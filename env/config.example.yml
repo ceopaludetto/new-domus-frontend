@@ -1,0 +1,15 @@
+version: 1
+
+database:
+  database:
+  dialect:
+  host:
+  port:
+  username:
+  password:
+
+auth:
+  secret:
+
+graphql:
+  schema:
