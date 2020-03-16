@@ -3,3 +3,5 @@ dist
 
 env/config.*.yml
 !env/config.example.yml
+
+.vscode
