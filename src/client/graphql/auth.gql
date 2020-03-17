@@ -1,0 +1,11 @@
+fragment UsuarioValues on Usuario {
+  id
+  email
+  nome
+}
+
+mutation Login($input: AuthenticationInput!) {
+  login(input: $input) {
+    ...UsuarioValues
+  }
+}

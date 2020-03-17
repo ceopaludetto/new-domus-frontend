@@ -1,0 +1,11 @@
+fragment UsuarioValues on Usuario {
+  id
+  email
+  nome
+}
+
+query FindAllUsuarios {
+  findAllUsuarios {
+    ...UsuarioValues
+  }
+}

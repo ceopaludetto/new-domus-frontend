@@ -4,16 +4,21 @@ module.exports = {
   parser: "@typescript-eslint/parser",
   env: {
     es6: true,
-    node: true
+    node: true,
+    browser: true
   },
-  extends: ["airbnb-base", "plugin:@typescript-eslint/recommended", "prettier", "prettier/@typescript-eslint"],
-  plugins: ["import", "import-helpers", "prettier"],
+  extends: ["airbnb", "plugin:@typescript-eslint/recommended", "prettier", "prettier/@typescript-eslint"],
+  plugins: ["react", "react-hooks", "import", "import-helpers", "prettier"],
   globals: {
     Atomics: "readonly",
     SharedArrayBuffer: "readonly"
   },
   parserOptions: {
-    ecmaVersion: 2019,
+    ecmaFeatures: {
+      jsx: true,
+      tsx: true
+    },
+    ecmaVersion: 2020,
     sourceType: "module",
     projects: [path.resolve("tsconfig.json")]
   },
@@ -39,6 +44,18 @@ module.exports = {
         alphabetize: { order: "asc", ignoreCase: true }
       }
     ],
+    "react/jsx-filename-extension": [
+      "warn",
+      {
+        extensions: [".jsx", ".tsx"]
+      }
+    ],
+    "react/button-has-type": "off",
+    "react-hooks/rules-of-hooks": "error",
+    "react/prop-types": "off",
+    "react/jsx-props-no-spreading": "off",
+    "jsx-a11y/label-has-for": "off",
+    "jsx-a11y/anchor-is-valid": "off",
     "import/extensions": [
       "error",
       "ignorePackages",
@@ -48,7 +65,7 @@ module.exports = {
         ts: "never",
         tsx: "never"
       }
-    ]
+    ],
   },
   settings: {
     "import/parsers": {
