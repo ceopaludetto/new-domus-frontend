@@ -1,7 +1,7 @@
 import { Resolver, Query, Args } from "@nestjs/graphql";
 
-import { Usuario } from "~/server/models";
-import { FindByID } from "~/server/utils/common.dto";
+import { Usuario } from "@/server/models";
+import { FindByID } from "@/server/utils/common.dto";
 
 import { UsuarioService } from "./usuario.service";
 

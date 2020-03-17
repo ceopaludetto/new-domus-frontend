@@ -11,9 +11,9 @@ import { NormalizedCacheObject } from "apollo-cache-inmemory";
 import { SchemaLink } from "apollo-link-schema";
 import { Request, Response } from "express";
 
-import { App } from "~/client/App";
-import { createClient } from "~/client/providers/apollo";
-import { ConfigurationService } from "~/server/components/configuration";
+import { App } from "@/client/App";
+import { createClient } from "@/client/providers/apollo";
+import { ConfigurationService } from "@/server/components/configuration";
 
 @Injectable()
 export class ReactService {

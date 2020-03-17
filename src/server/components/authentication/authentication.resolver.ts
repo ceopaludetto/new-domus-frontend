@@ -1,8 +1,8 @@
 import { Resolver, Mutation, Args, Context } from "@nestjs/graphql";
 
-import { UsuarioInput } from "~/server/components/usuario";
-import { Usuario } from "~/server/models";
-import { ContextType } from "~/server/utils/common.dto";
+import { UsuarioInput } from "@/server/components/usuario";
+import { Usuario } from "@/server/models";
+import { ContextType } from "@/server/utils/common.dto";
 
 import { AuthenticationInput } from "./authentication.dto";
 import { AuthenticationService } from "./authentication.service";

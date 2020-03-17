@@ -12,7 +12,7 @@ module.exports = async (type, name, sequelize, spinner) => {
 
   const model = `import SequelizeStatic, { QueryInterface } from 'sequelize';
 
-${isMigration ? "import { migrationDefaults } from '../defaults';\n" : ""}import {} from '~/utils/constants';
+${isMigration ? "import { migrationDefaults } from '../defaults';\n" : ""}import {} from '@/utils/constants';
 
 export default {
   async up(queryInterface: QueryInterface, Sequelize: typeof SequelizeStatic) {

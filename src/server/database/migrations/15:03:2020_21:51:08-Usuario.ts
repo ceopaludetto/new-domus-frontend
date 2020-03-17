@@ -1,6 +1,6 @@
 import SequelizeStatic, { QueryInterface } from "sequelize";
 
-import { USUARIO } from "~/server/utils/constants";
+import { USUARIO } from "@/server/utils/constants";
 
 import { migrationDefaults } from "../defaults";
 

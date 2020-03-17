@@ -107,6 +107,7 @@
     "css-loader": "^3.4.2",
     "css-modules-types-generator-loader": "^1.0.3",
     "cssnano-preset-advanced": "^4.0.7",
+    "csstyle": "^2.0.2",
     "date-fns": "^2.11.0",
     "eslint": "^6.8.0",
     "eslint-config-airbnb": "^18.1.0",

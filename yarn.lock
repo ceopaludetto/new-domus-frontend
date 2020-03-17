@@ -4773,6 +4773,11 @@ csso@^4.0.2:
   dependencies:
     css-tree "1.0.0-alpha.37"
 
+csstyle@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/csstyle/-/csstyle-2.0.2.tgz#e8fc461101206d9a1a31db6dc641299ba61161fa"
+  integrity sha512-rG4uXtj6juoUjg3V2l4+GyVSUpjP73Um6huQsgFH0gadzHVGSlltNurrIGcnjYXIKiL0g0d4c97in391A4C20g==
+
 csstype@^2.2.0:
   version "2.6.9"
   resolved "https://registry.yarnpkg.com/csstype/-/csstype-2.6.9.tgz#05141d0cd557a56b8891394c1911c40c8a98d098"

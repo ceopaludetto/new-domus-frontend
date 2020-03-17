@@ -1,4 +1,65 @@
-.button {
+@import "~@/client/scss/functions";
+
+@include component(button) {
   border: none;
-  border-radius: 6px;
+  border-radius: $shape;
+  padding: 0.65rem 1.25rem;
+  letter-spacing: 1.25px;
+  text-transform: uppercase;
+  font-weight: get-font-weight("medium");
+  font-size: nth($font-sizes, 1);
+  text-decoration: none;
+  user-select: none;
+  &:focus {
+    outline: none;
+  }
+  @include part(block) {
+    width: 100%;
+  }
+  &:not(:disabled) {
+    cursor: pointer;
+    @each $k, $v in map-get($colors, "light") {
+      @include option(contained) {
+        @include option(#{$k}) {
+          background-color: get-theme-color($k);
+          color: get-theme-color($k, "contrast");
+          transition: create-transition((background-color, box-shadow), 100ms, ease-in-out);
+          &:hover {
+            background-color: get-theme-color($k, "hover");
+          }
+          &:focus,
+          &:active {
+            background-color: get-theme-color($k, "active");
+            box-shadow: 0 0 0 3px get-theme-color($k, "shadow-3");
+          }
+        }
+      }
+      @include option(flat) {
+        @include option(#{$k}) {
+          background-color: transparent;
+          color: get-theme-color($k);
+          transition: create-transition((background-color, box-shadow), 100ms, ease-in-out);
+          &:hover {
+            background-color: get-theme-color($k, "shadow-2");
+          }
+          &:focus,
+          &:active {
+            background-color: get-theme-color($k, "shadow-3");
+            box-shadow: 0 0 0 3px get-theme-color($k, "shadow-1");
+          }
+        }
+      }
+    }
+  }
+  &:disabled {
+    cursor: not-allowed;
+    @include option(contained) {
+      background-color: get-theme-color("disabled");
+      color: get-theme-color("disabled-text");
+    }
+    @include option(flat) {
+      background-color: transparent;
+      color: get-theme-color("disabled-text");
+    }
+  }
 }

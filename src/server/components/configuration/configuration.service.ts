@@ -6,7 +6,7 @@ import { Dialect } from "sequelize";
 import yaml from "yaml";
 import * as Yup from "yup";
 
-import { REQUIRED, DIALECT } from "~/server/utils/constants";
+import { REQUIRED, DIALECT } from "@/server/utils/constants";
 
 const EnvSchema = Yup.object({
   database: Yup.object({

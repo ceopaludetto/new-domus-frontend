@@ -1,9 +1,10 @@
 import React from "react";
 
 import { useQuery } from "@apollo/react-hooks";
+import "@/client/scss/normalize.scss";
 
-import { Button } from "~/client/components";
-import { FindAllUsuarios } from "~/client/graphql/usuario.gql";
+import { Button } from "@/client/components";
+import { FindAllUsuarios } from "@/client/graphql/usuario.gql";
 
 export function App() {
   const { data, loading } = useQuery<FindAllUsuariosQuery>(FindAllUsuarios);
@@ -18,7 +19,10 @@ export function App() {
           ))}
         </ul>
       )}
-      <Button>agora o hotreload funfa</Button>
+      <Button variant="flat">Anterior</Button>
+      <Button>Anterior</Button>
+      <Button variant="flat">Próximo</Button>
+      <Button>Próximo</Button>
     </>
   );
 }

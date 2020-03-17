@@ -6,7 +6,7 @@ import { ApolloProvider } from "@apollo/react-common";
 import { loadableReady } from "@loadable/component";
 import { HttpLink } from "apollo-link-http";
 
-import { createClient } from "~/client/providers/apollo";
+import { createClient } from "@/client/providers/apollo";
 
 import { App } from "./App";
 

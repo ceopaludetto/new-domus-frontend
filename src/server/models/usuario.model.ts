@@ -2,7 +2,7 @@ import { ObjectType, Field } from "@nestjs/graphql";
 import { hash, compare } from "bcryptjs";
 import { Table, Column, BeforeSave } from "sequelize-typescript";
 
-import { USUARIO } from "~/server/utils/constants";
+import { USUARIO } from "@/server/utils/constants";
 
 import { BaseModel } from "./base.model";
 

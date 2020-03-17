@@ -3,8 +3,8 @@ import { JwtService } from "@nestjs/jwt";
 import { UserInputError } from "apollo-server-express";
 import { Response } from "express";
 
-import { UsuarioInput, UsuarioService } from "~/server/components/usuario";
-import { Usuario } from "~/server/models";
+import { UsuarioInput, UsuarioService } from "@/server/components/usuario";
+import { Usuario } from "@/server/models";
 
 import { AuthenticationInput } from "./authentication.dto";
 
