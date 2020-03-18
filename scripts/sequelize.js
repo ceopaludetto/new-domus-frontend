@@ -19,7 +19,7 @@ spinner.spinner = "bouncingBar";
 
 async function compileFactory(type, p) {
   spinner.text = "Cleaning tmp folder...";
-  await fs.remove(sequelizeConfig[`${type === "migration" ? "migrations" : "seeders"}-path`]);
+  await fs.emptyDir(sequelizeConfig[`${type === "migration" ? "migrations" : "seeders"}-path`]);
   spinner.text = "Compiling...";
   if (!p.all) {
     await compile(type, sequelizeConfig).then(() => {
@@ -68,6 +68,7 @@ program
   .action(async (type, name, p) => {
     spinner.start();
     if (p.compile) {
+      await fs.ensureDir(sequelizeConfig[`${type === "migration" ? "migrations" : "seeders"}-path`]);
       await compileFactory(type, p);
     }
 

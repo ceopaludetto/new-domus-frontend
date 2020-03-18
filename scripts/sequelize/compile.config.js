@@ -50,7 +50,7 @@ module.exports = files => ({
   },
   resolve: {
     alias: {
-      "~": path.resolve("src")
+      "@": path.resolve("src")
     },
     extensions: [".js", ".json", ".ts"]
   }
