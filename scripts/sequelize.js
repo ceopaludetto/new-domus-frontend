@@ -2,34 +2,42 @@
 const { exec } = require("child_process");
 const { Command } = require("commander");
 const fs = require("fs-extra");
-const ora = require("ora");
 const path = require("path");
 const { promisify } = require("util");
 
 const { version } = require("../package.json");
 const compile = require("./sequelize/compile");
 const generate = require("./sequelize/generate");
+const logger = require("./utils/logger");
 
 const program = new Command();
 
 let sequelizeConfig = {};
 
-const spinner = ora("Parsing commands");
-spinner.spinner = "bouncingBar";
+logger.info("Parsing commands...");
+
+function printOptions() {
+  return new Promise(resolve => {
+    if (program.verbose) {
+      logger.option("verbose", true);
+    }
+
+    logger.option("enviroment", program.enviroment);
+
+    resolve();
+  });
+}
 
 async function compileFactory(type, p) {
-  spinner.text = "Cleaning tmp folder...";
+  logger.info("Cleaning tmp folder...");
   await fs.emptyDir(sequelizeConfig[`${type === "migration" ? "migrations" : "seeders"}-path`]);
-  spinner.text = "Compiling...";
-  if (!p.all) {
-    await compile(type, sequelizeConfig).then(() => {
-      spinner.text = "Compiled successfully";
-    });
+  if (!p.all || type) {
+    await compile(type, sequelizeConfig);
   } else {
-    await compile("migration", sequelizeConfig, spinner);
-    await compile("seeders", sequelizeConfig, spinner);
-    spinner.text = "Compiled successfully";
+    await compile("migration", sequelizeConfig);
+    await compile("seeders", sequelizeConfig);
   }
+  logger.success("Compiled successfully");
 }
 
 program
@@ -44,7 +52,7 @@ program
   .description("Compile seeds|migrations in tmp path")
   .option("-a, --all", "Compile both migrations and seeders", false)
   .action(async (type, p) => {
-    spinner.start();
+    await printOptions();
     return compileFactory(type, p);
   });
 
@@ -53,20 +61,20 @@ program
   .alias("g")
   .description("Generate a new seed|migration")
   .action(async (type, name) => {
-    spinner.start();
-    await generate(type, name, sequelizeConfig, spinner);
+    await printOptions();
+    await generate(type, name, sequelizeConfig);
   });
 
 program
   .command("run <type> [name]")
   .alias("r")
   .option("-c, --compile", "Compile before run", false)
-  .option("-u, --undo [name]", "Undo seed|migration", false)
   .option("-a, --all", "Run all seeds|migrations, -u and -a can be combined", false)
+  .option("-u, --undo [name]", "Undo seed|migration", false)
   .option("--clean", "Clean tmp folder after run", true)
   .description("Generate a new seed|migration")
   .action(async (type, name, p) => {
-    spinner.start();
+    await printOptions();
     if (p.compile) {
       await fs.ensureDir(sequelizeConfig[`${type === "migration" ? "migrations" : "seeders"}-path`]);
       await compileFactory(type, p);
@@ -102,12 +110,12 @@ program
     }
 
     const { stderr, stdout } = await child(`npx sequelize ${cmd} - env ${p.e || "development"}`);
-    if (p.verbose) {
+    if (program.verbose) {
       if (stderr) {
         throw stderr;
       }
 
-      spinner.text = stdout;
+      logger.verbose(stdout);
     }
   });
 
@@ -121,7 +129,7 @@ async function bootstrap() {
 
         if (Object.keys(sequelizeConfig)) {
           await program.parseAsync(process.argv);
-          spinner.succeed();
+          logger.success("Commands executed successfully");
         }
       }
     } else {
@@ -129,11 +137,11 @@ async function bootstrap() {
     }
   } catch (err) {
     if (err.stderr) {
-      spinner.fail(err.stderr.replace("\n", ""));
+      logger.error(err.stderr.replace("\n", ""));
     } else if (err.message) {
-      spinner.fail(err.message);
+      logger.error(err.message);
     } else {
-      spinner.fail("Error when run CLI");
+      logger.error("Error when run CLI");
     }
   }
 }

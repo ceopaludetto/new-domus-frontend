@@ -29,12 +29,20 @@ module.exports = (isServer = false, isTest = false) => ({
         useBuiltIns: true,
         development: !isProd
       }
+    ],
+    [
+      "@emotion/babel-preset-css-prop",
+      {
+        autoLabel: !isProd,
+        labelFormat: "[local]",
+        useBuiltIns: true
+      }
     ]
   ],
   plugins: [
     "lodash",
+    "graphql-tag",
     "@loadable/babel-plugin",
-    "optimize-clsx",
     "@babel/plugin-transform-react-constant-elements",
     "@babel/plugin-transform-react-inline-elements",
     [

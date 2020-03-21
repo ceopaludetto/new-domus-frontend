@@ -4,11 +4,13 @@ const fns = require("date-fns");
 const fs = require("fs");
 const { promisify } = require("util");
 
-module.exports = async (type, name, sequelize, spinner) => {
+const logger = require("../utils/logger");
+
+module.exports = async (type, name, sequelize) => {
   const isMigration = type === "migration";
   const consoleName = isMigration ? "migration" : "seed";
 
-  spinner.text = `${chalk.whiteBright(`Creating new ${consoleName}:`)} ${chalk.greenBright(name)}`;
+  logger.info(`${chalk.whiteBright(`Creating new ${consoleName}:`)} ${chalk.greenBright(name)}`);
 
   const model = `import SequelizeStatic, { QueryInterface } from 'sequelize';
 
@@ -35,5 +37,5 @@ export default {
 
   await promisify(fs.writeFile)(`${migrationsPath}/${format}-${capitalize(name) || ""}.ts`, model);
 
-  spinner.text = chalk.whiteBright(`${capitalize(consoleName)} created successfully!`);
+  logger.success(chalk.whiteBright(`${capitalize(consoleName)} created successfully!`));
 };

@@ -28,6 +28,7 @@ module.exports = {
     "no-underscore-dangle": "off",
     "no-useless-constructor": "off",
     "max-classes-per-file": ["error", 5],
+    "class-methods-use-this": "off",
     "@typescript-eslint/interface-name-prefix": "off",
     "@typescript-eslint/no-var-requires": "off",
     "@typescript-eslint/explicit-function-return-type": "off",
@@ -65,7 +66,7 @@ module.exports = {
         ts: "never",
         tsx: "never"
       }
-    ],
+    ]
   },
   settings: {
     "import/parsers": {

@@ -7,7 +7,7 @@ import { LoggerModule, PinoLogger } from "nestjs-pino";
 import {
   ConfigurationModule,
   ConfigurationService,
-  UsuarioModule,
+  UserModule,
   AuthenticationModule,
   ReactModule
 } from "@/server/components";
@@ -62,7 +62,7 @@ import { APP_NAME } from "@/server/utils/constants";
         }
       })
     }),
-    UsuarioModule,
+    UserModule,
     AuthenticationModule,
     ReactModule
   ]

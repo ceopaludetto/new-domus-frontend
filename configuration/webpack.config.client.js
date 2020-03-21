@@ -6,7 +6,6 @@ const WatchMissingNodeModulesPlugin = require("react-dev-utils/WatchMissingNodeM
 const LoadablePlugin = require("@loadable/webpack-plugin");
 const CompressionPlugin = require("compression-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
-const MiniCssExtract = require("mini-css-extract-plugin");
 const path = require("path");
 const webpack = require("webpack");
 const merge = require("webpack-merge");
@@ -109,12 +108,7 @@ module.exports = merge(baseConfig(false), {
               from: path.resolve("public"),
               to: path.resolve("dist", "static", "public")
             }
-          ]),
-          new MiniCssExtract({
-            filename: isProd ? "css/[name].[contenthash:8].css" : "index.css",
-            chunkFilename: isProd ? "css/[name].[contenthash:8].css" : "[name].css",
-            allChunks: true
-          })
+          ])
         ]
       : [
           new webpack.HotModuleReplacementPlugin({

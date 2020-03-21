@@ -14,9 +14,13 @@ export function createClient(isSsr = false, link: any) {
   });
 
   if (!isSsr) {
-    cache.restore((window as any).__APOLLO_STATE__);
-    if (!module.hot) {
-      delete (window as any).__APOLLO_STATE__;
+    const apolloState = document.querySelector("#__APOLLO_STATE__");
+    if (apolloState && apolloState.innerHTML) {
+      cache.restore(JSON.parse(apolloState.innerHTML));
+      if (!module.hot) {
+        const cacheRoot = apolloState?.parentElement?.removeChild?.(apolloState);
+        if (!cacheRoot) throw Error("Fail to remove cache");
+      }
     }
   }
 

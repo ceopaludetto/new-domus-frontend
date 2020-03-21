@@ -1,0 +1,3 @@
+query Logged {
+  logged @client
+}

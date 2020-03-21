@@ -1,8 +1,9 @@
 import React from "react";
 
-import clsx from "clsx";
+import { css } from "@emotion/core";
+import { useTheme } from "emotion-theming";
 
-import s from "./index.scss";
+import { Theme } from "@/client/providers/theme";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   block?: boolean;
@@ -13,24 +14,29 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 export function Button({
   type = "button",
   children,
-  className,
   variant = "contained",
   color = "primary",
   block = false,
   ...rest
 }: ButtonProps) {
-  const classes = clsx(
-    s.button,
-    s[variant],
-    s[color],
-    {
-      [s["button.block"]]: block
-    },
-    className
-  );
+  const theme = useTheme<Theme>();
 
   return (
-    <button type={type} className={classes} {...rest}>
+    <button
+      css={css`
+        border: none;
+        text-transform: uppercase;
+        letter-spacing: 1.15px;
+        padding: 0.65rem 1.1rem;
+        background-color: ${theme.palette[theme.palette.current].primary};
+        ${block &&
+          css`
+            width: 100%;
+          `};
+      `}
+      type={type}
+      {...rest}
+    >
       {children}
     </button>
   );

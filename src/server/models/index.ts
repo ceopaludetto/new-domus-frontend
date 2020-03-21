@@ -1,4 +1,5 @@
-import { Usuario } from "./usuario.model";
+import { Person } from "./person.model";
+import { User } from "./user.model";
 
-export const entities = [Usuario];
-export { Usuario };
+export const entities = [User, Person];
+export { User, Person };

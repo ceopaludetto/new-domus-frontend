@@ -19,3 +19,9 @@ export class ContextType {
   @IsObject()
   public res!: Response;
 }
+
+export class PayloadType {
+  @IsString()
+  @IsShortID()
+  public id!: string;
+}

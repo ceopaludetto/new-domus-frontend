@@ -5,7 +5,8 @@ export const REQUIRED = "Configuração ${path} Obrigatória";
 export const DIALECT = "Dialeto do banco de dados não suportado";
 
 // Sequelize
-export const USUARIO = "Usuario";
+export const USER = "User";
+export const PERSON = "Person";
 
 // graphQL
 export const SCHEMA_LINK = "@SCHEMA_LINK";

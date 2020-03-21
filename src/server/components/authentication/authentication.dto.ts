@@ -5,7 +5,7 @@ import { IsString } from "class-validator";
 export class AuthenticationInput {
   @IsString()
   @Field()
-  public email!: string;
+  public login!: string;
 
   @IsString()
   @Field()
