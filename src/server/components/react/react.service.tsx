@@ -5,6 +5,7 @@ import { FilledContext, HelmetProvider } from "react-helmet-async";
 
 import { ApolloProvider } from "@apollo/react-common";
 import { getDataFromTree } from "@apollo/react-ssr";
+import { EmotionCache } from "@emotion/cache";
 import { CacheProvider } from "@emotion/core";
 import { ChunkExtractor, ChunkExtractorManager } from "@loadable/server";
 import { Injectable } from "@nestjs/common";
@@ -61,7 +62,7 @@ export class ReactService {
 
       const initialState = client.extract();
 
-      const fullHTML = this.markup(markup, initialState, extractor, (helmetContext as FilledContext).helmet, nonce);
+      const fullHTML = this.markup(markup, initialState, extractor, (helmetContext as FilledContext).helmet, cache);
 
       return res.send(fullHTML);
     } catch (error) {
@@ -75,13 +76,15 @@ export class ReactService {
     initialState: NormalizedCacheObject,
     extractor: ChunkExtractor,
     helmet: FilledContext["helmet"],
-    nonce: string
+    cache: EmotionCache
   ) => {
     const { htmlAttributes, bodyAttributes } = helmet;
 
     const linkEls = extractor.getLinkElements();
     const styleEls = extractor.getStyleElements();
     const scriptEls = extractor.getScriptElements();
+
+    const prop = { [`data-emotion-${cache.key}`]: ids.join(" ") };
 
     return renderToStaticMarkup(
       <html lang="pt-BR" {...htmlAttributes.toComponent()}>
@@ -91,7 +94,7 @@ export class ReactService {
           {helmet.link.toComponent()}
           {linkEls}
           {styleEls}
-          <style nonce={nonce} data-emotion-css={ids.join(" ")} dangerouslySetInnerHTML={{ __html: css }} />
+          <style nonce={cache.nonce} {...prop} dangerouslySetInnerHTML={{ __html: css }} />
         </head>
         <body {...bodyAttributes.toComponent()}>
           <div id="app" dangerouslySetInnerHTML={{ __html: html }} />

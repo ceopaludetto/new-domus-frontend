@@ -6,10 +6,10 @@ import { ApolloProvider } from "@apollo/react-common";
 import { CacheProvider } from "@emotion/core";
 import { loadableReady } from "@loadable/component";
 import { HttpLink } from "apollo-link-http";
-import { hydrate } from "emotion";
 
 import { createClient } from "@/client/providers/apollo";
 import { createCache } from "@/client/providers/emotion";
+import { EMOTION_KEY } from "@/client/utils/constants";
 
 import { App } from "./App";
 
@@ -21,11 +21,8 @@ const client = createClient(
   })
 );
 
-const styles: HTMLStyleElement | null = document.querySelector("[data-emotion-css]");
+const styles: HTMLStyleElement | null = document.querySelector(`[data-emotion-${EMOTION_KEY}]`);
 const cache = createCache(styles?.nonce ?? "");
-hydrate(styles?.dataset?.emotionCss?.split(" ") ?? []);
-const removed = styles?.parentElement?.removeChild(styles);
-if (!removed) throw Error("Falha ao remover server sided css");
 
 loadableReady(() => {
   const root = document.querySelector("#app");
