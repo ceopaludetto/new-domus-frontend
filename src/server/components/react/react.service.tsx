@@ -13,7 +13,7 @@ import { SchemaLink } from "apollo-link-schema";
 import createEmotionServer, { EmotionCritical } from "create-emotion-server";
 import { Request, Response } from "express";
 import { PinoLogger, InjectPinoLogger } from "nestjs-pino";
-import uuid from "uuid/v4";
+import { generate } from "shortid";
 
 import { App } from "@/client/App";
 import { createClient } from "@/client/providers/apollo";
@@ -29,7 +29,7 @@ export class ReactService {
 
   public async render(req: Request, res: Response) {
     try {
-      const nonce = Buffer.from(uuid()).toString("base64");
+      const nonce = Buffer.from(generate()).toString("base64");
       const cache = createCache(nonce);
       const { extractCritical } = createEmotionServer(cache);
       const extractor = new ChunkExtractor({
@@ -71,7 +71,7 @@ export class ReactService {
   }
 
   public markup = (
-    { html, ids, css }: EmotionCritical,
+    { html, css, ids }: EmotionCritical,
     initialState: NormalizedCacheObject,
     extractor: ChunkExtractor,
     helmet: FilledContext["helmet"],
