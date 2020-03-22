@@ -43,7 +43,7 @@ export class ReactService {
       if (process.env.NODE_ENV === "production") {
         res.set(
           "Content-Security-Policy",
-          `default-src 'self'; style-src 'self' 'nonce-${nonce}' https://fonts.googleapis.com; font-src *;`
+          `default-src 'self'; script-src 'self' 'nonce-${nonce}'; style-src 'self' 'nonce-${nonce}' https://fonts.googleapis.com; font-src *;`
         );
       }
 
@@ -83,8 +83,8 @@ export class ReactService {
     const { htmlAttributes, bodyAttributes } = helmet;
 
     const linkEls = extractor.getLinkElements();
-    const styleEls = extractor.getStyleElements();
-    const scriptEls = extractor.getScriptElements();
+    const styleEls = extractor.getStyleElements({ nonce: cache.nonce });
+    const scriptEls = extractor.getScriptElements({ nonce: cache.nonce });
 
     const prop = { [`data-emotion-${cache.key}`]: ids.join(" ") };
 
@@ -101,6 +101,7 @@ export class ReactService {
         <body {...bodyAttributes.toComponent()}>
           <div id="app" dangerouslySetInnerHTML={{ __html: html }} />
           <script
+            nonce={cache.nonce}
             id="__APOLLO_STATE__"
             type="application/json"
             dangerouslySetInnerHTML={{
