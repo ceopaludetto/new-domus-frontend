@@ -40,7 +40,7 @@ input PersonInput {
 }
 
 type Query {
-  showUsers: [User!]!
+  showUsers(first: Int, skip: Int): [User!]!
   findUser(id: ID!): User!
   profile: User!
 }

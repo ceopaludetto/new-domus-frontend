@@ -1,11 +1,15 @@
-fragment UsuarioValues on Usuario {
+fragment UserValues on User {
   id
-  email
-  nome
+  login
+  person {
+    id
+    name
+    email
+  }
 }
 
 mutation Login($input: AuthenticationInput!) {
   login(input: $input) {
-    ...UsuarioValues
+    ...UserValues
   }
 }

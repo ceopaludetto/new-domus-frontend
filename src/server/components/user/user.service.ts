@@ -1,7 +1,6 @@
 import { Injectable } from "@nestjs/common";
-import { InjectModel, InjectConnection } from "@nestjs/sequelize";
+import { InjectModel } from "@nestjs/sequelize";
 import { InjectPinoLogger, PinoLogger } from "nestjs-pino";
-import { Sequelize } from "sequelize-typescript";
 
 import { User, Person } from "@/server/models";
 
@@ -11,13 +10,11 @@ import { UserInput } from "./user.dto";
 export class UserService {
   public constructor(
     @InjectModel(User) private readonly userModel: typeof User,
-    @InjectModel(Person) private readonly personModel: typeof Person,
-    @InjectConnection() private readonly sequelize: Sequelize,
     @InjectPinoLogger(UserService.name) private readonly logger: PinoLogger
   ) {}
 
-  public async showAll() {
-    return this.userModel.findAll();
+  public async showAll(skip = 0, first?: number) {
+    return this.userModel.findAll({ offset: skip, limit: first });
   }
 
   public async findByLogin(login: string) {
@@ -28,19 +25,10 @@ export class UserService {
     return this.userModel.findByPk(id);
   }
 
-  public async create({ person, ...rest }: UserInput) {
-    const transaction = await this.sequelize.transaction();
+  public async create(data: UserInput) {
     try {
-      const p = await this.personModel.create(person, { transaction });
-
-      const u = await this.userModel.create({ ...rest, personID: p.id }, { transaction });
-      u.person = p;
-
-      await transaction.commit();
-
-      return u;
+      return this.userModel.create(data, { include: [Person] });
     } catch (error) {
-      transaction.rollback();
       this.logger.error("Falha ao criar usuário", error);
       throw error;
     }

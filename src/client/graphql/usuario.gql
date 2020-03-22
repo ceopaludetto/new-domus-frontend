@@ -1,11 +1,15 @@
-fragment UsuarioValues on Usuario {
+fragment UserValues on User {
   id
-  email
-  nome
+  login
+  person {
+    id
+    name
+    email
+  }
 }
 
-query FindAllUsuarios {
-  findAllUsuarios {
-    ...UsuarioValues
+query ShowAllUsers {
+  showUsers {
+    ...UserValues
   }
 }

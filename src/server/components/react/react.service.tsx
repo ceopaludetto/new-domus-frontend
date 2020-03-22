@@ -5,15 +5,19 @@ import { FilledContext, HelmetProvider } from "react-helmet-async";
 
 import { ApolloProvider } from "@apollo/react-common";
 import { getDataFromTree } from "@apollo/react-ssr";
+import { CacheProvider } from "@emotion/core";
 import { ChunkExtractor, ChunkExtractorManager } from "@loadable/server";
 import { Injectable } from "@nestjs/common";
 import { NormalizedCacheObject } from "apollo-cache-inmemory";
 import { SchemaLink } from "apollo-link-schema";
+import createEmotionServer, { EmotionCritical } from "create-emotion-server";
 import { Request, Response } from "express";
 import { PinoLogger, InjectPinoLogger } from "nestjs-pino";
+import uuid from "uuid/v4";
 
 import { App } from "@/client/App";
 import { createClient } from "@/client/providers/apollo";
+import { createCache } from "@/client/providers/emotion";
 import { ConfigurationService } from "@/server/components/configuration";
 
 @Injectable()
@@ -25,6 +29,9 @@ export class ReactService {
 
   public async render(req: Request, res: Response) {
     try {
+      const nonce = Buffer.from(uuid()).toString("base64");
+      const cache = createCache(nonce);
+      const { extractCritical } = createEmotionServer(cache);
       const extractor = new ChunkExtractor({
         statsFile: process.env.MANIFEST as string
       });
@@ -32,22 +39,29 @@ export class ReactService {
       const helmetContext: FilledContext | {} = {};
       const client = createClient(true, new SchemaLink({ schema: this.configService.schema }));
 
+      res.set(
+        "Content-Security-Policy",
+        `default-src 'self'; style-src 'self' 'nonce-${nonce}' https://fonts.googleapis.com; font-src *;`
+      );
+
       const tree = (
         <ChunkExtractorManager extractor={extractor}>
-          <HelmetProvider context={helmetContext}>
-            <ApolloProvider client={client}>
-              <App />
-            </ApolloProvider>
-          </HelmetProvider>
+          <CacheProvider value={cache}>
+            <HelmetProvider context={helmetContext}>
+              <ApolloProvider client={client}>
+                <App />
+              </ApolloProvider>
+            </HelmetProvider>
+          </CacheProvider>
         </ChunkExtractorManager>
       );
 
       await getDataFromTree(tree);
-      const markup = renderToString(tree);
+      const markup = extractCritical(renderToString(tree));
 
       const initialState = client.extract();
 
-      const fullHTML = this.markup(markup, initialState, extractor, (helmetContext as FilledContext).helmet);
+      const fullHTML = this.markup(markup, initialState, extractor, (helmetContext as FilledContext).helmet, nonce);
 
       return res.send(fullHTML);
     } catch (error) {
@@ -57,10 +71,11 @@ export class ReactService {
   }
 
   public markup = (
-    markup: string,
+    { html, ids, css }: EmotionCritical,
     initialState: NormalizedCacheObject,
     extractor: ChunkExtractor,
-    helmet: FilledContext["helmet"]
+    helmet: FilledContext["helmet"],
+    nonce: string
   ) => {
     const { htmlAttributes, bodyAttributes } = helmet;
 
@@ -76,9 +91,10 @@ export class ReactService {
           {helmet.link.toComponent()}
           {linkEls}
           {styleEls}
+          <style nonce={nonce} data-emotion-css={ids.join(" ")} dangerouslySetInnerHTML={{ __html: css }} />
         </head>
         <body {...bodyAttributes.toComponent()}>
-          <div id="app" dangerouslySetInnerHTML={{ __html: markup }} />
+          <div id="app" dangerouslySetInnerHTML={{ __html: html }} />
           <script
             id="__APOLLO_STATE__"
             type="application/json"

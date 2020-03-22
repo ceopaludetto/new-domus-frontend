@@ -1,5 +1,5 @@
-import { ArgsType, Field, ID } from "@nestjs/graphql";
-import { IsString, IsObject } from "class-validator";
+import { ArgsType, Field, ID, Int } from "@nestjs/graphql";
+import { IsString, IsObject, IsInt, IsNumber, IsOptional } from "class-validator";
 import { Request, Response } from "express";
 
 import { IsShortID } from "./validations";
@@ -12,16 +12,25 @@ export class FindByID {
   public id!: string;
 }
 
+@ArgsType()
+export class ShowAll {
+  @IsOptional()
+  @IsNumber()
+  @IsInt()
+  @Field(() => Int, { nullable: true })
+  public first?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @IsInt()
+  @Field(() => Int, { nullable: true })
+  public skip?: number;
+}
+
 export class ContextType {
   @IsObject()
   public req!: Request;
 
   @IsObject()
   public res!: Response;
-}
-
-export class PayloadType {
-  @IsString()
-  @IsShortID()
-  public id!: string;
 }

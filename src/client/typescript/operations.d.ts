@@ -11,64 +11,110 @@ type Scalars = {
 };
 
 type AuthenticationInput = {
-  email: Scalars["String"];
-  password: Scalars["String"];
+  login: Scalars['String'];
+  password: Scalars['String'];
 };
 
+
+enum Gender {
+  M = 'M',
+  F = 'F',
+  N = 'N'
+}
+
 type Mutation = {
-  __typename?: "Mutation";
-  login: Usuario;
-  register: Usuario;
+   __typename?: 'Mutation';
+  login: User;
+  register: User;
 };
+
 
 type MutationLoginArgs = {
   input: AuthenticationInput;
 };
 
+
 type MutationRegisterArgs = {
-  input: UsuarioInput;
+  input: UserInput;
+};
+
+type Person = {
+   __typename?: 'Person';
+  id: Scalars['ID'];
+  createdAt: Scalars['DateTime'];
+  updatedAt: Scalars['DateTime'];
+  deletedAt: Scalars['DateTime'];
+  name: Scalars['String'];
+  email: Scalars['String'];
+  gender: Gender;
+};
+
+type PersonInput = {
+  name: Scalars['String'];
+  email: Scalars['String'];
+  gender: Gender;
 };
 
 type Query = {
-  __typename?: "Query";
-  findAllUsuarios: Array<Usuario>;
-  findUsuario: Usuario;
+   __typename?: 'Query';
+  findUser: User;
+  logged: Scalars['Boolean'];
+  profile: User;
+  showUsers: Array<User>;
 };
 
-type QueryFindUsuarioArgs = {
-  id: Scalars["ID"];
+
+type QueryFindUserArgs = {
+  id: Scalars['ID'];
 };
 
-type Usuario = {
-  __typename?: "Usuario";
-  id: Scalars["ID"];
-  createdAt: Scalars["DateTime"];
-  updatedAt: Scalars["DateTime"];
-  deletedAt: Scalars["DateTime"];
-  nome: Scalars["String"];
-  email: Scalars["String"];
-  password: Scalars["String"];
+
+type QueryShowUsersArgs = {
+  first?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
 };
 
-type UsuarioInput = {
-  nome: Scalars["String"];
-  email: Scalars["String"];
-  password: Scalars["String"];
+type User = {
+   __typename?: 'User';
+  id: Scalars['ID'];
+  createdAt: Scalars['DateTime'];
+  updatedAt: Scalars['DateTime'];
+  deletedAt: Scalars['DateTime'];
+  login: Scalars['String'];
+  password: Scalars['String'];
+  personID: Scalars['String'];
+  person: Person;
 };
 
-type UsuarioValuesFragment = { __typename?: "Usuario"; id: string; email: string; nome: string };
+type UserInput = {
+  login: Scalars['String'];
+  password: Scalars['String'];
+  person: PersonInput;
+};
+
+type UserValuesFragment = { __typename?: 'User', id: string, login: string, person: { __typename?: 'Person', id: string, name: string, email: string } };
 
 type LoginMutationVariables = {
   input: AuthenticationInput;
 };
 
-type LoginMutation = { __typename?: "Mutation"; login: { __typename?: "Usuario" } & UsuarioValuesFragment };
 
-type UsuarioValuesFragment = { __typename?: "Usuario"; id: string; email: string; nome: string };
+type LoginMutation = { __typename?: 'Mutation', login: (
+    { __typename?: 'User' }
+    & UserValuesFragment
+  ) };
 
-type FindAllUsuariosQueryVariables = {};
+type LoggedQueryVariables = {};
 
-type FindAllUsuariosQuery = {
-  __typename?: "Query";
-  findAllUsuarios: Array<{ __typename?: "Usuario" } & UsuarioValuesFragment>;
-};
+
+type LoggedQuery = { __typename?: 'Query', logged: boolean };
+
+type UserValuesFragment = { __typename?: 'User', id: string, login: string, person: { __typename?: 'Person', id: string, name: string, email: string } };
+
+type ShowAllUsersQueryVariables = {};
+
+
+type ShowAllUsersQuery = { __typename?: 'Query', showUsers: Array<(
+    { __typename?: 'User' }
+    & UserValuesFragment
+  )> };

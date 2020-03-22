@@ -5,7 +5,7 @@ import { Strategy } from "passport-jwt";
 
 import { ConfigurationService } from "@/server/components/configuration";
 import { UserService } from "@/server/components/user";
-import { PayloadType } from "@/server/utils/common.dto";
+import { FindByID } from "@/server/utils/common.dto";
 
 import { extractor } from "./extractor";
 
@@ -20,7 +20,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   // eslint-disable-next-line
-  public async validate(payload: PayloadType) {
+  public async validate(payload: FindByID) {
     try {
       const user = await this.userService.findByID(payload.id);
       if (!user) {

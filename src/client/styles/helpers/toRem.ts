@@ -1,6 +1,6 @@
 import { rem } from "polished";
 
-export function toRem(v: number | number[], def?: number | string) {
+export function toRem(v: number | number[], def?: number | string): string | string[] {
   if (Array.isArray(v)) {
     return v.map((px: number) => rem(px, def)) as string[];
   }

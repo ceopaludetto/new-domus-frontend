@@ -15,12 +15,12 @@ export function Normalize() {
         *::before,
         *::after {
           box-sizing: border-box;
-          font-family: sans-serif;
         }
         html {
           line-height: 1.15;
           -webkit-text-size-adjust: 100%;
           font-size: ${theme.typography.default};
+          font-family: ${theme.typography.family.base.join(", ")};
         }
         body {
           margin: 0;
