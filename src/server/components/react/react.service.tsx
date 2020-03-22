@@ -40,10 +40,12 @@ export class ReactService {
       const helmetContext: FilledContext | {} = {};
       const client = createClient(true, new SchemaLink({ schema: this.configService.schema }));
 
-      res.set(
-        "Content-Security-Policy",
-        `default-src 'self'; style-src 'self' 'nonce-${nonce}' https://fonts.googleapis.com; font-src *;`
-      );
+      if (process.env.NODE_ENV === "production") {
+        res.set(
+          "Content-Security-Policy",
+          `default-src 'self'; style-src 'self' 'nonce-${nonce}' https://fonts.googleapis.com; font-src *;`
+        );
+      }
 
       const tree = (
         <ChunkExtractorManager extractor={extractor}>
