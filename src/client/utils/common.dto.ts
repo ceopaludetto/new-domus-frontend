@@ -1,3 +1,5 @@
+import { CSSProperties } from "react";
+
 export type Colors = {
   primary: string;
   secondary: string;
@@ -26,6 +28,14 @@ export interface Durations {
   long: string;
 }
 
+export interface Breakpoints<T> {
+  xs: T;
+  sm: T;
+  md: T;
+  lg: T;
+  xl: T;
+}
+
 export interface Theme {
   shape: string;
   palette: GeneratedColors;
@@ -40,6 +50,11 @@ export interface Theme {
     family: {
       base: string[];
     };
+  };
+  layout: {
+    sizes: string[];
+    breakpoints: Breakpoints<string> & { get(v: keyof Breakpoints<string>): string };
+    container: Breakpoints<string>;
   };
   transitions: {
     ease: Easing;

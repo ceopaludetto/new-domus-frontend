@@ -4,7 +4,7 @@ import { Helmet } from "react-helmet-async";
 import { useQuery } from "@apollo/react-hooks";
 import { ThemeProvider } from "emotion-theming";
 
-import { Button } from "@/client/components";
+import { Button, Control } from "@/client/components";
 import { ShowAllUsers } from "@/client/graphql/usuario.gql";
 import { theme } from "@/client/providers/theme";
 
@@ -35,6 +35,8 @@ export function App() {
       <Button variant="flat">Próximo</Button>
       <Button>Próximo</Button>
       <Button block>Próximo</Button>
+      <Control label="E-mail" id="email" />
+      <Control type="password" label="Password" id="password" />
     </ThemeProvider>
   );
 }

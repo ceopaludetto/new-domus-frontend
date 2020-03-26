@@ -11,10 +11,20 @@ const envs = require("./envs");
 
 const isProd = process.env.NODE_ENV === "production";
 
+const isDebug = process.env.INSPECT_BRK || process.env.INSPECT || false;
+
+function resolveDevTool() {
+  if (isDebug) {
+    return "source-map";
+  }
+
+  return isProd ? "hidden-source-map" : "eval-source-map";
+}
+
 module.exports = (isServer = false) => ({
   bail: isProd,
   name: isServer ? "Server" : "Client",
-  devtool: "source-map",
+  devtool: resolveDevTool(),
   mode: isProd ? "production" : "development",
   performance: false,
   watchOptions: {

@@ -1,16 +1,13 @@
 import React from "react";
 
 import { Global, css } from "@emotion/core";
-import { useTheme } from "emotion-theming";
 
-import { Theme } from "@/client/providers/theme";
+import { Theme } from "@/client/utils/common.dto";
 
 export function Normalize() {
-  const theme = useTheme<Theme>();
-
   return (
     <Global
-      styles={css`
+      styles={(theme: Theme) => css`
         *,
         *::before,
         *::after {
@@ -24,6 +21,8 @@ export function Normalize() {
         }
         body {
           margin: 0;
+          background-color: ${theme.palette.background.main};
+          color: ${theme.palette.background.contrast};
         }
         main {
           display: block;

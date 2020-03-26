@@ -35,7 +35,8 @@ module.exports = (isServer = false, isTest = false) => ({
       {
         autoLabel: !isProd,
         labelFormat: "[local]",
-        useBuiltIns: true
+        useBuiltIns: true,
+        sourceMap: !isProd
       }
     ]
   ],
@@ -43,8 +44,6 @@ module.exports = (isServer = false, isTest = false) => ({
     "lodash",
     "graphql-tag",
     "@loadable/babel-plugin",
-    "@babel/plugin-transform-react-constant-elements",
-    "@babel/plugin-transform-react-inline-elements",
     [
       "@babel/plugin-transform-destructuring",
       {
