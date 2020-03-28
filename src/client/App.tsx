@@ -37,6 +37,7 @@ export function App() {
       <Button block>Próximo</Button>
       <Control label="E-mail" id="email" />
       <Control type="password" label="Password" id="password" />
+      <Button>Salvar</Button>
     </ThemeProvider>
   );
 }

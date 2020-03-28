@@ -24,6 +24,7 @@ export function Button({ children, variant = "contained", color = "primary", blo
         border-radius: ${theme.shape};
         font-weight: ${theme.typography.weights.medium};
         transition: ${theme.transitions.create(["background-color"])};
+        position: relative;
         &:focus {
           outline: none;
         }

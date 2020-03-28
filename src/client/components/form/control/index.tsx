@@ -61,7 +61,7 @@ export function Control({ id, label, color = "primary", placeholder = " ", margi
       >
         <input
           css={(theme: Theme) => css`
-            padding: ${theme.layout.sizes[6]} ${theme.layout.sizes[3]} ${theme.layout.sizes[3]};
+            padding: ${theme.layout.sizes[7]} ${theme.layout.sizes[3]} ${theme.layout.sizes[3]};
             color: ${theme.palette.background.contrast};
             flex: 1;
             border: none;
