@@ -14,6 +14,7 @@ module.exports = (isServer = false, isTest = false) => ({
         useBuiltIns: "entry",
         shippedProposals: true,
         corejs: 3,
+        bugfixes: true,
         exclude: ["transform-typeof-symbol"],
         targets: isServer
           ? {
