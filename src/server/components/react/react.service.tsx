@@ -5,20 +5,16 @@ import { FilledContext, HelmetProvider } from "react-helmet-async";
 
 import { ApolloProvider } from "@apollo/react-common";
 import { getDataFromTree } from "@apollo/react-ssr";
-import { EmotionCache } from "@emotion/cache";
-import { CacheProvider } from "@emotion/core";
 import { ChunkExtractor, ChunkExtractorManager } from "@loadable/server";
 import { Injectable } from "@nestjs/common";
 import { NormalizedCacheObject } from "apollo-cache-inmemory";
 import { SchemaLink } from "apollo-link-schema";
-import createEmotionServer, { EmotionCritical } from "create-emotion-server";
 import { Request, Response } from "express";
 import { PinoLogger, InjectPinoLogger } from "nestjs-pino";
 import { generate } from "shortid";
 
 import { App } from "@/client/App";
 import { createClient } from "@/client/providers/apollo";
-import { createCache } from "@/client/providers/emotion";
 import { ConfigurationService } from "@/server/components/configuration";
 
 @Injectable()
@@ -31,8 +27,6 @@ export class ReactService {
   public async render(req: Request, res: Response) {
     try {
       const nonce = Buffer.from(generate()).toString("base64");
-      const cache = createCache(nonce);
-      const { extractCritical } = createEmotionServer(cache);
       const extractor = new ChunkExtractor({
         statsFile: process.env.MANIFEST as string
       });
@@ -49,44 +43,40 @@ export class ReactService {
 
       const tree = (
         <ChunkExtractorManager extractor={extractor}>
-          <CacheProvider value={cache}>
-            <HelmetProvider context={helmetContext}>
-              <ApolloProvider client={client}>
-                <App />
-              </ApolloProvider>
-            </HelmetProvider>
-          </CacheProvider>
+          <HelmetProvider context={helmetContext}>
+            <ApolloProvider client={client}>
+              <App />
+            </ApolloProvider>
+          </HelmetProvider>
         </ChunkExtractorManager>
       );
 
       await getDataFromTree(tree);
-      const markup = extractCritical(renderToString(tree));
+      const markup = renderToString(tree);
 
       const initialState = client.extract();
 
-      const fullHTML = this.markup(markup, initialState, extractor, (helmetContext as FilledContext).helmet, cache);
+      const fullHTML = this.markup(markup, initialState, extractor, (helmetContext as FilledContext).helmet, nonce);
 
       return res.send(fullHTML);
     } catch (error) {
-      this.logger.error(error);
+      this.logger.error(error?.message ?? error ?? "Falha ao renderizar React");
       return res.send({ error: true, message: "fail to render" });
     }
   }
 
   public markup = (
-    { html, css, ids }: EmotionCritical,
+    markup: string,
     initialState: NormalizedCacheObject,
     extractor: ChunkExtractor,
     helmet: FilledContext["helmet"],
-    cache: EmotionCache
+    nonce: string
   ) => {
     const { htmlAttributes, bodyAttributes } = helmet;
 
     const linkEls = extractor.getLinkElements();
-    const styleEls = extractor.getStyleElements({ nonce: cache.nonce });
-    const scriptEls = extractor.getScriptElements({ nonce: cache.nonce });
-
-    const prop = { [`data-emotion-${cache.key}`]: ids.join(" ") };
+    const styleEls = extractor.getStyleElements({ nonce });
+    const scriptEls = extractor.getScriptElements({ nonce });
 
     return renderToStaticMarkup(
       <html lang="pt-BR" {...htmlAttributes.toComponent()}>
@@ -96,12 +86,11 @@ export class ReactService {
           {helmet.link.toComponent()}
           {linkEls}
           {styleEls}
-          <style nonce={cache.nonce} {...prop} dangerouslySetInnerHTML={{ __html: css }} />
         </head>
         <body {...bodyAttributes.toComponent()}>
-          <div id="app" dangerouslySetInnerHTML={{ __html: html }} />
+          <div id="app" dangerouslySetInnerHTML={{ __html: markup }} />
           <script
-            nonce={cache.nonce}
+            nonce={nonce}
             id="__APOLLO_STATE__"
             type="application/json"
             dangerouslySetInnerHTML={{

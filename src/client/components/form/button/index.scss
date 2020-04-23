@@ -1,0 +1,49 @@
+@import "~@/client/styles/variables.scss";
+
+.button {
+  cursor: pointer;
+  border: none;
+  text-transform: uppercase;
+  letter-spacing: 1.15px;
+  padding: nth(map-get($layout, sizes), 4) nth(map-get($layout, sizes), 5);
+  border-radius: map-get($layout, shape);
+  font-weight: nth(map-get($typography, weights), 3);
+  transition: transition((background-color));
+  position: relative;
+  &:focus {
+    outline: none;
+  }
+  &.block {
+    width: 100%;
+  }
+  &.contained {
+    @each $k, $v in map-get($colors, light) {
+      &.#{$k} {
+        background-color: get-color($k);
+        color: get-color($k, contrast);
+        &:hover {
+          background-color: get-color($k, darken-1);
+        }
+        &:active,
+        &:focus {
+          background-color: get-color($k, darken-2);
+        }
+      }
+    }
+  }
+  &.flat {
+    @each $k, $v in map-get($colors, light) {
+      &.#{$k} {
+        background-color: transparent;
+        color: get-color($k);
+        &:hover {
+          background-color: get-shadow-color($k, 0.1);
+        }
+        &:active,
+        &:focus {
+          background-color: get-shadow-color($k, 0.2);
+        }
+      }
+    }
+  }
+}

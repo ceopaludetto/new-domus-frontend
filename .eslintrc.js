@@ -5,7 +5,8 @@ module.exports = {
   env: {
     es6: true,
     node: true,
-    browser: true
+    browser: true,
+    jest: true
   },
   extends: ["airbnb", "plugin:@typescript-eslint/recommended", "prettier", "prettier/@typescript-eslint"],
   plugins: ["react", "react-hooks", "import", "import-helpers", "prettier"],

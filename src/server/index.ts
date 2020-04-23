@@ -11,13 +11,14 @@ import "@/server/models";
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(ApplicationModule, { logger: false });
   const logger = app.get(Logger);
+
   app.useLogger(logger);
 
   installClassValidationContainer(app.select(ApplicationModule), { fallbackOnErrors: true });
   installMiddlewares(app);
 
   const port = process.env.PORT || 3333;
-  await app.listen(port);
+  await app.listenAsync(port);
   logger.log(`Application started in port ${port}`);
 
   if (module.hot) {

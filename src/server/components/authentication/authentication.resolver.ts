@@ -1,7 +1,7 @@
 import { UseGuards } from "@nestjs/common";
 import { Resolver, Mutation, Query, Args, Context } from "@nestjs/graphql";
 
-import { UserInput } from "@/server/components/user";
+import { UserInsertInput } from "@/server/components/user";
 import { User } from "@/server/models";
 import { ContextType } from "@/server/utils/common.dto";
 
@@ -19,7 +19,7 @@ export class AuthenticationResolver {
   }
 
   @Mutation(() => User)
-  public register(@Args("input") data: UserInput, @Context() ctx: ContextType) {
+  public register(@Args("input") data: UserInsertInput, @Context() ctx: ContextType) {
     return this.authService.register(data, ctx.res);
   }
 

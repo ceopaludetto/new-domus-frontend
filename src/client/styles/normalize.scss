@@ -1,0 +1,31 @@
+@import-normalize;
+@import "./variables.scss";
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: $base-px;
+  font-family: map-get($typography, family);
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background-color: get-color(background);
+  color: get-color(background, contrast);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none;
+    animation: none;
+  }
+}
+
+@include gen-colors($colors);

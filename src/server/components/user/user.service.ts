@@ -4,7 +4,7 @@ import { InjectPinoLogger, PinoLogger } from "nestjs-pino";
 
 import { User, Person } from "@/server/models";
 
-import { UserInput } from "./user.dto";
+import { UserInsertInput } from "./user.dto";
 
 @Injectable()
 export class UserService {
@@ -25,7 +25,7 @@ export class UserService {
     return this.userModel.findByPk(id);
   }
 
-  public async create(data: UserInput) {
+  public async create(data: UserInsertInput) {
     try {
       return this.userModel.create(data, { include: [Person] });
     } catch (error) {

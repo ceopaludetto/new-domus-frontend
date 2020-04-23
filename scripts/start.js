@@ -50,7 +50,7 @@ function log() {
     !stats.server.errors.length
   ) {
     logger.done("Aplication compiled successfully");
-    logger.log(`Access it in ${envs.PROTOCOL}://${envs.HOST}:${envs.PORT}\n\n`);
+    logger.log(`Access it in ${envs.PROTOCOL}://${envs.HOST}:${envs.PORT}\n`);
   }
 
   const serverMessages = formatWebpackMessages(stats.server);

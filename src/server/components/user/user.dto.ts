@@ -1,10 +1,10 @@
-import { InputType, Field } from "@nestjs/graphql";
+import { InputType, Field, PartialType } from "@nestjs/graphql";
 import { IsString, ValidateNested } from "class-validator";
 
-import { PersonInput } from "@/server/components/person";
+import { PersonInsertInput } from "@/server/components/person";
 
 @InputType()
-export class UserInput {
+export class UserInsertInput {
   @IsString()
   @Field()
   public login!: string;
@@ -14,6 +14,9 @@ export class UserInput {
   public password!: string;
 
   @ValidateNested()
-  @Field(() => PersonInput)
-  public person!: PersonInput;
+  @Field(() => PersonInsertInput)
+  public person!: PersonInsertInput;
 }
+
+@InputType()
+export class UserUpdateInput extends PartialType(UserInsertInput) {}

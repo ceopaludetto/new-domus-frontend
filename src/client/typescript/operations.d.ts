@@ -35,7 +35,7 @@ type MutationLoginArgs = {
 
 
 type MutationRegisterArgs = {
-  input: UserInput;
+  input: UserInsertInput;
 };
 
 type Person = {
@@ -86,7 +86,7 @@ type User = {
   person: Person;
 };
 
-type UserInput = {
+type UserInsertInput = {
   login: Scalars['String'];
   password: Scalars['String'];
   person: PersonInput;

@@ -5,6 +5,7 @@ import { static as serve } from "express";
 import helmet from "helmet";
 
 export function installMiddlewares(app: INestApplication) {
+  app.enableCors();
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
   if (process.env.NODE_ENV === "production") {

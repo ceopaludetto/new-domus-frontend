@@ -2,7 +2,10 @@
 const eslintFormatter = require("react-dev-utils/eslintFormatter");
 
 const LodashPlugin = require("lodash-webpack-plugin");
+const MiniCssPlugin = require("mini-css-extract-plugin");
+const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const path = require("path");
+const safePostCssParser = require("postcss-safe-parser");
 const TerserPlugin = require("terser-webpack-plugin");
 const webpack = require("webpack");
 
@@ -61,6 +64,18 @@ module.exports = (isServer = false) => ({
               }
             : null
         }
+      }),
+      new OptimizeCSSAssetsPlugin({
+        cssProcessorOptions: {
+          parser: safePostCssParser,
+          map: {
+            inline: false,
+            annotation: true
+          }
+        },
+        cssProcessorPluginOptions: {
+          preset: ["advanced", { discardComments: { removeAll: true } }]
+        }
       })
     ]
   },
@@ -110,6 +125,56 @@ module.exports = (isServer = false) => ({
               },
               "image-webpack-loader"
             ]
+          },
+          {
+            test: /\.(s?css|sass)$/,
+            use: [
+              !isServer && !isProd && { loader: "style-loader" },
+              !isServer && isProd && { loader: MiniCssPlugin.loader, options: { esModule: true } },
+              "css-modules-types-generator-loader",
+              {
+                loader: "css-loader",
+                options: {
+                  esModule: true,
+                  onlyLocals: isServer,
+                  importLoaders: 2,
+                  sourceMap: !isProd,
+                  modules: {
+                    localIdentName: isProd ? "_[hash:base64:5]" : "[path][name]__[local]--[hash:base64:5]"
+                  }
+                }
+              },
+              {
+                loader: "postcss-loader",
+                options: {
+                  ident: "postcss", // https://webpack.js.org/guides/migrating/#complex-options
+                  plugins: () =>
+                    [
+                      require("postcss-flexbugs-fixes"),
+                      require("postcss-preset-env")({
+                        autoprefixer: {
+                          flexbox: "no-2009"
+                        },
+                        stage: 3
+                      }),
+                      isProd &&
+                        require("@fullhuman/postcss-purgecss")({
+                          content: ["./src/**/*.tsx"],
+                          keyframes: true,
+                          fontFace: true,
+                          defaultExtractor: content => content.match(/[\w-/:]+(?<!:)/g) || []
+                        }),
+                      require("postcss-normalize")()
+                    ].filter(Boolean)
+                }
+              },
+              {
+                loader: "sass-loader",
+                options: {
+                  sourceMap: !isProd
+                }
+              }
+            ].filter(Boolean)
           },
           {
             test: /\.tsx?$/,
@@ -174,6 +239,11 @@ module.exports = (isServer = false) => ({
       BASE_DIR: path.resolve("."),
       PROTOCOL: envs.PROTOCOL
     }),
-    new LodashPlugin()
+    new LodashPlugin(),
+    new MiniCssPlugin({
+      filename: isProd ? "css/[name].[contenthash:8].css" : "index.css",
+      chunkFilename: isProd ? "css/[name].[contenthash:8].css" : "[name].css",
+      allChunks: true
+    })
   ]
 });

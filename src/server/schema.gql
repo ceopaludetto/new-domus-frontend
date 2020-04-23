@@ -20,7 +20,7 @@ enum Gender {
 
 type Mutation {
   login(input: AuthenticationInput!): User!
-  register(input: UserInput!): User!
+  register(input: UserInsertInput!): User!
 }
 
 type Person {
@@ -33,7 +33,7 @@ type Person {
   gender: Gender!
 }
 
-input PersonInput {
+input PersonInsertInput {
   name: String!
   email: String!
   gender: Gender!
@@ -56,8 +56,8 @@ type User {
   person: Person!
 }
 
-input UserInput {
+input UserInsertInput {
   login: String!
   password: String!
-  person: PersonInput!
+  person: PersonInsertInput!
 }

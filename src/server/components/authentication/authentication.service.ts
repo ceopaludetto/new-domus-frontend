@@ -3,7 +3,7 @@ import { JwtService } from "@nestjs/jwt";
 import { UserInputError, AuthenticationError } from "apollo-server-express";
 import { Response } from "express";
 
-import { UserInput, UserService } from "@/server/components/user";
+import { UserInsertInput, UserService } from "@/server/components/user";
 import { User } from "@/server/models";
 
 import { AuthenticationInput } from "./authentication.dto";
@@ -35,7 +35,7 @@ export class AuthenticationService {
     }
   }
 
-  public async register(data: UserInput, res: Response) {
+  public async register(data: UserInsertInput, res: Response) {
     try {
       const user = await this.userService.create(data);
 

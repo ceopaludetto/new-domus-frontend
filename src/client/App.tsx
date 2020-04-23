@@ -1,27 +1,24 @@
-import React from "react";
+import * as React from "react";
 import { Helmet } from "react-helmet-async";
 
 import { useQuery } from "@apollo/react-hooks";
-import { ThemeProvider } from "emotion-theming";
 
 import { Button, Control } from "@/client/components";
 import { ShowAllUsers } from "@/client/graphql/usuario.gql";
-import { theme } from "@/client/providers/theme";
 
-import { Normalize } from "./styles/normalize";
+import "@/client/styles/normalize.scss";
 
 export function App() {
   const { data, loading } = useQuery<ShowAllUsersQuery>(ShowAllUsers);
 
   return (
-    <ThemeProvider theme={theme}>
+    <>
       <Helmet>
         <link
           href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap"
           rel="stylesheet"
         />
       </Helmet>
-      <Normalize />
       {loading && <div>carregando</div>}
       {!loading && (
         <ul>
@@ -38,6 +35,6 @@ export function App() {
       <Control label="E-mail" id="email" />
       <Control type="password" label="Password" id="password" />
       <Button>Salvar</Button>
-    </ThemeProvider>
+    </>
   );
 }

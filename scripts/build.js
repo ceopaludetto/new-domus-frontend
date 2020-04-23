@@ -94,7 +94,7 @@ Promise.all([
   })
   .then(prevFileSizes => {
     normalizeFileSizes(prevFileSizes[0], true);
-    normalizeFileSizes(prevFileSizes[1]);
+    normalizeFileSizes(prevFileSizes[1], false);
     return Promise.all([build(prevFileSizes[0], serverConfig, true), build(prevFileSizes[1], clientConfig, false)]);
   })
   .then(

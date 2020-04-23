@@ -1,0 +1,70 @@
+$base-px: 16px;
+$rem-ratio: $base-px / 1rem;
+
+@import "./functions.scss";
+
+// Layout
+
+$layout: (
+  sizes: rem(0px 4px 8px 12px 16px 20px 24px 28px 32px 40px 48px 56px 64px),
+  shape: rem(6px),
+  breakpoints:
+    rem(
+      (
+        xs: 0px,
+        sm: 576px,
+        md: 768px,
+        lg: 992px,
+        xl: 1200px
+      )
+    ),
+  containers:
+    rem(
+      (
+        xs: none,
+        sm: 540px,
+        md: 720px,
+        lg: 960px,
+        xl: 1140px
+      )
+    )
+);
+
+// Typo
+
+$typography: (
+  weights: 400 500 700,
+  family: (
+    "Roboto",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    "Open Sans",
+    "Helvetica Neue",
+    sans-serif
+  ),
+  sizes: rem(14px 16px 24px 32px 48px)
+);
+
+// Colors
+
+$colors: (
+  light: (
+    primary: #2196f3,
+    secondary: #2196f3,
+    background: #1a1a1a,
+    paper: #2a2a2a,
+    muted: #3a3a3a
+  ),
+  dark: (
+    primary: #2196f3,
+    secondary: #2196f3,
+    background: #1a1a1a,
+    paper: #2a2a2a,
+    muted: #3a3a3a
+  )
+);
