@@ -102,6 +102,7 @@
     "babel-plugin-optimize-clsx": "^2.6.0",
     "babel-plugin-transform-imports": "^2.0.0",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
+    "browserslist": "^4.12.0",
     "chalk": "^3.0.0",
     "clean-webpack-plugin": "^3.0.0",
     "commander": "^5.0.0",

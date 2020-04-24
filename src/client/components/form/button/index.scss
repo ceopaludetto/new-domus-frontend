@@ -5,9 +5,9 @@
   border: none;
   text-transform: uppercase;
   letter-spacing: 1.15px;
-  padding: nth(map-get($layout, sizes), 4) nth(map-get($layout, sizes), 5);
-  border-radius: map-get($layout, shape);
-  font-weight: nth(map-get($typography, weights), 3);
+  padding: get-theme-prop(layout, sizes, 4) get-theme-prop(layout, sizes, 5);
+  border-radius: get-theme-prop(layout, shape);
+  font-weight: get-theme-prop(typography, weights, 3);
   transition: transition((background-color));
   position: relative;
   &:focus {

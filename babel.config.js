@@ -1,8 +1,9 @@
 /* eslint-disable no-template-curly-in-string */
-const fs = require("fs");
+const browserslist = require("browserslist");
 const path = require("path");
 
 const isProd = process.env.NODE_ENV === "production";
+process.env.BROWSERSLIST_ENV = isProd ? "production" : "development";
 
 module.exports = (isServer = false, isTest = false) => ({
   presets: [
@@ -15,13 +16,15 @@ module.exports = (isServer = false, isTest = false) => ({
         shippedProposals: true,
         corejs: 3,
         bugfixes: true,
+        configPath: path.resolve(process.cwd()),
         exclude: ["transform-typeof-symbol"],
-        targets: isServer
+        ...(isServer || isTest
           ? {
-              node: "current",
-              esmodules: true
+              targets: {
+                node: "current"
+              }
             }
-          : { browsers: fs.readFileSync(path.resolve(".browserslistrc"), "UTF-8").split("\n") }
+          : { targets: browserslist() })
       }
     ],
     [

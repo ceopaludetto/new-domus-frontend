@@ -65,6 +65,12 @@ $colors: (
     secondary: #2196f3,
     background: #1a1a1a,
     paper: #2a2a2a,
-    muted: #3a3a3a
+    muted: #5a5a5a
   )
+);
+
+$theme: (
+  typography: $typography,
+  layout: $layout,
+  colors: $colors
 );

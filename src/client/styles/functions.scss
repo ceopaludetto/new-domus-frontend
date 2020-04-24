@@ -80,3 +80,18 @@
 @function get-shadow-color($name, $alpha: 1) {
   @return rgba(var(#{unquote("--#{$name}-rgb")}), #{$alpha});
 }
+
+@function get-theme-prop($name, $type, $val: 0) {
+  $theme-item: map-get($theme, $name);
+  $value: map-get($theme-item, $type);
+
+  @if type-of($value) == list {
+    @return nth($value, $val);
+  }
+
+  @if type-of($value) == map {
+    @return map-get($value, $val);
+  }
+
+  @return $value;
+}

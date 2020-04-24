@@ -1,7 +1,7 @@
 @import "~@/client/styles/variables.scss";
 
 .form-group {
-  margin-bottom: nth(map-get($layout, sizes), 5);
+  margin-bottom: get-theme-prop(layout, sizes, 5);
   .container {
     display: flex;
     align-items: center;
@@ -16,8 +16,8 @@
         &:focus-within {
           background-color: get-color(background, darken-1);
           label {
-            top: calc(#{nth(map-get($layout, sizes), 4)} + 2px);
-            font-size: nth(map-get($typography, sizes), 1);
+            top: calc(#{get-theme-prop(layout, sizes, 4)} + 2px);
+            font-size: get-theme-prop(typography, sizes, 1);
             color: get-color($k);
           }
           div {
@@ -34,25 +34,26 @@
       }
     }
     .input {
-      padding: nth(map-get($layout, sizes), 8) nth(map-get($layout, sizes), 4) nth(map-get($layout, sizes), 4);
+      padding: get-theme-prop(layout, sizes, 8) get-theme-prop(layout, sizes, 4) get-theme-prop(layout, sizes, 4);
       color: get-color(background, contrast);
       flex: 1;
       border: none;
       background-color: transparent;
-      line-height: nth(map-get($layout, sizes), 5);
+      line-height: get-theme-prop(layout, sizes, 5);
+      font-size: get-theme-prop(typography, sizes, 2);
       &:not(:placeholder-shown):not(:focus) + .label {
-        font-size: nth(map-get($typography, sizes), 1);
-        top: calc(#{nth(map-get($layout, sizes), 4)} + 2px);
+        font-size: get-theme-prop(typography, sizes, 1);
+        top: calc(#{get-theme-prop(layout, sizes, 4)} + 2px);
       }
       &:focus {
         outline: none;
       }
     }
     .label {
-      font-size: nth(map-get($typography, sizes), 2);
+      font-size: get-theme-prop(typography, sizes, 2);
       color: get-color(muted);
-      font-weight: nth(map-get($typography, weights), 3);
-      left: nth(map-get($layout, sizes), 4);
+      font-weight: get-theme-prop(typography, weights, 3);
+      left: get-theme-prop(layout, sizes, 4);
       transition: transition((top, color, font-size));
       top: 50%;
       transform: translateY(-50%);
