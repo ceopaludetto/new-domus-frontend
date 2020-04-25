@@ -1,9 +1,7 @@
 /* eslint-disable no-template-curly-in-string */
-const browserslist = require("browserslist");
 const path = require("path");
 
 const isProd = process.env.NODE_ENV === "production";
-process.env.BROWSERSLIST_ENV = isProd ? "production" : "development";
 
 module.exports = (isServer = false, isTest = false) => ({
   presets: [
@@ -24,7 +22,7 @@ module.exports = (isServer = false, isTest = false) => ({
                 node: "current"
               }
             }
-          : { targets: browserslist() })
+          : {})
       }
     ],
     [

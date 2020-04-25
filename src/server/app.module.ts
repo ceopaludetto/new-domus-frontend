@@ -29,8 +29,7 @@ import { APP_NAME } from "@/server/utils/constants";
                 ignore: "context,pid,req",
                 levelFirst: true
               }
-            : false,
-        useLevelLabels: true
+            : false
       }
     }),
     ConfigurationModule,
