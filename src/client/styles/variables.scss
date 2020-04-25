@@ -33,9 +33,9 @@ $layout: (
 // Typo
 
 $typography: (
-  weights: 400 500 700,
+  weights: 400 500 600,
   family: (
-    "Roboto",
+    "Open Sans",
     -apple-system,
     BlinkMacSystemFont,
     "Segoe UI",
@@ -56,9 +56,9 @@ $colors: (
   light: (
     primary: #2196f3,
     secondary: #2196f3,
-    background: #1a1a1a,
-    paper: #2a2a2a,
-    muted: #3a3a3a
+    background: #fafafa,
+    paper: #ffffff,
+    muted: #cccccc
   ),
   dark: (
     primary: #2196f3,

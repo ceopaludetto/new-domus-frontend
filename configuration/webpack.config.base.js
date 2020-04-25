@@ -128,6 +128,7 @@ module.exports = (isServer = false) => ({
           },
           {
             test: /\.(s?css|sass)$/,
+            sideEffects: true,
             use: [
               !isServer && !isProd && { loader: "style-loader" },
               !isServer && isProd && { loader: MiniCssPlugin.loader, options: { esModule: true } },

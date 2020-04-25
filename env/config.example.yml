@@ -8,6 +8,20 @@ database:
   username:
   password:
 
+queue:
+  host:
+  port:
+
+mailer:
+  host:
+  port:
+  auth:
+    user:
+    pass:
+
+  template:
+    dir:
+
 auth:
   secret:
 

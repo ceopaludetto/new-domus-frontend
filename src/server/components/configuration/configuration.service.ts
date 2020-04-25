@@ -1,11 +1,11 @@
 import { Injectable } from "@nestjs/common";
 import fs from "fs";
 import { GraphQLSchema } from "graphql";
-import { PinoLogger } from "nestjs-pino";
 import { Dialect } from "sequelize";
 import yaml from "yaml";
 import * as Yup from "yup";
 
+import { LoggerService } from "@/server/components/logger";
 import { REQUIRED, DIALECT } from "@/server/utils/constants";
 
 const EnvSchema = Yup.object({
@@ -20,6 +20,21 @@ const EnvSchema = Yup.object({
     password: Yup.string().required(REQUIRED),
     ssl: Yup.boolean(),
     logger: Yup.boolean()
+  }),
+  queue: Yup.object({
+    host: Yup.string().required(REQUIRED),
+    port: Yup.number().required(REQUIRED)
+  }),
+  mailer: Yup.object({
+    host: Yup.string().required(REQUIRED),
+    port: Yup.number().required(REQUIRED),
+    auth: Yup.object({
+      user: Yup.string().required(REQUIRED),
+      pass: Yup.string().required(REQUIRED)
+    }),
+    template: Yup.object({
+      dir: Yup.string()
+    })
   }),
   auth: Yup.object({
     secret: Yup.string().required(REQUIRED)
@@ -37,7 +52,7 @@ export class ConfigurationService {
 
   private graphqlSchema!: GraphQLSchema;
 
-  public constructor(filePath: string, private readonly logger: PinoLogger) {
+  public constructor(filePath: string, private readonly logger: LoggerService) {
     const config = yaml.parse(fs.readFileSync(filePath, "UTF-8"));
     const validated = this.validateInput(config);
     if (validated !== false) {
@@ -69,6 +84,14 @@ export class ConfigurationService {
 
   public get graphql() {
     return this.envConfig.graphql;
+  }
+
+  public get queue() {
+    return this.envConfig.queue;
+  }
+
+  public get mailer() {
+    return this.envConfig.mailer;
   }
 
   public setSchema = (schema: GraphQLSchema) => {

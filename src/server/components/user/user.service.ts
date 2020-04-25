@@ -1,7 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/sequelize";
-import { InjectPinoLogger, PinoLogger } from "nestjs-pino";
 
+import { EmailService } from "@/server/components/email";
+import { LoggerService } from "@/server/components/logger";
 import { User, Person } from "@/server/models";
 
 import { UserInsertInput } from "./user.dto";
@@ -10,7 +11,8 @@ import { UserInsertInput } from "./user.dto";
 export class UserService {
   public constructor(
     @InjectModel(User) private readonly userModel: typeof User,
-    @InjectPinoLogger(UserService.name) private readonly logger: PinoLogger
+    private readonly logger: LoggerService,
+    private readonly mailService: EmailService
   ) {}
 
   public async showAll(skip = 0, first?: number) {
@@ -27,7 +29,11 @@ export class UserService {
 
   public async create(data: UserInsertInput) {
     try {
-      return this.userModel.create(data, { include: [Person] });
+      const user = await this.userModel.create(data, { include: [Person] });
+
+      await this.mailService.sendRegisterEmail(user);
+
+      return user;
     } catch (error) {
       this.logger.error("Falha ao criar usuário", error);
       throw error;
