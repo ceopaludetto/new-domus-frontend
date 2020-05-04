@@ -10,16 +10,19 @@ import { Injectable } from "@nestjs/common";
 import { NormalizedCacheObject } from "apollo-cache-inmemory";
 import { SchemaLink } from "apollo-link-schema";
 import { Request, Response } from "express";
+import { PinoLogger, InjectPinoLogger } from "nestjs-pino";
 import { generate } from "shortid";
 
 import { App } from "@/client/App";
 import { createClient } from "@/client/providers/apollo";
 import { ConfigurationService } from "@/server/components/configuration";
-import { LoggerService } from "@/server/components/logger";
 
 @Injectable()
 export class ReactService {
-  public constructor(private readonly configService: ConfigurationService, private readonly logger: LoggerService) {}
+  public constructor(
+    private readonly configService: ConfigurationService,
+    @InjectPinoLogger(ReactService.name) private readonly logger: PinoLogger
+  ) {}
 
   public async render(req: Request, res: Response) {
     try {

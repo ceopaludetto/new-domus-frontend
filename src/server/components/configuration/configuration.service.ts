@@ -1,11 +1,11 @@
 import { Injectable } from "@nestjs/common";
 import fs from "fs";
 import { GraphQLSchema } from "graphql";
+import { PinoLogger } from "nestjs-pino";
 import { Dialect } from "sequelize";
 import yaml from "yaml";
 import * as Yup from "yup";
 
-import { LoggerService } from "@/server/components/logger";
 import { REQUIRED, DIALECT } from "@/server/utils/constants";
 
 const EnvSchema = Yup.object({
@@ -52,7 +52,7 @@ export class ConfigurationService {
 
   private graphqlSchema!: GraphQLSchema;
 
-  public constructor(filePath: string, private readonly logger: LoggerService) {
+  public constructor(filePath: string, private readonly logger: PinoLogger) {
     const config = yaml.parse(fs.readFileSync(filePath, "UTF-8"));
     const validated = this.validateInput(config);
     if (validated !== false) {

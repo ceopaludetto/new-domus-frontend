@@ -18,10 +18,10 @@ const isDebug = process.env.INSPECT_BRK || process.env.INSPECT || false;
 
 function resolveDevTool() {
   if (isDebug) {
-    return "source-map";
+    return "cheap-module-eval-source-map";
   }
 
-  return isProd ? "hidden-source-map" : "eval-source-map";
+  return isProd ? "source-map" : "inline-source-map";
 }
 
 module.exports = (isServer = false) => ({

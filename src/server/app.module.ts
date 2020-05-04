@@ -1,7 +1,9 @@
+import { MailerModule, PugAdapter } from "@nestjs-modules/mailer";
 import { Module } from "@nestjs/common";
 import { GraphQLModule } from "@nestjs/graphql";
 import { SequelizeModule } from "@nestjs/sequelize";
 import { GraphQLSchema } from "graphql";
+import { LoggerModule, PinoLogger } from "nestjs-pino";
 
 import {
   ConfigurationModule,
@@ -9,21 +11,34 @@ import {
   UserModule,
   AuthenticationModule,
   ReactModule,
-  NodemailerModule,
-  EmailModule,
-  LoggerModule,
-  LoggerService
+  QueueModule
 } from "@/server/components";
 import { entities } from "@/server/models";
 import { ContextType } from "@/server/utils/common.dto";
+import { APP_NAME } from "@/server/utils/constants";
 
 @Module({
   imports: [
-    LoggerModule,
+    QueueModule,
+    LoggerModule.forRoot({
+      pinoHttp: {
+        name: APP_NAME,
+        autoLogging: process.env.NODE_ENV === "production",
+        level: process.env.NODE_ENV !== "production" ? "debug" : "info",
+        prettyPrint:
+          process.env.NODE_ENV === "development"
+            ? {
+                translateTime: "dd/mm/yyyy, hh:MM:ss:l",
+                ignore: "context,pid,req",
+                levelFirst: true
+              }
+            : false
+      }
+    }),
     ConfigurationModule,
     SequelizeModule.forRootAsync({
-      inject: [ConfigurationService, LoggerService],
-      useFactory: ({ database }: ConfigurationService, logger: LoggerService) => ({
+      inject: [ConfigurationService, PinoLogger],
+      useFactory: ({ database }: ConfigurationService, logger: PinoLogger) => ({
         dialect: database.dialect || "postgres",
         host: database.host,
         port: database.port,
@@ -33,6 +48,23 @@ import { ContextType } from "@/server/utils/common.dto";
         ssl: database.ssl || false,
         logging: database.logger ? sql => logger.debug(sql) : false,
         models: entities
+      })
+    }),
+    MailerModule.forRootAsync({
+      inject: [ConfigurationService],
+      useFactory: async ({ mailer }: ConfigurationService) => ({
+        transport: {
+          host: mailer.host,
+          port: mailer.port,
+          auth: mailer.auth
+        },
+        template: {
+          dir: mailer.template.dir,
+          adapter: new PugAdapter(),
+          options: {
+            strict: true
+          }
+        }
       })
     }),
     GraphQLModule.forRootAsync({
@@ -51,9 +83,7 @@ import { ContextType } from "@/server/utils/common.dto";
     }),
     UserModule,
     AuthenticationModule,
-    ReactModule,
-    NodemailerModule,
-    EmailModule
+    ReactModule
   ]
 })
 export class ApplicationModule {}
