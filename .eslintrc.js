@@ -21,7 +21,7 @@ module.exports = {
     },
     ecmaVersion: 2020,
     sourceType: "module",
-    project: [path.resolve("tsconfig.json")]
+    projects: [path.resolve("tsconfig.json")]
   },
   rules: {
     "prettier/prettier": "error",
@@ -30,7 +30,6 @@ module.exports = {
     "no-useless-constructor": "off",
     "max-classes-per-file": ["error", 5],
     "class-methods-use-this": "off",
-    // "@typescript-eslint/interface-name-prefix": "off",
     "@typescript-eslint/no-var-requires": "off",
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/no-explicit-any": "off",
