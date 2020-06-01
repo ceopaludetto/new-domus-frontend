@@ -8,11 +8,11 @@ import { BaseModel } from "./base.model";
 export enum Gender {
   M = "Male",
   F = "Female",
-  N = "None"
+  N = "None",
 }
 
 registerEnumType(Gender, {
-  name: "Gender"
+  name: "Gender",
 });
 
 @ObjectType()

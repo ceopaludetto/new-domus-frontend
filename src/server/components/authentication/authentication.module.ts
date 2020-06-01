@@ -17,11 +17,11 @@ import { JwtStrategy } from "./strategies/jwt.strategy";
       inject: [ConfigurationService],
       useFactory: async ({ auth }: ConfigurationService) => ({
         secret: auth.secret,
-        signOptions: { expiresIn: "1h" }
-      })
-    })
+        signOptions: { expiresIn: "1h" },
+      }),
+    }),
   ],
   providers: [AuthenticationService, AuthenticationResolver, JwtStrategy],
-  exports: [AuthenticationService]
+  exports: [AuthenticationService],
 })
 export class AuthenticationModule {}

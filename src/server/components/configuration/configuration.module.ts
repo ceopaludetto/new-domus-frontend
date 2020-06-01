@@ -18,9 +18,9 @@ import { ConfigurationService } from "./configuration.service";
             `config.${(process.env.DEPLOYMENT as string) || "development"}.yml`
           ),
           logger
-        )
-    }
+        ),
+    },
   ],
-  exports: [ConfigurationService]
+  exports: [ConfigurationService],
 })
 export class ConfigurationModule {}

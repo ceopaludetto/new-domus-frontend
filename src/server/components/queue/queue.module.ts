@@ -14,12 +14,12 @@ import { MailQueueConsumer } from "./mail.queue.consumer";
       useFactory: ({ queue }: ConfigurationService) => ({
         redis: {
           host: queue.host,
-          port: +queue.port
-        }
-      })
-    })
+          port: +queue.port,
+        },
+      }),
+    }),
   ],
   providers: [MailQueueConsumer],
-  exports: [BullModule]
+  exports: [BullModule],
 })
 export class QueueModule {}

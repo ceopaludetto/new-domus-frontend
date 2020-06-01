@@ -21,11 +21,11 @@
       &.#{$k} {
         background-color: get-color($k);
         color: get-color($k, contrast);
-        &:hover {
+        &:hover,
+        &:focus {
           background-color: get-color($k, darken-1);
         }
-        &:active,
-        &:focus {
+        &:active {
           background-color: get-color($k, darken-2);
         }
       }
@@ -36,12 +36,12 @@
       &.#{$k} {
         background-color: transparent;
         color: get-color($k);
-        &:hover {
-          background-color: get-shadow-color($k, 0.1);
-        }
-        &:active,
+        &:hover,
         &:focus {
           background-color: get-shadow-color($k, 0.2);
+        }
+        &:active {
+          background-color: get-shadow-color($k, 0.3);
         }
       }
     }

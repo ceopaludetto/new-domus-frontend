@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 
 import clsx from "clsx";
 
@@ -10,9 +10,18 @@ export interface ControlProps extends React.InputHTMLAttributes<HTMLInputElement
   label?: string;
   color?: keyof Colors;
   margin?: boolean;
+  append?: React.ReactElement<{ size?: "small" | "normal" }>;
 }
 
-export function Control({ id, label, color = "primary", placeholder = " ", margin = true, ...rest }: ControlProps) {
+export function Control({
+  id,
+  label,
+  color = "primary",
+  placeholder = " ",
+  margin = true,
+  append,
+  ...rest
+}: ControlProps) {
   return (
     <div className={clsx({ [s["form-group"]]: margin })}>
       <div className={clsx(s.container, s[color])}>
@@ -20,6 +29,13 @@ export function Control({ id, label, color = "primary", placeholder = " ", margi
         <label className={s.label} htmlFor={id}>
           {label}
         </label>
+        {append && (
+          <div className={s.append}>
+            {React.cloneElement(append, {
+              size: "small",
+            })}
+          </div>
+        )}
         <div className={clsx(s.effect, s[color])} />
       </div>
     </div>

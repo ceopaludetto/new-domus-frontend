@@ -5,6 +5,6 @@ import { ReactService } from "./react.service";
 
 @Module({
   controllers: [ReactController],
-  providers: [ReactService]
+  providers: [ReactService],
 })
 export class ReactModule {}

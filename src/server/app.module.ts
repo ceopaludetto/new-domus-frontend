@@ -11,7 +11,7 @@ import {
   UserModule,
   AuthenticationModule,
   ReactModule,
-  QueueModule
+  QueueModule,
 } from "@/server/components";
 import { entities } from "@/server/models";
 import { ContextType } from "@/server/utils/common.dto";
@@ -30,10 +30,10 @@ import { APP_NAME } from "@/server/utils/constants";
             ? {
                 translateTime: "dd/mm/yyyy, hh:MM:ss:l",
                 ignore: "context,pid,req",
-                levelFirst: true
+                levelFirst: true,
               }
-            : false
-      }
+            : false,
+      },
     }),
     ConfigurationModule,
     SequelizeModule.forRootAsync({
@@ -46,9 +46,9 @@ import { APP_NAME } from "@/server/utils/constants";
         username: database.username,
         password: database.password,
         ssl: database.ssl || false,
-        logging: database.logger ? sql => logger.debug(sql) : false,
-        models: entities
-      })
+        logging: database.logger ? (sql) => logger.debug(sql) : false,
+        models: entities,
+      }),
     }),
     MailerModule.forRootAsync({
       inject: [ConfigurationService],
@@ -56,16 +56,16 @@ import { APP_NAME } from "@/server/utils/constants";
         transport: {
           host: mailer.host,
           port: mailer.port,
-          auth: mailer.auth
+          auth: mailer.auth,
         },
         template: {
           dir: mailer.template.dir,
           adapter: new PugAdapter(),
           options: {
-            strict: true
-          }
-        }
-      })
+            strict: true,
+          },
+        },
+      }),
     }),
     GraphQLModule.forRootAsync({
       inject: [ConfigurationService],
@@ -78,12 +78,12 @@ import { APP_NAME } from "@/server/utils/constants";
         transformSchema: (schema: GraphQLSchema) => {
           setSchema(schema);
           return schema;
-        }
-      })
+        },
+      }),
     }),
     UserModule,
     AuthenticationModule,
-    ReactModule
-  ]
+    ReactModule,
+  ],
 })
 export class ApplicationModule {}

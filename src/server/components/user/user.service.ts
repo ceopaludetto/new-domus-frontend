@@ -31,7 +31,13 @@ export class UserService {
   public async create(data: UserInsertInput) {
     const user = await this.userModel.create(data, { include: [Person] });
 
-    await this.mailQueue.add("register", user);
+    await this.mailQueue.add("register", user, {
+      removeOnFail: true,
+      repeat: {
+        every: 1000,
+        limit: 5,
+      },
+    });
 
     return user;
   }

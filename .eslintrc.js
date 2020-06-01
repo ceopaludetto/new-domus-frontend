@@ -21,7 +21,7 @@ module.exports = {
     },
     ecmaVersion: 2020,
     sourceType: "module",
-    projects: [path.resolve("tsconfig.json")]
+    project: [path.resolve("tsconfig.json")]
   },
   rules: {
     "prettier/prettier": "error",
@@ -30,10 +30,9 @@ module.exports = {
     "no-useless-constructor": "off",
     "max-classes-per-file": ["error", 5],
     "class-methods-use-this": "off",
-    "@typescript-eslint/interface-name-prefix": "off",
+    // "@typescript-eslint/interface-name-prefix": "off",
     "@typescript-eslint/no-var-requires": "off",
     "@typescript-eslint/explicit-function-return-type": "off",
-    "@typescript-eslint/no-empty-interface": "warn",
     "@typescript-eslint/no-explicit-any": "off",
     "import/prefer-default-export": "off",
     "import/no-extraneous-dependencies": ["error", { devDependencies: true }],
@@ -56,6 +55,7 @@ module.exports = {
     "react-hooks/rules-of-hooks": "error",
     "react/prop-types": "off",
     "react/jsx-props-no-spreading": "off",
+    "react/jsx-wrap-multilines": ["error", {"declaration": false, "assignment": false}],
     "jsx-a11y/label-has-for": "off",
     "jsx-a11y/anchor-is-valid": "off",
     "import/extensions": [

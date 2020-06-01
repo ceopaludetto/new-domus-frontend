@@ -17,7 +17,7 @@ let sequelizeConfig = {};
 logger.info("Parsing commands...");
 
 function printOptions() {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     if (program.verbose) {
       logger.option("verbose", true);
     }

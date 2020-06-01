@@ -1,9 +1,10 @@
-import React from "react";
+import * as React from "react";
 import { Helmet } from "react-helmet-async";
 
 import { useQuery } from "@apollo/react-hooks";
+import { OutlineVisibility } from "mdi-norm";
 
-import { Button, Control } from "@/client/components";
+import { Button, Control, IconButton } from "@/client/components";
 import { ShowAllUsers } from "@/client/graphql/usuario.gql";
 
 import "@/client/styles/normalize.scss";
@@ -22,7 +23,7 @@ export function App() {
       {loading && <div>carregando</div>}
       {!loading && (
         <ul>
-          {data?.showUsers.map(u => (
+          {data?.showUsers.map((u) => (
             <li key={u.id}>{u.login}</li>
           ))}
         </ul>
@@ -32,8 +33,20 @@ export function App() {
       <Button variant="flat">Próximo</Button>
       <Button>Próximo</Button>
       <Button block>Próximo</Button>
+      <IconButton>
+        <OutlineVisibility />
+      </IconButton>
       <Control label="E-mail" id="email" />
-      <Control type="password" label="Password" id="password" />
+      <Control
+        type="password"
+        label="Password"
+        id="password"
+        append={
+          <IconButton>
+            <OutlineVisibility />
+          </IconButton>
+        }
+      />
       <Button>Salvar</Button>
     </>
   );

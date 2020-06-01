@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { UserInputError, AuthenticationError } from "apollo-server-express";
 import { Response } from "express";
+import { InjectPinoLogger, PinoLogger } from "nestjs-pino";
 
 import { UserInsertInput, UserService } from "@/server/components/user";
 import { User } from "@/server/models";
@@ -10,7 +11,11 @@ import { AuthenticationInput } from "./authentication.dto";
 
 @Injectable()
 export class AuthenticationService {
-  public constructor(private readonly userService: UserService, private readonly jwtService: JwtService) {}
+  public constructor(
+    private readonly userService: UserService,
+    private readonly jwtService: JwtService,
+    @InjectPinoLogger(AuthenticationService.name) private readonly logger: PinoLogger
+  ) {}
 
   private async generate(user: User) {
     return this.jwtService.sign({ id: user.id });
@@ -43,6 +48,7 @@ export class AuthenticationService {
 
       return user;
     } catch (error) {
+      this.logger.error(error);
       throw new AuthenticationError("Falha ao cadastrar usuário");
     }
   }

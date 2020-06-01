@@ -18,7 +18,7 @@ export function installMiddlewares(app: INestApplication) {
   app.use(
     process.env.PUBLIC_PATH,
     serve(process.env.STATIC_FOLDER as string, {
-      maxAge: process.env.NODE_ENV === "production" ? "1y" : undefined
+      maxAge: process.env.NODE_ENV === "production" ? "1y" : undefined,
     })
   );
 }

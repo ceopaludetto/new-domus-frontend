@@ -1,5 +1,5 @@
-import React from "react";
-import ReactDOM from "react-dom";
+import * as React from "react";
+import * as ReactDOM from "react-dom";
 import { HelmetProvider } from "react-helmet-async";
 
 import { ApolloProvider } from "@apollo/react-common";
@@ -14,7 +14,7 @@ const client = createClient(
   false,
   new HttpLink({
     credentials: "include",
-    uri: "/graphql"
+    uri: "/graphql",
   })
 );
 

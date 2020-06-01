@@ -2,23 +2,30 @@
 process.env.NODE_ENV === "development";
 process.noDeprecation = true;
 
-process.env.INSPECT_BRK = process.argv.find(arg => arg.match(/--inspect-brk(=|$)/)) || "";
-process.env.INSPECT = process.argv.find(arg => arg.match(/--inspect(=|$)/)) || "";
+process.env.INSPECT_BRK = process.argv.find((arg) => arg.match(/--inspect-brk(=|$)/)) || "";
+process.env.INSPECT = process.argv.find((arg) => arg.match(/--inspect(=|$)/)) || "";
 
 const clearConsole = require("react-dev-utils/clearConsole");
 const formatWebpackMessages = require("react-dev-utils/formatWebpackMessages");
 
 const chalk = require("chalk");
 const fs = require("fs-extra");
+const ip = require("ip");
 const logger = require("razzle-dev-utils/logger");
 const printErrors = require("razzle-dev-utils/printErrors");
 const setPorts = require("razzle-dev-utils/setPorts");
+const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
 const webpack = require("webpack");
-const DevServer = require("webpack-dev-server");
 
+const SilentDevServer = require("../configuration/devServer");
 const envs = require("../configuration/envs");
 const clientConfig = require("../configuration/webpack.config.client");
 const serverConfig = require("../configuration/webpack.config.server");
+
+const measure = process.argv.some((arg) => arg === "--measure" || arg === "-m");
+const verbose = process.argv.some((arg) => arg === "--verbose" || arg === "-v");
+
+const smp = new SpeedMeasurePlugin({ disable: !measure });
 
 const reg = /mini-css-extract-plugin/g;
 
@@ -39,9 +46,9 @@ function printMessage(messages, name) {
 }
 
 function log() {
-  clearConsole();
-  stats.server.warnings = stats.server.warnings.filter(x => !/\/client/.test(x));
-  stats.server.errors = stats.server.errors.filter(x => !/\/client/.test(x));
+  if (!measure) clearConsole();
+  stats.server.warnings = stats.server.warnings.filter((x) => !/\/client/.test(x));
+  stats.server.errors = stats.server.errors.filter((x) => !/\/client/.test(x));
 
   if (
     !stats.client.warnings.length &&
@@ -50,7 +57,9 @@ function log() {
     !stats.server.errors.length
   ) {
     logger.done("Aplication compiled successfully");
-    logger.log(`Access it in ${envs.PROTOCOL}://${envs.HOST}:${envs.PORT}\n`);
+    logger.log(
+      `Access it in ${envs.PROTOCOL}://${envs.HOST}:${envs.PORT} or ${envs.PROTOCOL}://${ip.address()}:${envs.PORT}\n`
+    );
   }
 
   const serverMessages = formatWebpackMessages(stats.server);
@@ -58,8 +67,8 @@ function log() {
 
   if (serverMessages.errors.length || clientMessages.errors.length) {
     logger.error("Failed to compile.\n");
-    serverMessages.errors.forEach(e => logger.log(`${e.message || e}\n`));
-    clientMessages.errors.forEach(e => logger.log(`${e.message || e}\n`));
+    serverMessages.errors.forEach((e) => logger.log(`${e.message || e}\n`));
+    clientMessages.errors.forEach((e) => logger.log(`${e.message || e}\n`));
   } else if (
     !serverMessages.errors.length &&
     !clientMessages.errors.length &&
@@ -80,63 +89,60 @@ function compile(config) {
   try {
     compiler = webpack(config);
   } catch (e) {
-    printErrors("Failed to compile.", [e]);
+    printErrors("Failed to compile.", [e], verbose);
     process.exit(1);
   }
   return compiler;
 }
 
 function main() {
-  clearConsole();
+  if (!measure) clearConsole();
   logger.start("Compiling...");
   fs.emptyDirSync(serverConfig.output.path);
 
-  const clientCompiler = compile(clientConfig);
-  const serverCompiler = compile(serverConfig);
+  const clientCompiler = compile(smp.wrap(clientConfig));
+  const serverCompiler = compile(smp.wrap(serverConfig));
 
   let watching = null;
-  let finished = false;
+  const finished = { client: false, server: false };
 
-  clientCompiler.hooks.beforeRun.tap("beforeRun", () => {
-    finished = false;
-    stats = {};
-  });
+  function beforeRun(compiler) {
+    finished[compiler.name] = false;
+    delete stats[compiler.name];
+  }
 
-  serverCompiler.hooks.beforeRun.tap("beforeRun", () => {
-    finished = false;
-    stats = {};
-  });
+  function done(cb) {
+    return async (st) => {
+      stats = { ...stats, [st.compilation.compiler.name]: st.toJson({}, true) };
 
-  clientCompiler.hooks.done.tap("done", async st => {
-    stats = { ...stats, [st.compilation.compiler.name]: st.toJson({}, true) };
+      finished[st.compilation.compiler.name] = true;
+      if (finished.client && finished.server && st.compilation.compiler.name !== "client") log();
+      if (cb) cb();
+    };
+  }
 
-    if (finished) {
-      log();
-    }
-    finished = true;
-    if (watching) return;
+  clientCompiler.hooks.watchRun.tap("watchRun", beforeRun);
+  serverCompiler.hooks.watchRun.tap("watchRun", beforeRun);
 
-    watching = serverCompiler.watch(
-      {
-        quiet: true,
-        stats: "none"
-      },
-      () => {} // eslint-disable-line @typescript-eslint/no-empty-function
-    );
-  });
+  clientCompiler.hooks.done.tap(
+    "done",
+    done(() => {
+      if (watching) return;
 
-  serverCompiler.hooks.done.tap("done", st => {
-    stats = { ...stats, [st.compilation.compiler.name]: st.toJson({}, true) };
+      watching = serverCompiler.watch(
+        {
+          quiet: true,
+          stats: "none",
+        },
+        () => {} // eslint-disable-line @typescript-eslint/no-empty-function
+      );
+    })
+  );
+  serverCompiler.hooks.done.tap("done", done());
 
-    if (finished) {
-      log();
-    }
-    finished = true;
-  });
+  const clientDevServer = new SilentDevServer(clientCompiler, { ...clientConfig.devServer, verbose });
 
-  const clientDevServer = new DevServer(clientCompiler, clientConfig.devServer);
-
-  clientDevServer.listen(envs.DEV_PORT || 3001, err => {
+  clientDevServer.listen(envs.DEV_PORT || 3001, (err) => {
     if (err) {
       logger.error(err);
     }

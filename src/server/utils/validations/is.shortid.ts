@@ -3,7 +3,7 @@ import {
   registerDecorator,
   ValidationOptions,
   ValidatorConstraint,
-  ValidatorConstraintInterface
+  ValidatorConstraintInterface,
 } from "class-validator";
 import { isValid } from "shortid";
 
@@ -11,7 +11,7 @@ import { isValid } from "shortid";
 @Injectable()
 export class IsShortidConstraint implements ValidatorConstraintInterface {
   public validate = (id: string): Promise<boolean> => {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       if (id) {
         if (isValid(id)) {
           return resolve(true);
@@ -35,7 +35,7 @@ export function IsShortID(validationOptions?: ValidationOptions) {
       propertyName,
       options: validationOptions,
       constraints: [],
-      validator: IsShortidConstraint
+      validator: IsShortidConstraint,
     });
   };
 }

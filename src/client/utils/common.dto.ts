@@ -1,5 +1,3 @@
-import { CSSProperties } from "react";
-
 export type Colors = {
   primary: string;
   secondary: string;

@@ -31,7 +31,7 @@ module.exports = (isServer = false) => ({
   mode: isProd ? "production" : "development",
   performance: false,
   watchOptions: {
-    ignored: [/node_modules/, /dist/]
+    ignored: [/node_modules/, /dist/],
   },
   optimization: {
     removeAvailableModules: isProd,
@@ -49,35 +49,35 @@ module.exports = (isServer = false) => ({
           keep_fnames: isServer,
           output: {
             ecma: isServer ? 8 : 5,
-            comments: false
+            comments: false,
           },
           parse: {
-            ecma: 8
+            ecma: 8,
           },
           compress: {
             comparisons: true,
-            inline: 2
+            inline: 2,
           },
           mangle: !isServer
             ? {
-                safari10: true
+                safari10: true,
               }
-            : null
-        }
+            : null,
+        },
       }),
       new OptimizeCSSAssetsPlugin({
         cssProcessorOptions: {
           parser: safePostCssParser,
           map: {
             inline: false,
-            annotation: true
-          }
+            annotation: true,
+          },
         },
         cssProcessorPluginOptions: {
-          preset: ["advanced", { discardComments: { removeAll: true } }]
-        }
-      })
-    ]
+          preset: ["advanced", { discardComments: { removeAll: true } }],
+        },
+      }),
+    ],
   },
   module: {
     strictExportPresence: true,
@@ -89,10 +89,10 @@ module.exports = (isServer = false) => ({
           loader: "eslint-loader",
           options: {
             cache: true,
-            formatter: eslintFormatter
-          }
+            formatter: eslintFormatter,
+          },
         },
-        enforce: "pre"
+        enforce: "pre",
       },
       {
         oneOf: [
@@ -102,16 +102,16 @@ module.exports = (isServer = false) => ({
               {
                 loader: "url-loader",
                 options: {
-                  limit: 10 * 1024
-                }
+                  limit: 10 * 1024,
+                },
               },
-              "image-webpack-loader"
-            ]
+              isProd && "image-webpack-loader",
+            ].filter(Boolean),
           },
           {
             test: /\.(graphql|gql)$/,
             exclude: /node_modules/,
-            loader: "graphql-tag/loader"
+            loader: "graphql-tag/loader",
           },
           {
             test: /\.svg$/,
@@ -120,11 +120,11 @@ module.exports = (isServer = false) => ({
                 loader: "svg-url-loader",
                 options: {
                   limit: 10 * 1024,
-                  noquotes: true
-                }
+                  noquotes: true,
+                },
               },
-              "image-webpack-loader"
-            ]
+              "image-webpack-loader",
+            ],
           },
           {
             test: /\.(s?css|sass)$/,
@@ -141,9 +141,9 @@ module.exports = (isServer = false) => ({
                   importLoaders: 2,
                   sourceMap: !isProd,
                   modules: {
-                    localIdentName: isProd ? "_[hash:base64:5]" : "[path][name]__[local]--[hash:base64:5]"
-                  }
-                }
+                    localIdentName: isProd ? "_[hash:base64:5]" : "[path][name]__[local]--[hash:base64:5]",
+                  },
+                },
               },
               {
                 loader: "postcss-loader",
@@ -154,32 +154,32 @@ module.exports = (isServer = false) => ({
                       require("postcss-flexbugs-fixes"),
                       require("postcss-preset-env")({
                         autoprefixer: {
-                          flexbox: "no-2009"
+                          flexbox: "no-2009",
                         },
-                        stage: 3
+                        stage: 3,
                       }),
                       isProd &&
                         require("@fullhuman/postcss-purgecss")({
                           content: ["./src/**/*.tsx"],
                           keyframes: true,
                           fontFace: true,
-                          defaultExtractor: content => content.match(/[\w-/:]+(?<!:)/g) || []
+                          defaultExtractor: (content) => content.match(/[\w-/:]+(?<!:)/g) || [],
                         }),
-                      require("postcss-normalize")()
-                    ].filter(Boolean)
-                }
+                      require("postcss-normalize")(),
+                    ].filter(Boolean),
+                },
               },
               {
                 loader: "sass-loader",
                 options: {
-                  sourceMap: !isProd
-                }
-              }
-            ].filter(Boolean)
+                  sourceMap: !isProd,
+                },
+              },
+            ].filter(Boolean),
           },
           {
             test: /\.tsx?$/,
-            exclude: /node_modules/,
+            exclude: /(node_modules|bower_components)/,
             use: [
               {
                 loader: "babel-loader",
@@ -189,18 +189,18 @@ module.exports = (isServer = false) => ({
                   cacheDirectory: true,
                   cacheCompression: !isProd,
                   compact: !isProd,
-                  ...babelOptions(isServer)
-                }
+                  ...babelOptions(isServer),
+                },
               },
               {
                 loader: "ts-loader",
                 options: {
                   transpileOnly: true,
                   experimentalWatchApi: !isProd,
-                  configFile: path.resolve(`tsconfig.json`)
-                }
-              }
-            ]
+                  configFile: path.resolve(`tsconfig.json`),
+                },
+              },
+            ],
           },
           {
             exclude: [/\.(js|mjs|ts|tsx|scss|html|json)$/],
@@ -209,23 +209,24 @@ module.exports = (isServer = false) => ({
                 loader: "file-loader",
                 options: {
                   name: "assets/[name].[contenthash:8].[ext]",
-                  emitFile: !isServer
-                }
+                  emitFile: !isServer,
+                },
               },
-              "image-webpack-loader"
-            ]
-          }
-        ]
-      }
-    ]
+              "image-webpack-loader",
+            ],
+          },
+        ],
+      },
+    ],
   },
   resolve: {
+    symlinks: false,
     alias: {
       "@": path.resolve("src"),
       "lodash-es": "lodash",
-      "webpack/hot/poll": require.resolve("webpack/hot/poll")
+      "./hotPoll.js": require.resolve("./hotPoll.js"),
     },
-    extensions: [".js", ".jsx", ".tsx", ".ts", ".json", ".scss", ".gql", ".graphql"]
+    extensions: [".js", ".jsx", ".tsx", ".ts", ".json", ".scss", ".gql", ".graphql"],
   },
   plugins: [
     new webpack.EnvironmentPlugin({
@@ -238,13 +239,13 @@ module.exports = (isServer = false) => ({
       STATIC_FOLDER: path.resolve("dist", "static"),
       MANIFEST: path.resolve("dist", "static", "manifest.json"),
       BASE_DIR: path.resolve("."),
-      PROTOCOL: envs.PROTOCOL
+      PROTOCOL: envs.PROTOCOL,
     }),
     new LodashPlugin(),
     new MiniCssPlugin({
       filename: isProd ? "css/[name].[contenthash:8].css" : "index.css",
       chunkFilename: isProd ? "css/[name].[contenthash:8].css" : "[name].css",
-      allChunks: true
-    })
-  ]
+      allChunks: true,
+    }),
+  ],
 });

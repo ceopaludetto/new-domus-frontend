@@ -3,17 +3,14 @@
 
 export interface IndexStyles {
   [index: string]: string;
-  	'form-group': string;
-	'container': string;
+  	'button': string;
 	'primary': string;
 	'secondary': string;
 	'background': string;
 	'paper': string;
 	'muted': string;
-	'input': string;
-	'label': string;
-	'append': string;
-	'effect': string;
+	'normal': string;
+	'small': string;
 }
 
 export type IIndexStyles = IndexStyles;

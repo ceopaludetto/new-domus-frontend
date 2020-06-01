@@ -1,10 +1,10 @@
 /* eslint-disable react/no-danger */
-import React from "react";
-import { renderToString, renderToStaticMarkup } from "react-dom/server";
+import * as React from "react";
+import { renderToStaticMarkup } from "react-dom/server";
 import { FilledContext, HelmetProvider } from "react-helmet-async";
 
 import { ApolloProvider } from "@apollo/react-common";
-import { getDataFromTree } from "@apollo/react-ssr";
+import { renderToStringWithData } from "@apollo/react-ssr";
 import { ChunkExtractor, ChunkExtractorManager } from "@loadable/server";
 import { Injectable } from "@nestjs/common";
 import { NormalizedCacheObject } from "apollo-cache-inmemory";
@@ -28,7 +28,7 @@ export class ReactService {
     try {
       const nonce = Buffer.from(generate()).toString("base64");
       const extractor = new ChunkExtractor({
-        statsFile: process.env.MANIFEST as string
+        statsFile: process.env.MANIFEST as string,
       });
       // const context: { url?: string } = {};
       const helmetContext: FilledContext | {} = {};
@@ -41,7 +41,7 @@ export class ReactService {
         );
       }
 
-      const tree = (
+      const markup = await renderToStringWithData(
         <ChunkExtractorManager extractor={extractor}>
           <HelmetProvider context={helmetContext}>
             <ApolloProvider client={client}>
@@ -50,9 +50,6 @@ export class ReactService {
           </HelmetProvider>
         </ChunkExtractorManager>
       );
-
-      await getDataFromTree(tree);
-      const markup = renderToString(tree);
 
       const initialState = client.extract();
 
@@ -94,7 +91,7 @@ export class ReactService {
             id="__APOLLO_STATE__"
             type="application/json"
             dangerouslySetInnerHTML={{
-              __html: JSON.stringify(initialState).replace(/</g, "\\u003c")
+              __html: JSON.stringify(initialState).replace(/</g, "\\u003c"),
             }}
           />
           {scriptEls}

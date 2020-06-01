@@ -2251,9 +2251,9 @@
     "@types/webpack" "*"
 
 "@types/lodash@*":
-  version "4.14.150"
-  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.150.tgz#649fe44684c3f1fcb6164d943c5a61977e8cf0bd"
-  integrity sha512-kMNLM5JBcasgYscD9x/Gvr6lTAv2NVgsKtet/hm93qMyf/D1pt+7jeEZklKJKxMVmXjxbRVQQGfqDSfipYCO6w==
+  version "4.14.152"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.152.tgz#7e7679250adce14e749304cdb570969f77ec997c"
+  integrity sha512-Vwf9YF2x1GE3WNeUMjT5bTHa2DqgUo87ocdgTScupY2JclZ5Nn7W2RLM/N0+oreexUk8uaVugR81NnTY/jNNXg==
 
 "@types/long@^4.0.0":
   version "4.0.1"
@@ -2457,9 +2457,9 @@
   integrity sha1-a9p9uGU/piZD9e5p6facEaOS46Y=
 
 "@types/sequelize@^4.28.8":
-  version "4.28.8"
-  resolved "https://registry.yarnpkg.com/@types/sequelize/-/sequelize-4.28.8.tgz#e97b5745d25c12881b348533c1d9e750adf8278b"
-  integrity sha512-3n/iSpOtO5NynSBgEJ+738DK/ctxkqnVMvdPLZxrbZrf/rQgNm8wgDPDSarS1rmluvOe5ZMRDF8DXhts5MIbag==
+  version "4.28.9"
+  resolved "https://registry.yarnpkg.com/@types/sequelize/-/sequelize-4.28.9.tgz#64d0fad07de2f30ef11003a8c2ef5ac0321de115"
+  integrity sha512-QqYgkw/2fEc0FyEQejnxM7cHKB8XBV3Y69k7GSFOToQBOXos0PJVqNpgROXZddXIkl2d6zicYssHuy75ws84sw==
   dependencies:
     "@types/bluebird" "*"
     "@types/continuation-local-storage" "*"
@@ -3680,6 +3680,11 @@ babel-loader@^8.0.6:
     mkdirp "^0.5.3"
     pify "^4.0.1"
     schema-utils "^2.6.5"
+
+babel-plugin-date-fns@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/babel-plugin-date-fns/-/babel-plugin-date-fns-2.0.0.tgz#56074f1b4659c3b1208b5d156d4f51612d7af620"
+  integrity sha512-MbsQzEgglAIBZLQbKQDgMUgFDwf7sSHXgaWRXowiEVs1B+eiBge4JnhBQtIaHIVLE9QmXfDQbb18oggvP7KSFQ==
 
 babel-plugin-dynamic-import-node@^2.3.3:
   version "2.3.3"
@@ -10049,6 +10054,11 @@ md5.js@^1.3.4:
     inherits "^2.0.1"
     safe-buffer "^5.1.2"
 
+mdi-norm@^2.2.2:
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/mdi-norm/-/mdi-norm-2.2.2.tgz#e9a73008b31bedce0005c7dc2069401e24cbcb32"
+  integrity sha512-SB3Yf1ZHvVEelwoPTaWzfs59KVHL4g02sWBl3hfxnyYj15Ze5kXx4/tv4SUn1YuXzShwpyJYmemch2dRBYAYbQ==
+
 mdn-data@2.0.4:
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/mdn-data/-/mdn-data-2.0.4.tgz#699b3c38ac6f1d728091a64650b65d388502fd5b"
@@ -12334,10 +12344,10 @@ prettier-linter-helpers@^1.0.0:
   dependencies:
     fast-diff "^1.1.2"
 
-prettier@^1:
-  version "1.19.1"
-  resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.19.1.tgz#f7d7f5ff8a9cd872a7be4ca142095956a60797cb"
-  integrity sha512-s7PoyDv/II1ObgQunCbB9PdLmUcBZcnWOcxDh7O0N/UwDEsHyqkW+Qh28jW+mVuCdx7gLB0BotYI1Y6uI9iyew==
+prettier@^2.0.5:
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.0.5.tgz#d6d56282455243f2f92cc1716692c08aa31522d4"
+  integrity sha512-7PtVymN48hGcO4fGjybyBSIWDsLU4H4XlvOHfq91pz9kkGlonzwTfYkaIEwiRg/dAJF9YlbsduBAgtYLi+8cFg==
 
 pretty-format@^24.7.0:
   version "24.9.0"
@@ -14090,6 +14100,13 @@ specificity@^0.4.1:
   resolved "https://registry.yarnpkg.com/specificity/-/specificity-0.4.1.tgz#aab5e645012db08ba182e151165738d00887b019"
   integrity sha512-1klA3Gi5PD1Wv9Q0wUoOQN1IWAuPu0D1U03ThXTr0cJ20+/iq2tHSDnK7Kk/0LXJ1ztUB2/1Os0wKmfyNgUQfg==
 
+speed-measure-webpack-plugin@^1.3.3:
+  version "1.3.3"
+  resolved "https://registry.yarnpkg.com/speed-measure-webpack-plugin/-/speed-measure-webpack-plugin-1.3.3.tgz#6ff894fc83e8a6310dde3af863a0329cd79da4f5"
+  integrity sha512-2ljD4Ch/rz2zG3HsLsnPfp23osuPBS0qPuz9sGpkNXTN1Ic4M+W9xB8l8rS8ob2cO4b1L+WTJw/0AJwWYVgcxQ==
+  dependencies:
+    chalk "^2.0.1"
+
 split-string@^3.0.1, split-string@^3.0.2:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/split-string/-/split-string-3.1.0.tgz#7cb09dda3a86585705c64b39a6466038682e8fe2"
@@ -15480,6 +15497,11 @@ webpack-messages@^2.0.4:
     console-clear "^1.0.0"
     kleur "^3.0.0"
     webpack-format-messages "^2.0.0"
+
+webpack-mild-compile@^3.3.1:
+  version "3.3.1"
+  resolved "https://registry.yarnpkg.com/webpack-mild-compile/-/webpack-mild-compile-3.3.1.tgz#60d56efcf8f0424ec12373cb2649b9c8a6d37e7f"
+  integrity sha512-bMwvhjvMhDxcj0u7CrE5iT2h62HIqkCP3l9/AeDleV78YUjpSK/prsCqvZxTgRMfg2RmpBfaxDoe/fncPqFOLQ==
 
 webpack-node-externals@^1.7.2:
   version "1.7.2"

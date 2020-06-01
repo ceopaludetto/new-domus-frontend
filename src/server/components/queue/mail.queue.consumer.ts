@@ -26,8 +26,8 @@ export class MailQueueConsumer {
         subject: "[NestNewGraphql] Welcome",
         template: "cadastro",
         context: {
-          name: job.data.person.name
-        }
+          name: job.data.person.name,
+        },
       });
 
       return info;

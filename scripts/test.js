@@ -2,7 +2,7 @@ process.env.NODE_ENV = "test";
 process.env.BABEL_ENV = "test";
 process.noDeprecation = true;
 
-process.on("unhandledRejection", err => {
+process.on("unhandledRejection", (err) => {
   throw err;
 });
 

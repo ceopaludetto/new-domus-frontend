@@ -26,7 +26,7 @@ export class User extends BaseModel<User> {
 
   @Field(() => Person)
   @BelongsTo(() => Person, {
-    foreignKey: "personID"
+    foreignKey: "personID",
   })
   public person!: Person;
 

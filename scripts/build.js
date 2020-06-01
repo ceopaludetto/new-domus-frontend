@@ -2,36 +2,38 @@ process.env.NODE_ENV = "production";
 process.noDeprecation = true;
 
 const clearConsole = require("react-dev-utils/clearConsole");
-const FileSizeReporter = require("react-dev-utils/FileSizeReporter");
+const { measureFileSizesBeforeBuild, printFileSizesAfterBuild } = require("react-dev-utils/FileSizeReporter");
 const formatWebpackMessages = require("react-dev-utils/formatWebpackMessages");
 
 const chalk = require("chalk");
 const fs = require("fs-extra");
 const logger = require("razzle-dev-utils/logger");
 const printErrors = require("razzle-dev-utils/printErrors");
+const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
 const webpack = require("webpack");
-
-const { measureFileSizesBeforeBuild } = FileSizeReporter;
-const { printFileSizesAfterBuild } = FileSizeReporter;
 
 const clientConfig = require("../configuration/webpack.config.client");
 const serverConfig = require("../configuration/webpack.config.server");
+
+const measure = process.argv.some((arg) => arg === "--measure");
+
+const smp = new SpeedMeasurePlugin({ disable: !measure });
 
 const reg = /mini-css-extract-plugin/g;
 
 function normalizeFileSizes(prevFileSizes, isServer = false) {
   if (isServer)
-    Object.keys(prevFileSizes.sizes).forEach(x =>
+    Object.keys(prevFileSizes.sizes).forEach((x) =>
       // eslint-disable-next-line no-param-reassign
       x !== "/index.js" ? delete prevFileSizes.sizes[x] : {}
     );
-  const arr = Object.keys(prevFileSizes.sizes).map(x => x);
+  const arr = Object.keys(prevFileSizes.sizes).map((x) => x);
 
   let newPrev = {};
-  arr.forEach(a => {
+  arr.forEach((a) => {
     newPrev = {
       ...newPrev,
-      [a[0] === "/" ? a.substr(1) : a]: prevFileSizes.sizes[a]
+      [a[0] === "/" ? a.substr(1) : a]: prevFileSizes.sizes[a],
     };
   });
 
@@ -76,7 +78,7 @@ function build(previousFileSizes, config, isServer = false) {
       return resolve({
         stats,
         previousFileSizes,
-        warnings: messages.warnings
+        warnings: messages.warnings,
       });
     });
   });
@@ -84,21 +86,24 @@ function build(previousFileSizes, config, isServer = false) {
 
 Promise.all([
   measureFileSizesBeforeBuild(serverConfig.output.path),
-  measureFileSizesBeforeBuild(clientConfig.output.path)
+  measureFileSizesBeforeBuild(clientConfig.output.path),
 ])
-  .then(prevFileSizes => {
+  .then((prevFileSizes) => {
     clearConsole();
     logger.start("Compiling...");
     fs.emptyDir(serverConfig.output.path);
     return prevFileSizes;
   })
-  .then(prevFileSizes => {
+  .then((prevFileSizes) => {
     normalizeFileSizes(prevFileSizes[0], true);
     normalizeFileSizes(prevFileSizes[1], false);
-    return Promise.all([build(prevFileSizes[0], serverConfig, true), build(prevFileSizes[1], clientConfig, false)]);
+    return Promise.all([
+      build(prevFileSizes[0], smp.wrap(serverConfig), true),
+      build(prevFileSizes[1], smp.wrap(clientConfig), false),
+    ]);
   })
   .then(
-    info => {
+    (info) => {
       info.forEach(({ stats, previousFileSizes, warnings }, i) => {
         if (warnings.length) {
           logger.warn("Compiled with warnings.\n");
@@ -116,7 +121,7 @@ Promise.all([
         logger.log();
       });
     },
-    err => {
+    (err) => {
       logger.error("Failed to compile.\n");
       logger.log(`${err.message || err}\n`);
       process.exit(1);

@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 
 import clsx from "clsx";
 
@@ -14,7 +14,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 
 export function Button({ children, variant = "contained", color = "primary", block = false, ...rest }: ButtonProps) {
   const classes = clsx(s.button, s[variant], s[color], {
-    [s.block]: block
+    [s.block]: block,
   });
 
   return (

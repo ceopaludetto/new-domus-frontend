@@ -9,10 +9,13 @@
     width: 100%;
     border-radius: map-get($layout, shape);
     transition: transition((background-color));
-    background-color: get-color(background, darken-2);
+    background-color: get-color(background, darken-1);
     overflow: hidden;
     @each $k, $v in map-get($colors, light) {
       &.#{$k} {
+        &:hover {
+          background-color: get-color(background, darken-2);
+        }
         &:focus-within {
           background-color: get-color(background, darken-1);
           label {
@@ -48,6 +51,9 @@
       &:focus {
         outline: none;
       }
+    }
+    .append {
+      padding: 0 get-theme-prop(layout, sizes, 3);
     }
     .label {
       font-size: get-theme-prop(typography, sizes, 2);
