@@ -3,12 +3,9 @@
 
 export interface IndexStyles {
   [index: string]: string;
-  	'button': string;
-	'primary': string;
-	'secondary': string;
-	'paper': string;
+  	'paper': string;
 	'normal': string;
-	'small': string;
+	'large': string;
 }
 
 export type IIndexStyles = IndexStyles;

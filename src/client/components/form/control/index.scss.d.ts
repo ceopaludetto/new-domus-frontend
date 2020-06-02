@@ -6,6 +6,8 @@ export interface IndexStyles {
   	'form-group': string;
 	'container': string;
 	'primary': string;
+	'secondary': string;
+	'paper': string;
 	'input': string;
 	'label': string;
 	'append': string;

@@ -57,6 +57,23 @@ function log() {
     !stats.server.errors.length
   ) {
     logger.done("Aplication compiled successfully");
+    stats.server.changed = stats.server.changed.filter((x) => !/\/client/.test(x));
+    if (stats.server.changed.length || stats.client.changed.length) {
+      logger.log(chalk.bgWhite.black(" CHANGED FILES "));
+      if (stats.server.changed.length) {
+        logger.log(chalk.greenBright("\nServer"));
+        stats.server.changed.forEach((f) => {
+          logger.log(`- ${f}`);
+        });
+      }
+      if (stats.client.changed.length) {
+        logger.log(chalk.greenBright("\nClient"));
+        stats.client.changed.forEach((f) => {
+          logger.log(`- ${f}`);
+        });
+      }
+      logger.log();
+    }
     logger.log(
       `Access it in ${envs.PROTOCOL}://${envs.HOST}:${envs.PORT} or ${envs.PROTOCOL}://${ip.address()}:${envs.PORT}\n`
     );
@@ -113,7 +130,9 @@ function main() {
 
   function done(cb) {
     return async (st) => {
-      stats = { ...stats, [st.compilation.compiler.name]: st.toJson({}, true) };
+      const changedTimes = st.compilation.compiler.watchFileSystem.watcher.mtimes;
+      const changedFiles = Object.keys(changedTimes);
+      stats = { ...stats, [st.compilation.compiler.name]: { ...st.toJson({}, true), changed: changedFiles } };
 
       finished[st.compilation.compiler.name] = true;
       if (finished.client && finished.server && st.compilation.compiler.name !== "client") log();

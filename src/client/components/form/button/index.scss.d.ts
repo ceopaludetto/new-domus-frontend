@@ -7,6 +7,9 @@ export interface IndexStyles {
 	'block': string;
 	'contained': string;
 	'primary': string;
+	'raised': string;
+	'secondary': string;
+	'paper': string;
 	'flat': string;
 }
 

@@ -15,7 +15,7 @@ $layout: (
         sm: 576px,
         md: 768px,
         lg: 992px,
-        xl: 1200px
+        xl: 1200px,
       )
     ),
   containers:
@@ -25,9 +25,9 @@ $layout: (
         sm: 540px,
         md: 720px,
         lg: 960px,
-        xl: 1140px
+        xl: 1140px,
       )
-    )
+    ),
 );
 
 // Typo
@@ -45,9 +45,9 @@ $typography: (
     Cantarell,
     "Open Sans",
     "Helvetica Neue",
-    sans-serif
+    sans-serif,
   ),
-  sizes: rem(14px 16px 24px 32px 48px)
+  sizes: rem(14px 16px 24px 32px 48px),
 );
 
 // Colors
@@ -55,22 +55,22 @@ $typography: (
 $colors: (
   light: (
     primary: #2196f3,
-    secondary: #2196f3,
-    background: #fafafa,
+    secondary: #1a1a1a,
+    background: #f7f7f7,
     paper: #ffffff,
-    muted: #cccccc
+    muted: #cccccc,
   ),
   dark: (
     primary: #2196f3,
-    secondary: #2196f3,
+    secondary: #fafafa,
     background: #1a1a1a,
     paper: #2a2a2a,
-    muted: #5a5a5a
-  )
+    muted: #5a5a5a,
+  ),
 );
 
 $theme: (
   typography: $typography,
   layout: $layout,
-  colors: $colors
+  colors: $colors,
 );

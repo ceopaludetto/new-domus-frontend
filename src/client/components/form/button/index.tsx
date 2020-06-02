@@ -8,7 +8,7 @@ import s from "./index.scss";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   block?: boolean;
-  variant?: "contained" | "flat";
+  variant?: "contained" | "flat" | "raised";
   color?: keyof Colors;
 }
 
