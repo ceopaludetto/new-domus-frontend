@@ -6,3 +6,5 @@ env/config.*.yml
 
 .vscode
 tmp
+
+*.scss.d.ts
