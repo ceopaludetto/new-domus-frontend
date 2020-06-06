@@ -13,7 +13,8 @@
     "build": "node scripts/build.js",
     "graphql": "graphql-codegen --config codegen.yml",
     "test:server": "TARGET=server node scripts/test.js",
-    "test:client": "TARGET=client node scripts/test.js"
+    "test:client": "TARGET=client node scripts/test.js",
+    "clean": "rm -r node_modules/.cache"
   },
   "dependencies": {
     "@apollo/react-common": "^3.1.3",
