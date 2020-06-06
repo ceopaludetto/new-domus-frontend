@@ -43,9 +43,7 @@ module.exports = merge(baseConfig(true), {
     filename: "index.js",
     pathinfo: true,
     futureEmitAssets: isProd,
-    devtoolModuleFilenameTemplate: isProd
-      ? (info) => path.resolve(path.resolve("src"), info.absoluteResourcePath).replace(/\\/g, "/")
-      : (info) => path.resolve(info.absoluteResourcePath).replace(/\\/g, "/"),
+    devtoolModuleFilenameTemplate: (info) => path.resolve(info.resourcePath).replace(/\\/g, "/"),
   },
   plugins: [
     ...(isProd

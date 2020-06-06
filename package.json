@@ -146,7 +146,7 @@
     "compression-webpack-plugin": "^3.1.0",
     "copy-webpack-plugin": "^5.1.1",
     "css-loader": "^3.5.2",
-    "css-modules-types-generator-loader": "^1.0.3",
+    "css-modules-types-generator-loader": "^1.0.4",
     "cssnano-preset-advanced": "^4.0.7",
     "date-fns": "^2.11.0",
     "eslint": "^6.8.0",
@@ -192,6 +192,7 @@
     "webpack-merge": "^4.2.2",
     "webpack-messages": "^2.0.4",
     "webpack-mild-compile": "^3.3.1",
-    "webpack-node-externals": "^1.7.2"
+    "webpack-node-externals": "^1.7.2",
+    "webpack-typings-for-css": "^0.4.0"
   }
 }

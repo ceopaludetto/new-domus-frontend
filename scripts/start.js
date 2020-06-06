@@ -46,7 +46,7 @@ function printMessage(messages, name) {
 }
 
 function log() {
-  if (!measure) clearConsole();
+  if (!measure || !verbose) clearConsole();
   stats.server.warnings = stats.server.warnings.filter((x) => !/\/client/.test(x));
   stats.server.errors = stats.server.errors.filter((x) => !/\/client/.test(x));
 
@@ -113,7 +113,7 @@ function compile(config) {
 }
 
 function main() {
-  if (!measure) clearConsole();
+  if (!measure || !verbose) clearConsole();
   logger.start("Compiling...");
   fs.emptyDirSync(serverConfig.output.path);
 

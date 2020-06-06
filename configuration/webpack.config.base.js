@@ -241,6 +241,7 @@ module.exports = (isServer = false) => ({
       BASE_DIR: path.resolve("."),
       PROTOCOL: envs.PROTOCOL,
     }),
+    new webpack.WatchIgnorePlugin([/\.scss\.d\.ts/g]),
     new LodashPlugin(),
     new MiniCssPlugin({
       filename: isProd ? "css/[name].[contenthash:8].css" : "index.css",
