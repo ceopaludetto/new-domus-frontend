@@ -1,4 +1,5 @@
-import { MailerModule, PugAdapter } from "@nestjs-modules/mailer";
+import { MailerModule } from "@nestjs-modules/mailer";
+import { PugAdapter } from "@nestjs-modules/mailer/dist/adapters/pug.adapter";
 import { Module } from "@nestjs/common";
 import { GraphQLModule } from "@nestjs/graphql";
 import { SequelizeModule } from "@nestjs/sequelize";

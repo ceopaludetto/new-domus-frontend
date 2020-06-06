@@ -17,7 +17,7 @@ export class AuthenticationService {
     @InjectPinoLogger(AuthenticationService.name) private readonly logger: PinoLogger
   ) {}
 
-  private async generate(user: User) {
+  private generate(user: User) {
     return this.jwtService.sign({ id: user.id });
   }
 
@@ -25,14 +25,14 @@ export class AuthenticationService {
     try {
       const user = await this.userService.findByLogin(login);
       if (!user) {
-        throw new UserInputError("Usuário não encontrado", { field: "email" });
+        throw new UserInputError("Usuário não encontrado", { fields: ["email"] });
       }
 
       if (!(await user.comparePasswords(password))) {
-        throw new UserInputError("Senha incorreta", { field: "password" });
+        throw new UserInputError("Senha incorreta", { fields: ["password"] });
       }
 
-      res.cookie("auth", `Bearer ${await this.generate(user)}`);
+      res.cookie("auth", `Bearer ${this.generate(user)}`);
 
       return user;
     } catch (error) {
@@ -41,15 +41,15 @@ export class AuthenticationService {
   }
 
   public async register(data: UserInsertInput, res: Response) {
-    try {
-      const user = await this.userService.create(data);
+    // try {
+    const user = await this.userService.create(data);
 
-      res.cookie("auth", `Bearer ${await this.generate(user)}`);
+    res.cookie("auth", `Bearer ${this.generate(user)}`);
 
-      return user;
-    } catch (error) {
-      this.logger.error(error);
-      throw new AuthenticationError("Falha ao cadastrar usuário");
-    }
+    return user;
+    // } catch (error) {
+    //   this.logger.error(error);
+    //   throw new AuthenticationError("Falha ao cadastrar usuário");
+    // }
   }
 }
