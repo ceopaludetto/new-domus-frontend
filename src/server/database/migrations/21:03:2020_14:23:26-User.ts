@@ -10,20 +10,20 @@ export default {
       ...migrationDefaults(Sequelize),
       login: {
         type: Sequelize.STRING,
-        unique: true
+        unique: true,
       },
       password: Sequelize.STRING,
       personID: {
         type: Sequelize.STRING,
         references: {
           key: "id",
-          model: PERSON
-        }
-      }
+          model: PERSON,
+        },
+      },
     });
   },
 
   async down(queryInterface: QueryInterface) {
     return queryInterface.dropTable(USER);
-  }
+  },
 };

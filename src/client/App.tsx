@@ -2,9 +2,8 @@ import * as React from "react";
 import { Helmet } from "react-helmet-async";
 
 import { useQuery } from "@apollo/react-hooks";
-import { OutlineVisibility } from "mdi-norm";
 
-import { Button, Control, IconButton, Paper } from "@/client/components";
+import { Button, Control, Paper, Switch, Title, SubTitle } from "@/client/components";
 import { ShowAllUsers } from "@/client/graphql/usuario.gql";
 import { useMultipleVisibility } from "@/client/hooks";
 
@@ -30,21 +29,13 @@ export function App() {
           ))}
         </ul>
       )}
-      <Paper>
-        <Button variant="flat">Anterior</Button>
-        <Button>Anterior</Button>
-        <Button variant="raised">Anterior</Button>
-        <Button variant="flat" color="secondary">
-          Próximo
-        </Button>
-        <Button color="secondary">Próximo</Button>
-        <Button block>Próximo</Button>
-        <IconButton>
-          <OutlineVisibility />
-        </IconButton>
+      <Paper outline>
+        <SubTitle>Criação de Usuário</SubTitle>
+        <Title>Cadastro</Title>
         <Control label="E-mail" id="email" />
         <Control label="Password" id="password" {...field.getFieldProps("password")} />
         <Control label="Repeat Password" id="repeat-password" {...field.getFieldProps("repeat-password")} />
+        <Switch label="Receive updates" id="newsletter" info="When activated app will send news to your e-mail" />
         <Button variant="raised">Salvar</Button>
       </Paper>
     </>

@@ -12,13 +12,13 @@ export default {
       name: Sequelize.STRING,
       email: {
         type: Sequelize.STRING,
-        unique: true
+        unique: true,
       },
-      gender: { type: Sequelize.ENUM(Gender.F, Gender.M, Gender.N), defaultValue: Gender.M }
+      gender: { type: Sequelize.ENUM(Gender.F, Gender.M, Gender.N), defaultValue: Gender.M },
     });
   },
 
   async down(queryInterface: QueryInterface) {
     return queryInterface.dropTable(PERSON);
-  }
+  },
 };

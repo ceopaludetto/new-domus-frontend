@@ -12,14 +12,13 @@ export abstract class BaseModel<T> extends Model<T> {
 
   @Field()
   @CreatedAt
-  @Field()
   public createdAt!: Date;
 
-  @UpdatedAt
   @Field()
+  @UpdatedAt
   public updatedAt!: Date;
 
-  @DeletedAt
   @Field()
+  @DeletedAt
   public deletedAt!: Date;
 }

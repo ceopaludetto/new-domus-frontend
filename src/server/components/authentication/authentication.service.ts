@@ -41,15 +41,15 @@ export class AuthenticationService {
   }
 
   public async register(data: UserInsertInput, res: Response) {
-    // try {
-    const user = await this.userService.create(data);
+    try {
+      const user = await this.userService.create(data);
 
-    res.cookie("auth", `Bearer ${this.generate(user)}`);
+      res.cookie("auth", `Bearer ${this.generate(user)}`);
 
-    return user;
-    // } catch (error) {
-    //   this.logger.error(error);
-    //   throw new AuthenticationError("Falha ao cadastrar usuário");
-    // }
+      return user;
+    } catch (error) {
+      this.logger.error(error);
+      throw new AuthenticationError("Falha ao cadastrar usuário");
+    }
   }
 }

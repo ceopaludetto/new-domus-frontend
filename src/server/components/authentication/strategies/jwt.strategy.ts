@@ -19,7 +19,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  // eslint-disable-next-line
   public async validate(payload: FindByID) {
     try {
       const user = await this.userService.findByID(payload.id);

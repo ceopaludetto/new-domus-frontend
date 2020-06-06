@@ -5,11 +5,11 @@ import * as Messages from "@/server/utils/validations/messages";
 
 @InputType()
 export class AuthenticationInput {
-  @IsString({ message: Messages.STRING })
   @Field()
+  @IsString({ message: Messages.STRING })
   public login!: string;
 
-  @IsString({ message: Messages.STRING })
   @Field()
+  @IsString({ message: Messages.STRING })
   public password!: string;
 }
