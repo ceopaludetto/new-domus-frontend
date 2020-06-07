@@ -2,6 +2,7 @@
 
 .button {
   cursor: pointer;
+  user-select: none;
   border: none;
   text-transform: uppercase;
   letter-spacing: 1.15px;

@@ -4,14 +4,23 @@ schema:
   - "./src/client/graphql/schema.gql"
 documents: "src/**/*.(graphql|gql)"
 generates:
-  src/client/typescript/operations.d.ts:
+  src/client/typescript/operations.ts:
     config:
       preResolveTypes: true
       dedupeOperationSuffix: true
-      noExport: true
+      # noExport: true
     plugins:
       - typescript
       - typescript-operations
-  src/client/typescript/graphql.d.ts:
+  src/:
+    preset: near-operation-file
+    presetConfig:
+      extension: .gql.d.ts
+      baseTypesPath: "client/typescript/operations.ts"
+    config:
+      prefix: "./"
     plugins:
       - typescript-graphql-files-modules
+hooks:
+  afterAllFileWrite:
+    - eslint --fix

@@ -1,8 +1,8 @@
 /* eslint-disable global-require, @typescript-eslint/camelcase */
 const eslintFormatter = require("react-dev-utils/eslintFormatter");
 
-const ExtractCssChunks = require("extract-css-chunks-webpack-plugin");
 const LodashPlugin = require("lodash-webpack-plugin");
+const MiniCssPlugin = require("mini-css-extract-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const path = require("path");
 const safePostCssParser = require("postcss-safe-parser");
@@ -123,15 +123,15 @@ module.exports = (isServer = false) => ({
                   noquotes: true,
                 },
               },
-              "image-webpack-loader",
-            ],
+              isProd && "image-webpack-loader",
+            ].filter(Boolean),
           },
           {
             test: /\.(s?css|sass)$/,
             sideEffects: true,
             use: [
-              !isServer && !isProd && { loader: "style-loader" },
-              !isServer && isProd && { loader: ExtractCssChunks.loader, options: { esModule: true } },
+              !isServer && !isProd && { loader: "style-loader", options: { sourceMap: true } },
+              !isServer && isProd && { loader: MiniCssPlugin.loader, options: { esModule: true, sourceMap: true } },
               "css-modules-types-generator-loader",
               {
                 loader: "css-loader",
@@ -139,7 +139,7 @@ module.exports = (isServer = false) => ({
                   esModule: true,
                   onlyLocals: isServer,
                   importLoaders: 2,
-                  sourceMap: !isProd,
+                  sourceMap: true,
                   modules: {
                     localIdentName: isProd ? "_[hash:base64:5]" : "[path][name]__[local]--[hash:base64:5]",
                   },
@@ -148,7 +148,8 @@ module.exports = (isServer = false) => ({
               {
                 loader: "postcss-loader",
                 options: {
-                  ident: "postcss", // https://webpack.js.org/guides/migrating/#complex-options
+                  sourceMap: true,
+                  ident: "postcss",
                   plugins: () =>
                     [
                       require("postcss-flexbugs-fixes"),
@@ -172,7 +173,7 @@ module.exports = (isServer = false) => ({
               {
                 loader: "sass-loader",
                 options: {
-                  sourceMap: !isProd,
+                  sourceMap: true,
                 },
               },
             ].filter(Boolean),
@@ -243,7 +244,7 @@ module.exports = (isServer = false) => ({
     }),
     new webpack.WatchIgnorePlugin([/\.scss\.d\.ts/g]),
     new LodashPlugin(),
-    new ExtractCssChunks({
+    new MiniCssPlugin({
       filename: isProd ? "css/[name].[contenthash:8].css" : "index.css",
       chunkFilename: isProd ? "css/[name].[contenthash:8].css" : "[name].css",
       ignoreOrder: false,

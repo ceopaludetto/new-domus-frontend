@@ -59,7 +59,7 @@ export class ConfigurationService {
       this.envConfig = validated;
     }
 
-    this.logger.info(`Deployment: ${process.env.DEPLOYMENT as string}`);
+    this.logger.info(`Deployment: ${(process.env.DEPLOYMENT as string) || "development"}`);
   }
 
   private validateInput = (config: any) => {

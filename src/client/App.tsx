@@ -6,6 +6,7 @@ import { useQuery } from "@apollo/react-hooks";
 import { Button, Control, Paper, Switch, Title, SubTitle } from "@/client/components";
 import { ShowAllUsers } from "@/client/graphql/usuario.gql";
 import { useMultipleVisibility } from "@/client/hooks";
+import { ShowAllUsersQuery } from "@/client/typescript/operations";
 
 import "@/client/styles/normalize.scss";
 

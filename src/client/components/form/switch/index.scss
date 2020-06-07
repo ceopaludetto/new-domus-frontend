@@ -26,6 +26,14 @@
             background-color: get-color($k, contrast);
           }
         }
+        &:focus {
+          &:checked,
+          &[checked] {
+            & + .switch.#{$k}::before {
+              background-color: get-color($k, darken-1);
+            }
+          }
+        }
       }
       &:checked,
       &[checked] {
@@ -41,6 +49,14 @@
         &[checked] {
           & + .switch::after {
             transform: translateX(14px);
+          }
+        }
+      }
+      &:focus {
+        &:not(:checked),
+        &:not([checked]) {
+          & + .switch::before {
+            background-color: get-color(background, darken-1);
           }
         }
       }
