@@ -58,6 +58,8 @@ export class ConfigurationService {
     if (validated !== false) {
       this.envConfig = validated;
     }
+
+    this.logger.info(`Deployment: ${process.env.DEPLOYMENT as string}`);
   }
 
   private validateInput = (config: any) => {

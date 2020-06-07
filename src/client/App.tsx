@@ -15,7 +15,12 @@ export function App() {
 
   return (
     <>
-      <Helmet>
+      <Helmet htmlAttributes={{ lang: "pt-BR" }}>
+        <title>Nest New Graphql</title>
+        <meta charSet="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="dns-prefetch" href="//fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com/" crossOrigin="use-credentials" />
         <link
           href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap"
           rel="stylesheet"

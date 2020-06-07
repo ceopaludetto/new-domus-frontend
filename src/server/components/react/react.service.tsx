@@ -55,7 +55,7 @@ export class ReactService {
 
       const fullHTML = this.markup(markup, initialState, extractor, (helmetContext as FilledContext).helmet, nonce);
 
-      return res.send(fullHTML);
+      return res.send(`<!DOCTYPE html>${fullHTML}`);
     } catch (error) {
       this.logger.error(error?.message ?? error ?? "Falha ao renderizar React");
       return res.send({ error: true, message: "fail to render" });
@@ -80,8 +80,8 @@ export class ReactService {
         <head>
           {helmet.title.toComponent()}
           {helmet.meta.toComponent()}
-          {helmet.link.toComponent()}
           {linkEls}
+          {helmet.link.toComponent()}
           {styleEls}
         </head>
         <body {...bodyAttributes.toComponent()}>

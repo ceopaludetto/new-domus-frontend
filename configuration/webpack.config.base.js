@@ -1,8 +1,8 @@
 /* eslint-disable global-require, @typescript-eslint/camelcase */
 const eslintFormatter = require("react-dev-utils/eslintFormatter");
 
+const ExtractCssChunks = require("extract-css-chunks-webpack-plugin");
 const LodashPlugin = require("lodash-webpack-plugin");
-const MiniCssPlugin = require("mini-css-extract-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const path = require("path");
 const safePostCssParser = require("postcss-safe-parser");
@@ -131,7 +131,7 @@ module.exports = (isServer = false) => ({
             sideEffects: true,
             use: [
               !isServer && !isProd && { loader: "style-loader" },
-              !isServer && isProd && { loader: MiniCssPlugin.loader, options: { esModule: true } },
+              !isServer && isProd && { loader: ExtractCssChunks.loader, options: { esModule: true } },
               "css-modules-types-generator-loader",
               {
                 loader: "css-loader",
@@ -243,10 +243,10 @@ module.exports = (isServer = false) => ({
     }),
     new webpack.WatchIgnorePlugin([/\.scss\.d\.ts/g]),
     new LodashPlugin(),
-    new MiniCssPlugin({
+    new ExtractCssChunks({
       filename: isProd ? "css/[name].[contenthash:8].css" : "index.css",
       chunkFilename: isProd ? "css/[name].[contenthash:8].css" : "[name].css",
-      allChunks: true,
+      ignoreOrder: false,
     }),
   ],
 });

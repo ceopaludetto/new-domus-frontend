@@ -19,8 +19,6 @@ const measure = process.argv.some((arg) => arg === "--measure");
 
 const smp = new SpeedMeasurePlugin({ disable: !measure });
 
-const reg = /mini-css-extract-plugin/g;
-
 function normalizeFileSizes(prevFileSizes, isServer = false) {
   if (isServer)
     Object.keys(prevFileSizes.sizes).forEach((x) =>
@@ -68,12 +66,6 @@ function build(previousFileSizes, config, isServer = false) {
       if (messages.errors.length) {
         return reject(new Error(messages.errors.join("\n\n")));
       }
-
-      messages.warnings.forEach((w, i) => {
-        if (reg.test(w)) {
-          messages.warnings.splice(i);
-        }
-      });
 
       return resolve({
         stats,

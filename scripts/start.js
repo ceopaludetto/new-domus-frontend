@@ -27,17 +27,9 @@ const verbose = process.argv.some((arg) => arg === "--verbose" || arg === "-v");
 
 const smp = new SpeedMeasurePlugin({ disable: !measure });
 
-const reg = /mini-css-extract-plugin/g;
-
 let stats = {};
 
 function printMessage(messages, name) {
-  messages.warnings.forEach((w, i) => {
-    if (reg.test(w)) {
-      messages.warnings.splice(i);
-    }
-  });
-
   if (messages.warnings.length) {
     logger.log(chalk.yellow(`${name} warnings`));
     logger.log(messages.warnings.join("\n\n"));

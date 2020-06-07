@@ -20,14 +20,6 @@ module.exports = merge(baseConfig(false), {
     splitChunks: isProd
       ? {
           chunks: "all",
-          cacheGroups: {
-            styles: {
-              name: "index",
-              test: /\.scss$/,
-              chunks: "all",
-              enforce: true,
-            },
-          },
         }
       : undefined,
     moduleIds: isProd ? "hashed" : false,

@@ -17,7 +17,7 @@ export function useVisibility(initialValue?: boolean) {
     return {
       type: isVisible ? "text" : "password",
       append: (
-        <IconButton tabIndex={-1} onClick={toggleVisible}>
+        <IconButton tabIndex={-1} aria-label={isVisible ? "Esconder senha" : "Mostrar senha"} onClick={toggleVisible}>
           {isVisible ? <OutlineVisibilityOff /> : <OutlineVisibility />}
         </IconButton>
       ),
@@ -50,7 +50,11 @@ export function useMultipleVisibility<T extends string | symbol>(names: T[], ini
       return {
         type: isVisible[name] ? "text" : "password",
         append: (
-          <IconButton tabIndex={-1} onClick={toggleVisible(name)}>
+          <IconButton
+            tabIndex={-1}
+            aria-label={isVisible[name] ? "Esconder senha" : "Mostrar senha"}
+            onClick={toggleVisible(name)}
+          >
             {isVisible[name] ? <OutlineVisibilityOff /> : <OutlineVisibility />}
           </IconButton>
         ),
