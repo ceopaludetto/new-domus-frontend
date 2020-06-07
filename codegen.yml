@@ -4,7 +4,7 @@ schema:
   - "./src/client/graphql/schema.gql"
 documents: "src/**/*.(graphql|gql)"
 generates:
-  src/client/typescript/operations.ts:
+  src/client/graphql/operations.ts:
     config:
       preResolveTypes: true
       dedupeOperationSuffix: true
@@ -16,7 +16,7 @@ generates:
     preset: near-operation-file
     presetConfig:
       extension: .gql.d.ts
-      baseTypesPath: "client/typescript/operations.ts"
+      baseTypesPath: "client/graphql/operations.ts"
     config:
       prefix: "./"
     plugins:
