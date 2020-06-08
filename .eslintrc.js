@@ -5,7 +5,8 @@ module.exports = {
   env: {
     es6: true,
     node: true,
-    browser: true
+    browser: true,
+    jest: true
   },
   extends: ["airbnb", "plugin:@typescript-eslint/recommended", "prettier", "prettier/@typescript-eslint"],
   plugins: ["react", "react-hooks", "import", "import-helpers", "prettier"],
@@ -28,10 +29,9 @@ module.exports = {
     "no-underscore-dangle": "off",
     "no-useless-constructor": "off",
     "max-classes-per-file": ["error", 5],
-    "@typescript-eslint/interface-name-prefix": "off",
+    "class-methods-use-this": "off",
     "@typescript-eslint/no-var-requires": "off",
     "@typescript-eslint/explicit-function-return-type": "off",
-    "@typescript-eslint/no-empty-interface": "warn",
     "@typescript-eslint/no-explicit-any": "off",
     "import/prefer-default-export": "off",
     "import/no-extraneous-dependencies": ["error", { devDependencies: true }],
@@ -54,6 +54,7 @@ module.exports = {
     "react-hooks/rules-of-hooks": "error",
     "react/prop-types": "off",
     "react/jsx-props-no-spreading": "off",
+    "react/jsx-wrap-multilines": ["error", {"declaration": false, "assignment": false}],
     "jsx-a11y/label-has-for": "off",
     "jsx-a11y/anchor-is-valid": "off",
     "import/extensions": [
@@ -65,7 +66,7 @@ module.exports = {
         ts: "never",
         tsx: "never"
       }
-    ],
+    ]
   },
   settings: {
     "import/parsers": {

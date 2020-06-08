@@ -1,10 +1,10 @@
 /* eslint-disable no-template-curly-in-string */
-const fs = require("fs");
 const path = require("path");
 
 const isProd = process.env.NODE_ENV === "production";
 
 module.exports = (isServer = false, isTest = false) => ({
+  sourceMaps: true,
   presets: [
     [
       "@babel/preset-env",
@@ -14,29 +14,32 @@ module.exports = (isServer = false, isTest = false) => ({
         useBuiltIns: "entry",
         shippedProposals: true,
         corejs: 3,
+        bugfixes: true,
+        configPath: path.resolve(process.cwd()),
         exclude: ["transform-typeof-symbol"],
-        targets: isServer
+        ...(isServer || isTest
           ? {
-              node: "current",
-              esmodules: true
+              targets: {
+                node: "current",
+              },
             }
-          : { browsers: fs.readFileSync(path.resolve(".browserslistrc"), "UTF-8").split("\n") }
-      }
+          : {}),
+      },
     ],
     [
       "@babel/preset-react",
       {
         useBuiltIns: true,
-        development: !isProd
-      }
-    ]
+        development: !isProd,
+      },
+    ],
   ],
   plugins: [
     "lodash",
-    "@loadable/babel-plugin",
+    "graphql-tag",
     "optimize-clsx",
-    "@babel/plugin-transform-react-constant-elements",
-    "@babel/plugin-transform-react-inline-elements",
+    "@loadable/babel-plugin",
+    "date-fns",
     [
       "@babel/plugin-transform-destructuring",
       {
@@ -51,9 +54,9 @@ module.exports = (isServer = false, isTest = false) => ({
           "useRef",
           "useImperativeHandle",
           "useLayoutEffect",
-          "useDebugValue"
-        ]
-      }
+          "useDebugValue",
+        ],
+      },
     ],
     [
       "@babel/plugin-transform-runtime",
@@ -62,8 +65,8 @@ module.exports = (isServer = false, isTest = false) => ({
         regenerator: true,
         helpers: true,
         useESModules: !isServer,
-        version: require("@babel/runtime/package.json").version // eslint-disable-line global-require
-      }
+        version: require("@babel/runtime/package.json").version, // eslint-disable-line global-require
+      },
     ],
     ["@babel/plugin-proposal-object-rest-spread", { useBuiltIns: true }],
     ["transform-react-remove-prop-types", { mode: "remove", removeImport: true }],
@@ -72,21 +75,17 @@ module.exports = (isServer = false, isTest = false) => ({
       {
         "react-use": {
           transform: isServer ? "react-use/lib/${member}" : "react-use/esm/${member}",
-          preventFullImport: true
-        },
-        "date-fns": {
-          transform: isServer ? "date-fns/${member}" : "date-fns/esm/${member}",
-          preventFullImport: true
+          preventFullImport: true,
         },
         "mdi-norm": {
           transform: isServer ? "mdi-norm/lib/${member}" : "mdi-norm/es/${member}",
           preventFullImport: true,
-          skipDefaultConversion: true
-        }
-      }
+          skipDefaultConversion: true,
+        },
+      },
     ],
     ...(isTest
       ? ["babel-plugin-dynamic-import-node", ["@babel/plugin-transform-modules-commonjs", { loose: true }]]
-      : [])
-  ]
+      : []),
+  ],
 });

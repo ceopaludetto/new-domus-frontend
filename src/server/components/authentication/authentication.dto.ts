@@ -1,13 +1,15 @@
 import { InputType, Field } from "@nestjs/graphql";
 import { IsString } from "class-validator";
 
+import * as Messages from "@/server/utils/validations/messages";
+
 @InputType()
 export class AuthenticationInput {
-  @IsString()
   @Field()
-  public email!: string;
+  @IsString({ message: Messages.STRING })
+  public login!: string;
 
-  @IsString()
   @Field()
+  @IsString({ message: Messages.STRING })
   public password!: string;
 }

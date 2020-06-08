@@ -24,28 +24,26 @@ module.exports = merge(baseConfig(true), {
   node: {
     __console: false,
     __dirname: false,
-    __filename: false
+    __filename: false,
   },
   externals: [
     NodeExternals({
-      whitelist: [...(isProd ? [] : ["webpack/hot/poll?300"]), /\.(scss|sass)$/]
-    })
+      whitelist: [...(isProd ? [] : ["./hotPoll.js?300"]), /\.(scss|sass|gql|graphql)$/],
+    }),
   ],
   entry: [
-    ...(isProd ? [] : ["razzle-dev-utils/prettyNodeErrors", "webpack/hot/poll?300"]),
+    ...(isProd ? [] : ["razzle-dev-utils/prettyNodeErrors", "./hotPoll.js?300"]),
     "reflect-metadata",
-    path.resolve("src", "server", "index.ts")
+    path.resolve("src", "server", "index.ts"),
   ],
   output: {
     path: path.resolve("dist"),
-    publicPath: isProd ? "/static/" : `http://${envs.HOST}:${envs.DEV_PORT}/static/`,
+    publicPath: isProd ? "/static/" : `${envs.PROTOCOL}://${envs.HOST}:${envs.DEV_PORT}/static/`,
     libraryTarget: "commonjs2",
     filename: "index.js",
     pathinfo: true,
     futureEmitAssets: isProd,
-    devtoolModuleFilenameTemplate: isProd
-      ? info => path.resolve(path.resolve("src"), info.absoluteResourcePath).replace(/\\/g, "/")
-      : info => path.resolve(info.absoluteResourcePath).replace(/\\/g, "/")
+    devtoolModuleFilenameTemplate: (info) => path.resolve(info.resourcePath).replace(/\\/g, "/"),
   },
   plugins: [
     ...(isProd
@@ -55,11 +53,11 @@ module.exports = merge(baseConfig(true), {
           new StartServerPlugin({
             name: "index.js",
             keyboard: !isProd,
-            nodeArgs
-          })
+            nodeArgs,
+          }),
         ]),
     new webpack.optimize.LimitChunkCountPlugin({
-      maxChunks: 1
-    })
-  ]
+      maxChunks: 1,
+    }),
+  ],
 });

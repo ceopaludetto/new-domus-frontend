@@ -1,8 +1,10 @@
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { ApolloClient } from "apollo-client";
+import { HttpLink } from "apollo-link-http";
+import { SchemaLink } from "apollo-link-schema";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function createClient(isSsr = false, link: any) {
+export function createClient(isSsr = false, link: HttpLink | SchemaLink) {
   const cache = new InMemoryCache();
 
   const client = new ApolloClient({
@@ -10,13 +12,17 @@ export function createClient(isSsr = false, link: any) {
     link,
     ssrMode: isSsr,
     connectToDevTools: process.env.NODE_ENV === "development",
-    resolvers: {}
+    resolvers: {},
   });
 
   if (!isSsr) {
-    cache.restore((window as any).__APOLLO_STATE__);
-    if (!module.hot) {
-      delete (window as any).__APOLLO_STATE__;
+    const apolloState = document.querySelector("#__APOLLO_STATE__");
+    if (apolloState && apolloState.innerHTML) {
+      cache.restore(JSON.parse(apolloState.innerHTML));
+      if (!module.hot) {
+        const cacheRoot = apolloState?.parentElement?.removeChild?.(apolloState);
+        if (!cacheRoot) throw Error("Fail to remove cache");
+      }
     }
   }
 

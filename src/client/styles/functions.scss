@@ -1,0 +1,97 @@
+@function rem($val) {
+  @if $val {
+    @if type-of($val) == list {
+      $n: ();
+      @each $v in $val {
+        $n: append($n, $v / $rem-ratio);
+      }
+      @return $n;
+    }
+
+    @if type-of($val) == map {
+      $n: ();
+      @each $k, $v in $val {
+        $n: map-merge(
+          $n,
+          (
+            $k: $v / $rem-ratio,
+          )
+        );
+      }
+      @return $n;
+    }
+
+    @return $val / $rem-ratio;
+  }
+}
+
+@function transition($props) {
+  $n: unquote("");
+  @each $prop in $props {
+    @if length($n) == 0 {
+      $n: #{$n} #{$prop} 125ms ease-in-out;
+    } @else {
+      $n: #{$n}, #{$prop} 125ms ease-in-out;
+    }
+  }
+  @return $n;
+}
+
+@function color-yiq($color) {
+  $r: red($color);
+  $g: green($color);
+  $b: blue($color);
+
+  $yiq: (($r * 299) + ($g * 587) + ($b * 114)) / 1000;
+
+  @if ($yiq >= 150) {
+    @return #000;
+  } @else {
+    @return #fff;
+  }
+}
+
+@mixin gen-colors($color-schemes) {
+  @each $scheme-name, $scheme in $color-schemes {
+    @media (prefers-color-scheme: $scheme-name) {
+      :root {
+        @each $k, $v in $scheme {
+          --#{$k}: #{$v};
+          --#{$k}-darken-1: #{darken($v, 3.75%)};
+          --#{$k}-darken-2: #{darken($v, 7.5%)};
+          --#{$k}-lighten-1: #{lighten($v, 3.75%)};
+          --#{$k}-lighten-2: #{lighten($v, 7.5%)};
+          --#{$k}-contrast: #{color-yiq($v)};
+          --#{$k}-rgb: #{unquote("#{red($v)}, #{green($v)}, #{blue($v)}")};
+        }
+      }
+    }
+  }
+}
+
+@function get-color($name, $type: "") {
+  @if $type != "" {
+    $type: unquote("-#{$type}");
+  }
+
+  @return var(#{unquote("--#{$name}#{$type}")});
+}
+
+@function get-shadow-color($name, $alpha: 1) {
+  @return rgba(var(#{unquote("--#{$name}-rgb")}), #{$alpha});
+}
+
+@function get-theme-prop($name, $type, $val: 0) {
+  $theme-item: map-get($theme, $name);
+  $value: map-get($theme-item, $type);
+
+  @if type-of($value) == list {
+    @return nth($value, $val);
+  }
+
+  @if type-of($value) == map {
+    @return map-get($value, $val);
+  }
+
+  @return $value;
+}

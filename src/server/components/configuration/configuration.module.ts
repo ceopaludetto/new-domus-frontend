@@ -10,17 +10,17 @@ import { ConfigurationService } from "./configuration.service";
     {
       provide: ConfigurationService,
       inject: [PinoLogger],
-      useFactory: (pino: PinoLogger) =>
+      useFactory: (logger: PinoLogger) =>
         new ConfigurationService(
           resolve(
             process.env.BASE_DIR as string,
             "env",
             `config.${(process.env.DEPLOYMENT as string) || "development"}.yml`
           ),
-          pino
-        )
-    }
+          logger
+        ),
+    },
   ],
-  exports: [ConfigurationService]
+  exports: [ConfigurationService],
 })
 export class ConfigurationModule {}

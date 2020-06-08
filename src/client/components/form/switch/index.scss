@@ -1,0 +1,108 @@
+@import "~@/client/styles/variables.scss";
+
+.form-group {
+  margin-bottom: get-theme-prop(layout, sizes, 5);
+  .switch-container {
+    position: relative;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    .input {
+      position: absolute;
+      top: 0;
+      left: 0;
+      opacity: 0;
+      width: 40px;
+      height: 100%;
+      cursor: pointer;
+      @each $k, $v in map-get($colors, light) {
+        &:active,
+        &:checked,
+        &[checked] {
+          & + .switch.#{$k}::before {
+            background-color: get-color($k);
+          }
+          & + .switch.#{$k}::after {
+            background-color: get-color($k, contrast);
+          }
+        }
+        &:focus {
+          &:checked,
+          &[checked] {
+            & + .switch.#{$k}::before {
+              background-color: get-color($k, darken-1);
+            }
+          }
+        }
+      }
+      &:checked,
+      &[checked] {
+        & + .switch::after {
+          transform: translateX(18px);
+        }
+      }
+      &:active {
+        & + .switch::after {
+          width: 20px;
+        }
+        &:checked,
+        &[checked] {
+          & + .switch::after {
+            transform: translateX(14px);
+          }
+        }
+      }
+      &:focus {
+        &:not(:checked),
+        &:not([checked]) {
+          & + .switch::before {
+            background-color: get-color(background, darken-1);
+          }
+        }
+      }
+    }
+    .switch {
+      top: 0;
+      position: absolute;
+      height: 22px;
+      width: 40px;
+      pointer-events: none;
+      &::before,
+      &::after {
+        content: "";
+        position: absolute;
+        display: block;
+      }
+      &::after {
+        height: 16px;
+        width: 16px;
+        left: 3px;
+        top: 3px;
+        border-radius: 999px;
+        background-color: get-color(background, contrast);
+        transition: transition((background-color, transform, width));
+      }
+      &::before {
+        left: 0;
+        top: 0;
+        width: 40px;
+        height: 22px;
+        border-radius: 999px;
+        background-color: get-color(background, darken-2);
+        transition: transition((background-color));
+      }
+    }
+    .info {
+      display: inline-block;
+      padding-left: 50px;
+      user-select: none;
+      flex: 1;
+      @media (prefers-color-scheme: dark) {
+        color: get-color(muted, lighten-2);
+      }
+      @media (prefers-color-scheme: light) {
+        color: get-color(muted, darken-2);
+      }
+    }
+  }
+}

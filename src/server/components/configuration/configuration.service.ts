@@ -19,14 +19,29 @@ const EnvSchema = Yup.object({
     username: Yup.string().required(REQUIRED),
     password: Yup.string().required(REQUIRED),
     ssl: Yup.boolean(),
-    logger: Yup.boolean()
+    logger: Yup.boolean(),
+  }),
+  queue: Yup.object({
+    host: Yup.string().required(REQUIRED),
+    port: Yup.number().required(REQUIRED),
+  }),
+  mailer: Yup.object({
+    host: Yup.string().required(REQUIRED),
+    port: Yup.number().required(REQUIRED),
+    auth: Yup.object({
+      user: Yup.string().required(REQUIRED),
+      pass: Yup.string().required(REQUIRED),
+    }),
+    template: Yup.object({
+      dir: Yup.string(),
+    }),
   }),
   auth: Yup.object({
-    secret: Yup.string().required(REQUIRED)
+    secret: Yup.string().required(REQUIRED),
   }),
   graphql: Yup.object({
-    schema: Yup.string()
-  })
+    schema: Yup.string(),
+  }),
 });
 
 type EnvConfig = Yup.InferType<typeof EnvSchema>;
@@ -43,6 +58,8 @@ export class ConfigurationService {
     if (validated !== false) {
       this.envConfig = validated;
     }
+
+    this.logger.info(`Deployment: ${(process.env.DEPLOYMENT as string) || "development"}`);
   }
 
   private validateInput = (config: any) => {
@@ -69,6 +86,14 @@ export class ConfigurationService {
 
   public get graphql() {
     return this.envConfig.graphql;
+  }
+
+  public get queue() {
+    return this.envConfig.queue;
+  }
+
+  public get mailer() {
+    return this.envConfig.mailer;
   }
 
   public setSchema = (schema: GraphQLSchema) => {

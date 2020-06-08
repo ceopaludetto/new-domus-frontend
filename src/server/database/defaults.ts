@@ -5,9 +5,9 @@ export const migrationDefaults = (Sequelize: typeof SequelizeStatic) => ({
   id: {
     primaryKey: true,
     type: Sequelize.STRING,
-    defaultValue: generate
+    defaultValue: generate,
   },
   createdAt: Sequelize.DATE,
   updatedAt: Sequelize.DATE,
-  deletedAt: Sequelize.DATE
+  deletedAt: Sequelize.DATE,
 });

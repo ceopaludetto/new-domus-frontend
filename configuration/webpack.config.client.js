@@ -1,12 +1,8 @@
 const errorOverlayMiddleware = require("react-dev-utils/errorOverlayMiddleware");
-const evalSourceMapMiddleware = require("react-dev-utils/evalSourceMapMiddleware");
-const ModuleNotFoundPlugin = require("react-dev-utils/ModuleNotFoundPlugin");
-const WatchMissingNodeModulesPlugin = require("react-dev-utils/WatchMissingNodeModulesPlugin");
 
 const LoadablePlugin = require("@loadable/webpack-plugin");
 const CompressionPlugin = require("compression-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
-const MiniCssExtract = require("mini-css-extract-plugin");
 const path = require("path");
 const webpack = require("webpack");
 const merge = require("webpack-merge");
@@ -24,47 +20,34 @@ module.exports = merge(baseConfig(false), {
     splitChunks: isProd
       ? {
           chunks: "all",
-          cacheGroups: {
-            styles: {
-              name: "index",
-              test: /\.scss$/,
-              chunks: "all",
-              enforce: true
-            }
-          }
         }
       : undefined,
     moduleIds: isProd ? "hashed" : false,
     runtimeChunk: isProd
       ? {
-          name: "runtime"
+          name: "runtime",
         }
-      : false
+      : false,
   },
   output: {
     pathinfo: true,
-    publicPath: isProd ? "/static/" : `http://${envs.HOST}:${envs.DEV_PORT}/static/`,
+    publicPath: isProd ? "/static/" : `${envs.PROTOCOL}://${envs.HOST}:${envs.DEV_PORT}/static/`,
     path: path.resolve("dist", "static"),
     libraryTarget: "var",
     filename: isProd ? "js/[name].[contenthash:8].js" : "index.js",
     chunkFilename: isProd ? "js/[name].[contenthash:8].js" : "[name].chunk.js",
     futureEmitAssets: true,
-    devtoolModuleFilenameTemplate: isProd
-      ? info => path.resolve(path.resolve("src"), info.absoluteResourcePath).replace(/\\/g, "/")
-      : info => path.resolve(info.absoluteResourcePath).replace(/\\/g, "/")
+    devtoolModuleFilenameTemplate: (info) => path.resolve(info.resourcePath).replace(/\\/g, "/"),
   },
   devServer: {
     disableHostCheck: true,
     clientLogLevel: "none",
     compress: true,
-    contentBase: path.resolve("public"),
-    watchContentBase: true,
-    injectClient: false,
     headers: {
-      "Access-Control-Allow-Origin": "*"
+      "Access-Control-Allow-Origin": "*",
     },
     historyApiFallback: {
-      disableDotRule: true
+      disableDotRule: true,
     },
     hot: true,
     noInfo: true,
@@ -74,12 +57,11 @@ module.exports = merge(baseConfig(false), {
     port: envs.DEV_PORT,
     quiet: true,
     watchOptions: {
-      ignored: /node_modules/
+      ignored: ["node_modules/**", "src/**/*.d.ts", "dist/**"],
     },
-    before(app, server) {
-      app.use(evalSourceMapMiddleware(server));
+    before(app) {
       app.use(errorOverlayMiddleware());
-    }
+    },
   },
   node: {
     module: "empty",
@@ -90,43 +72,34 @@ module.exports = merge(baseConfig(false), {
     net: "empty",
     tls: "empty",
     // eslint-disable-next-line @typescript-eslint/camelcase
-    child_process: "empty"
+    child_process: "empty",
   },
   plugins: [
     ...(isProd
       ? [
           new webpack.HashedModuleIdsPlugin(),
-          new webpack.optimize.AggressiveMergingPlugin({
-            minSizeReduce: 1.5
-          }),
+          new webpack.optimize.AggressiveMergingPlugin(),
           new CompressionPlugin({
             exclude: /(\.map|\.LICENSE|\.json)/,
             cache: true,
-            minRatio: Number.MAX_SAFE_INTEGER
+            minRatio: Number.MAX_SAFE_INTEGER,
           }),
-          new CopyWebpackPlugin([
-            {
-              from: path.resolve("public"),
-              to: path.resolve("dist", "static", "public")
-            }
-          ]),
-          new MiniCssExtract({
-            filename: isProd ? "css/[name].[contenthash:8].css" : "index.css",
-            chunkFilename: isProd ? "css/[name].[contenthash:8].css" : "[name].css",
-            allChunks: true
-          })
         ]
       : [
           new webpack.HotModuleReplacementPlugin({
             multiStep: true,
-            quiet: true
+            quiet: true,
           }),
-          new WatchMissingNodeModulesPlugin(path.resolve("node_modules"))
         ]),
+    new CopyWebpackPlugin([
+      {
+        from: path.resolve("public"),
+        to: path.resolve("dist", "static", "public"),
+      },
+    ]),
     new LoadablePlugin({
       filename: "manifest.json",
-      writeToDisk: true
+      writeToDisk: true,
     }),
-    new ModuleNotFoundPlugin(path.resolve("src"))
-  ]
+  ],
 });

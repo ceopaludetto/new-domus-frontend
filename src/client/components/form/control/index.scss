@@ -1,0 +1,94 @@
+@import "~@/client/styles/variables.scss";
+
+.form-group {
+  margin-bottom: get-theme-prop(layout, sizes, 5);
+  .container {
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: 100%;
+    border-radius: map-get($layout, shape);
+    transition: transition((background-color));
+    background-color: get-color(background, darken-1);
+    overflow: hidden;
+    @each $k, $v in map-get($colors, light) {
+      &.#{$k} {
+        &:hover {
+          background-color: get-color(background, darken-2);
+        }
+        &:focus-within {
+          background-color: get-color(background, darken-1);
+          label {
+            top: calc(#{get-theme-prop(layout, sizes, 4)} + 2px);
+            font-size: get-theme-prop(typography, sizes, 1);
+            color: get-color($k);
+          }
+          div {
+            &::before,
+            &::after {
+              width: 50%;
+              opacity: 1;
+            }
+            &::before {
+              left: 0%;
+            }
+          }
+        }
+      }
+    }
+    .input {
+      padding: get-theme-prop(layout, sizes, 8) get-theme-prop(layout, sizes, 4) get-theme-prop(layout, sizes, 4);
+      color: get-color(background, contrast);
+      flex: 1;
+      border: none;
+      background-color: transparent;
+      line-height: get-theme-prop(layout, sizes, 5);
+      font-size: get-theme-prop(typography, sizes, 2);
+      &:not(:placeholder-shown):not(:focus) + .label {
+        font-size: get-theme-prop(typography, sizes, 1);
+        top: calc(#{get-theme-prop(layout, sizes, 4)} + 2px);
+      }
+      &:focus {
+        outline: none;
+      }
+    }
+    .append {
+      padding: 0 get-theme-prop(layout, sizes, 3);
+    }
+    .label {
+      font-size: get-theme-prop(typography, sizes, 2);
+      color: get-color(muted);
+      font-weight: get-theme-prop(typography, weights, 2);
+      left: get-theme-prop(layout, sizes, 4);
+      transition: transition((top, color, font-size));
+      top: 50%;
+      transform: translateY(-50%);
+      display: inline-block;
+      position: absolute;
+      pointer-events: none;
+    }
+    .effect {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 2px;
+      width: 100%;
+      @each $k, $v in map-get($colors, light) {
+        &.#{$k} {
+          &::before,
+          &::after {
+            content: "";
+            display: block;
+            position: absolute;
+            height: 100%;
+            background-color: get-color($k);
+            left: 50%;
+            width: 0;
+            opacity: 0;
+            transition: transition((width, left, opacity));
+          }
+        }
+      }
+    }
+  }
+}

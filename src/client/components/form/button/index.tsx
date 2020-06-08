@@ -1,36 +1,24 @@
-import React from "react";
+import * as React from "react";
 
 import clsx from "clsx";
+
+import { Colors } from "@/client/utils/common.dto";
 
 import s from "./index.scss";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   block?: boolean;
-  variant?: "contained" | "flat";
-  color?: "primary" | "background";
+  variant?: "contained" | "flat" | "raised";
+  color?: keyof Colors;
 }
 
-export function Button({
-  type = "button",
-  children,
-  className,
-  variant = "contained",
-  color = "primary",
-  block = false,
-  ...rest
-}: ButtonProps) {
-  const classes = clsx(
-    s.button,
-    s[variant],
-    s[color],
-    {
-      [s["button.block"]]: block
-    },
-    className
-  );
+export function Button({ children, variant = "contained", color = "primary", block = false, ...rest }: ButtonProps) {
+  const classes = clsx(s.button, s[variant], s[color], {
+    [s.block]: block,
+  });
 
   return (
-    <button type={type} className={classes} {...rest}>
+    <button className={classes} {...rest}>
       {children}
     </button>
   );

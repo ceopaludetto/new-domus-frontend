@@ -1,3 +1,5 @@
+import { MailerModule } from "@nestjs-modules/mailer";
+import { PugAdapter } from "@nestjs-modules/mailer/dist/adapters/pug.adapter";
 import { Module } from "@nestjs/common";
 import { GraphQLModule } from "@nestjs/graphql";
 import { SequelizeModule } from "@nestjs/sequelize";
@@ -7,9 +9,10 @@ import { LoggerModule, PinoLogger } from "nestjs-pino";
 import {
   ConfigurationModule,
   ConfigurationService,
-  UsuarioModule,
+  UserModule,
   AuthenticationModule,
-  ReactModule
+  ReactModule,
+  QueueModule,
 } from "@/server/components";
 import { entities } from "@/server/models";
 import { ContextType } from "@/server/utils/common.dto";
@@ -17,6 +20,7 @@ import { APP_NAME } from "@/server/utils/constants";
 
 @Module({
   imports: [
+    QueueModule,
     LoggerModule.forRoot({
       pinoHttp: {
         name: APP_NAME,
@@ -27,16 +31,15 @@ import { APP_NAME } from "@/server/utils/constants";
             ? {
                 translateTime: "dd/mm/yyyy, hh:MM:ss:l",
                 ignore: "context,pid,req",
-                levelFirst: true
+                levelFirst: true,
               }
             : false,
-        useLevelLabels: true
-      }
+      },
     }),
     ConfigurationModule,
     SequelizeModule.forRootAsync({
       inject: [ConfigurationService, PinoLogger],
-      useFactory: ({ database }: ConfigurationService, pino: PinoLogger) => ({
+      useFactory: ({ database }: ConfigurationService, logger: PinoLogger) => ({
         dialect: database.dialect || "postgres",
         host: database.host,
         port: database.port,
@@ -44,9 +47,26 @@ import { APP_NAME } from "@/server/utils/constants";
         username: database.username,
         password: database.password,
         ssl: database.ssl || false,
-        logging: database.logger ? sql => pino.debug(sql) : false,
-        models: entities
-      })
+        logging: database.logger ? (sql) => logger.debug(sql) : false,
+        models: entities,
+      }),
+    }),
+    MailerModule.forRootAsync({
+      inject: [ConfigurationService],
+      useFactory: async ({ mailer }: ConfigurationService) => ({
+        transport: {
+          host: mailer.host,
+          port: mailer.port,
+          auth: mailer.auth,
+        },
+        template: {
+          dir: mailer.template.dir,
+          adapter: new PugAdapter(),
+          options: {
+            strict: true,
+          },
+        },
+      }),
     }),
     GraphQLModule.forRootAsync({
       inject: [ConfigurationService],
@@ -59,12 +79,12 @@ import { APP_NAME } from "@/server/utils/constants";
         transformSchema: (schema: GraphQLSchema) => {
           setSchema(schema);
           return schema;
-        }
-      })
+        },
+      }),
     }),
-    UsuarioModule,
+    UserModule,
     AuthenticationModule,
-    ReactModule
-  ]
+    ReactModule,
+  ],
 })
 export class ApplicationModule {}
