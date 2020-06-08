@@ -21,9 +21,14 @@ const SilentDevServer = require("../configuration/devServer");
 const envs = require("../configuration/envs");
 const clientConfig = require("../configuration/webpack.config.client");
 const serverConfig = require("../configuration/webpack.config.server");
+const CodegenRunner = require("./utils/codegen.watcher");
 
 const measure = process.argv.some((arg) => arg === "--measure" || arg === "-m");
 const verbose = process.argv.some((arg) => arg === "--verbose" || arg === "-v");
+
+if (verbose) {
+  process.env.VERBOSE = verbose;
+}
 
 const smp = new SpeedMeasurePlugin({ disable: !measure });
 
@@ -38,7 +43,7 @@ function printMessage(messages, name) {
 }
 
 function log() {
-  if (!measure || !verbose) clearConsole();
+  if (!measure && !verbose) clearConsole();
   stats.server.warnings = stats.server.warnings.filter((x) => !/\/client/.test(x));
   stats.server.errors = stats.server.errors.filter((x) => !/\/client/.test(x));
 
@@ -88,7 +93,8 @@ function compile(config) {
 }
 
 function main() {
-  if (!measure || !verbose) clearConsole();
+  const codegen = new CodegenRunner();
+  if (!measure && !verbose) clearConsole();
   logger.start("Compiling...");
   fs.emptyDirSync(serverConfig.output.path);
 
@@ -130,7 +136,14 @@ function main() {
       );
     })
   );
-  serverCompiler.hooks.done.tap("done", done());
+  serverCompiler.hooks.done.tap(
+    "done",
+    done(() => {
+      if (codegen.listen) return;
+
+      codegen.run();
+    })
+  );
 
   const clientDevServer = new SilentDevServer(clientCompiler, { ...clientConfig.devServer, verbose });
 

@@ -58,7 +58,7 @@
     .label {
       font-size: get-theme-prop(typography, sizes, 2);
       color: get-color(muted);
-      font-weight: get-theme-prop(typography, weights, 3);
+      font-weight: get-theme-prop(typography, weights, 2);
       left: get-theme-prop(layout, sizes, 4);
       transition: transition((top, color, font-size));
       top: 50%;

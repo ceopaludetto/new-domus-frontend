@@ -97,7 +97,7 @@ module.exports = (isServer = false) => ({
       {
         oneOf: [
           {
-            test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/],
+            test: /\.(bmp|gif|jpe?g|png)$/,
             use: [
               {
                 loader: "url-loader",
@@ -130,7 +130,7 @@ module.exports = (isServer = false) => ({
             test: /\.(s?css|sass)$/,
             sideEffects: true,
             use: [
-              !isServer && !isProd && { loader: "style-loader", options: { sourceMap: true } },
+              !isServer && !isProd && { loader: "style-loader" },
               !isServer && isProd && { loader: MiniCssPlugin.loader, options: { esModule: true, sourceMap: true } },
               "css-modules-types-generator-loader",
               {
@@ -213,8 +213,8 @@ module.exports = (isServer = false) => ({
                   emitFile: !isServer,
                 },
               },
-              "image-webpack-loader",
-            ],
+              isProd && "image-webpack-loader",
+            ].filter(Boolean),
           },
         ],
       },
