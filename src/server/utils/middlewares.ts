@@ -18,14 +18,12 @@ export function installMiddlewares(app: INestApplication) {
   app.useGlobalFilters(new GenericExceptionFilter());
   app.enableCors();
 
-  if (process.env.NODE_ENV === "production") {
-    app.use(compression());
-  }
-
   app.use(helmet());
-  app.use(cookie());
 
   if (!process.env.NO_SERVE) {
+    if (process.env.NODE_ENV === "production") {
+      app.use(compression());
+    }
     app.use(
       process.env.PUBLIC_PATH,
       serve(process.env.STATIC_FOLDER as string, {
@@ -33,4 +31,6 @@ export function installMiddlewares(app: INestApplication) {
       })
     );
   }
+
+  app.use(cookie());
 }
