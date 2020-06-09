@@ -21,7 +21,6 @@ const SilentDevServer = require("../configuration/devServer");
 const envs = require("../configuration/envs");
 const clientConfig = require("../configuration/webpack.config.client");
 const serverConfig = require("../configuration/webpack.config.server");
-const CodegenRunner = require("./utils/codegen.watcher");
 
 const measure = process.argv.some((arg) => arg === "--measure" || arg === "-m");
 const verbose = process.argv.some((arg) => arg === "--verbose" || arg === "-v");
@@ -93,7 +92,6 @@ function compile(config) {
 }
 
 function main() {
-  const codegen = new CodegenRunner();
   if (!measure && !verbose) clearConsole();
   logger.start("Compiling...");
   fs.emptyDirSync(serverConfig.output.path);
@@ -136,14 +134,7 @@ function main() {
       );
     })
   );
-  serverCompiler.hooks.done.tap(
-    "done",
-    done(() => {
-      if (codegen.listen) return;
-
-      codegen.run();
-    })
-  );
+  serverCompiler.hooks.done.tap("done", done());
 
   const clientDevServer = new SilentDevServer(clientCompiler, { ...clientConfig.devServer, verbose });
 
