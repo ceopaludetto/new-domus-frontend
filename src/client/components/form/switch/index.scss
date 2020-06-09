@@ -15,6 +15,9 @@
       width: 40px;
       height: 100%;
       cursor: pointer;
+      &:focus + .switch::before {
+        background-color: get-color(background, darken-1);
+      }
       @each $k, $v in map-get($colors, light) {
         &:active,
         &:checked,
@@ -49,14 +52,6 @@
         &[checked] {
           & + .switch::after {
             transform: translateX(14px);
-          }
-        }
-      }
-      &:focus {
-        &:not(:checked),
-        &:not([checked]) {
-          & + .switch::before {
-            background-color: get-color(background, darken-1);
           }
         }
       }
