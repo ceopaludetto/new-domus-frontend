@@ -42,13 +42,15 @@ export class ReactService {
       }
 
       const markup = await renderToStringWithData(
-        <ChunkExtractorManager extractor={extractor}>
-          <HelmetProvider context={helmetContext}>
-            <ApolloProvider client={client}>
-              <App />
-            </ApolloProvider>
-          </HelmetProvider>
-        </ChunkExtractorManager>
+        <React.StrictMode>
+          <ChunkExtractorManager extractor={extractor}>
+            <HelmetProvider context={helmetContext}>
+              <ApolloProvider client={client}>
+                <App />
+              </ApolloProvider>
+            </HelmetProvider>
+          </ChunkExtractorManager>
+        </React.StrictMode>
       );
 
       const initialState = client.extract();

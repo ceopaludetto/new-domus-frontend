@@ -5,13 +5,14 @@ import { SchemaLink } from "apollo-link-schema";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function createClient(isSsr = false, link: HttpLink | SchemaLink) {
-  const cache = new InMemoryCache();
+  const cache = new InMemoryCache({ freezeResults: true });
 
   const client = new ApolloClient({
     cache,
     link,
     ssrMode: isSsr,
     connectToDevTools: process.env.NODE_ENV === "development",
+    assumeImmutableResults: true,
     resolvers: {},
   });
 

@@ -8,6 +8,7 @@ generates:
     config:
       preResolveTypes: true
       dedupeOperationSuffix: true
+      immutableTypes: true
       scalars:
         DateTime: Date
       # noExport: true
