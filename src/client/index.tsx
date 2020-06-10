@@ -1,6 +1,7 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { HelmetProvider } from "react-helmet-async";
+import { BrowserRouter } from "react-router-dom";
 
 import { ApolloProvider } from "@apollo/react-common";
 import { loadableReady } from "@loadable/component";
@@ -26,7 +27,9 @@ loadableReady(() => {
     <React.StrictMode>
       <HelmetProvider>
         <ApolloProvider client={client}>
-          <App />
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
         </ApolloProvider>
       </HelmetProvider>
     </React.StrictMode>,

@@ -3,7 +3,6 @@ import { ApolloClient } from "apollo-client";
 import { HttpLink } from "apollo-link-http";
 import { SchemaLink } from "apollo-link-schema";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function createClient(isSsr = false, link: HttpLink | SchemaLink) {
   const cache = new InMemoryCache({ freezeResults: true });
 

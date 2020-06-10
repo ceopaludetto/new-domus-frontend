@@ -13,6 +13,7 @@ import {
   AuthenticationModule,
   ReactModule,
   QueueModule,
+  PersonModule,
 } from "@/server/components";
 import { entities } from "@/server/models";
 import { ContextType } from "@/server/utils/common.dto";
@@ -83,6 +84,7 @@ import { APP_NAME } from "@/server/utils/constants";
       }),
     }),
     UserModule,
+    PersonModule,
     AuthenticationModule,
     ReactModule,
   ],
