@@ -12,6 +12,6 @@ const target = process.env.TARGET || "server";
 
 const argv = process.argv.slice(2);
 
-argv.push("--config", JSON.stringify(require("../jest.config")(target)));
+argv.push("--config", JSON.stringify(require("../jest.config")(target === "server")));
 
 jest.run(argv);

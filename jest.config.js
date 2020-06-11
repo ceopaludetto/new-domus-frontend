@@ -1,5 +1,4 @@
 const { defaults: tsjPreset } = require("ts-jest/presets");
-const { pathsToModuleNameMapper } = require("ts-jest/utils");
 
 const babelConfig = require("./babel.config");
 const { compilerOptions } = require("./tsconfig");
@@ -11,10 +10,15 @@ module.exports = (isServer = false) => {
       ...tsjPreset.transform,
     },
     moduleFileExtensions: ["js", "jsx", "json", "gql", "graphql", "ts", "tsx"],
-    moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths),
+    moduleNameMapper: { "^@/(.*)$": "<rootDir>/src/$1", "\\.scss$": "identity-obj-proxy" },
     globals: {
       "ts-jest": {
         babelConfig: () => babelConfig(isServer, true),
+        tsconfig: {
+          ...compilerOptions,
+          jsx: "react",
+          target: "ES2019",
+        },
       },
     },
     testMatch: ["<rootDir>/src/**/__tests__/**/*.[jt]s?(x)", "<rootDir>/src/**/?(*.)+(spec|test).[jt]s?(x)"],
