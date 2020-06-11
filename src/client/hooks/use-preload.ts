@@ -3,9 +3,11 @@ import { useHistory } from "react-router-dom";
 
 import { useApolloClient } from "@apollo/react-hooks";
 
+import { ProgressContext } from "@/client/providers/progress";
 import { preload } from "@/client/utils/preload";
 
 export function usePreload<T>(to: string, nested = false, onClick?: (e: React.MouseEvent<T, MouseEvent>) => void) {
+  const { start, changeStep, step, done } = React.useContext(ProgressContext);
   const client = useApolloClient();
   const history = useHistory();
 
@@ -15,7 +17,9 @@ export function usePreload<T>(to: string, nested = false, onClick?: (e: React.Mo
     }
 
     try {
-      await preload(to, { client, nested });
+      start();
+      await preload(to, { client, nested, changeStep, step });
+      done();
 
       if (onClick) {
         onClick(e);

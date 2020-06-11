@@ -1,6 +1,7 @@
 import * as React from "react";
 import { matchPath } from "react-router-dom";
 
+import type { useProgress } from "@/client/hooks/use-progress";
 import { routes } from "@/client/providers/routes";
 import { Route, Client } from "@/client/utils/common.dto";
 
@@ -53,9 +54,11 @@ function findRoute(path: string, proutes: Route[], matching?: Route[]): Route | 
 interface PreloadOptions {
   nested?: boolean;
   client: Client;
+  changeStep: ReturnType<typeof useProgress>["changeStep"];
+  step: ReturnType<typeof useProgress>["step"];
 }
 
-export async function preload(path: string, { nested = false, client }: PreloadOptions) {
+export async function preload(path: string, { nested = false, client, changeStep, step }: PreloadOptions) {
   const matchingRoute = findRoute(path, routes, nested ? [] : undefined);
 
   if (isRouteArray(matchingRoute)) {
@@ -65,6 +68,9 @@ export async function preload(path: string, { nested = false, client }: PreloadO
 
         const c = isDefaultExported(component) ? component.default : component;
 
+        if (step !== 1) {
+          changeStep(1);
+        }
         await (c as any)?.fetchBefore?.(client);
       })
     );
@@ -73,6 +79,7 @@ export async function preload(path: string, { nested = false, client }: PreloadO
 
     const c = isDefaultExported(component) ? component.default : component;
 
+    changeStep(1);
     await (c as any)?.fetchBefore?.(client);
   }
 }
