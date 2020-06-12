@@ -3,7 +3,7 @@
     @if type-of($val) == list {
       $n: ();
       @each $v in $val {
-        $n: append($n, $v / $rem-ratio);
+        $n: append($n, if(type-of($v) == "number", $v / $rem-ratio, $v));
       }
       @return $n;
     }
@@ -14,7 +14,7 @@
         $n: map-merge(
           $n,
           (
-            $k: $v / $rem-ratio,
+            $k: if(type-of($v) == "number", $v / $rem-ratio, $v),
           )
         );
       }

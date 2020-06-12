@@ -22,8 +22,6 @@ export function App() {
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="description" content="Testing my all learned skills in web development" />
-        <link rel="dns-prefetch" href="//fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com/" crossOrigin="anonymous" />
         <link rel="preload" href={OpenSans400} as="font" crossOrigin="anonymous" />
         <link rel="preload" href={OpenSans600} as="font" crossOrigin="anonymous" />
       </Helmet>
