@@ -3,7 +3,6 @@ const path = require("path");
 module.exports = {
   parser: "@typescript-eslint/parser",
   env: {
-    es6: true,
     node: true,
     browser: true,
     jest: true,
@@ -31,7 +30,7 @@ module.exports = {
     },
     ecmaVersion: 2020,
     sourceType: "module",
-    projects: [path.resolve("tsconfig.json")],
+    project: path.resolve("tsconfig.json"),
   },
   rules: {
     "prettier/prettier": "error",
