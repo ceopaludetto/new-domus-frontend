@@ -1,0 +1,31 @@
+version: 1
+
+database:
+  database: graphql
+  dialect: postgres
+  host: localhost
+  port: 5432
+  username: docker
+  password: docker
+  logger: true
+  test: $PORT
+
+queue:
+  host: localhost
+  port: 6379
+
+mailer:
+  host: smtp.mailtrap.io
+  port: 2525
+  auth:
+    user: 542484e887f0bc
+    pass: 900ed66f62db84
+
+  template:
+    dir: src/server/templates
+
+auth:
+  secret: teste
+
+graphql:
+  schema: src/server/schema.gql
