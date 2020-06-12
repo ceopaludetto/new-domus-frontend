@@ -10,7 +10,7 @@
   "scripts": {
     "start": "node scripts/start.js",
     "start:production": "NODE_ENV=production node dist/index.js",
-    "build": "yarn graphql && node scripts/build.js && node scripts/sequelize run migration -ca",
+    "build": "node scripts/build.js",
     "build:docker": "docker-compose down && docker volume rm $(basename \"$PWD\")_app_content && docker-compose up -d --build --force-recreate -V",
     "graphql": "graphql-codegen --config codegen.yml",
     "test:server": "TARGET=server node scripts/test.js",
