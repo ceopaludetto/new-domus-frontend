@@ -3,9 +3,9 @@
 .header {
   position: fixed;
   width: 100%;
+  background-color: get-shadow-color(background, 0.6);
 }
 
 .content {
   padding: get-theme-prop(layout, sizes, 5) 0;
-  background-color: get-shadow-color(background, 0.6);
 }
