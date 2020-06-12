@@ -15,6 +15,7 @@ import { MailQueueConsumer } from "./mail.queue.consumer";
         redis: {
           host: queue.host,
           port: +queue.port,
+          password: queue.password,
         },
       }),
     }),

@@ -17,7 +17,8 @@
     "test:client": "TARGET=client node scripts/test.js",
     "clean": "[ -d \"node_modules/.cache\" ] && rm -r node_modules/.cache || echo \"Already cleanned\"",
     "analyze": "source-map-explorer dist/static/js/*.js",
-    "lint": "eslint \"src/**\""
+    "lint": "eslint \"src/**\"",
+    "heroku-cleanup": "node scripts/sequelize run migration -ca"
   },
   "dependencies": {
     "@apollo/react-common": "^3.1.3",
