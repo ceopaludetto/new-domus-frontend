@@ -10,3 +10,6 @@ tmp
 *.scss.d.ts
 *.gql.d.ts
 src/client/graphql/operations.ts
+
+
+coverage

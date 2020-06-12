@@ -42,6 +42,8 @@ input PersonInsertInput {
 type Query {
   showUsers(first: Int, skip: Int): [User!]!
   findUser(id: ID!): User!
+  showPeople(first: Int, skip: Int): [Person!]!
+  findPerson(id: ID!): Person!
   profile: User!
 }
 

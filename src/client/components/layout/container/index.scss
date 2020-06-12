@@ -1,0 +1,13 @@
+@import "~@/client/styles/variables.scss";
+
+.container {
+  padding: 0 get-theme-prop(layout, sizes, 5);
+  &:not(.fluid) {
+    margin: 0 auto;
+    @each $k, $v in get-theme-prop(layout, breakpoints) {
+      @media (min-width: $v) {
+        max-width: #{get-theme-prop(layout, containers, $k)};
+      }
+    }
+  }
+}

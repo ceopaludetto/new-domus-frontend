@@ -1,12 +1,4 @@
-fragment UserValues on User {
-  id
-  login
-  person {
-    id
-    name
-    email
-  }
-}
+#import "./fragments/user-values.gql"
 
 mutation Login($input: AuthenticationInput!) {
   login(input: $input) {

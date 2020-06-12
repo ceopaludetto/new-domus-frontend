@@ -26,4 +26,8 @@ async function bootstrap() {
   }
 }
 
-bootstrap();
+bootstrap().catch((err) => {
+  if (err) {
+    console.error(err); // eslint-disable-line no-console
+  }
+});

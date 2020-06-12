@@ -26,9 +26,11 @@ export function Control({
     <div className={clsx({ [s["form-group"]]: margin })}>
       <div className={clsx(s.container, s[color])}>
         <input className={s.input} id={id} placeholder={placeholder} {...rest} />
-        <label className={s.label} htmlFor={id}>
-          {label}
-        </label>
+        {label && (
+          <label className={s.label} htmlFor={id}>
+            {label}
+          </label>
+        )}
         {append && (
           <div className={s.append}>
             {React.cloneElement(append, {

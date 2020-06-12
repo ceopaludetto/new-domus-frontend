@@ -1,0 +1,16 @@
+@import "~@/client/styles/variables.scss";
+
+.blurred {
+  transition: transition((backdrop-filter));
+  &:not(.deactivate) {
+    backdrop-filter: saturate(100%) blur(5px);
+  }
+  &.border {
+    @media (prefers-color-scheme: dark) {
+      border-bottom: 1px solid get-color(background, lighten-2);
+    }
+    @media (prefers-color-scheme: light) {
+      border-bottom: 1px solid get-color(background, darken-2);
+    }
+  }
+}

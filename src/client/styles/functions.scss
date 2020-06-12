@@ -3,7 +3,7 @@
     @if type-of($val) == list {
       $n: ();
       @each $v in $val {
-        $n: append($n, $v / $rem-ratio);
+        $n: append($n, if(type-of($v) == "number", $v / $rem-ratio, $v));
       }
       @return $n;
     }
@@ -14,7 +14,7 @@
         $n: map-merge(
           $n,
           (
-            $k: $v / $rem-ratio,
+            $k: if(type-of($v) == "number", $v / $rem-ratio, $v),
           )
         );
       }
@@ -25,13 +25,13 @@
   }
 }
 
-@function transition($props) {
+@function transition($props, $dur: 125ms) {
   $n: unquote("");
   @each $prop in $props {
     @if length($n) == 0 {
-      $n: #{$n} #{$prop} 125ms ease-in-out;
+      $n: #{$n} #{$prop} #{$dur} ease-in-out;
     } @else {
-      $n: #{$n}, #{$prop} 125ms ease-in-out;
+      $n: #{$n}, #{$prop} #{$dur} ease-in-out;
     }
   }
   @return $n;
@@ -90,7 +90,10 @@
   }
 
   @if type-of($value) == map {
-    @return map-get($value, $val);
+    @if $val != 0 {
+      @return map-get($value, $val);
+    }
+    @return $value;
   }
 
   @return $value;

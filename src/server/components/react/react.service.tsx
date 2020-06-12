@@ -2,6 +2,7 @@
 import * as React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { FilledContext, HelmetProvider } from "react-helmet-async";
+import { StaticRouter } from "react-router-dom";
 
 import { ApolloProvider } from "@apollo/react-common";
 import { renderToStringWithData } from "@apollo/react-ssr";
@@ -30,26 +31,34 @@ export class ReactService {
       const extractor = new ChunkExtractor({
         statsFile: process.env.MANIFEST as string,
       });
-      // const context: { url?: string } = {};
+      const context: { url?: string } = {};
       const helmetContext: FilledContext | {} = {};
       const client = createClient(true, new SchemaLink({ schema: this.configService.schema }));
 
       if (process.env.NODE_ENV === "production") {
         res.set(
           "Content-Security-Policy",
-          `default-src 'self'; script-src 'self' 'nonce-${nonce}'; style-src 'self' 'nonce-${nonce}' https://fonts.googleapis.com; font-src *;`
+          `default-src 'self'; script-src 'self' 'nonce-${nonce}'; style-src 'self' 'nonce-${nonce}'; font-src *;`
         );
       }
 
       const markup = await renderToStringWithData(
-        <ChunkExtractorManager extractor={extractor}>
-          <HelmetProvider context={helmetContext}>
-            <ApolloProvider client={client}>
-              <App />
-            </ApolloProvider>
-          </HelmetProvider>
-        </ChunkExtractorManager>
+        <React.StrictMode>
+          <ChunkExtractorManager extractor={extractor}>
+            <HelmetProvider context={helmetContext}>
+              <ApolloProvider client={client}>
+                <StaticRouter context={context} location={req.url}>
+                  <App />
+                </StaticRouter>
+              </ApolloProvider>
+            </HelmetProvider>
+          </ChunkExtractorManager>
+        </React.StrictMode>
       );
+
+      if (context.url) {
+        return res.redirect(context.url);
+      }
 
       const initialState = client.extract();
 
@@ -58,7 +67,7 @@ export class ReactService {
       return res.send(`<!DOCTYPE html>${fullHTML}`);
     } catch (error) {
       this.logger.error(error?.message ?? error ?? "Falha ao renderizar React");
-      return res.send({ error: true, message: "fail to render" });
+      return res.send({ error: true, message: "Falha ao renderizar React" });
     }
   }
 

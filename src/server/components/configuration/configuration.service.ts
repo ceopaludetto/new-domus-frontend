@@ -24,6 +24,7 @@ const EnvSchema = Yup.object({
   queue: Yup.object({
     host: Yup.string().required(REQUIRED),
     port: Yup.number().required(REQUIRED),
+    password: Yup.string(),
   }),
   mailer: Yup.object({
     host: Yup.string().required(REQUIRED),

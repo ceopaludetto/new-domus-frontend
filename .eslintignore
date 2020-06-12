@@ -1,2 +1,8 @@
 dist
 node_modules
+coverage
+
+src/**/*.pug
+src/**/*.gql*
+src/**/*.scss*
+src/**/*.woff2

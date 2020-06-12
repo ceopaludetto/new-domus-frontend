@@ -8,6 +8,10 @@ generates:
     config:
       preResolveTypes: true
       dedupeOperationSuffix: true
+      immutableTypes: true
+      nonOptionalTypename: true
+      scalars:
+        DateTime: Date
       # noExport: true
     plugins:
       - typescript

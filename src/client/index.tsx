@@ -1,6 +1,7 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { HelmetProvider } from "react-helmet-async";
+import { BrowserRouter } from "react-router-dom";
 
 import { ApolloProvider } from "@apollo/react-common";
 import { loadableReady } from "@loadable/component";
@@ -23,11 +24,15 @@ loadableReady(() => {
   const method: "render" | "hydrate" = root?.hasChildNodes() ? "hydrate" : "render";
 
   ReactDOM[method](
-    <HelmetProvider>
-      <ApolloProvider client={client}>
-        <App />
-      </ApolloProvider>
-    </HelmetProvider>,
+    <React.StrictMode>
+      <HelmetProvider>
+        <ApolloProvider client={client}>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </ApolloProvider>
+      </HelmetProvider>
+    </React.StrictMode>,
     root
   );
 });

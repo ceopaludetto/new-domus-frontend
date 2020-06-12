@@ -3,32 +3,40 @@ const path = require("path");
 module.exports = {
   parser: "@typescript-eslint/parser",
   env: {
-    es6: true,
     node: true,
     browser: true,
-    jest: true
+    jest: true,
   },
-  extends: ["airbnb", "plugin:@typescript-eslint/recommended", "prettier", "prettier/@typescript-eslint"],
-  plugins: ["react", "react-hooks", "import", "import-helpers", "prettier"],
+  extends: [
+    "airbnb",
+    "airbnb/hooks",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:import/errors",
+    "plugin:import/warnings",
+    "plugin:import/typescript",
+    "prettier",
+    "prettier/react",
+    "prettier/@typescript-eslint",
+  ],
+  plugins: ["@typescript-eslint", "import-helpers", "prettier"],
   globals: {
     Atomics: "readonly",
-    SharedArrayBuffer: "readonly"
+    SharedArrayBuffer: "readonly",
   },
   parserOptions: {
     ecmaFeatures: {
       jsx: true,
-      tsx: true
+      tsx: true,
     },
     ecmaVersion: 2020,
     sourceType: "module",
-    projects: [path.resolve("tsconfig.json")]
+    project: path.resolve("tsconfig.json"),
   },
   rules: {
     "prettier/prettier": "error",
     "no-param-reassign": "off",
-    "no-underscore-dangle": "off",
     "no-useless-constructor": "off",
-    "max-classes-per-file": ["error", 5],
+    "max-classes-per-file": ["error", 4],
     "class-methods-use-this": "off",
     "@typescript-eslint/no-var-requires": "off",
     "@typescript-eslint/explicit-function-return-type": "off",
@@ -41,22 +49,19 @@ module.exports = {
       {
         newlinesBetween: "always",
         groups: ["/^react/", "module", "/^@\\//", ["parent", "sibling", "index"]],
-        alphabetize: { order: "asc", ignoreCase: true }
-      }
+        alphabetize: { order: "asc", ignoreCase: true },
+      },
     ],
     "react/jsx-filename-extension": [
       "warn",
       {
-        extensions: [".jsx", ".tsx"]
-      }
+        extensions: [".jsx", ".tsx"],
+      },
     ],
     "react/button-has-type": "off",
-    "react-hooks/rules-of-hooks": "error",
     "react/prop-types": "off",
     "react/jsx-props-no-spreading": "off",
-    "react/jsx-wrap-multilines": ["error", {"declaration": false, "assignment": false}],
     "jsx-a11y/label-has-for": "off",
-    "jsx-a11y/anchor-is-valid": "off",
     "import/extensions": [
       "error",
       "ignorePackages",
@@ -64,17 +69,17 @@ module.exports = {
         js: "never",
         jsx: "never",
         ts: "never",
-        tsx: "never"
-      }
-    ]
+        tsx: "never",
+      },
+    ],
   },
   settings: {
     "import/parsers": {
-      "@typescript-eslint/parser": [".ts"]
+      "@typescript-eslint/parser": [".ts", ".tsx"],
     },
-    "import/extensions": [".js", ".ts"],
+    "import/extensions": [".js", ".jsx", ".ts", ".tsx", ".scss"],
     "import/resolver": {
-      typescript: {}
-    }
-  }
+      typescript: {},
+    },
+  },
 };

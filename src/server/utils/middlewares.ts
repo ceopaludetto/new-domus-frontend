@@ -6,44 +6,24 @@ import { static as serve } from "express";
 import helmet from "helmet";
 
 import { GenericExceptionFilter } from "./exception.filter";
+import { formatErrors } from "./validations/format";
 
 export function installMiddlewares(app: INestApplication) {
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
-      exceptionFactory: (errors) => {
-        const constraints: { [index: string]: string[] } = {};
-
-        const properties = errors.map((e) => e.property);
-
-        errors.forEach((e) => {
-          const messages: string[] = [];
-
-          Object.keys(e.constraints).forEach((ck) => {
-            messages.push(e.constraints[ck]);
-          });
-
-          constraints[e.property] = messages;
-        });
-
-        return new UserInputError("Erro de validação", {
-          fields: properties,
-          messages: constraints,
-        });
-      },
+      exceptionFactory: (errors) => new UserInputError("Erro de validação", formatErrors(errors)),
     })
   );
   app.useGlobalFilters(new GenericExceptionFilter());
   app.enableCors();
 
-  if (process.env.NODE_ENV === "production") {
-    app.use(compression());
-  }
-
   app.use(helmet());
-  app.use(cookie());
 
   if (!process.env.NO_SERVE) {
+    if (process.env.NODE_ENV === "production") {
+      app.use(compression());
+    }
     app.use(
       process.env.PUBLIC_PATH,
       serve(process.env.STATIC_FOLDER as string, {
@@ -51,4 +31,6 @@ export function installMiddlewares(app: INestApplication) {
       })
     );
   }
+
+  app.use(cookie());
 }

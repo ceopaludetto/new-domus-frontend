@@ -10,7 +10,6 @@ const TerserPlugin = require("terser-webpack-plugin");
 const webpack = require("webpack");
 
 const babelOptions = require("../babel.config");
-const envs = require("./envs");
 
 const isProd = process.env.NODE_ENV === "production";
 
@@ -231,16 +230,12 @@ module.exports = (isServer = false) => ({
   },
   plugins: [
     new webpack.EnvironmentPlugin({
-      URL: `${envs.PROTOCOL}://${envs.HOST}:${envs.PORT}`,
-      PORT: envs.PORT,
-      HOST: envs.HOST,
       TARGET: isServer ? "server" : "web",
       PUBLIC_PATH: "/static/",
       PUBLIC_URL: "/static",
       STATIC_FOLDER: path.resolve("dist", "static"),
       MANIFEST: path.resolve("dist", "static", "manifest.json"),
       BASE_DIR: path.resolve("."),
-      PROTOCOL: envs.PROTOCOL,
     }),
     new webpack.WatchIgnorePlugin([/\.scss\.d\.ts/g]),
     new LodashPlugin(),
