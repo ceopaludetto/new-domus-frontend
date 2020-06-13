@@ -4,14 +4,16 @@ import clsx from "clsx";
 
 import s from "./index.scss";
 
-interface PaperProps extends React.HTMLAttributes<HTMLDivElement> {
+type PaperProps<T extends React.ElementType<any> = "div"> = {
+  as?: T;
   size?: "large" | "normal";
   outline?: boolean;
   noGutter?: boolean;
   noHorizontalBorders?: boolean;
-}
+} & React.ComponentProps<T>;
 
-export function Paper({
+export function Paper<T extends React.ElementType<any> = "div">({
+  as: Component = "div",
   children,
   className,
   size = "normal",
@@ -19,7 +21,7 @@ export function Paper({
   noGutter = false,
   noHorizontalBorders = false,
   ...rest
-}: PaperProps) {
+}: PaperProps<T>) {
   const classes = clsx(
     s.paper,
     s[size],
@@ -32,8 +34,8 @@ export function Paper({
   );
 
   return (
-    <div className={classes} {...rest}>
+    <Component className={classes} {...rest}>
       {children}
-    </div>
+    </Component>
   );
 }

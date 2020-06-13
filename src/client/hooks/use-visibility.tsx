@@ -24,7 +24,7 @@ export function useVisibility(initialValue?: boolean) {
     };
   }, [isVisible, toggleVisible]);
 
-  return [{ getFieldProps }];
+  return [getFieldProps];
 }
 
 export function useMultipleVisibility<T extends string | symbol>(names: T[], initialValue?: boolean) {
@@ -63,5 +63,5 @@ export function useMultipleVisibility<T extends string | symbol>(names: T[], ini
     [isVisible, toggleVisible]
   );
 
-  return [{ getFieldProps }];
+  return [getFieldProps];
 }

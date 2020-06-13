@@ -7,9 +7,6 @@ export default function Main() {
     <>
       <Header />
       conteudo
-      {Array.from(new Array(100).keys()).map((i) => (
-        <br key={i} />
-      ))}
     </>
   );
 }

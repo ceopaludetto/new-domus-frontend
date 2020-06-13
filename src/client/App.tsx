@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Helmet } from "react-helmet-async";
-import { Switch as RouterSwitch, Route } from "react-router-dom";
+import { Switch, Route } from "react-router-dom";
 
 import OpenSans400 from "@/client/assets/fonts/open-sans-400.woff2";
 import OpenSans600 from "@/client/assets/fonts/open-sans-600.woff2";
@@ -25,11 +25,11 @@ export function App() {
         <link rel="preload" href={OpenSans400} as="font" crossOrigin="anonymous" />
         <link rel="preload" href={OpenSans600} as="font" crossOrigin="anonymous" />
       </Helmet>
-      <RouterSwitch>
-        {routes.map(({ name, ...rest }) => (
-          <Route key={name} {...rest} />
+      <Switch>
+        {routes.map(({ name, component: Component, children, ...rest }) => (
+          <Route key={name} render={(props) => <Component {...props} routes={children} />} {...rest} />
         ))}
-      </RouterSwitch>
+      </Switch>
     </ProgressContext.Provider>
   );
 }

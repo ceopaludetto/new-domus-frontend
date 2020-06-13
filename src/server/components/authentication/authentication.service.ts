@@ -25,7 +25,7 @@ export class AuthenticationService {
     try {
       const user = await this.userService.findByLogin(login);
       if (!user) {
-        throw new UserInputError("Usuário não encontrado", { fields: ["email"] });
+        throw new UserInputError("Usuário não encontrado", { fields: ["login"] });
       }
 
       if (!(await user.comparePasswords(password))) {
@@ -36,6 +36,9 @@ export class AuthenticationService {
 
       return user;
     } catch (error) {
+      if (error instanceof UserInputError) {
+        throw error;
+      }
       throw new AuthenticationError("Falha ao fazer login");
     }
   }

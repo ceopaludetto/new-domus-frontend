@@ -1,0 +1,7 @@
+@import "~@/client/styles/variables";
+
+@each $k, $v in map-get($colors, light) {
+  .#{$k} {
+    color: get-color($k);
+  }
+}

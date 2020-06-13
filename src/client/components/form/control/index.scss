@@ -1,7 +1,8 @@
 @import "~@/client/styles/variables.scss";
 
 .form-group {
-  margin-bottom: get-theme-prop(layout, sizes, 5);
+  margin-top: get-theme-prop(layout, sizes, 5);
+  margin-bottom: get-theme-prop(layout, sizes, 4);
   .container {
     display: flex;
     align-items: center;
@@ -66,6 +67,9 @@
       display: inline-block;
       position: absolute;
       pointer-events: none;
+      &.error {
+        color: get-color(error) !important;
+      }
     }
     .effect {
       position: absolute;
@@ -85,10 +89,24 @@
             left: 50%;
             width: 0;
             opacity: 0;
-            transition: transition((width, left, opacity));
+            transition: transition((width, left, opacity, background-color));
           }
         }
       }
+      &.error {
+        &::before,
+        &::after {
+          background-color: get-color(error) !important;
+        }
+      }
+    }
+  }
+  .helper {
+    margin-top: get-theme-prop(layout, sizes, 3);
+    transition: transition((color));
+    padding-left: get-theme-prop(layout, sizes, 4);
+    &.error {
+      color: get-color(error) !important;
     }
   }
 }

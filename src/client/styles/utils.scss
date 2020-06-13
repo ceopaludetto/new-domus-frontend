@@ -1,0 +1,55 @@
+@import "~@/client/styles/variables";
+
+$justify: flex-start flex-end center space-between space-around;
+$align: flex-start flex-end center baseline stretch;
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -#{get-theme-prop(layout, sizes, 5)};
+  @each $k, $v in get-theme-prop(layout, breakpoints) {
+    @media (min-width: $v) {
+      @for $i from 1 through length($justify) {
+        &.justify-content-#{$k}-#{nth($justify, $i)} {
+          justify-content: nth($justify, $i);
+        }
+      }
+      @for $i from 1 through length($align) {
+        &.align-items-#{$k}-#{nth($align, $i)} {
+          align-items: nth($align, $i);
+        }
+      }
+    }
+  }
+}
+
+.col {
+  padding: 0 #{get-theme-prop(layout, sizes, 5)};
+  @each $k, $v in get-theme-prop(layout, breakpoints) {
+    @media (min-width: $v) {
+      &.#{$k} {
+        flex: 1;
+      }
+      @for $i from 1 through 12 {
+        &.#{$k}-#{$i} {
+          flex: #{100% / 12 * $i};
+        }
+      }
+    }
+  }
+}
+
+@for $i from 1 through 20 {
+  .mw-#{$i * 50} {
+    max-width: #{$i * 50}px;
+  }
+}
+
+@for $i from 1 through 4 {
+  .w-#{$i * 25} {
+    width: #{$i * 25%};
+  }
+  .h-#{$i * 25} {
+    height: #{$i * 25%};
+  }
+}
