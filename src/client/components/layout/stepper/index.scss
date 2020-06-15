@@ -1,0 +1,48 @@
+@import "~@/client/styles/variables";
+
+.stepper {
+  margin-top: get-theme-prop(layout, sizes, 3);
+  margin-bottom: get-theme-prop(layout, sizes, 7);
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  &.clickable {
+    cursor: pointer;
+  }
+  &:not(.active) {
+    .icon,
+    .content {
+      color: get-color(muted);
+    }
+  }
+  &.active {
+    .icon,
+    .content {
+      color: get-color(primary);
+    }
+  }
+}
+
+.icon {
+  display: inline-flex;
+}
+
+.content {
+  font-weight: 600;
+  @media (max-width: get-theme-prop(layout, breakpoints, md)) {
+    display: none;
+  }
+}
+
+.line {
+  height: 2px;
+  border-radius: 999px;
+  &:not(.active) {
+    background-color: get-color(muted);
+  }
+  &.active {
+    background-color: get-color(primary);
+  }
+}

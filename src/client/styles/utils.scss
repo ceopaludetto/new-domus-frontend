@@ -6,7 +6,7 @@ $align: flex-start flex-end center baseline stretch;
 .row {
   display: flex;
   flex-wrap: wrap;
-  margin: 0 -#{get-theme-prop(layout, sizes, 5)};
+  margin: 0 -#{get-theme-prop(layout, sizes, 3)};
   @each $k, $v in get-theme-prop(layout, breakpoints) {
     @media (min-width: $v) {
       @for $i from 1 through length($justify) {
@@ -24,7 +24,7 @@ $align: flex-start flex-end center baseline stretch;
 }
 
 .col {
-  padding: 0 #{get-theme-prop(layout, sizes, 5)};
+  padding: 0 #{get-theme-prop(layout, sizes, 3)};
   @each $k, $v in get-theme-prop(layout, breakpoints) {
     @media (min-width: $v) {
       &.#{$k} {
@@ -32,7 +32,7 @@ $align: flex-start flex-end center baseline stretch;
       }
       @for $i from 1 through 12 {
         &.#{$k}-#{$i} {
-          flex: #{100% / 12 * $i};
+          flex: 0 0 #{100% / 12 * $i};
         }
       }
     }
@@ -52,4 +52,47 @@ $align: flex-start flex-end center baseline stretch;
   .h-#{$i * 25} {
     height: #{$i * 25%};
   }
+}
+
+$sides: (
+  l: left,
+  r: right,
+  t: top,
+  b: bottom,
+  x: left right,
+  y: top bottom,
+);
+
+@for $i from 1 through length(get-theme-prop(layout, sizes)) {
+  .m-#{$i} {
+    margin: get-theme-prop(layout, sizes, $i);
+  }
+  .p-#{$i} {
+    padding: get-theme-prop(layout, sizes, $i);
+  }
+  @each $k, $v in $sides {
+    @if type-of($v) == list {
+      .m#{$k}-#{$i} {
+        @for $j from 1 through length($v) {
+          margin-#{nth($v, $j)}: get-theme-prop(layout, sizes, $i);
+        }
+      }
+      .p#{$k}-#{$i} {
+        @for $j from 1 through length($v) {
+          padding-#{nth($v, $j)}: get-theme-prop(layout, sizes, $i);
+        }
+      }
+    } @else {
+      .m#{$k}-#{$i} {
+        margin-#{$v}: get-theme-prop(layout, sizes, $i);
+      }
+      .p#{$k}-#{$i} {
+        padding-#{$v}: get-theme-prop(layout, sizes, $i);
+      }
+    }
+  }
+}
+
+.inline-flex {
+  display: inline-flex;
 }

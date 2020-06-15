@@ -20,10 +20,10 @@ export function PreloadLink<T extends React.ComponentType<any> = Link>({
   ...rest
 }: PreloadLinkProps<T>) {
   const path = hasPathname(to) ? to.pathname : to;
-  const handleClick = usePreload(path, nested, onClick);
+  const [handleClick] = usePreload<T>(nested, onClick);
 
   return (
-    <Component onClick={handleClick} {...rest}>
+    <Component onClick={handleClick(path)} {...rest}>
       {children}
     </Component>
   );

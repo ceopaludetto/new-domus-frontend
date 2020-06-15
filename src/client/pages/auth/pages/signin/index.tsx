@@ -57,7 +57,7 @@ export default function SignIn() {
         />
         <div className={clsx(u.row, u["justify-content-xs-flex-end"])}>
           <div className={u.col}>
-            <PreloadLink as={Button} variant="flat" to="/auth/signup">
+            <PreloadLink as={Button} variant="flat" to="/auth/signup/step-1">
               Cadastre-se
             </PreloadLink>{" "}
             <Button variant="raised" type="submit">

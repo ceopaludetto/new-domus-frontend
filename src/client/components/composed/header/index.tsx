@@ -24,7 +24,7 @@ export function Header() {
               <PreloadLink as={Button} variant="flat" size="small" to="/auth/signin">
                 Entrar
               </PreloadLink>{" "}
-              <PreloadLink as={Button} variant="raised" size="small" to="/auth/signup">
+              <PreloadLink as={Button} variant="raised" size="small" to="/auth/signup/step-1">
                 Cadastre-se
               </PreloadLink>
             </div>

@@ -18,25 +18,35 @@ export interface ControlProps extends React.InputHTMLAttributes<HTMLInputElement
 export const Control = React.forwardRef<HTMLInputElement, ControlProps>(
   (
     {
+      margin = true,
+      placeholder = " ",
+      error = false,
       id,
       label,
-      color = "primary",
-      placeholder = " ",
-      margin = true,
+      required,
       append,
-      error = false,
       helperText,
+      color = "primary",
       ...rest
-    }: ControlProps,
+    },
     ref
   ) => {
     return (
       <div className={clsx({ [s["form-group"]]: margin })}>
         <div className={clsx(s.container, s[color])}>
-          <input ref={ref} className={s.input} id={id} placeholder={placeholder} {...rest} />
+          <input
+            aria-invalid={error ? "true" : "false"}
+            aria-describedby={`${id}-error`}
+            ref={ref}
+            className={s.input}
+            id={id}
+            placeholder={placeholder}
+            {...rest}
+          />
           {label && (
             <label className={clsx(s.label, error && s.error)} htmlFor={id}>
               {label}
+              {required && " *"}
             </label>
           )}
           {append && (
@@ -49,7 +59,11 @@ export const Control = React.forwardRef<HTMLInputElement, ControlProps>(
           )}
           <div className={clsx(s.effect, s[color], error && s.error)} />
         </div>
-        {helperText && <div className={clsx(s.helper, error && s.error)}>{helperText}</div>}
+        {helperText && (
+          <div id={`${id}-error`} className={clsx(s.helper, error && s.error)}>
+            {helperText}
+          </div>
+        )}
       </div>
     );
   }

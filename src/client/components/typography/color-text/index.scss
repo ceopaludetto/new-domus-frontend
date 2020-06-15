@@ -4,4 +4,10 @@
   .#{$k} {
     color: get-color($k);
   }
+  .bold {
+    font-weight: get-theme-prop(typography, weights, 2);
+  }
+  .small {
+    font-size: get-theme-prop(typography, sizes, 1);
+  }
 }

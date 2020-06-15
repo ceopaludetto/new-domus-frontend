@@ -242,7 +242,7 @@ module.exports = (isServer = false) => ({
     new MiniCssPlugin({
       filename: isProd ? "css/[name].[contenthash:8].css" : "index.css",
       chunkFilename: isProd ? "css/[name].[contenthash:8].css" : "[name].css",
-      ignoreOrder: false,
+      ignoreOrder: true,
     }),
   ],
 });
