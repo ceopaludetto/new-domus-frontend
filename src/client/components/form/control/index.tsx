@@ -36,7 +36,7 @@ export const Control = React.forwardRef<HTMLInputElement, ControlProps>(
         <div className={clsx(s.container, s[color])}>
           <input
             aria-invalid={error ? "true" : "false"}
-            aria-describedby={`${id}-error`}
+            aria-describedby={error ? `${id}-error` : undefined}
             ref={ref}
             className={s.input}
             id={id}

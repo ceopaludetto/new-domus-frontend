@@ -63,36 +63,47 @@ $sides: (
   y: top bottom,
 );
 
+$props: (
+  m: margin,
+  p: padding,
+);
+
 @for $i from 1 through length(get-theme-prop(layout, sizes)) {
-  .m-#{$i} {
-    margin: get-theme-prop(layout, sizes, $i);
-  }
-  .p-#{$i} {
-    padding: get-theme-prop(layout, sizes, $i);
-  }
-  @each $k, $v in $sides {
-    @if type-of($v) == list {
-      .m#{$k}-#{$i} {
-        @for $j from 1 through length($v) {
-          margin-#{nth($v, $j)}: get-theme-prop(layout, sizes, $i);
+  @each $pk, $pv in $props {
+    .#{$pk}-#{$i} {
+      #{$pv}: get-theme-prop(layout, sizes, $i);
+    }
+    .-#{$pk}-#{$i} {
+      #{$pv}: -#{get-theme-prop(layout, sizes, $i)};
+    }
+    @each $k, $v in $sides {
+      @if type-of($v) == list {
+        .#{$pk}#{$k}-#{$i} {
+          @for $j from 1 through length($v) {
+            #{$pv}-#{nth($v, $j)}: get-theme-prop(layout, sizes, $i);
+          }
         }
-      }
-      .p#{$k}-#{$i} {
-        @for $j from 1 through length($v) {
-          padding-#{nth($v, $j)}: get-theme-prop(layout, sizes, $i);
+        .-#{$pk}#{$k}-#{$i} {
+          @for $j from 1 through length($v) {
+            #{$pv}-#{nth($v, $j)}: -#{get-theme-prop(layout, sizes, $i)};
+          }
         }
-      }
-    } @else {
-      .m#{$k}-#{$i} {
-        margin-#{$v}: get-theme-prop(layout, sizes, $i);
-      }
-      .p#{$k}-#{$i} {
-        padding-#{$v}: get-theme-prop(layout, sizes, $i);
+      } @else {
+        .#{$pk}#{$k}-#{$i} {
+          #{$pv}-#{$v}: get-theme-prop(layout, sizes, $i);
+        }
+        .-#{$pk}#{$k}-#{$i} {
+          #{$pv}-#{$v}: -#{get-theme-prop(layout, sizes, $i)};
+        }
       }
     }
   }
 }
 
-.inline-flex {
-  display: inline-flex;
+$displays: flex, inline-flex, block, inline-block;
+
+@for $i from 1 through length($displays) {
+  .#{nth($displays, $i)} {
+    display: #{nth($displays, $i)};
+  }
 }

@@ -10,6 +10,7 @@ export type Colors = {
   paper: string;
   muted: string;
   error: string;
+  success: string;
 };
 
 export type Client = ApolloClient<object>;

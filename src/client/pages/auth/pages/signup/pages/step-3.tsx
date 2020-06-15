@@ -41,7 +41,7 @@ export default function Step3() {
           </div>
         </div>
         {methods.errors.type && (
-          <ColorText className={u["ml-4"]} color="error">
+          <ColorText className={clsx(u["ml-4"], u["-mt-4"], u["mb-4"], u.block)} color="error">
             <ErrorMessage errors={methods.errors} name="type" />
           </ColorText>
         )}
@@ -89,7 +89,7 @@ export default function Step3() {
               Voltar
             </Button>{" "}
             <Button variant="raised" type="submit">
-              Próximo
+              Cadastrar
             </Button>
           </div>
         </div>

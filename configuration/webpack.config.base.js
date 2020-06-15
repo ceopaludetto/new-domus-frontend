@@ -239,10 +239,11 @@ module.exports = (isServer = false) => ({
     }),
     new webpack.WatchIgnorePlugin([/\.scss\.d\.ts/g]),
     new LodashPlugin(),
-    new MiniCssPlugin({
-      filename: isProd ? "css/[name].[contenthash:8].css" : "index.css",
-      chunkFilename: isProd ? "css/[name].[contenthash:8].css" : "[name].css",
-      ignoreOrder: true,
-    }),
-  ],
+    isProd &&
+      new MiniCssPlugin({
+        filename: isProd ? "css/[name].[contenthash:8].css" : "index.css",
+        chunkFilename: isProd ? "css/[name].[contenthash:8].css" : "[name].css",
+        ignoreOrder: true,
+      }),
+  ].filter(Boolean),
 });

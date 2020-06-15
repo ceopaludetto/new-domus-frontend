@@ -17,7 +17,7 @@ export function PasswordHelper({ children, active, ...rest }: PasswordHelperProp
       bold
       small
       className={clsx(u.row, u["align-items-xs-center"], u["mb-3"])}
-      color={active ? "primary" : "muted"}
+      color={active ? "success" : "muted"}
       {...rest}
     >
       <div className={clsx(u.col, u["inline-flex"])}>
