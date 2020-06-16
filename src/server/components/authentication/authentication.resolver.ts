@@ -1,8 +1,7 @@
 import { UseGuards } from "@nestjs/common";
 import { Resolver, Mutation, Query, Args, Context } from "@nestjs/graphql";
 
-import { UserInsertInput } from "@/server/components/user";
-import { User } from "@/server/models";
+import { UserInsertInput, User } from "@/server/components/user";
 import { ContextType } from "@/server/utils/common.dto";
 
 import { AuthenticationInput } from "./authentication.dto";

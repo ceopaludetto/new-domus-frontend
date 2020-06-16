@@ -14,10 +14,13 @@ import {
   ReactModule,
   QueueModule,
   PersonModule,
+  StateModule,
+  CityModule,
 } from "@/server/components";
-import { entities } from "@/server/models";
+import Entities from "@/server/components/entities";
 import { ContextType } from "@/server/utils/common.dto";
 import { APP_NAME } from "@/server/utils/constants";
+import { ComplexityPlugin } from "@/server/utils/plugins/query.complexity.plugin";
 
 @Module({
   imports: [
@@ -49,7 +52,7 @@ import { APP_NAME } from "@/server/utils/constants";
         password: database.password,
         ssl: database.ssl || false,
         logging: database.logger ? (sql) => logger.debug(sql) : false,
-        models: entities,
+        models: Entities,
       }),
     }),
     MailerModule.forRootAsync({
@@ -87,6 +90,9 @@ import { APP_NAME } from "@/server/utils/constants";
     PersonModule,
     AuthenticationModule,
     ReactModule,
+    StateModule,
+    CityModule,
   ],
+  providers: [ComplexityPlugin],
 })
 export class ApplicationModule {}

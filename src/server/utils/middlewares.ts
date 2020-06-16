@@ -4,11 +4,13 @@ import compression from "compression";
 import cookie from "cookie-parser";
 import { static as serve } from "express";
 import helmet from "helmet";
+import { PinoLogger } from "nestjs-pino";
 
-import { GenericExceptionFilter } from "./exception.filter";
+import { GenericExceptionFilter } from "./plugins/exception.filter";
+import { LoggingInterceptor } from "./plugins/logging.interceptor";
 import { formatErrors } from "./validations/format";
 
-export function installMiddlewares(app: INestApplication) {
+export async function installMiddlewares(app: INestApplication) {
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
@@ -16,6 +18,7 @@ export function installMiddlewares(app: INestApplication) {
     })
   );
   app.useGlobalFilters(new GenericExceptionFilter());
+  app.useGlobalInterceptors(new LoggingInterceptor(await app.resolve(PinoLogger)));
   app.enableCors();
 
   app.use(helmet());

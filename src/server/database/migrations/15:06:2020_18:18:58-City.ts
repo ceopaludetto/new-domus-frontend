@@ -1,31 +1,27 @@
 import SequelizeStatic, { QueryInterface } from "sequelize";
 
-import { USER, PERSON } from "@/server/utils/constants";
+import { CITY, STATE } from "@/server/utils/constants";
 
 import { migrationDefaults } from "../defaults";
 
 export default {
   async up(queryInterface: QueryInterface, Sequelize: typeof SequelizeStatic) {
-    return queryInterface.createTable(USER, {
+    return queryInterface.createTable(CITY, {
       ...migrationDefaults(Sequelize),
-      login: {
-        type: Sequelize.STRING,
-        unique: true,
-        allowNull: false,
-      },
-      password: { type: Sequelize.STRING, allowNull: false },
-      personID: {
+      name: { type: Sequelize.STRING, allowNull: false },
+      slug: { type: Sequelize.STRING, allowNull: false },
+      stateID: {
         type: Sequelize.STRING,
         allowNull: false,
         references: {
           key: "id",
-          model: PERSON,
+          model: STATE,
         },
       },
     });
   },
 
   async down(queryInterface: QueryInterface) {
-    return queryInterface.dropTable(USER);
+    return queryInterface.dropTable(CITY);
   },
 };

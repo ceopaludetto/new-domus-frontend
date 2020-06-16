@@ -1,8 +1,8 @@
-import { Resolver, Query, Args } from "@nestjs/graphql";
+import { Resolver, Query, Args, ResolveField, Parent } from "@nestjs/graphql";
 
-import { Person } from "@/server/models";
 import { FindByID, ShowAll } from "@/server/utils/common.dto";
 
+import { Person } from "./person.model";
 import { PersonService } from "./person.service";
 
 @Resolver(() => Person)
@@ -15,7 +15,15 @@ export class PersonResolver {
   }
 
   @Query(() => Person)
-  public async findPerson(@Args() { id }: FindByID) {
+  public async findPersonByID(@Args() { id }: FindByID) {
     return this.personService.findByID(id);
+  }
+
+  @ResolveField()
+  public async user(@Parent() person: Person) {
+    if (!person.user) {
+      return person.$get("user");
+    }
+    return person.user;
   }
 }

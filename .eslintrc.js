@@ -83,4 +83,12 @@ module.exports = {
       typescript: {},
     },
   },
+  overrides: [
+    {
+      files: ['src/server/models/*.ts'],
+      rules: {
+        "import/no-cycle": 'off',
+      }
+    }
+  ]
 };

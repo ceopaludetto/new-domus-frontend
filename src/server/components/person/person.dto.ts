@@ -1,8 +1,9 @@
 import { InputType, Field, PartialType } from "@nestjs/graphql";
 import { IsString, IsEmail, IsEnum } from "class-validator";
 
-import { Gender } from "@/server/models/person.model";
 import * as Messages from "@/server/utils/validations/messages";
+
+import { Gender } from "./person.model";
 
 @InputType()
 export class PersonInsertInput {
