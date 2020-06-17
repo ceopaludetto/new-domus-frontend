@@ -37,5 +37,7 @@ export async function installMiddlewares(app: INestApplication) {
   }
 
   app.use(cookie());
-  app.use(csurf({ cookie: true }));
+  if (process.env.NODE_ENV === "production") {
+    app.use(csurf({ cookie: true }));
+  }
 }

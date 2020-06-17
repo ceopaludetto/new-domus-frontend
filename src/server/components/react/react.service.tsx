@@ -64,7 +64,9 @@ export class ReactService {
 
       const fullHTML = this.markup(markup, initialState, extractor, (helmetContext as FilledContext).helmet, nonce);
 
-      res.cookie("X-XSRF-TOKEN", req.csrfToken());
+      if (process.env.NODE_ENV === "production") {
+        res.cookie("X-XSRF-TOKEN", req.csrfToken());
+      }
 
       return res.send(`<!DOCTYPE html>${fullHTML}`);
     } catch (error) {
