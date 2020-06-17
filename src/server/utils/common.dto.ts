@@ -40,3 +40,7 @@ export class ContextType {
 export type Mapped<T, U = Omit<T, keyof Model<T>>> = {
   [P in keyof U]: U[P] extends object ? Mapped<U[P]> : {};
 } & { keys: () => string[]; includes: () => IncludeOptions[] };
+
+export type KeepOptions<T, U = Omit<T, keyof Model<T>>> = {
+  [P in keyof U]?: U[P] extends object ? KeepOptions<U[P]> : boolean;
+};
