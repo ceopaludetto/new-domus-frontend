@@ -1,6 +1,8 @@
-import { Resolver, Query, Args, ResolveField, Parent } from "@nestjs/graphql";
+import { Resolver, Query, Args } from "@nestjs/graphql";
 
 import { ShowAll, FindByID } from "@/server/utils/common.dto";
+import type { Mapped } from "@/server/utils/common.dto";
+import { MapFields } from "@/server/utils/plugins/fields.plugin.decorator";
 
 import { City } from "./city.model";
 import { CityService } from "./city.service";
@@ -10,26 +12,17 @@ export class CityResolver {
   public constructor(private readonly cityService: CityService) {}
 
   @Query(() => [City])
-  public async showCities(@Args() { first, skip }: ShowAll) {
-    return this.cityService.showAll(skip, first);
+  public async showCities(@Args() { first, skip }: ShowAll, @MapFields(City) mapped: Mapped<City>) {
+    return this.cityService.showAll({ skip, first }, mapped);
   }
 
   @Query(() => City)
-  public async findCityByID(@Args() { id }: FindByID) {
-    return this.cityService.findByID(id);
+  public async findCityByID(@Args() { id }: FindByID, @MapFields(City) mapped: Mapped<City>) {
+    return this.cityService.findByID(id, mapped);
   }
 
   @Query(() => [City])
-  public async findCitiesByStateID(@Args() { id }: FindByID) {
-    return this.cityService.findByState(id);
-  }
-
-  @ResolveField()
-  public async state(@Parent() city: City) {
-    if (!city.state) {
-      return city.$get("state");
-    }
-
-    return city.state;
+  public async findCitiesByStateID(@Args() { id }: FindByID, @MapFields(City) mapped: Mapped<City>) {
+    return this.cityService.findByState(id, mapped);
   }
 }

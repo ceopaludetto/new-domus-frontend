@@ -6,14 +6,13 @@ import { Person } from "@/server/components/person";
 import { BaseModel } from "@/server/utils/base.model";
 import { USER } from "@/server/utils/constants";
 
-@ObjectType()
+@ObjectType(USER)
 @Table({ tableName: USER, modelName: USER })
 export class User extends BaseModel<User> {
   @Field()
   @Column({ unique: true, allowNull: false })
   public login!: string;
 
-  @Field()
   @Column({ allowNull: false })
   public password!: string;
 

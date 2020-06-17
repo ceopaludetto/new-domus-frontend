@@ -1,6 +1,8 @@
 import { ArgsType, Field, ID, Int } from "@nestjs/graphql";
 import { IsString, IsObject, IsInt, IsNumber, IsOptional } from "class-validator";
 import { Request, Response } from "express";
+import type { IncludeOptions } from "sequelize";
+import type { Model } from "sequelize-typescript";
 
 import { IsShortID } from "./validations";
 
@@ -34,3 +36,7 @@ export class ContextType {
   @IsObject()
   public res!: Response;
 }
+
+export type Mapped<T, U = Omit<T, keyof Model<T>>> = {
+  [P in keyof U]: U[P] extends object ? Mapped<U[P]> : {};
+} & { keys: () => string[]; includes: () => IncludeOptions[] };

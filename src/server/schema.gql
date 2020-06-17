@@ -81,7 +81,6 @@ type User {
   updatedAt: DateTime!
   deletedAt: DateTime!
   login: String!
-  password: String!
   personID: String!
   person: Person!
 }

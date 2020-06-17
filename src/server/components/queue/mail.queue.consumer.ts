@@ -3,7 +3,7 @@ import { Processor, Process, OnQueueActive } from "@nestjs/bull";
 import { Job } from "bull";
 import { InjectPinoLogger, PinoLogger } from "nestjs-pino";
 
-import { User } from "@/server/models";
+import type { User } from "@/server/components/user";
 
 @Processor("mail")
 export class MailQueueConsumer {

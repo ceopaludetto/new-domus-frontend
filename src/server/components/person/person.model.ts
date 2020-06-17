@@ -15,7 +15,7 @@ registerEnumType(Gender, {
   name: "Gender",
 });
 
-@ObjectType()
+@ObjectType(PERSON)
 @Table({ tableName: PERSON, modelName: PERSON })
 export class Person extends BaseModel<Person> {
   @Field()

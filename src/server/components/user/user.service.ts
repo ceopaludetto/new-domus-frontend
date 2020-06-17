@@ -4,7 +4,7 @@ import { InjectModel } from "@nestjs/sequelize";
 import { Queue } from "bull";
 
 import { Person } from "@/server/components/person";
-import { ShowAll } from "@/server/utils/common.dto";
+import type { ShowAll, Mapped } from "@/server/utils/common.dto";
 
 import { UserInsertInput } from "./user.dto";
 import { User } from "./user.model";
@@ -16,24 +16,40 @@ export class UserService {
     @InjectQueue("mail") private readonly mailQueue: Queue
   ) {}
 
-  public async showAll({ skip = 0, first }: ShowAll) {
-    return this.userModel.findAll({ offset: skip, limit: first, include: [Person] });
+  public async showAll({ skip = 0, first }: ShowAll, mapped: Mapped<User>) {
+    return this.userModel.findAll({
+      attributes: mapped.keys(),
+      offset: skip,
+      limit: first,
+      include: mapped.includes(),
+    });
   }
 
-  public async findByLogin(login: string) {
-    return this.userModel.findOne({ where: { login }, include: [Person] });
+  public async findByLogin(login: string, mapped: Mapped<User>) {
+    return this.userModel.findOne({
+      attributes: mapped.keys(),
+      where: { login },
+      include: mapped.includes(),
+    });
   }
 
-  public async findByID(id: string) {
-    return this.userModel.findByPk(id, { include: [Person] });
+  public async findByID(id: string, mapped: Mapped<User>) {
+    return this.userModel.findByPk(id, {
+      attributes: mapped.keys(),
+      include: mapped.includes(),
+    });
   }
 
-  public async findByPersonID(id: string) {
-    return this.userModel.findOne({ where: { personID: id }, include: [Person] });
+  public async findByPersonID(id: string, mapped: Mapped<User>) {
+    return this.userModel.findOne({
+      attributes: mapped.keys(),
+      where: { personID: id },
+      include: mapped.includes(),
+    });
   }
 
   public async create(data: UserInsertInput) {
-    const user = await this.userModel.create(data as User, { include: [Person] });
+    const user = await this.userModel.create(data, { include: [Person] });
 
     await this.mailQueue.add("register", user, {
       removeOnFail: true,

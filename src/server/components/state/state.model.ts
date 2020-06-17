@@ -5,7 +5,7 @@ import { City } from "@/server/components/city";
 import { BaseModel } from "@/server/utils/base.model";
 import { STATE } from "@/server/utils/constants";
 
-@ObjectType()
+@ObjectType(STATE)
 @Table({ tableName: STATE, modelName: STATE })
 export class State extends BaseModel<State> {
   @Field()
