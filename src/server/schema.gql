@@ -7,6 +7,17 @@ input AuthenticationInput {
   password: String!
 }
 
+type City {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  name: String!
+  slug: String!
+  stateID: String!
+  state: State!
+}
+
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
@@ -31,6 +42,7 @@ type Person {
   name: String!
   email: String!
   gender: Gender!
+  user: User!
 }
 
 input PersonInsertInput {
@@ -40,11 +52,27 @@ input PersonInsertInput {
 }
 
 type Query {
-  showUsers(first: Int, skip: Int): [User!]!
-  findUser(id: ID!): User!
   showPeople(first: Int, skip: Int): [Person!]!
-  findPerson(id: ID!): Person!
+  findPersonByID(id: ID!): Person!
+  showUsers(first: Int, skip: Int): [User!]!
+  findUserByID(id: ID!): User!
+  findUserByLogin(login: String!): User!
   profile: User!
+  showCities(first: Int, skip: Int): [City!]!
+  findCityByID(id: ID!): City!
+  findCitiesByStateID(id: ID!): [City!]!
+  showStates(first: Int, skip: Int): [State!]!
+  findStateByID(id: ID!): State!
+}
+
+type State {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  name: String!
+  initials: String!
+  cities: [City!]!
 }
 
 type User {
@@ -53,7 +81,6 @@ type User {
   updatedAt: DateTime!
   deletedAt: DateTime!
   login: String!
-  password: String!
   personID: String!
   person: Person!
 }

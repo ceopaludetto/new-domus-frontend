@@ -1,4 +1,4 @@
-import { InputType, Field, PartialType } from "@nestjs/graphql";
+import { InputType, ArgsType, Field, PartialType } from "@nestjs/graphql";
 import { Type } from "class-transformer";
 import { IsString, ValidateNested } from "class-validator";
 
@@ -23,3 +23,10 @@ export class UserInsertInput {
 
 @InputType()
 export class UserUpdateInput extends PartialType(UserInsertInput) {}
+
+@ArgsType()
+export class FindUserByLogin {
+  @Field()
+  @IsString({ message: Messages.STRING })
+  public login!: string;
+}

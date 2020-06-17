@@ -5,15 +5,15 @@ import clsx from "clsx";
 import s from "./index.scss";
 
 interface BlurredProps extends React.HTMLAttributes<HTMLDivElement> {
-  deactive?: boolean;
+  deactivate?: boolean;
   border?: boolean;
 }
 
-export function Blurred({ deactive = false, className, children, border = false, ...rest }: BlurredProps) {
+export function Blurred({ deactivate = false, className, children, border = false, ...rest }: BlurredProps) {
   const classes = clsx(
     s.blurred,
     {
-      [s.deactive]: deactive,
+      [s.deactivate]: deactivate,
       [s.border]: border,
     },
     className

@@ -7,9 +7,11 @@ export const DIALECT = "Dialeto do banco de dados não suportado";
 // Sequelize
 export const USER = "User";
 export const PERSON = "Person";
+export const STATE = "State";
+export const CITY = "City";
 
 // GraphQL
-export const SCHEMA_LINK = "@SCHEMA_LINK";
+export const COMPLEXITY = 20;
 
 // Mailer
 export const MAILER = "@MAILER";

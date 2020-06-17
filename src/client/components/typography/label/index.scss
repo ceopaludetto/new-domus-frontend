@@ -6,7 +6,9 @@
   display: inline-block;
   font-weight: get-theme-prop(typography, weights, 2);
   font-size: get-theme-prop(typography, sizes, 1);
-  margin-bottom: get-theme-prop(layout, sizes, 3);
+  &:not(.no-margin) {
+    margin-bottom: get-theme-prop(layout, sizes, 3);
+  }
   @each $k, $v in map-get($colors, light) {
     &.#{$k} {
       color: get-color($k, contrast);

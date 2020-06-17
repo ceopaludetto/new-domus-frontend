@@ -6,11 +6,16 @@
   border: none;
   text-transform: uppercase;
   letter-spacing: 1.15px;
-  padding: get-theme-prop(layout, sizes, 4) get-theme-prop(layout, sizes, 5);
   border-radius: get-theme-prop(layout, shape);
   font-weight: get-theme-prop(typography, weights, 2);
   transition: transition((background-color, box-shadow));
   position: relative;
+  &.normal {
+    padding: get-theme-prop(layout, sizes, 4) get-theme-prop(layout, sizes, 5);
+  }
+  &.small {
+    padding: get-theme-prop(layout, sizes, 3) get-theme-prop(layout, sizes, 4);
+  }
   &:focus {
     outline: none;
   }

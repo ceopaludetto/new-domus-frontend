@@ -86,7 +86,10 @@
   $value: map-get($theme-item, $type);
 
   @if type-of($value) == list {
-    @return nth($value, $val);
+    @if $val != 0 {
+      @return nth($value, $val);
+    }
+    @return $value;
   }
 
   @if type-of($value) == map {

@@ -7,10 +7,10 @@
   }
   &.border {
     @media (prefers-color-scheme: dark) {
-      border-bottom: 1px solid get-color(background, lighten-2);
+      border-bottom: 2px solid get-color(background, lighten-2);
     }
     @media (prefers-color-scheme: light) {
-      border-bottom: 1px solid get-color(background, darken-2);
+      border-bottom: 2px solid get-color(background, darken-2);
     }
   }
 }

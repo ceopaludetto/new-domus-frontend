@@ -10,20 +10,20 @@
   &.outline {
     @media (prefers-color-scheme: dark) {
       &:not(.no-horizontal-borders) {
-        border: 1px solid get-color(paper, lighten-2);
+        border: 2px solid get-color(paper, lighten-2);
       }
       &.no-horizontal-borders {
-        border-top: 1px solid get-color(paper, lighten-2);
-        border-bottom: 1px solid get-color(paper, lighten-2);
+        border-top: 2px solid get-color(paper, lighten-2);
+        border-bottom: 2px solid get-color(paper, lighten-2);
       }
     }
     @media (prefers-color-scheme: light) {
       &:not(.no-horizontal-borders) {
-        border: 1px solid get-color(background, darken-2);
+        border: 2px solid get-color(background, darken-2);
       }
       &.no-horizontal-borders {
-        border-top: 1px solid get-color(background, darken-2);
-        border-bottom: 1px solid get-color(background, darken-2);
+        border-top: 2px solid get-color(background, darken-2);
+        border-bottom: 2px solid get-color(background, darken-2);
       }
     }
   }

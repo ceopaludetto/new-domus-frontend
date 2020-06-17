@@ -15,19 +15,25 @@ const isProd = process.env.NODE_ENV === "production";
 module.exports = merge(baseConfig(false), {
   name: "client",
   target: "web",
-  entry: [...(isProd ? [] : ["razzle-dev-utils/webpackHotDevClient"]), path.resolve("src", "client", "index.tsx")],
+  entry: [!isProd && "razzle-dev-utils/webpackHotDevClient", path.resolve("src", "client", "index.tsx")].filter(
+    Boolean
+  ),
   optimization: {
-    splitChunks: isProd
-      ? {
+    splitChunks: {
+      chunks: "all",
+      cacheGroups: {
+        styles: {
+          name: "style",
           chunks: "all",
-        }
-      : undefined,
+          test: /\.(s?css|sass)$/,
+          enforce: true, // force css in new chunks (ignores all other options)
+        },
+      },
+    },
     moduleIds: isProd ? "hashed" : false,
-    runtimeChunk: isProd
-      ? {
-          name: "runtime",
-        }
-      : false,
+    runtimeChunk: {
+      name: "runtime",
+    },
   },
   output: {
     pathinfo: true,

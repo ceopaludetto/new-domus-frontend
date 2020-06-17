@@ -6,7 +6,6 @@ import { Logger } from "nestjs-pino";
 import { installMiddlewares } from "@/server/utils/middlewares";
 
 import { ApplicationModule } from "./app.module";
-import "@/server/models";
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(ApplicationModule, { logger: false });
@@ -14,7 +13,7 @@ async function bootstrap() {
   app.useLogger(logger);
 
   installClassValidationContainer(app.select(ApplicationModule), { fallbackOnErrors: true });
-  installMiddlewares(app);
+  await installMiddlewares(app);
 
   const port = process.env.PORT || 3333;
   await app.listenAsync(port);

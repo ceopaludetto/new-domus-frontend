@@ -4,8 +4,8 @@ import { UserInputError, AuthenticationError } from "apollo-server-express";
 import { Response } from "express";
 import { InjectPinoLogger, PinoLogger } from "nestjs-pino";
 
-import { UserInsertInput, UserService } from "@/server/components/user";
-import { User } from "@/server/models";
+import { UserInsertInput, UserService, User } from "@/server/components/user";
+import type { Mapped } from "@/server/utils/common.dto";
 
 import { AuthenticationInput } from "./authentication.dto";
 
@@ -21,11 +21,11 @@ export class AuthenticationService {
     return this.jwtService.sign({ id: user.id });
   }
 
-  public async login({ login, password }: AuthenticationInput, res: Response) {
+  public async login({ login, password }: AuthenticationInput, res: Response, mapped: Mapped<User>) {
     try {
-      const user = await this.userService.findByLogin(login);
+      const user = await this.userService.findByLogin(login, mapped);
       if (!user) {
-        throw new UserInputError("Usuário não encontrado", { fields: ["email"] });
+        throw new UserInputError("Usuário não encontrado", { fields: ["login"] });
       }
 
       if (!(await user.comparePasswords(password))) {
@@ -36,6 +36,9 @@ export class AuthenticationService {
 
       return user;
     } catch (error) {
+      if (error instanceof UserInputError) {
+        throw error;
+      }
       throw new AuthenticationError("Falha ao fazer login");
     }
   }

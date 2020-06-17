@@ -11,10 +11,12 @@ export default {
       login: {
         type: Sequelize.STRING,
         unique: true,
+        allowNull: false,
       },
-      password: Sequelize.STRING,
+      password: { type: Sequelize.STRING, allowNull: false },
       personID: {
         type: Sequelize.STRING,
+        allowNull: false,
         references: {
           key: "id",
           model: PERSON,

@@ -6,28 +6,46 @@ import { useApolloClient } from "@apollo/react-hooks";
 import { ProgressContext } from "@/client/providers/progress";
 import { preload } from "@/client/utils/preload";
 
-export function usePreload<T>(to: string, nested = false, onClick?: (e: React.MouseEvent<T, MouseEvent>) => void) {
+type UsePreloadReturn<T> = [
+  (to: string) => (e: React.MouseEvent<T>) => Promise<void>,
+  {
+    run: (to: string) => Promise<void>;
+  }
+];
+
+export function usePreload<T>(
+  nested = false,
+  onClick?: (e: React.MouseEvent<T, MouseEvent>) => void
+): UsePreloadReturn<T> {
   const { start, changeStep, step, done } = React.useContext(ProgressContext);
   const client = useApolloClient();
   const history = useHistory();
 
-  return async function handleClick(e: React.MouseEvent<T, MouseEvent>) {
-    if (!e.defaultPrevented) {
-      e.preventDefault();
-    }
+  async function run(to: string) {
+    start();
+    await preload(to, { client, nested, changeStep, step });
+    done();
+  }
 
-    try {
-      start();
-      await preload(to, { client, nested, changeStep, step });
-      done();
-
-      if (onClick) {
-        onClick(e);
+  function handleClick(to: string) {
+    return async (e: React.MouseEvent<T, MouseEvent>) => {
+      if (!e.defaultPrevented) {
+        e.preventDefault();
       }
 
-      history.push(to);
-    } catch (error) {
-      console.error("[PRELOAD] error", error); // eslint-disable-line no-console
-    }
-  };
+      try {
+        await run(to);
+
+        if (onClick) {
+          onClick(e);
+        }
+
+        history.push(to);
+      } catch (error) {
+        console.error("[PRELOAD] error", error); // eslint-disable-line no-console
+      }
+    };
+  }
+
+  return [handleClick, { run }];
 }

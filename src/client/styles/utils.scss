@@ -1,0 +1,109 @@
+@import "~@/client/styles/variables";
+
+$justify: flex-start flex-end center space-between space-around;
+$align: flex-start flex-end center baseline stretch;
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -#{get-theme-prop(layout, sizes, 3)};
+  @each $k, $v in get-theme-prop(layout, breakpoints) {
+    @media (min-width: $v) {
+      @for $i from 1 through length($justify) {
+        &.justify-content-#{$k}-#{nth($justify, $i)} {
+          justify-content: nth($justify, $i);
+        }
+      }
+      @for $i from 1 through length($align) {
+        &.align-items-#{$k}-#{nth($align, $i)} {
+          align-items: nth($align, $i);
+        }
+      }
+    }
+  }
+}
+
+.col {
+  padding: 0 #{get-theme-prop(layout, sizes, 3)};
+  @each $k, $v in get-theme-prop(layout, breakpoints) {
+    @media (min-width: $v) {
+      &.#{$k} {
+        flex: 1;
+      }
+      @for $i from 1 through 12 {
+        &.#{$k}-#{$i} {
+          flex: 0 0 #{100% / 12 * $i};
+        }
+      }
+    }
+  }
+}
+
+@for $i from 1 through 20 {
+  .mw-#{$i * 50} {
+    max-width: #{$i * 50}px;
+  }
+}
+
+@for $i from 1 through 4 {
+  .w-#{$i * 25} {
+    width: #{$i * 25%};
+  }
+  .h-#{$i * 25} {
+    height: #{$i * 25%};
+  }
+}
+
+$sides: (
+  l: left,
+  r: right,
+  t: top,
+  b: bottom,
+  x: left right,
+  y: top bottom,
+);
+
+$props: (
+  m: margin,
+  p: padding,
+);
+
+@for $i from 1 through length(get-theme-prop(layout, sizes)) {
+  @each $pk, $pv in $props {
+    .#{$pk}-#{$i} {
+      #{$pv}: get-theme-prop(layout, sizes, $i);
+    }
+    .-#{$pk}-#{$i} {
+      #{$pv}: -#{get-theme-prop(layout, sizes, $i)};
+    }
+    @each $k, $v in $sides {
+      @if type-of($v) == list {
+        .#{$pk}#{$k}-#{$i} {
+          @for $j from 1 through length($v) {
+            #{$pv}-#{nth($v, $j)}: get-theme-prop(layout, sizes, $i);
+          }
+        }
+        .-#{$pk}#{$k}-#{$i} {
+          @for $j from 1 through length($v) {
+            #{$pv}-#{nth($v, $j)}: -#{get-theme-prop(layout, sizes, $i)};
+          }
+        }
+      } @else {
+        .#{$pk}#{$k}-#{$i} {
+          #{$pv}-#{$v}: get-theme-prop(layout, sizes, $i);
+        }
+        .-#{$pk}#{$k}-#{$i} {
+          #{$pv}-#{$v}: -#{get-theme-prop(layout, sizes, $i)};
+        }
+      }
+    }
+  }
+}
+
+$displays: flex, inline-flex, block, inline-block;
+
+@for $i from 1 through length($displays) {
+  .#{nth($displays, $i)} {
+    display: #{nth($displays, $i)};
+  }
+}

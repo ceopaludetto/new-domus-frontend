@@ -8,10 +8,11 @@ import s from "./index.scss";
 
 interface LabelProps extends React.LabelHTMLAttributes<HTMLLabelElement> {
   color?: keyof Colors;
+  noMargin?: boolean;
 }
 
-export function Label({ children, className, color = "background", htmlFor, ...rest }: LabelProps) {
-  const classes = clsx(s.label, s[color], className);
+export function Label({ children, className, color = "background", noMargin = false, htmlFor, ...rest }: LabelProps) {
+  const classes = clsx(s.label, s[color], noMargin && s["no-margin"], className);
 
   return (
     <label htmlFor={htmlFor} className={classes} {...rest}>

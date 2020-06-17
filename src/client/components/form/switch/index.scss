@@ -22,11 +22,13 @@
         &:active,
         &:checked,
         &[checked] {
-          & + .switch.#{$k}::before {
-            background-color: get-color($k);
-          }
-          & + .switch.#{$k}::after {
-            background-color: get-color($k, contrast);
+          & + .switch.#{$k} {
+            &::before {
+              background-color: get-color($k);
+            }
+            &::after {
+              background-color: get-color($k, contrast);
+            }
           }
         }
         &:focus {

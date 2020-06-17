@@ -6,7 +6,7 @@
   border-radius: get-theme-prop(layout, shape);
   display: inline-flex;
   background-color: transparent;
-  transition: transition((background-color));
+  transition: transition((background-color, color));
   &:focus {
     outline: none;
   }

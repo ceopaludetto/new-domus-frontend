@@ -7,7 +7,7 @@
     align-items: center;
     position: relative;
     width: 100%;
-    border-radius: map-get($layout, shape);
+    border-radius: get-theme-prop(layout, shape);
     transition: transition((background-color));
     background-color: get-color(background, darken-1);
     overflow: hidden;
@@ -18,19 +18,21 @@
         }
         &:focus-within {
           background-color: get-color(background, darken-1);
-          label {
-            top: calc(#{get-theme-prop(layout, sizes, 4)} + 2px);
-            font-size: get-theme-prop(typography, sizes, 1);
+          .label {
+            transform: translate3d(0, -130%, 0) scale(0.875);
             color: get-color($k);
           }
-          div {
+          .effect {
             &::before,
             &::after {
               width: 50%;
               opacity: 1;
             }
+            &::after {
+              transform: translate3d(100%, 0, 0) scale(1);
+            }
             &::before {
-              left: 0%;
+              transform: translate3d(0, 0, 0) scale(1);
             }
           }
         }
@@ -44,9 +46,9 @@
       background-color: transparent;
       line-height: get-theme-prop(layout, sizes, 5);
       font-size: get-theme-prop(typography, sizes, 2);
+      width: 100%;
       &:not(:placeholder-shown):not(:focus) + .label {
-        font-size: get-theme-prop(typography, sizes, 1);
-        top: calc(#{get-theme-prop(layout, sizes, 4)} + 2px);
+        transform: translate3d(0, -130%, 0) scale(0.875);
       }
       &:focus {
         outline: none;
@@ -60,12 +62,20 @@
       color: get-color(muted);
       font-weight: get-theme-prop(typography, weights, 2);
       left: get-theme-prop(layout, sizes, 4);
-      transition: transition((top, color, font-size));
+      transition: transition((transform, color));
+      transform-origin: 0 0;
       top: 50%;
-      transform: translateY(-50%);
+      transform: translate3d(0, -50%, 0) scale(1);
       display: inline-block;
       position: absolute;
       pointer-events: none;
+      user-select: none;
+      transform-style: preserve-3d;
+      backface-visibility: hidden;
+      perspective: 1000;
+      &.error {
+        color: get-color(error) !important;
+      }
     }
     .effect {
       position: absolute;
@@ -82,13 +92,31 @@
             position: absolute;
             height: 100%;
             background-color: get-color($k);
-            left: 50%;
-            width: 0;
+            transform: translate3d(100%, 0, 0) scale(0);
+            width: 50%;
             opacity: 0;
-            transition: transition((width, left, opacity));
+            transform-origin: left;
+            transform-style: preserve-3d;
+            backface-visibility: hidden;
+            perspective: 1000;
+            transition: transition((transform, opacity, background-color));
           }
         }
       }
+      &.error {
+        &::before,
+        &::after {
+          background-color: get-color(error) !important;
+        }
+      }
+    }
+  }
+  .helper {
+    margin-top: get-theme-prop(layout, sizes, 3);
+    transition: transition((color));
+    padding-left: get-theme-prop(layout, sizes, 4);
+    &.error {
+      color: get-color(error) !important;
     }
   }
 }

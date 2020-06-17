@@ -48,6 +48,7 @@ function findRoute(path: string, proutes: Route[], matching?: Route[]): Route | 
       return matchingRoute as Route;
     }
   }
+
   throw new Error("Route not find");
 }
 

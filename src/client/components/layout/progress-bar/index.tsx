@@ -1,4 +1,5 @@
 import * as React from "react";
+import * as ReactDOM from "react-dom";
 
 import clsx from "clsx";
 
@@ -27,11 +28,15 @@ export function ProgressBar({ color = "primary", className, ...rest }: ProgressB
 
   return (
     <NoSsr>
-      <div className={classes} {...rest}>
-        <div className={clsx(s.bar, s[color])} style={{ width: `${progress}%`, opacity: resolveOpacity() }}>
-          <div className={clsx(s.peg, s[color])} />
-        </div>
-      </div>
+      {typeof window !== "undefined" &&
+        ReactDOM.createPortal(
+          <div className={classes} {...rest}>
+            <div className={clsx(s.bar, s[color])} style={{ width: `${progress}%`, opacity: resolveOpacity() }}>
+              <div className={clsx(s.peg, s[color])} />
+            </div>
+          </div>,
+          document.querySelector("body") as HTMLBodyElement
+        )}
     </NoSsr>
   );
 }
