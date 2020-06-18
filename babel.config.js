@@ -10,7 +10,7 @@ module.exports = (isServer = false, isTest = false) => ({
       "@babel/preset-env",
       {
         loose: true,
-        modules: false,
+        modules: isServer ? "cjs" : false,
         useBuiltIns: "entry",
         shippedProposals: true,
         corejs: 3,

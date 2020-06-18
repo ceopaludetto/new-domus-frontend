@@ -194,11 +194,6 @@ module.exports = (isServer = false) => ({
                   transpileOnly: true,
                   experimentalWatchApi: !isProd,
                   configFile: path.resolve(`tsconfig.json`),
-                  compilerOptions: isServer
-                    ? {
-                        module: "CommonJS",
-                      }
-                    : undefined,
                 },
               },
             ],

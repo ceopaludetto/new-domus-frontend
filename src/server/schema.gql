@@ -65,10 +65,6 @@ input PersonInsertInput {
 type Query {
   showPeople(first: Int, skip: Int): [Person!]!
   findPersonByID(id: ID!): Person!
-  showUsers(first: Int, skip: Int): [User!]!
-  findUserByID(id: ID!): User!
-  findUserByLogin(login: String!): User!
-  profile: User!
   showCondominiums(first: Int, skip: Int): [Condominium!]!
   findCondominiumByID(id: ID!): Condominium!
   showStates(first: Int, skip: Int): [State!]!
@@ -76,6 +72,10 @@ type Query {
   showCities(first: Int, skip: Int): [City!]!
   findCityByID(id: ID!): City!
   findCitiesByStateID(id: ID!): [City!]!
+  showUsers(first: Int, skip: Int): [User!]!
+  findUserByID(id: ID!): User!
+  findUserByLogin(login: String!): User!
+  profile: User!
 }
 
 type State {
