@@ -1,10 +1,10 @@
 import { Resolver, Query, Args } from "@nestjs/graphql";
 
+import { City } from "@/server/models";
 import { ShowAll, FindByID } from "@/server/utils/common.dto";
 import type { Mapped } from "@/server/utils/common.dto";
 import { MapFields } from "@/server/utils/plugins/fields.plugin.decorator";
 
-import { City } from "./city.model";
 import { CityService } from "./city.service";
 
 @Resolver(() => City)

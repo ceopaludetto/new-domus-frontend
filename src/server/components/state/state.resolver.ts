@@ -1,10 +1,10 @@
 import { Resolver, Args, Query } from "@nestjs/graphql";
 
+import { State } from "@/server/models";
 import { FindByID, ShowAll } from "@/server/utils/common.dto";
 import type { Mapped } from "@/server/utils/common.dto";
 import { MapFields } from "@/server/utils/plugins/fields.plugin.decorator";
 
-import { State } from "./state.model";
 import { StateService } from "./state.service";
 
 @Resolver(() => State)

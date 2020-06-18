@@ -1,5 +1,5 @@
-import { Module, Global } from "@nestjs/common";
-import { PinoLogger } from "nestjs-pino";
+import { Module, Global, OnModuleInit } from "@nestjs/common";
+import { PinoLogger, InjectPinoLogger } from "nestjs-pino";
 import { resolve } from "path";
 
 import { ConfigurationService } from "./configuration.service";
@@ -23,4 +23,10 @@ import { ConfigurationService } from "./configuration.service";
   ],
   exports: [ConfigurationService],
 })
-export class ConfigurationModule {}
+export class ConfigurationModule implements OnModuleInit {
+  public constructor(@InjectPinoLogger(ConfigurationModule.name) private readonly logger: PinoLogger) {}
+
+  public onModuleInit() {
+    this.logger.info(`ConfigurationModule successfully started`);
+  }
+}

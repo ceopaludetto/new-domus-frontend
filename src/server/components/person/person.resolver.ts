@@ -1,10 +1,10 @@
 import { Resolver, Query, Args } from "@nestjs/graphql";
 
+import { Person } from "@/server/models";
 import { FindByID, ShowAll } from "@/server/utils/common.dto";
 import type { Mapped } from "@/server/utils/common.dto";
 import { MapFields } from "@/server/utils/plugins/fields.plugin.decorator";
 
-import { Person } from "./person.model";
 import { PersonService } from "./person.service";
 
 @Resolver(() => Person)

@@ -1,9 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/sequelize";
 
+import { Person } from "@/server/models";
 import type { Mapped, ShowAll } from "@/server/utils/common.dto";
-
-import { Person } from "./person.model";
 
 @Injectable()
 export class PersonService {

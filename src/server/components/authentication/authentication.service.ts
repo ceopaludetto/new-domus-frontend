@@ -4,7 +4,8 @@ import { UserInputError, AuthenticationError } from "apollo-server-express";
 import { Response } from "express";
 import { InjectPinoLogger, PinoLogger } from "nestjs-pino";
 
-import { UserInsertInput, UserService, User } from "@/server/components/user";
+import { UserInsertInput, UserService } from "@/server/components/user";
+import { User } from "@/server/models";
 import type { Mapped } from "@/server/utils/common.dto";
 
 import { AuthenticationInput } from "./authentication.dto";

@@ -1,9 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/sequelize";
 
+import { State } from "@/server/models";
 import type { ShowAll, Mapped } from "@/server/utils/common.dto";
-
-import { State } from "./state.model";
 
 @Injectable()
 export class StateService {

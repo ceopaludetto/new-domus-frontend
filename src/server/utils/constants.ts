@@ -9,6 +9,9 @@ export const USER = "User";
 export const PERSON = "Person";
 export const STATE = "State";
 export const CITY = "City";
+export const CONDOMINIUM = "Condominium";
+export const PERSON_CONDOMINIUM = `${PERSON}${CONDOMINIUM}`;
+export const LOCAL = "Local";
 
 // GraphQL
 export const COMPLEXITY = 20;

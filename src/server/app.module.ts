@@ -7,17 +7,18 @@ import { GraphQLSchema } from "graphql";
 import { LoggerModule, PinoLogger } from "nestjs-pino";
 
 import {
-  ConfigurationModule,
   ConfigurationService,
-  UserModule,
   AuthenticationModule,
+  ConfigurationModule,
+  CondominiumModule,
+  PersonModule,
   ReactModule,
   QueueModule,
-  PersonModule,
   StateModule,
   CityModule,
+  UserModule,
 } from "@/server/components";
-import Entities from "@/server/components/entities";
+import Entities from "@/server/models";
 import { ContextType } from "@/server/utils/common.dto";
 import { APP_NAME } from "@/server/utils/constants";
 import { ComplexityPlugin } from "@/server/utils/plugins/query.complexity.plugin";
@@ -53,6 +54,7 @@ import { ComplexityPlugin } from "@/server/utils/plugins/query.complexity.plugin
         ssl: database.ssl || false,
         logging: database.logger ? (sql) => logger.debug(sql) : false,
         models: Entities,
+        native: true,
       }),
     }),
     MailerModule.forRootAsync({
@@ -89,6 +91,7 @@ import { ComplexityPlugin } from "@/server/utils/plugins/query.complexity.plugin
     UserModule,
     PersonModule,
     AuthenticationModule,
+    CondominiumModule,
     ReactModule,
     StateModule,
     CityModule,

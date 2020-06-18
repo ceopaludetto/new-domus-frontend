@@ -1,9 +1,12 @@
 import { ObjectType, Field, registerEnumType } from "@nestjs/graphql";
-import { Table, Column, DataType, HasOne } from "sequelize-typescript";
+import { Table, Column, DataType, HasOne, BelongsToMany } from "sequelize-typescript";
 
-import { User } from "@/server/components/user";
-import { BaseModel } from "@/server/utils/base.model";
 import { PERSON } from "@/server/utils/constants";
+
+import { BaseModel } from "./base.model";
+import { Condominium } from "./condominium.model";
+import { PersonCondominium } from "./person.condominium.model";
+import { User } from "./user.model";
 
 export enum Gender {
   M = "Male",
@@ -33,4 +36,8 @@ export class Person extends BaseModel<Person> {
   @Field(() => User)
   @HasOne(() => User)
   public user!: User;
+
+  @Field(() => [Condominium])
+  @BelongsToMany(() => Condominium, () => PersonCondominium)
+  public condominiums!: Condominium[];
 }

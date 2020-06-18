@@ -3,11 +3,10 @@ import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/sequelize";
 import { Queue } from "bull";
 
-import { Person } from "@/server/components/person";
+import { Person, User } from "@/server/models";
 import type { ShowAll, Mapped } from "@/server/utils/common.dto";
 
 import { UserInsertInput } from "./user.dto";
-import { User } from "./user.model";
 
 @Injectable()
 export class UserService {
@@ -33,10 +32,10 @@ export class UserService {
     });
   }
 
-  public async findByID(id: string, mapped: Mapped<User>) {
+  public async findByID(id: string, mapped?: Mapped<User>) {
     return this.userModel.findByPk(id, {
-      attributes: mapped.keys(),
-      include: mapped.includes(),
+      attributes: mapped?.keys() ?? undefined,
+      include: mapped?.includes() ?? [Person],
     });
   }
 

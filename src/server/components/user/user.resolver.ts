@@ -1,11 +1,11 @@
 import { Resolver, Query, Args } from "@nestjs/graphql";
 
+import { User } from "@/server/models";
 import { FindByID, ShowAll } from "@/server/utils/common.dto";
 import type { Mapped } from "@/server/utils/common.dto";
 import { MapFields } from "@/server/utils/plugins/fields.plugin.decorator";
 
 import { FindUserByLogin } from "./user.dto";
-import { User } from "./user.model";
 import { UserService } from "./user.service";
 
 @Resolver(() => User)

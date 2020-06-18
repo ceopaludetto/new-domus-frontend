@@ -49,13 +49,13 @@ module.exports = merge(baseConfig(true), {
     ...(isProd
       ? []
       : [
-          new webpack.HotModuleReplacementPlugin({ quiet: true }),
-          new webpack.WatchIgnorePlugin([path.resolve("src", "server", "schema.gql")]),
           new StartServerPlugin({
             name: "index.js",
             keyboard: !isProd,
             nodeArgs,
           }),
+          new webpack.HotModuleReplacementPlugin({ quiet: true }),
+          new webpack.WatchIgnorePlugin([path.resolve("src", "server", "schema.gql")]),
         ]),
     new webpack.optimize.LimitChunkCountPlugin({
       maxChunks: 1,

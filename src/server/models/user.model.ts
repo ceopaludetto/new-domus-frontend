@@ -2,9 +2,10 @@ import { ObjectType, Field } from "@nestjs/graphql";
 import { hash, compare } from "bcryptjs";
 import { Table, Column, BeforeSave, ForeignKey, BelongsTo } from "sequelize-typescript";
 
-import { Person } from "@/server/components/person";
-import { BaseModel } from "@/server/utils/base.model";
 import { USER } from "@/server/utils/constants";
+
+import { BaseModel } from "./base.model";
+import { Person } from "./person.model";
 
 @ObjectType(USER)
 @Table({ tableName: USER, modelName: USER })

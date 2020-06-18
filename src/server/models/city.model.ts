@@ -1,9 +1,10 @@
 import { ObjectType, Field } from "@nestjs/graphql";
 import { Table, Column, BelongsTo, ForeignKey } from "sequelize-typescript";
 
-import { State } from "@/server/components/state";
-import { BaseModel } from "@/server/utils/base.model";
 import { CITY } from "@/server/utils/constants";
+
+import { BaseModel } from "./base.model";
+import { State } from "./state.model";
 
 @ObjectType(CITY)
 @Table({ tableName: CITY, modelName: CITY })

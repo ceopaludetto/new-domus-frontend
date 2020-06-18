@@ -50,18 +50,14 @@ module.exports = (isServer = false) => ({
             ecma: isServer ? 8 : 5,
             comments: false,
           },
-          parse: {
-            ecma: 8,
-          },
           compress: {
             comparisons: true,
             inline: 2,
           },
-          mangle: !isServer
-            ? {
-                safari10: true,
-              }
-            : null,
+          mangle: {
+            safari10: !isServer,
+            module: true,
+          },
         },
       }),
       new OptimizeCSSAssetsPlugin({
@@ -198,6 +194,11 @@ module.exports = (isServer = false) => ({
                   transpileOnly: true,
                   experimentalWatchApi: !isProd,
                   configFile: path.resolve(`tsconfig.json`),
+                  compilerOptions: isServer
+                    ? {
+                        module: "CommonJS",
+                      }
+                    : undefined,
                 },
               },
             ],
