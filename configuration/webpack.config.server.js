@@ -37,11 +37,11 @@ module.exports = merge(baseConfig(true), {
     path.resolve("src", "server", "index.ts"),
   ],
   output: {
+    pathinfo: isProd,
     path: path.resolve("dist"),
     publicPath: isProd ? "/static/" : `${envs.PROTOCOL}://${envs.HOST}:${envs.DEV_PORT}/static/`,
     libraryTarget: "commonjs2",
     filename: "index.js",
-    pathinfo: true,
     futureEmitAssets: isProd,
     devtoolModuleFilenameTemplate: (info) => path.resolve(info.resourcePath).replace(/\\/g, "/"),
   },

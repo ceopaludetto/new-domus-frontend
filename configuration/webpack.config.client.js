@@ -1,8 +1,10 @@
 const errorOverlayMiddleware = require("react-dev-utils/errorOverlayMiddleware");
+const tsFormatter = require("react-dev-utils/typescriptFormatter");
 
 const LoadablePlugin = require("@loadable/webpack-plugin");
 const CompressionPlugin = require("compression-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
+const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 const path = require("path");
 const webpack = require("webpack");
 const merge = require("webpack-merge");
@@ -19,24 +21,26 @@ module.exports = merge(baseConfig(false), {
     Boolean
   ),
   optimization: {
-    splitChunks: {
-      chunks: "all",
-      cacheGroups: {
-        styles: {
-          name: "style",
+    splitChunks: isProd
+      ? {
           chunks: "all",
-          test: /\.(s?css|sass)$/,
-          enforce: true, // force css in new chunks (ignores all other options)
-        },
-      },
-    },
+          cacheGroups: {
+            styles: {
+              name: "style",
+              chunks: "all",
+              test: /\.(s?css|sass)$/,
+              enforce: true, // force css in new chunks (ignores all other options)
+            },
+          },
+        }
+      : false,
     moduleIds: isProd ? "hashed" : false,
     runtimeChunk: {
       name: "runtime",
     },
   },
   output: {
-    pathinfo: true,
+    pathinfo: isProd,
     publicPath: isProd ? "/static/" : `${envs.PROTOCOL}://${envs.HOST}:${envs.DEV_PORT}/static/`,
     path: path.resolve("dist", "static"),
     libraryTarget: "var",
@@ -106,6 +110,10 @@ module.exports = merge(baseConfig(false), {
     new LoadablePlugin({
       filename: "manifest.json",
       writeToDisk: true,
+    }),
+    new ForkTsCheckerWebpackPlugin({
+      async: !isProd,
+      formatter: tsFormatter,
     }),
   ],
 });

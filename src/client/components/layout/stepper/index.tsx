@@ -20,7 +20,7 @@ export function Stepper({ items, clickable = true, onStepChange }: StepperProps)
   const { currentPage, previousPage, toggle } = React.useContext(StepperContext);
 
   React.useEffect(() => {
-    if (onStepChange && currentPage !== previousPage) {
+    if (onStepChange && currentPage !== previousPage && previousPage !== undefined) {
       onStepChange(currentPage);
     }
   }, [currentPage, previousPage, onStepChange]);

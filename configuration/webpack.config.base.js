@@ -44,19 +44,10 @@ module.exports = (isServer = false) => ({
         extractComments: false,
         terserOptions: {
           safari10: !isServer,
-          keep_classnames: isServer,
-          keep_fnames: isServer,
+          module: true,
           output: {
             ecma: isServer ? 8 : 5,
             comments: false,
-          },
-          compress: {
-            comparisons: true,
-            inline: 2,
-          },
-          mangle: {
-            safari10: !isServer,
-            module: true,
           },
         },
       }),
@@ -127,7 +118,7 @@ module.exports = (isServer = false) => ({
             use: [
               !isServer && !isProd && { loader: "style-loader" },
               !isServer && isProd && { loader: MiniCssPlugin.loader, options: { esModule: true, sourceMap: true } },
-              "css-modules-types-generator-loader",
+              { loader: "css-modules-types-generator-loader", options: { index: true } },
               {
                 loader: "css-loader",
                 options: {
