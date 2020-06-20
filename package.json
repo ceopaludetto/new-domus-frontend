@@ -179,7 +179,6 @@
     "eslint-plugin-react": "^7.19.0",
     "eslint-plugin-react-hooks": "^2.5.0",
     "file-loader": "^6.0.0",
-    "fork-ts-checker-webpack-plugin": "^5.0.2",
     "fs-extra": "^8.1.0",
     "glob": "^7.1.6",
     "graphql-tag": "^2.10.3",

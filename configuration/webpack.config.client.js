@@ -1,10 +1,8 @@
 const errorOverlayMiddleware = require("react-dev-utils/errorOverlayMiddleware");
-const tsFormatter = require("react-dev-utils/typescriptFormatter");
 
 const LoadablePlugin = require("@loadable/webpack-plugin");
 const CompressionPlugin = require("compression-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
-const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 const path = require("path");
 const webpack = require("webpack");
 const merge = require("webpack-merge");
@@ -110,10 +108,6 @@ module.exports = merge(baseConfig(false), {
     new LoadablePlugin({
       filename: "manifest.json",
       writeToDisk: true,
-    }),
-    new ForkTsCheckerWebpackPlugin({
-      async: !isProd,
-      formatter: tsFormatter,
     }),
   ],
 });
