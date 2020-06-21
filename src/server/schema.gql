@@ -25,7 +25,14 @@ type Condominium {
   deletedAt: DateTime!
   companyName: String!
   cnpj: String!
+  character: String!
   people: [Person!]!
+}
+
+input CondominiumInsertInput {
+  companyName: String!
+  cnpj: String!
+  character: String!
 }
 
 """
@@ -42,6 +49,7 @@ enum Gender {
 type Mutation {
   login(input: AuthenticationInput!): User!
   register(input: UserInsertInput!): User!
+  createCondominium(input: CondominiumInsertInput!): Int!
 }
 
 type Person {

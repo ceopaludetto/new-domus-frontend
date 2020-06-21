@@ -17,6 +17,11 @@ export default {
         allowNull: false,
         unique: true,
       },
+      character: {
+        type: Sequelize.STRING(1),
+        allowNull: false,
+        defaultValue: "#",
+      },
     });
   },
 

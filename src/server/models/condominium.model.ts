@@ -1,5 +1,5 @@
 import { ObjectType, Field } from "@nestjs/graphql";
-import { Table, Column, BelongsToMany } from "sequelize-typescript";
+import { Table, Column, Default, BelongsToMany } from "sequelize-typescript";
 
 import { CONDOMINIUM } from "@/server/utils/constants";
 
@@ -17,6 +17,11 @@ export class Condominium extends BaseModel<Condominium> {
   @Field()
   @Column({ allowNull: false })
   public cnpj!: string;
+
+  @Field()
+  @Default("#")
+  @Column({ allowNull: false })
+  public character!: string;
 
   @Field(() => [Person])
   @BelongsToMany(() => Person, () => PersonCondominium)

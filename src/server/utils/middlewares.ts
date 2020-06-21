@@ -15,6 +15,7 @@ export async function installMiddlewares(app: INestApplication) {
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
+      dismissDefaultMessages: true,
       exceptionFactory: (errors) => new UserInputError("Erro de validação", formatErrors(errors)),
     })
   );
