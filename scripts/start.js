@@ -76,8 +76,6 @@ function log() {
     logger.log(`\nSearch for the ${chalk.underline(chalk.yellow("keywords"))} to learn more about each warning.`);
     logger.log(`To ignore, add ${chalk.cyan("// eslint-disable-next-line")} to the line before.\n`);
   }
-
-  logger.log(`Application logs:`);
 }
 
 function compile(config) {
@@ -91,7 +89,7 @@ function compile(config) {
   return compiler;
 }
 
-function main() {
+function main(port = 300) {
   if (!measure && !verbose) clearConsole();
   logger.start("Compiling...");
   fs.emptyDirSync(serverConfig.output.path);
@@ -138,10 +136,19 @@ function main() {
 
   const clientDevServer = new SilentDevServer(clientCompiler, { ...clientConfig.devServer, verbose });
 
-  clientDevServer.listen(envs.DEV_PORT || 3001, (err) => {
+  clientDevServer.listen(envs.DEV_PORT || port, (err) => {
     if (err) {
       logger.error(err);
     }
+  });
+
+  ["SIGINT", "SIGTERM"].forEach((sig) => {
+    process.on(sig, async () => {
+      await serverCompiler.TunnelServerWebpackPlugin.watchClose();
+      await watching.close();
+      await clientDevServer.close();
+      process.exit();
+    });
   });
 }
 

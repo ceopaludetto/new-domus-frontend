@@ -1,5 +1,5 @@
 const path = require("path");
-const StartServerPlugin = require("start-server-webpack-plugin");
+const TunnelServerWebpackPlugin = require("tunnel-server-webpack-plugin").default;
 const webpack = require("webpack");
 const merge = require("webpack-merge");
 const NodeExternals = require("webpack-node-externals");
@@ -49,10 +49,11 @@ module.exports = merge(baseConfig(true), {
     ...(isProd
       ? []
       : [
-          new StartServerPlugin({
+          new TunnelServerWebpackPlugin({
             name: "index.js",
             keyboard: !isProd,
             nodeArgs,
+            clearOnRestart: true,
           }),
           new webpack.HotModuleReplacementPlugin({ quiet: true }),
           new webpack.WatchIgnorePlugin([path.resolve("src", "server", "schema.gql")]),
