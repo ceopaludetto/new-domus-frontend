@@ -148,7 +148,6 @@
     "@types/webpack-env": "^1.15.1",
     "@types/webpack-merge": "^4.1.5",
     "@types/webpack-node-externals": "^1.7.1",
-    "@types/yaml": "^1.2.0",
     "@types/yup": "^0.26.32",
     "@typescript-eslint/eslint-plugin": "^2.23.0",
     "@typescript-eslint/parser": "^2.23.0",
