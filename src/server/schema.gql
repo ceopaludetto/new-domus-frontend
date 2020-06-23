@@ -25,6 +25,7 @@ type City {
   updatedAt: DateTime!
   deletedAt: DateTime!
   name: String!
+  code: Float!
   slug: String!
   stateID: ID!
   state: State!
@@ -122,6 +123,7 @@ type State {
   deletedAt: DateTime!
   name: String!
   initials: String!
+  code: Float!
   cities: [City!]!
 }
 

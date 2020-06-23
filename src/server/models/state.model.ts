@@ -17,6 +17,10 @@ export class State extends BaseModel<State> {
   @Column({ unique: true, allowNull: false })
   public initials!: string;
 
+  @Field()
+  @Column({ unique: true, allowNull: false })
+  public code!: number;
+
   @Field(() => [City])
   @HasMany(() => City)
   public cities!: City[];

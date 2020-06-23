@@ -16,6 +16,11 @@ export default {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      code: {
+        type: Sequelize.INTEGER,
+        unique: true,
+        allowNull: false,
+      },
       stateID: {
         type: Sequelize.STRING,
         allowNull: false,

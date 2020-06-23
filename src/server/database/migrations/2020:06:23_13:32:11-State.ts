@@ -17,6 +17,11 @@ export default {
         allowNull: false,
         unique: true,
       },
+      code: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        unique: true,
+      },
     });
   },
 

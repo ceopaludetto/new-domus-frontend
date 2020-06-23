@@ -14,6 +14,10 @@ export class City extends BaseModel<City> {
   public name!: string;
 
   @Field()
+  @Column({ allowNull: false, unique: true })
+  public code!: number;
+
+  @Field()
   @Column({ allowNull: false })
   public slug!: string;
 
