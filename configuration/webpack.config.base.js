@@ -16,11 +16,11 @@ const isProd = process.env.NODE_ENV === "production";
 const isDebug = process.env.INSPECT_BRK || process.env.INSPECT || false;
 
 function resolveDevTool() {
-  if (isDebug) {
-    return "cheap-module-eval-source-map";
+  if (isDebug || isProd) {
+    return "source-map";
   }
 
-  return isProd ? "source-map" : "inline-source-map";
+  return "inline-source-map";
 }
 
 module.exports = (isServer = false) => ({

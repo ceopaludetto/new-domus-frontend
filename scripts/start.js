@@ -144,7 +144,6 @@ function main(port = 300) {
 
   ["SIGINT", "SIGTERM"].forEach((sig) => {
     process.on(sig, async () => {
-      await serverCompiler.TunnelServerWebpackPlugin.watchClose();
       await watching.close();
       await clientDevServer.close();
       process.exit();
