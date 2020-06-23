@@ -8,9 +8,15 @@ export default {
   async up(queryInterface: QueryInterface, Sequelize: typeof SequelizeStatic) {
     return queryInterface.createTable(STATE, {
       ...migrationDefaults(Sequelize),
-      name: { type: Sequelize.STRING, allowNull: false },
-      initials: { type: Sequelize.STRING(2), allowNull: false },
-      code: { type: Sequelize.INTEGER, allowNull: false },
+      name: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      initials: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        unique: true,
+      },
     });
   },
 

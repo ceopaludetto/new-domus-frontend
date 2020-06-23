@@ -9,13 +9,19 @@ export default {
   async up(queryInterface: QueryInterface, Sequelize: typeof SequelizeStatic) {
     return queryInterface.createTable(PERSON, {
       ...migrationDefaults(Sequelize),
-      name: { type: Sequelize.STRING, allowNull: false },
-      email: {
+      name: {
         type: Sequelize.STRING,
-        unique: true,
         allowNull: false,
       },
-      gender: { type: Sequelize.ENUM(Gender.F, Gender.M, Gender.N), defaultValue: Gender.M, allowNull: false },
+      email: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        unique: true,
+      },
+      gender: {
+        type: Sequelize.ENUM(Gender.F, Gender.M, Gender.N),
+        allowNull: false,
+      },
     });
   },
 

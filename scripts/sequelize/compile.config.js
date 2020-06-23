@@ -4,13 +4,13 @@ const NodeExternals = require("webpack-node-externals");
 
 const babelOptions = require("../../babel.config");
 
-module.exports = files => ({
+module.exports = (files) => ({
   name: "server",
   target: "node",
   mode: "development",
   node: {
     __dirname: false,
-    __filename: false
+    __filename: false,
   },
   externals: [NodeExternals()],
   entry: files.reduce((entries, filename) => {
@@ -20,7 +20,7 @@ module.exports = files => ({
   output: {
     path: path.resolve("tmp"),
     libraryTarget: "commonjs2",
-    filename: "[name].js"
+    filename: "[name].js",
   },
   module: {
     rules: [
@@ -32,26 +32,26 @@ module.exports = files => ({
             options: {
               babelrc: false,
               configFile: false,
-              ...babelOptions
-            }
+              ...babelOptions(true),
+            },
           },
           {
             loader: "ts-loader",
             options: {
               transpileOnly: true,
               experimentalWatchApi: false,
-              configFile: path.resolve("tsconfig.json")
-            }
-          }
+              configFile: path.resolve("tsconfig.json"),
+            },
+          },
         ],
-        exclude: /node_modules/
-      }
-    ]
+        exclude: /node_modules/,
+      },
+    ],
   },
   resolve: {
     alias: {
-      "@": path.resolve("src")
+      "@": path.resolve("src"),
     },
-    extensions: [".js", ".json", ".ts"]
-  }
+    extensions: [".js", ".json", ".ts"],
+  },
 });

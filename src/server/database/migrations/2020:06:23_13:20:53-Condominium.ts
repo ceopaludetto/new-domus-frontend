@@ -1,31 +1,30 @@
 import SequelizeStatic, { QueryInterface } from "sequelize";
 
-import { USER, PERSON } from "@/server/utils/constants";
+import { CONDOMINIUM } from "@/server/utils/constants";
 
 import { migrationDefaults } from "../defaults";
 
 export default {
   async up(queryInterface: QueryInterface, Sequelize: typeof SequelizeStatic) {
-    return queryInterface.createTable(USER, {
+    return queryInterface.createTable(CONDOMINIUM, {
       ...migrationDefaults(Sequelize),
-      login: {
+      companyName: {
         type: Sequelize.STRING,
-        unique: true,
         allowNull: false,
       },
-      password: { type: Sequelize.STRING, allowNull: false },
-      personID: {
-        type: Sequelize.STRING,
+      cnpj: {
+        type: Sequelize.STRING(14),
         allowNull: false,
-        references: {
-          key: "id",
-          model: PERSON,
-        },
+        unique: true,
+      },
+      character: {
+        type: Sequelize.STRING(1),
+        allowNull: false,
       },
     });
   },
 
   async down(queryInterface: QueryInterface) {
-    return queryInterface.dropTable(USER);
+    return queryInterface.dropTable(CONDOMINIUM);
   },
 };

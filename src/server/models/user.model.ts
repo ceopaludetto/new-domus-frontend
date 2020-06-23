@@ -1,4 +1,4 @@
-import { ObjectType, Field } from "@nestjs/graphql";
+import { ObjectType, Field, ID } from "@nestjs/graphql";
 import { hash, compare } from "bcryptjs";
 import { Table, Column, BeforeSave, ForeignKey, BelongsTo } from "sequelize-typescript";
 
@@ -17,7 +17,7 @@ export class User extends BaseModel<User> {
   @Column({ allowNull: false })
   public password!: string;
 
-  @Field()
+  @Field(() => ID)
   @ForeignKey(() => Person)
   @Column({ allowNull: false })
   public personID!: string;

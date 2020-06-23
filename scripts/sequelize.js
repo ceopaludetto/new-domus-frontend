@@ -8,6 +8,7 @@ const { promisify } = require("util");
 const { version } = require("../package.json");
 const compile = require("./sequelize/compile");
 const generate = require("./sequelize/generate");
+const rename = require("./sequelize/rename");
 const logger = require("./utils/logger");
 
 const program = new Command();
@@ -66,6 +67,18 @@ program
   });
 
 program
+  .command("normalize")
+  .alias("n")
+  .description("Normalize timestamp in name")
+  .action(async () => {
+    await fs.ensureDir(sequelizeConfig["typescript-migrations-path"]);
+    await fs.ensureDir(sequelizeConfig["typescript-seeders-path"]);
+
+    await rename(sequelizeConfig["typescript-migrations-path"]);
+    await rename(sequelizeConfig["typescript-seeders-path"]);
+  });
+
+program
   .command("run <type> [name]")
   .alias("r")
   .option("-c, --compile", "Compile before run", false)
@@ -109,7 +122,7 @@ program
       cmd += ` ${name}`;
     }
 
-    const { stderr, stdout } = await child(`npx sequelize ${cmd} - env ${p.e || "development"}`);
+    const { stderr, stdout } = await child(`npx sequelize ${cmd} --env ${p.e || "development"}`);
     if (program.verbose) {
       if (stderr) {
         throw stderr;
@@ -137,8 +150,10 @@ async function bootstrap() {
     }
   } catch (err) {
     if (err.stderr) {
+      console.log(err);
       logger.error(err.stderr.replace("\n", ""));
     } else if (err.message) {
+      console.error(err);
       logger.error(err.message);
     } else {
       logger.error("Error when run CLI");

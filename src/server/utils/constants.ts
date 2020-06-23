@@ -12,6 +12,7 @@ export const CITY = "City";
 export const CONDOMINIUM = "Condominium";
 export const PERSON_CONDOMINIUM = `${PERSON}${CONDOMINIUM}`;
 export const LOCAL = "Local";
+export const BLOCK = "Block";
 
 // GraphQL
 export const COMPLEXITY = 20;

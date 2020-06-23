@@ -1,4 +1,4 @@
-import { ObjectType, Field } from "@nestjs/graphql";
+import { ObjectType, Field, ID } from "@nestjs/graphql";
 import { Table, Column, BelongsTo, ForeignKey } from "sequelize-typescript";
 
 import { CITY } from "@/server/utils/constants";
@@ -17,7 +17,7 @@ export class City extends BaseModel<City> {
   @Column({ allowNull: false })
   public slug!: string;
 
-  @Field()
+  @Field(() => ID)
   @ForeignKey(() => State)
   @Column({ allowNull: false })
   public stateID!: string;

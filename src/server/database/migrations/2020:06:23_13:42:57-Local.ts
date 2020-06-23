@@ -1,18 +1,34 @@
 import SequelizeStatic, { QueryInterface } from "sequelize";
 
-import { PERSON_CONDOMINIUM, PERSON, CONDOMINIUM } from "@/server/utils/constants";
+import { LOCAL, CONDOMINIUM, BLOCK } from "@/server/utils/constants";
 
 import { migrationDefaults } from "../defaults";
 
 export default {
   async up(queryInterface: QueryInterface, Sequelize: typeof SequelizeStatic) {
-    return queryInterface.createTable(PERSON_CONDOMINIUM, {
+    return queryInterface.createTable(LOCAL, {
       ...migrationDefaults(Sequelize),
-      personID: {
+      name: {
         type: Sequelize.STRING,
         allowNull: false,
+      },
+      description: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      capacity: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+      },
+      image: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      blockID: {
+        type: Sequelize.STRING,
+        allowNull: true,
         references: {
-          model: PERSON,
+          model: BLOCK,
           key: "id",
         },
       },
@@ -28,6 +44,6 @@ export default {
   },
 
   async down(queryInterface: QueryInterface) {
-    return queryInterface.dropTable(PERSON_CONDOMINIUM);
+    return queryInterface.dropTable(LOCAL);
   },
 };

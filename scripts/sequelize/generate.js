@@ -29,7 +29,7 @@ export default {
   const migrationsPath = sequelize[`typescript-${isMigration ? "migrations" : "seeders"}-path`];
 
   const date = new Date();
-  const format = `${fns.format(date, "dd:MM:yyyy_HH:mm:ss")}`;
+  const format = `${fns.format(date, "yyyy:MM:dd_HH:mm:ss")}`;
 
   function capitalize(str) {
     return `${str[0].toUpperCase()}${str.substr(1)}`;

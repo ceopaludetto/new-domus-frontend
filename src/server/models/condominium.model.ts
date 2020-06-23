@@ -1,9 +1,11 @@
 import { ObjectType, Field } from "@nestjs/graphql";
-import { Table, Column, Default, BelongsToMany } from "sequelize-typescript";
+import { Table, Column, Default, BelongsToMany, HasMany } from "sequelize-typescript";
 
 import { CONDOMINIUM } from "@/server/utils/constants";
 
 import { BaseModel } from "./base.model";
+import { Block } from "./block.model";
+import { Local } from "./local.model";
 import { PersonCondominium } from "./person.condominium.model";
 import { Person } from "./person.model";
 
@@ -26,4 +28,12 @@ export class Condominium extends BaseModel<Condominium> {
   @Field(() => [Person])
   @BelongsToMany(() => Person, () => PersonCondominium)
   public people!: Person[];
+
+  @Field(() => [Block])
+  @HasMany(() => Block)
+  public blocks!: Block[];
+
+  @Field(() => [Local])
+  @HasMany(() => Local)
+  public locals!: Local[];
 }

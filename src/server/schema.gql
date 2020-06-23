@@ -7,6 +7,18 @@ input AuthenticationInput {
   password: String!
 }
 
+type Block {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  name: String
+  number: Float!
+  condominiumID: ID!
+  condominium: Condominium!
+  locals: [Local!]
+}
+
 type City {
   id: ID!
   createdAt: DateTime!
@@ -14,7 +26,7 @@ type City {
   deletedAt: DateTime!
   name: String!
   slug: String!
-  stateID: String!
+  stateID: ID!
   state: State!
 }
 
@@ -27,6 +39,8 @@ type Condominium {
   cnpj: String!
   character: String!
   people: [Person!]!
+  blocks: [Block!]!
+  locals: [Local!]!
 }
 
 input CondominiumInsertInput {
@@ -44,6 +58,21 @@ enum Gender {
   M
   F
   N
+}
+
+type Local {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  name: String!
+  description: String
+  capacity: Float!
+  image: String
+  blockID: ID
+  condominiumID: ID!
+  block: Block
+  condominium: Condominium!
 }
 
 type Mutation {
@@ -102,7 +131,7 @@ type User {
   updatedAt: DateTime!
   deletedAt: DateTime!
   login: String!
-  personID: String!
+  personID: ID!
   person: Person!
 }
 
