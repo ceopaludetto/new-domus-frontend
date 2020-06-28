@@ -2,6 +2,27 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Address {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  cep: String!
+  address: String!
+  number: String!
+  cityID: ID!
+  condominiumID: ID!
+  condominium: Condominium!
+  city: City!
+}
+
+input AddressInsertInput {
+  cep: String!
+  address: String!
+  number: String!
+  cityID: ID!
+}
+
 input AuthenticationInput {
   login: String!
   password: String!
@@ -42,12 +63,14 @@ type Condominium {
   people: [Person!]!
   blocks: [Block!]!
   locals: [Local!]!
+  address: Address!
 }
 
 input CondominiumInsertInput {
   companyName: String!
   cnpj: String!
-  character: String!
+  character: String = "#"
+  address: AddressInsertInput!
 }
 
 """
@@ -77,9 +100,9 @@ type Local {
 }
 
 type Mutation {
+  createCondominium(input: CondominiumInsertInput!): Int!
   login(input: AuthenticationInput!): User!
   register(input: UserInsertInput!): User!
-  createCondominium(input: CondominiumInsertInput!): Int!
 }
 
 type Person {
@@ -90,6 +113,9 @@ type Person {
   name: String!
   email: String!
   gender: Gender!
+  cpf: String!
+  birthdate: DateTime!
+  phones: [Phone!]!
   user: User!
   condominiums: [Condominium!]!
 }
@@ -97,18 +123,38 @@ type Person {
 input PersonInsertInput {
   name: String!
   email: String!
+  cpf: String!
+  birthdate: DateTime!
   gender: Gender!
+  phones: [PhoneInsertInput!]!
+  condominiums: [CondominiumInsertInput!]!
+}
+
+type Phone {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  ddd: String!
+  number: String!
+  personID: ID!
+  person: Person!
+}
+
+input PhoneInsertInput {
+  ddd: String!
+  number: String!
 }
 
 type Query {
+  showCondominiums(first: Int, skip: Int): [Condominium!]!
+  findCondominiumByID(id: ID!): Condominium!
   showPeople(first: Int, skip: Int): [Person!]!
   findPersonByID(id: ID!): Person!
   showUsers(first: Int, skip: Int): [User!]!
   findUserByID(id: ID!): User!
   findUserByLogin(login: String!): User!
   profile: User!
-  showCondominiums(first: Int, skip: Int): [Condominium!]!
-  findCondominiumByID(id: ID!): Condominium!
   showStates(first: Int, skip: Int): [State!]!
   findStateByID(id: ID!): State!
   showCities(first: Int, skip: Int): [City!]!

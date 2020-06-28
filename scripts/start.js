@@ -11,7 +11,6 @@ const formatWebpackMessages = require("react-dev-utils/formatWebpackMessages");
 const chalk = require("chalk");
 const fs = require("fs-extra");
 const ip = require("ip");
-const logger = require("razzle-dev-utils/logger");
 const printErrors = require("razzle-dev-utils/printErrors");
 const setPorts = require("razzle-dev-utils/setPorts");
 const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
@@ -21,6 +20,7 @@ const SilentDevServer = require("../configuration/devServer");
 const envs = require("../configuration/envs");
 const clientConfig = require("../configuration/webpack.config.client");
 const serverConfig = require("../configuration/webpack.config.server");
+const logger = require("./utils/logger");
 
 const measure = process.argv.some((arg) => arg === "--measure" || arg === "-m");
 const verbose = process.argv.some((arg) => arg === "--verbose" || arg === "-v");
@@ -70,7 +70,7 @@ function log() {
     !clientMessages.errors.length &&
     (serverMessages.warnings.length || clientMessages.warnings.length)
   ) {
-    logger.warn("Compiled with warnings.\n");
+    logger.warning("Compiled with warnings.\n");
     printMessage(serverMessages, "Server");
     printMessage(clientMessages, "Client");
     logger.log(`\nSearch for the ${chalk.underline(chalk.yellow("keywords"))} to learn more about each warning.`);
@@ -91,7 +91,7 @@ function compile(config) {
 
 function main(port = 300) {
   if (!measure && !verbose) clearConsole();
-  logger.start("Compiling...");
+  logger.wait("Compiling...");
   fs.emptyDirSync(serverConfig.output.path);
 
   const clientCompiler = compile(smp.wrap(clientConfig));

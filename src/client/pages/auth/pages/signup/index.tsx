@@ -1,8 +1,7 @@
 import * as React from "react";
+import { FiUser, FiLock, FiMap } from "react-icons/fi";
 import { Switch, Route, useHistory } from "react-router-dom";
 import { useLocalStorage } from "react-use";
-
-import { OutlinePerson, OutlineLock, OutlineBusiness } from "mdi-norm";
 
 import { Title, SubTitle, Stepper } from "@/client/components";
 import { useStepper, StepperContext, usePreload } from "@/client/hooks";
@@ -36,15 +35,15 @@ export default function SignUp({ routes }: RouteComponentProps) {
           items={[
             {
               content: "Usuário",
-              icon: OutlinePerson,
+              icon: FiUser,
             },
             {
               content: "Senha",
-              icon: OutlineLock,
+              icon: FiLock,
             },
             {
               content: "Condomínio",
-              icon: OutlineBusiness,
+              icon: FiMap,
             },
           ]}
           clickable={false}

@@ -18,6 +18,14 @@ export default {
         allowNull: false,
         unique: true,
       },
+      cpf: {
+        type: Sequelize.STRING(11),
+        allowNull: false,
+      },
+      birthdate: {
+        type: Sequelize.DATE,
+        allowNull: false,
+      },
       gender: {
         type: Sequelize.ENUM(Gender.F, Gender.M, Gender.N),
         allowNull: false,

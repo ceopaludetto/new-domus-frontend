@@ -31,17 +31,17 @@ export default function Step1() {
   return (
     <FormContext {...methods}>
       <form noValidate onSubmit={methods.handleSubmit(submit)}>
-        <div className={u.row}>
-          <div className={clsx(u.col, u.xs)}>
+        <div className={clsx(u.grid, u["grid-template"])}>
+          <div className={clsx(u["xs-12"], u["md-6"])}>
             <FormControl name="login" id="login" label="Login" required />
           </div>
-          <div className={clsx(u.col, u.xs)}>
+          <div className={clsx(u["xs-12"], u["md-6"])}>
             <FormControl name="name" id="name" label="Nome" required />
           </div>
-        </div>
-        <FormControl name="email" id="email" label="E-mail" required />
-        <div className={u.row}>
-          <div className={clsx(u.col, u.xs)}>
+          <div className={clsx(u["xs-12"])}>
+            <FormControl name="email" id="email" label="E-mail" required />
+          </div>
+          <div className={clsx(u["xs-12"], u["md-6"])}>
             <MaskedFormControl
               rifm={{ format: Masks.cpf, accept: /\d+/g, mask: true }}
               name="cpf"
@@ -50,12 +50,10 @@ export default function Step1() {
               required
             />
           </div>
-          <div className={clsx(u.col, u.xs)}>
+          <div className={clsx(u["xs-12"], u["md-6"])}>
             <FormControl name="gender" id="gender" label="Gênero" required />
           </div>
-        </div>
-        <div className={u.row}>
-          <div className={clsx(u.col, u.xs)}>
+          <div className={clsx(u["xs-12"], u["md-6"])}>
             <MaskedFormControl
               rifm={{ format: Masks.tel, accept: /\d+/g, mask: true }}
               name="tel"
@@ -64,7 +62,7 @@ export default function Step1() {
               required
             />
           </div>
-          <div className={clsx(u.col, u.xs)}>
+          <div className={clsx(u["xs-12"], u["md-6"])}>
             <FormControl name="birthdate" id="birthdate" label="Data de Nascimento" required />
           </div>
         </div>

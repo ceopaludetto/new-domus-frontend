@@ -25,7 +25,7 @@ export function IconButton({
   return (
     <button type={type} className={classes} {...rest}>
       {React.cloneElement(children, {
-        size: 24,
+        size: size === "small" ? 20 : 24,
       })}
     </button>
   );

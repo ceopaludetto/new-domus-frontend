@@ -32,26 +32,26 @@ export default function Step3() {
   return (
     <FormContext {...methods}>
       <form noValidate onSubmit={methods.handleSubmit(submit)}>
-        <div className={u.row}>
-          <div className={clsx(u.col, u["xs-12"], u.md)}>
+        <div className={clsx(u.grid, u["grid-template"])}>
+          <div className={clsx(u["xs-12"], u["md-6"])}>
             <FormRadioCard name="type" value="enter" label="Ingressar condomínio" />
           </div>
-          <div className={clsx(u.col, u["xs-12"], u.md)}>
+          <div className={clsx(u["xs-12"], u["md-6"])}>
             <FormRadioCard name="type" value="create" label="Criar novo condomínio" />
           </div>
         </div>
         {methods.errors.type && (
-          <ColorText className={clsx(u["ml-4"], u["-mt-4"], u["mb-4"], u.block)} color="error">
+          <ColorText className={clsx(u["ml-xs-4"], u["-mt-xs-4"], u["mb-xs-4"], u.block)} color="error">
             <ErrorMessage errors={methods.errors} name="type" />
           </ColorText>
         )}
         {type === "create" && (
           <>
-            <div className={u.row}>
-              <div className={clsx(u.col, u["xs-12"], u.md)}>
+            <div className={clsx(u.grid, u["grid-template"])}>
+              <div className={clsx(u["xs-12"], u["md-6"])}>
                 <FormControl name="razaoSocial" id="razaoSocial" label="Razão Social" required />
               </div>
-              <div className={clsx(u.col, u["xs-12"], u.md)}>
+              <div className={clsx(u["xs-12"], u["md-6"])}>
                 <MaskedFormControl
                   rifm={{ format: Masks.cnpj, mask: true }}
                   name="cnpj"
@@ -60,23 +60,19 @@ export default function Step3() {
                   required
                 />
               </div>
-            </div>
-            <div className={u.row}>
-              <div className={clsx(u.col, u["xs-12"], u["md-3"])}>
+              <div className={clsx(u["xs-12"], u["md-3"])}>
                 <MaskedFormControl rifm={{ format: Masks.cep, mask: true }} name="zip" id="zip" label="CEP" required />
               </div>
-              <div className={clsx(u.col, u["xs-12"], u["md-7"])}>
+              <div className={clsx(u["xs-12"], u["md-7"])}>
                 <FormControl name="endereco" id="endereco" label="Endereço" required />
               </div>
-              <div className={clsx(u.col, u["xs-12"], u["md-2"])}>
+              <div className={clsx(u["xs-12"], u["md-2"])}>
                 <FormControl name="number" id="number" label="Número" required />
               </div>
-            </div>
-            <div className={u.row}>
-              <div className={clsx(u.col, u["xs-12"], u["md-4"])}>
+              <div className={clsx(u["xs-12"], u["md-4"])}>
                 <FormControl name="state" id="state" label="Estado" required />
               </div>
-              <div className={clsx(u.col, u["xs-12"], u["md-8"])}>
+              <div className={clsx(u["xs-12"], u["md-8"])}>
                 <FormControl name="city" id="city" label="Cidade" required />
               </div>
             </div>

@@ -40,8 +40,8 @@ export default function Step2() {
   return (
     <FormContext {...methods}>
       <form noValidate onSubmit={methods.handleSubmit(submit)}>
-        <div className={u.row}>
-          <div className={clsx(u.col, u["xs-12"], u.md)}>
+        <div className={clsx(u.grid, u["grid-template"])}>
+          <div className={clsx(u["xs-12"], u["md-6"], u["order-xs-2"], u["order-md-1"], u["mt-xs-4"], u["mt-md-0"])}>
             <FormControl name="password" id="password" label="Senha" required {...getVisibilityProps("password")} />
             <FormControl
               name="repeatPassword"
@@ -51,7 +51,7 @@ export default function Step2() {
               {...getVisibilityProps("repeatPassword")}
             />
           </div>
-          <div className={clsx(u.col, u["xs-12"], u.md)}>
+          <div className={clsx(u["xs-12"], u["md-6"], u["order-xs-1"], u["order-md-2"])}>
             <Label htmlFor="password">Dicas de Senha</Label>
             <PasswordHelper active={passwordHelp.oneNumber}>Pelo menos 1 número.</PasswordHelper>
             <PasswordHelper active={passwordHelp.oneUpper}>Pelo menos 1 caractere maiúsculo.</PasswordHelper>

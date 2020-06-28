@@ -30,7 +30,7 @@
 }
 
 .content {
-  font-weight: 600;
+  font-weight: get-theme-prop(typography, weights, 2);
   @media (max-width: get-theme-prop(layout, breakpoints, md)) {
     display: none;
   }

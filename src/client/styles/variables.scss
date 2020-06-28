@@ -6,6 +6,8 @@ $rem-ratio: $base-px / 1rem;
 // Layout
 
 $layout: (
+  base: 12,
+  gap: rem(8px),
   sizes: rem(0px 4px 8px 12px 16px 20px 24px 28px 32px 40px 48px 56px 64px),
   shape: rem(6px),
   breakpoints:

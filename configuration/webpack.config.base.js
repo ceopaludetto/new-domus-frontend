@@ -45,6 +45,8 @@ module.exports = (isServer = false) => ({
         terserOptions: {
           safari10: !isServer,
           module: true,
+          keep_classnames: isServer,
+          keep_fnames: isServer,
           output: {
             ecma: isServer ? 8 : 5,
             comments: false,
@@ -152,7 +154,7 @@ module.exports = (isServer = false) => ({
                           fontFace: true,
                           defaultExtractor: (content) => content.match(/[\w-/:]+(?<!:)/g) || [],
                         }),
-                      require("postcss-normalize")(),
+                      require("postcss-normalize"),
                     ].filter(Boolean),
                 },
               },

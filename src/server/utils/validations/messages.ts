@@ -12,3 +12,4 @@ export const MAX_LENGTH = (args: ValidationArguments) => {
 };
 export const CNPJ = "CNPJ inválido";
 export const CPF = "CPF inválido";
+export const DATE = "Campo deve ser do tipo data";

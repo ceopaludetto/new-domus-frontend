@@ -1,19 +1,18 @@
 process.env.NODE_ENV = "production";
 process.noDeprecation = true;
 
-const clearConsole = require("react-dev-utils/clearConsole");
 const { measureFileSizesBeforeBuild, printFileSizesAfterBuild } = require("react-dev-utils/FileSizeReporter");
 const formatWebpackMessages = require("react-dev-utils/formatWebpackMessages");
 
 const chalk = require("chalk");
 const fs = require("fs-extra");
-const logger = require("razzle-dev-utils/logger");
 const printErrors = require("razzle-dev-utils/printErrors");
 const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
 const webpack = require("webpack");
 
 const clientConfig = require("../configuration/webpack.config.client");
 const serverConfig = require("../configuration/webpack.config.server");
+const logger = require("./utils/logger");
 
 const measure = process.argv.some((arg) => arg === "--measure");
 
@@ -80,10 +79,9 @@ Promise.all([
   measureFileSizesBeforeBuild(serverConfig.output.path),
   measureFileSizesBeforeBuild(clientConfig.output.path),
 ])
-  .then((prevFileSizes) => {
-    clearConsole();
-    logger.start("Compiling...");
-    fs.emptyDir(serverConfig.output.path);
+  .then(async (prevFileSizes) => {
+    logger.wait("Compiling...");
+    await fs.emptyDir(serverConfig.output.path);
     return prevFileSizes;
   })
   .then((prevFileSizes) => {
@@ -98,12 +96,12 @@ Promise.all([
     (info) => {
       info.forEach(({ stats, previousFileSizes, warnings }, i) => {
         if (warnings.length) {
-          logger.warn("Compiled with warnings.\n");
+          logger.warning("Compiled with warnings.\n");
           logger.log(warnings.join("\n\n"));
           logger.log(`\nSearch for the ${chalk.underline(chalk.yellow("keywords"))} to learn more about each warning.`);
           logger.log(`To ignore, add ${chalk.cyan("// eslint-disable-next-line")} to the line before.\n`);
         }
-        logger.done(`[${i === 0 ? "SERVER" : "CLIENT"}] Compiled done.`);
+        logger.done(`${i === 0 ? "Server" : "Client"} Compiled done.`);
         logger.log("File sizes after gzip:\n");
         printFileSizesAfterBuild(
           stats,
