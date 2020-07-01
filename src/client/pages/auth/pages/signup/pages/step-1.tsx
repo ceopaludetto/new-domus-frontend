@@ -1,36 +1,36 @@
 import * as React from "react";
-import { useForm, FormContext } from "react-hook-form";
+import { useForm, FormProvider } from "react-hook-form";
 
+import { yupResolver } from "@hookform/resolvers";
 import clsx from "clsx";
 
 import { FormControl, MaskedFormControl, Button } from "@/client/components";
 import * as Masks from "@/client/helpers/masks";
 import { SignUpStep1Schema, SignUpStep1Values } from "@/client/helpers/validations/signup.schema";
-import { StepperContext, useYupValidationResolver } from "@/client/hooks";
+import { StepperContext } from "@/client/hooks";
 import u from "@/client/styles/utils.scss";
 import { clean } from "@/client/utils/clean";
 
 import { WizardContext } from "../providers";
 
 export default function Step1() {
-  const validationResolver = useYupValidationResolver(SignUpStep1Schema);
   const { setValues, values } = React.useContext(WizardContext);
   const { next } = React.useContext(StepperContext);
   const methods = useForm<SignUpStep1Values>({
-    validationResolver,
+    resolver: yupResolver(SignUpStep1Schema),
     defaultValues: values,
   });
 
-  function submit(data: SignUpStep1Values) {
+  const submit = methods.handleSubmit((data) => {
     if (values) {
       setValues({ ...values, ...clean(data) });
       next();
     }
-  }
+  });
 
   return (
-    <FormContext {...methods}>
-      <form noValidate onSubmit={methods.handleSubmit(submit)}>
+    <FormProvider {...methods}>
+      <form noValidate onSubmit={submit}>
         <div className={clsx(u.grid, u["grid-template"])}>
           <div className={clsx(u["xs-12"], u["md-6"])}>
             <FormControl name="login" id="login" label="Login" required />
@@ -74,6 +74,6 @@ export default function Step1() {
           </div>
         </div>
       </form>
-    </FormContext>
+    </FormProvider>
   );
 }

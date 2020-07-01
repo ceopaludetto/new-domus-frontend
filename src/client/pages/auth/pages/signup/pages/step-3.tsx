@@ -1,37 +1,37 @@
 import * as React from "react";
-import { useForm, FormContext, ErrorMessage } from "react-hook-form";
+import { useForm, FormProvider, get } from "react-hook-form";
 
+import { yupResolver } from "@hookform/resolvers";
 import clsx from "clsx";
 
 import { MaskedFormControl, FormControl, FormRadioCard, Button, Switch, ColorText } from "@/client/components";
 import * as Masks from "@/client/helpers/masks";
 import { SignUpStep3Schema, SignUpStep3Values } from "@/client/helpers/validations/signup.schema";
-import { StepperContext, useYupValidationResolver } from "@/client/hooks";
+import { StepperContext } from "@/client/hooks";
 import u from "@/client/styles/utils.scss";
 import { clean } from "@/client/utils/clean";
 
 import { WizardContext } from "../providers";
 
 export default function Step3() {
-  const validationResolver = useYupValidationResolver(SignUpStep3Schema);
   const { setValues, values } = React.useContext(WizardContext);
   const { next, prev } = React.useContext(StepperContext);
   const methods = useForm<SignUpStep3Values>({
-    validationResolver,
+    resolver: yupResolver(SignUpStep3Schema),
     defaultValues: values,
   });
   const type = methods.watch("type");
 
-  function submit(data: SignUpStep3Values) {
+  const submit = methods.handleSubmit((data) => {
     if (values) {
       setValues({ ...values, ...clean(data) });
       next();
     }
-  }
+  });
 
   return (
-    <FormContext {...methods}>
-      <form noValidate onSubmit={methods.handleSubmit(submit)}>
+    <FormProvider {...methods}>
+      <form noValidate onSubmit={submit}>
         <div className={clsx(u.grid, u["grid-template"])}>
           <div className={clsx(u["xs-12"], u["md-6"])}>
             <FormRadioCard name="type" value="enter" label="Ingressar condomínio" />
@@ -41,8 +41,8 @@ export default function Step3() {
           </div>
         </div>
         {methods.errors.type && (
-          <ColorText className={clsx(u["ml-xs-4"], u["-mt-xs-4"], u["mb-xs-4"], u.block)} color="error">
-            <ErrorMessage errors={methods.errors} name="type" />
+          <ColorText className={clsx(u["ml-xs-4"], u["-mt-xs-3"], u["mb-xs-4"], u.block)} color="error">
+            {get(methods.errors, "type.message")}
           </ColorText>
         )}
         {type === "create" && (
@@ -90,6 +90,6 @@ export default function Step3() {
           </div>
         </div>
       </form>
-    </FormContext>
+    </FormProvider>
   );
 }

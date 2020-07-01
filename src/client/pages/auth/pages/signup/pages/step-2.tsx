@@ -1,23 +1,23 @@
 import * as React from "react";
-import { useForm, FormContext } from "react-hook-form";
+import { useForm, FormProvider } from "react-hook-form";
 
+import { yupResolver } from "@hookform/resolvers";
 import clsx from "clsx";
 
 import { FormControl, Button, Label, PasswordHelper } from "@/client/components";
 import { SignUpStep2Schema, SignUpStep2Values } from "@/client/helpers/validations/signup.schema";
-import { StepperContext, useYupValidationResolver, useMultipleVisibility } from "@/client/hooks";
+import { StepperContext, useMultipleVisibility } from "@/client/hooks";
 import u from "@/client/styles/utils.scss";
 import { clean } from "@/client/utils/clean";
 
 import { WizardContext } from "../providers";
 
 export default function Step2() {
-  const validationResolver = useYupValidationResolver(SignUpStep2Schema);
   const [getVisibilityProps] = useMultipleVisibility(["password", "repeatPassword"]);
   const { setValues, values } = React.useContext(WizardContext);
   const { next, prev } = React.useContext(StepperContext);
   const methods = useForm<SignUpStep2Values>({
-    validationResolver,
+    resolver: yupResolver(SignUpStep2Schema),
     defaultValues: values,
   });
   const password = methods.watch("password");
@@ -30,16 +30,16 @@ export default function Step2() {
     };
   }, [password]);
 
-  function submit(data: SignUpStep2Values) {
+  const submit = methods.handleSubmit((data) => {
     if (values) {
       setValues({ ...values, ...clean(data) });
       next();
     }
-  }
+  });
 
   return (
-    <FormContext {...methods}>
-      <form noValidate onSubmit={methods.handleSubmit(submit)}>
+    <FormProvider {...methods}>
+      <form noValidate onSubmit={submit}>
         <div className={clsx(u.grid, u["grid-template"])}>
           <div className={clsx(u["xs-12"], u["md-6"], u["order-xs-2"], u["order-md-1"], u["mt-xs-4"], u["mt-md-0"])}>
             <FormControl name="password" id="password" label="Senha" required {...getVisibilityProps("password")} />
@@ -69,6 +69,6 @@ export default function Step2() {
           </div>
         </div>
       </form>
-    </FormContext>
+    </FormProvider>
   );
 }

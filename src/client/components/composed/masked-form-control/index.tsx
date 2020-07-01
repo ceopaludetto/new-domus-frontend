@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useFormContext, ErrorMessage, Controller } from "react-hook-form";
+import { useFormContext, Controller, get } from "react-hook-form";
 
 import { Rifm } from "rifm";
 
@@ -12,7 +12,7 @@ interface MaskedFormControlProps extends Omit<React.ComponentProps<typeof Contro
 
 export function MaskedFormControl({ name, helperText, rifm, ...rest }: MaskedFormControlProps) {
   const { control, errors } = useFormContext();
-  const message = errors[name] ? <ErrorMessage errors={errors} name={name} /> : helperText;
+  const message = get(errors, `${name}.message`, helperText);
 
   return (
     <Controller

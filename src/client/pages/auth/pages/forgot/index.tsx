@@ -1,28 +1,27 @@
 import * as React from "react";
-import { useForm, FormContext } from "react-hook-form";
+import { useForm, FormProvider } from "react-hook-form";
 
+import { yupResolver } from "@hookform/resolvers";
 import clsx from "clsx";
 
 import { SubTitle, Title, FormControl, Button, PreloadLink, Link } from "@/client/components";
 import { ForgotSchema, ForgotValues } from "@/client/helpers/validations/forgot.schema";
-import { useYupValidationResolver } from "@/client/hooks";
 import u from "@/client/styles/utils.scss";
 
 export default function Forgot() {
-  const validationResolver = useYupValidationResolver(ForgotSchema);
-  const methods = useForm<ForgotValues>({ validationResolver });
+  const methods = useForm<ForgotValues>({ resolver: yupResolver(ForgotSchema) });
 
-  function submit(data: ForgotValues) {
+  const submit = methods.handleSubmit((data) => {
     console.log(data); // eslint-disable-line no-console
     /**
      * TODO:
      * [] Forgot logic
      */
-  }
+  });
 
   return (
-    <FormContext {...methods}>
-      <form noValidate onSubmit={methods.handleSubmit(submit)}>
+    <FormProvider {...methods}>
+      <form noValidate onSubmit={submit}>
         <SubTitle>Esqueceu a senha</SubTitle>
         <Title>Recuperar Senha</Title>
         <FormControl
@@ -43,6 +42,6 @@ export default function Forgot() {
           </div>
         </div>
       </form>
-    </FormContext>
+    </FormProvider>
   );
 }

@@ -1,7 +1,8 @@
 import * as React from "react";
-import { useForm, FormContext } from "react-hook-form";
+import { useForm, FormProvider } from "react-hook-form";
 
 import { useMutation } from "@apollo/react-hooks";
+import { yupResolver } from "@hookform/resolvers";
 import type { UserInputError } from "apollo-server-express";
 import clsx from "clsx";
 
@@ -9,17 +10,16 @@ import { Title, SubTitle, Button, FormControl, Link, PreloadLink, ColorText } fr
 import { Login } from "@/client/graphql/auth.gql";
 import { LoginMutation, LoginMutationVariables } from "@/client/graphql/operations";
 import { SignInSchema, SignInValues } from "@/client/helpers/validations/signin.schema";
-import { useVisibility, useYupValidationResolver } from "@/client/hooks";
+import { useVisibility } from "@/client/hooks";
 import u from "@/client/styles/utils.scss";
 
 export default function SignIn() {
   const [genericError, setGenericError] = React.useState(false);
-  const validationResolver = useYupValidationResolver(SignInSchema);
   const [login] = useMutation<LoginMutation, LoginMutationVariables>(Login);
-  const methods = useForm<SignInValues>({ validationResolver });
+  const methods = useForm<SignInValues>({ resolver: yupResolver(SignInSchema) });
   const [getFieldProps] = useVisibility();
 
-  async function submit(data: SignInValues) {
+  const submit = methods.handleSubmit(async (data) => {
     try {
       await login({
         variables: {
@@ -30,16 +30,19 @@ export default function SignIn() {
       const graphQLError = (error.graphQLErrors as UserInputError[])[0];
       if (graphQLError.extensions.fields) {
         const field: "login" | "password" = graphQLError.extensions.fields[0];
-        methods.setError(field, "graphql", graphQLError.message);
+        methods.setError(field, {
+          type: "graphql",
+          message: graphQLError.message,
+        });
       } else {
         setGenericError(true);
       }
     }
-  }
+  });
 
   return (
-    <FormContext {...methods}>
-      <form noValidate onSubmit={methods.handleSubmit(submit)}>
+    <FormProvider {...methods}>
+      <form noValidate onSubmit={submit}>
         <SubTitle>Login</SubTitle>
         <Title>Entrar</Title>
         {genericError && <ColorText color="error">Falha ao realizar login</ColorText>}
@@ -66,6 +69,6 @@ export default function SignIn() {
           </div>
         </div>
       </form>
-    </FormContext>
+    </FormProvider>
   );
 }
