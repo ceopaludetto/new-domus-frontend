@@ -1,7 +1,8 @@
 import * as React from "react";
+import { Helmet } from "react-helmet-async";
 import { useForm, FormProvider } from "react-hook-form";
 
-import { useMutation } from "@apollo/react-hooks";
+import { useMutation } from "@apollo/client";
 import { yupResolver } from "@hookform/resolvers";
 import type { UserInputError } from "apollo-server-express";
 import clsx from "clsx";
@@ -43,6 +44,9 @@ export default function SignIn() {
   return (
     <FormProvider {...methods}>
       <form noValidate onSubmit={submit}>
+        <Helmet>
+          <title>Login</title>
+        </Helmet>
         <SubTitle>Login</SubTitle>
         <Title>Entrar</Title>
         {genericError && <ColorText color="error">Falha ao realizar login</ColorText>}

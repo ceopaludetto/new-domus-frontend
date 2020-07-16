@@ -1,8 +1,5 @@
-import { InMemoryCache } from "apollo-cache-inmemory";
-import { ApolloClient } from "apollo-client";
-import { setContext } from "apollo-link-context";
-import { HttpLink } from "apollo-link-http";
-import { SchemaLink } from "apollo-link-schema";
+import { InMemoryCache, ApolloClient, HttpLink, ApolloLink, concat } from "@apollo/client";
+import { SchemaLink } from "@apollo/client/link/schema";
 
 function getCookie(name: string) {
   const cookieName = `${name}=`;
@@ -13,23 +10,26 @@ function getCookie(name: string) {
   return cookie?.replace(cookieName, "") ?? "";
 }
 
-const csurfLink = setContext((_, { headers }) => {
+const csurfLink = new ApolloLink((operation, forward) => {
   const csurfToken = getCookie("X-XSRF-TOKEN");
 
-  return {
-    headers: {
-      ...headers,
-      "X-XSRF-TOKEN": csurfToken,
-    },
-  };
+  if (csurfToken) {
+    operation.setContext({
+      headers: {
+        "X-XSRF-TOKEN": csurfToken,
+      },
+    });
+  }
+
+  return forward(operation);
 });
 
 export function createClient(isSsr = false, link: HttpLink | SchemaLink) {
-  const cache = new InMemoryCache({ freezeResults: true });
+  const cache = new InMemoryCache();
 
   const client = new ApolloClient({
     cache,
-    link: typeof document !== "undefined" ? csurfLink.concat(link) : link,
+    link: typeof document !== "undefined" ? concat(csurfLink, link) : link,
     ssrMode: isSsr,
     connectToDevTools: process.env.NODE_ENV === "development",
     assumeImmutableResults: true,

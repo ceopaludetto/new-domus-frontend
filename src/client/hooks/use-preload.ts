@@ -1,17 +1,12 @@
 import * as React from "react";
 import { useHistory } from "react-router-dom";
 
-import { useApolloClient } from "@apollo/react-hooks";
+import { useApolloClient } from "@apollo/client";
 
 import { ProgressContext } from "@/client/providers/progress";
 import { preload } from "@/client/utils/preload";
 
-type UsePreloadReturn<T> = [
-  (to: string) => (e: React.MouseEvent<T>) => Promise<void>,
-  {
-    run: (to: string) => Promise<void>;
-  }
-];
+type UsePreloadReturn<T> = [(to: string) => (e: React.MouseEvent<T>) => Promise<void>, (to: string) => Promise<void>];
 
 export function usePreload<T>(
   nested = false,
@@ -47,5 +42,5 @@ export function usePreload<T>(
     };
   }
 
-  return [handleClick, { run }];
+  return [handleClick, run];
 }

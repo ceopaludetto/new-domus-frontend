@@ -1,7 +1,7 @@
 import { RouteProps } from "react-router-dom";
 
+import { ApolloClient } from "@apollo/client";
 import { LoadableComponent } from "@loadable/component";
-import { ApolloClient } from "apollo-client";
 
 export type Colors = {
   primary: string;

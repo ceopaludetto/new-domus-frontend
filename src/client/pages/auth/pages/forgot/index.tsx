@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Helmet } from "react-helmet-async";
 import { useForm, FormProvider } from "react-hook-form";
 
 import { yupResolver } from "@hookform/resolvers";
@@ -22,6 +23,9 @@ export default function Forgot() {
   return (
     <FormProvider {...methods}>
       <form noValidate onSubmit={submit}>
+        <Helmet>
+          <title>Esqueceu a senha</title>
+        </Helmet>
         <SubTitle>Esqueceu a senha</SubTitle>
         <Title>Recuperar Senha</Title>
         <FormControl

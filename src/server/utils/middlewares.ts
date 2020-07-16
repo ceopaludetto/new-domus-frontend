@@ -21,7 +21,7 @@ export async function installMiddlewares(app: INestApplication) {
   );
   app.useGlobalFilters(new GenericExceptionFilter());
   app.useGlobalInterceptors(new LoggingInterceptor(await app.resolve(PinoLogger)));
-  app.enableCors();
+  app.enableCors({ credentials: true });
 
   app.use(helmet());
 

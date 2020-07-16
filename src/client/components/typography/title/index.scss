@@ -5,7 +5,7 @@
   font-weight: get-theme-prop(typography, weights, 2);
   font-size: get-theme-prop(typography, sizes, 4);
   margin-top: 0;
-  margin-bottom: get-theme-prop(layout, sizes, 5);
+  margin-bottom: get-theme-prop(layout, sizes, 9);
   @each $k, $v in map-get($colors, light) {
     &.#{$k} {
       color: get-color($k, contrast);

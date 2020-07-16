@@ -1,7 +1,7 @@
 @import "~@/client/styles/variables.scss";
 
 .form-group {
-  margin-bottom: get-theme-prop(layout, sizes, 5);
+  margin-bottom: get-theme-prop(layout, sizes, 6);
   .container {
     display: flex;
     align-items: center;
@@ -115,6 +115,7 @@
     margin-top: get-theme-prop(layout, sizes, 3);
     transition: transition((color));
     padding-left: get-theme-prop(layout, sizes, 4);
+    font-size: get-theme-prop(typography, sizes, 1);
     &.error {
       color: get-color(error) !important;
     }

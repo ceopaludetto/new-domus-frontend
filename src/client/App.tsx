@@ -17,8 +17,7 @@ export function App() {
   return (
     <ProgressContext.Provider value={methods}>
       <ProgressBar />
-      <Helmet htmlAttributes={{ lang: "pt-BR" }}>
-        <title>Nest New Graphql</title>
+      <Helmet htmlAttributes={{ lang: "pt-BR" }} defaultTitle="Domus" titleTemplate="%s | Domus">
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="description" content="Testing my all learned skills in web development" />

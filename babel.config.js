@@ -10,7 +10,7 @@ module.exports = (isServer = false, isTest = false) => ({
       "@babel/preset-env",
       {
         loose: true,
-        modules: isServer ? "cjs" : false,
+        modules: false,
         useBuiltIns: "entry",
         shippedProposals: true,
         corejs: 3,
@@ -36,26 +36,14 @@ module.exports = (isServer = false, isTest = false) => ({
   ],
   plugins: [
     "lodash",
+    "date-fns",
     "graphql-tag",
     "optimize-clsx",
     "@loadable/babel-plugin",
-    "date-fns",
     [
       "@babel/plugin-transform-destructuring",
       {
         loose: true,
-        selectiveLoose: [
-          "useState",
-          "useEffect",
-          "useContext",
-          "useReducer",
-          "useCallback",
-          "useMemo",
-          "useRef",
-          "useImperativeHandle",
-          "useLayoutEffect",
-          "useDebugValue",
-        ],
       },
     ],
     [
@@ -82,5 +70,11 @@ module.exports = (isServer = false, isTest = false) => ({
     ...(isTest
       ? ["babel-plugin-dynamic-import-node", ["@babel/plugin-transform-modules-commonjs", { loose: true }]]
       : []),
+  ],
+  overrides: [
+    {
+      test: "./src/server/models/*.ts",
+      plugins: [["@babel/plugin-transform-modules-commonjs", { loose: true }]],
+    },
   ],
 });

@@ -4,12 +4,11 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { FilledContext, HelmetProvider } from "react-helmet-async";
 import { StaticRouter } from "react-router-dom";
 
-import { ApolloProvider } from "@apollo/react-common";
-import { renderToStringWithData } from "@apollo/react-ssr";
+import { ApolloProvider, NormalizedCacheObject } from "@apollo/client";
+import { SchemaLink } from "@apollo/client/link/schema";
+import { renderToStringWithData } from "@apollo/client/react/ssr";
 import { ChunkExtractor, ChunkExtractorManager } from "@loadable/server";
 import { Injectable } from "@nestjs/common";
-import { NormalizedCacheObject } from "apollo-cache-inmemory";
-import { SchemaLink } from "apollo-link-schema";
 import { Request, Response } from "express";
 import { PinoLogger, InjectPinoLogger } from "nestjs-pino";
 import { generate } from "shortid";
