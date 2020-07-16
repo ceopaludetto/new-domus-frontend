@@ -16,8 +16,8 @@ export function MaskedFormControl({ name, helperText, rifm, ...rest }: MaskedFor
 
   return (
     <Controller
-      as={
-        <Rifm value="" onChange={() => {}} {...rifm}>
+      render={(props) => (
+        <Rifm {...props} {...rifm}>
           {({ onChange, value }) => (
             <Control
               onChange={onChange}
@@ -29,10 +29,9 @@ export function MaskedFormControl({ name, helperText, rifm, ...rest }: MaskedFor
             />
           )}
         </Rifm>
-      }
+      )}
       control={control}
       name={name}
-      {...rifm}
     />
   );
 }

@@ -48,7 +48,7 @@ export default function SignIn() {
           <title>Login</title>
         </Helmet>
         <SubTitle>Login</SubTitle>
-        <Title>Entrar</Title>
+        <Title>Bem vindo de volta</Title>
         {genericError && <ColorText color="error">Falha ao realizar login</ColorText>}
         <FormControl label="Login" name="login" id="login" />
         <FormControl

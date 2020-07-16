@@ -14,12 +14,11 @@
     left: 0;
     width: 100%;
     height: 2px;
-    transition: transition((width, opacity), 100ms);
   }
   .peg {
     display: block;
     position: absolute;
-    right: 0px;
+    right: 0;
     width: 100px;
     height: 100%;
     opacity: 1;

@@ -1,21 +1,21 @@
 import * as React from "react";
 import { Helmet } from "react-helmet-async";
 import { Switch, Route } from "react-router-dom";
+import { useToggle } from "react-use";
 
 import OpenSans400 from "@/client/assets/fonts/open-sans-400.woff2";
 import OpenSans600 from "@/client/assets/fonts/open-sans-600.woff2";
 import { ProgressBar } from "@/client/components";
-import { useProgress } from "@/client/hooks";
 import { ProgressContext } from "@/client/providers/progress";
 import { routes } from "@/client/providers/routes";
 
 import "@/client/styles/normalize.scss";
 
 export function App() {
-  const methods = useProgress({ steps: [30, 70], speed: 400, waitUntilEnd: 200 });
+  const [isAnimating, toggle] = useToggle(false);
 
   return (
-    <ProgressContext.Provider value={methods}>
+    <ProgressContext.Provider value={{ isAnimating, toggle }}>
       <ProgressBar />
       <Helmet htmlAttributes={{ lang: "pt-BR" }} defaultTitle="Domus" titleTemplate="%s | Domus">
         <meta charSet="UTF-8" />

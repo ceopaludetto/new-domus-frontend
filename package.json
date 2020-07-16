@@ -34,6 +34,7 @@
     "@nestjs/passport": "^7.0.0",
     "@nestjs/platform-express": "^7.0.2",
     "@nestjs/sequelize": "^0.1.0",
+    "@tanem/react-nprogress": "^3.0.34",
     "apollo-server-express": "^2.14.2",
     "apollo-server-plugin-base": "^0.9.0",
     "axios": "^0.19.2",

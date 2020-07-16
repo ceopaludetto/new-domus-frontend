@@ -41,7 +41,7 @@ export default function Step3() {
           </div>
         </div>
         {methods.errors.type && (
-          <ColorText className={clsx(u["ml-xs-4"], u["-mt-xs-3"], u["mb-xs-4"], u.block)} color="error">
+          <ColorText className={clsx(u["ml-xs-4"], u["-mt-xs-3"], u["mb-xs-4"], u.block)} small color="error">
             {get(methods.errors, "type.message")}
           </ColorText>
         )}

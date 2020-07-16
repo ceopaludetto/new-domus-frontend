@@ -11,7 +11,7 @@ import { RouteComponentProps } from "@/client/utils/common.dto";
 import { WizardContext, WizardContextProps } from "./providers";
 
 export default function SignUp({ routes }: RouteComponentProps) {
-  const [, run] = usePreload(false);
+  const [, run] = usePreload();
   const history = useHistory();
   const [currentPage, methods] = useStepper(3);
   const [values, setValues] = useLocalStorage<WizardContextProps["values"]>("@DOMUS:AUTH:SIGNUP", {
@@ -27,6 +27,10 @@ export default function SignUp({ routes }: RouteComponentProps) {
     type: "",
   });
 
+  React.useEffect(() => {
+    history.replace("/auth/signup/step-1");
+  }, [history]);
+
   return (
     <WizardContext.Provider value={{ values, setValues }}>
       <StepperContext.Provider value={{ currentPage, ...methods }}>
@@ -34,7 +38,7 @@ export default function SignUp({ routes }: RouteComponentProps) {
           <title>Cadastro</title>
         </Helmet>
         <SubTitle>Cadastro</SubTitle>
-        <Title>Nova Conta</Title>
+        <Title>Bem vindo</Title>
         <Stepper
           items={[
             {
