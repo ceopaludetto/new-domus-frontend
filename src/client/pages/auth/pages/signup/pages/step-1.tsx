@@ -4,7 +4,7 @@ import { useForm, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers";
 import clsx from "clsx";
 
-import { FormControl, MaskedFormControl, Button } from "@/client/components";
+import { FormControl, MaskedFormControl, Button, CalendarControl } from "@/client/components";
 import * as Masks from "@/client/helpers/masks";
 import { SignUpStep1Schema, SignUpStep1Values } from "@/client/helpers/validations/signup.schema";
 import { StepperContext } from "@/client/hooks";
@@ -66,6 +66,7 @@ export default function Step1() {
             <FormControl name="birthdate" id="birthdate" label="Data de Nascimento" required />
           </div>
         </div>
+        <CalendarControl disableFuture label="Data de Nascimento" name="dataNascimento" />
         <div className={clsx(u.row, u["justify-content-xs-flex-end"])}>
           <div className={u.col}>
             <Button variant="raised" type="submit">

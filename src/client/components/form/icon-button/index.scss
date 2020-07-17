@@ -1,31 +1,36 @@
 @import "~@/client/styles/variables.scss";
 
 .button {
-  cursor: pointer;
   border: none;
-  border-radius: get-theme-prop(layout, shape);
   display: inline-flex;
   background-color: transparent;
+  border-radius: get-theme-prop(layout, shape);
   transition: transition((background-color, color));
-  &:focus {
-    outline: none;
-  }
-  @each $k, $v in map-get($colors, light) {
-    &.#{$k} {
-      color: get-color($k);
-      &:hover,
-      &:focus {
-        background-color: get-shadow-color($k, 0.2);
-      }
-      &:active {
-        background-color: get-shadow-color($k, 0.3);
-      }
-    }
-  }
   &.normal {
     padding: get-theme-prop(layout, sizes, 4);
   }
   &.small {
     padding: get-theme-prop(layout, sizes, 3);
+  }
+  &:focus {
+    outline: none;
+  }
+  @include not-disabled {
+    cursor: pointer;
+    @each $k, $v in map-get($colors, light) {
+      &.#{$k} {
+        color: get-color($k);
+        &:hover,
+        &:focus {
+          background-color: get-shadow-color($k, 0.2);
+        }
+        &:active {
+          background-color: get-shadow-color($k, 0.3);
+        }
+      }
+    }
+  }
+  @include disabled {
+    color: get-color(muted);
   }
 }

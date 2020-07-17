@@ -226,7 +226,7 @@ module.exports = (isServer = false) => ({
       MANIFEST: path.resolve("dist", "static", "manifest.json"),
       BASE_DIR: path.resolve("."),
     }),
-    new webpack.WatchIgnorePlugin([/\.scss\.d\.ts/g]),
+    new webpack.WatchIgnorePlugin([/\.scss\.d\.ts/g, "src/server/schema.gql"]),
     new LodashPlugin(),
     isProd &&
       new MiniCssPlugin({

@@ -20,11 +20,19 @@ export function Button({
   block = false,
   size = "normal",
   type = "button",
+  className,
   ...rest
 }: ButtonProps) {
-  const classes = clsx(s.button, s[size], s[variant], s[color], {
-    [s.block]: block,
-  });
+  const classes = clsx(
+    s.button,
+    s[size],
+    s[variant],
+    s[color],
+    {
+      [s.block]: block,
+    },
+    className
+  );
 
   return (
     <button type={type} className={classes} {...rest}>

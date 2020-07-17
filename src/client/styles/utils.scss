@@ -153,3 +153,15 @@ $displays: flex, inline-flex, block, inline-block, grid;
     }
   }
 }
+
+$texts: left right center;
+
+@each $bk, $bv in get-theme-prop(layout, breakpoints) {
+  @media (min-width: $bv) {
+    @for $i from 1 through length($texts) {
+      .text-align-#{$bk}-#{nth($texts, $i)} {
+        text-align: #{nth($texts, $i)};
+      }
+    }
+  }
+}

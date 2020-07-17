@@ -101,3 +101,17 @@
 
   @return $value;
 }
+
+@mixin disabled {
+  &:disabled,
+  &[disabled] {
+    @content;
+  }
+}
+
+@mixin not-disabled {
+  &:not(:disabled),
+  &:not([disabled]) {
+    @content;
+  }
+}

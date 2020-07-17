@@ -11,6 +11,7 @@ export type Colors = {
   muted: string;
   error: string;
   success: string;
+  text: string;
 };
 
 export type Client = ApolloClient<object>;

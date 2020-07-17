@@ -56,7 +56,6 @@ module.exports = merge(baseConfig(true), {
             clearOnRestart: true,
           }),
           new webpack.HotModuleReplacementPlugin({ quiet: true }),
-          new webpack.WatchIgnorePlugin([path.resolve("src", "server", "schema.gql")]),
         ]),
     new webpack.optimize.LimitChunkCountPlugin({
       maxChunks: 1,
