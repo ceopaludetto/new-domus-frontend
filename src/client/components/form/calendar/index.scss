@@ -3,9 +3,23 @@
 .calendar {
   grid-template-columns: repeat(7, minmax(0, 1fr));
   gap: #{get-theme-prop(layout, gap) / 2};
+  .min {
+    min-height: get-theme-prop(layout, sizes, 9);
+  }
 }
 
 .button {
   padding: get-theme-prop(layout, sizes, 3) !important;
   width: 40px;
+}
+
+.years {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: #{get-theme-prop(layout, gap) / 2};
+  max-height: 287px;
+  overflow-y: auto;
+}
+
+.width {
+  min-width: 310px;
 }

@@ -17,7 +17,7 @@ module.exports = (isServer = false, isTest = false) => ({
         bugfixes: true,
         exclude: ["transform-typeof-symbol"],
         configPath: path.resolve(process.cwd()),
-        browserslistEnv: process.env.NODE_ENV,
+        browserslistEnv: process.env.NODE_ENV || "development",
         ...(isServer || isTest
           ? {
               targets: {

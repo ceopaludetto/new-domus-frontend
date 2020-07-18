@@ -16,12 +16,13 @@ export function MaskedFormControl({ name, helperText, rifm, ...rest }: MaskedFor
 
   return (
     <Controller
-      render={(props) => (
+      render={({ onBlur, ...props }) => (
         <Rifm {...props} {...rifm}>
           {({ onChange, value }) => (
             <Control
               onChange={onChange}
               value={value}
+              onBlur={onBlur}
               name={name}
               error={!!errors[name]}
               helperText={message}

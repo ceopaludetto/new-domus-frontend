@@ -69,6 +69,7 @@ export class ReactService {
 
       return res.send(`<!DOCTYPE html>${fullHTML}`);
     } catch (error) {
+      console.error(error);
       this.logger.error(error?.message ?? error ?? "Falha ao renderizar React");
       return res.send({ error: true, message: "Falha ao renderizar React" });
     }

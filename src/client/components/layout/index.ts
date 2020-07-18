@@ -5,3 +5,5 @@ export { Blurred } from "./blurred";
 export { Container } from "./container";
 export { Stepper } from "./stepper";
 export { Divider } from "./divider";
+export { Modal } from "./modal";
+export { FocusTrap } from "./focus-trap";
