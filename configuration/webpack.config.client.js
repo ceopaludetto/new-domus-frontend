@@ -5,6 +5,7 @@ const CompressionPlugin = require("compression-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const path = require("path");
 const webpack = require("webpack");
+const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
 const merge = require("webpack-merge");
 
 const envs = require("./envs");
@@ -91,6 +92,10 @@ module.exports = merge(baseConfig(false), {
             exclude: /(\.map|\.LICENSE|\.json)/,
             cache: true,
             minRatio: Number.MAX_SAFE_INTEGER,
+          }),
+          new BundleAnalyzerPlugin({
+            analyzerMode: "static",
+            openAnalyzer: false,
           }),
         ]
       : [

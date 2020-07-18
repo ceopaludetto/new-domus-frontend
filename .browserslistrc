@@ -1,7 +1,5 @@
 [production]
-last 2 version
-> 2%
-not dead
+defaults
 
 [development]
 last 2 chrome version

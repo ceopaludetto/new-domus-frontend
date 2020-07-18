@@ -11,12 +11,13 @@ module.exports = (isServer = false, isTest = false) => ({
       {
         loose: true,
         modules: false,
-        useBuiltIns: "entry",
+        useBuiltIns: "usage",
         shippedProposals: true,
         corejs: 3,
         bugfixes: true,
-        configPath: path.resolve(process.cwd()),
         exclude: ["transform-typeof-symbol"],
+        configPath: path.resolve(process.cwd()),
+        browserslistEnv: process.env.NODE_ENV,
         ...(isServer || isTest
           ? {
               targets: {
@@ -37,15 +38,8 @@ module.exports = (isServer = false, isTest = false) => ({
   plugins: [
     "lodash",
     "date-fns",
-    "graphql-tag",
     "optimize-clsx",
     "@loadable/babel-plugin",
-    [
-      "@babel/plugin-transform-destructuring",
-      {
-        loose: true,
-      },
-    ],
     [
       "@babel/plugin-transform-runtime",
       {
@@ -56,17 +50,7 @@ module.exports = (isServer = false, isTest = false) => ({
         version: require("@babel/runtime/package.json").version, // eslint-disable-line global-require
       },
     ],
-    ["@babel/plugin-proposal-object-rest-spread", { useBuiltIns: true }],
     ["transform-react-remove-prop-types", { mode: "remove", removeImport: true }],
-    [
-      "transform-imports",
-      {
-        "react-use": {
-          transform: isServer ? "react-use/lib/${member}" : "react-use/esm/${member}",
-          preventFullImport: true,
-        },
-      },
-    ],
     ...(isTest
       ? ["babel-plugin-dynamic-import-node", ["@babel/plugin-transform-modules-commonjs", { loose: true }]]
       : []),

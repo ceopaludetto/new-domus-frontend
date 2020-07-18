@@ -4,6 +4,7 @@
     "module": "ESNext",
     "lib": ["ESNext", "DOM"],
     "baseUrl": ".",
+    "jsx": "preserve",
     "paths": {
       "@/*": ["src/*"]
     },
@@ -14,7 +15,7 @@
     "experimentalDecorators": true,
     "strict": true,
     "noEmit": true,
-    "jsx": "preserve",
+    "noEmitHelpers": true,
     "sourceMap": true
   },
   "include": ["src/**/*", "configuration/**/*", "scripts/**/*"],
