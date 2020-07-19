@@ -4,6 +4,7 @@ const LoadablePlugin = require("@loadable/webpack-plugin");
 const CompressionPlugin = require("compression-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const path = require("path");
+const StylelintWebpackPlugin = require("stylelint-webpack-plugin");
 const webpack = require("webpack");
 const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
 const merge = require("webpack-merge");
@@ -104,6 +105,7 @@ module.exports = merge(baseConfig(false), {
             quiet: true,
           }),
         ]),
+    new StylelintWebpackPlugin(),
     new CopyWebpackPlugin([
       {
         from: path.resolve("public"),

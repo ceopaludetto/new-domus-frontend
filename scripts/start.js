@@ -89,7 +89,7 @@ function compile(config) {
   return compiler;
 }
 
-function main(port = 300) {
+function main(port = 3001) {
   if (!measure && !verbose) clearConsole();
   logger.wait("Compiling...");
   fs.emptyDirSync(serverConfig.output.path);
