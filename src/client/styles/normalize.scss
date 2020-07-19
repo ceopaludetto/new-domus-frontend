@@ -1,19 +1,19 @@
 @import-normalize;
-@import "./variables.scss";
+@import "./variables";
 
 @font-face {
+  font-display: swap;
   font-family: "Open Sans";
   font-style: normal;
   font-weight: 400;
-  font-display: swap;
   src: local("Open Sans Regular"), local("OpenSans-Regular"),
     url("~@/client/assets/fonts/open-sans-400.woff2") format("woff2");
 }
 @font-face {
+  font-display: swap;
   font-family: "Open Sans";
   font-style: normal;
   font-weight: 600;
-  font-display: swap;
   src: local("Open Sans SemiBold"), local("OpenSans-SemiBold"),
     url("~@/client/assets/fonts/open-sans-600.woff2") format("woff2");
 }
@@ -25,23 +25,23 @@
 }
 
 html {
-  font-size: $base-px;
   font-family: get-theme-prop(typography, family);
+  font-size: $base-px;
   text-size-adjust: 100%;
 }
 
 body {
-  margin: 0;
   background-color: get-color(background);
   color: get-color(background, contrast);
+  margin: 0;
 }
 
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
   *::after {
-    transition: none;
     animation: none;
+    transition: none;
   }
 }
 

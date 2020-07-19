@@ -1,15 +1,15 @@
 @import "~@/client/styles/variables";
 
 .modal {
-  position: fixed;
-  background-color: get-shadow-color(background, 0.75);
-  left: 0px;
-  top: 0px;
-  width: 100vw;
-  height: 100vh;
-  display: flex;
   align-items: center;
+  background-color: get-shadow-color(background, 0.75);
+  display: flex;
+  height: 100vh;
   justify-content: center;
+  left: 0;
+  position: fixed;
+  top: 0;
+  width: 100vw;
   z-index: get-theme-prop(layout, zindex, modal);
   &.enter {
     opacity: 0;
@@ -21,8 +21,8 @@
     opacity: 1;
     transition: transition((opacity));
     .content {
-      transition: transition((transform));
       transform: translate3d(0, 0, 0);
+      transition: transition((transform));
     }
   }
   &.exit {
@@ -35,8 +35,8 @@
     opacity: 0;
     transition: transition((opacity));
     .content {
-      transition: transition((transform));
       transform: translate3d(0, -20px, 0);
+      transition: transition((transform));
     }
   }
 }

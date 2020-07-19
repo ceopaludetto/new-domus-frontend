@@ -1,14 +1,20 @@
-@import "~@/client/styles/variables.scss";
+@import "~@/client/styles/variables";
 
 .button {
-  user-select: none;
-  border: none;
-  text-transform: uppercase;
-  letter-spacing: 1.15px;
+  border: 0;
   border-radius: get-theme-prop(layout, shape);
   font-weight: get-theme-prop(typography, weights, 2);
-  transition: transition((background-color, box-shadow));
+  letter-spacing: 1.15px;
   position: relative;
+  text-transform: uppercase;
+  transition: transition((background-color, box-shadow));
+  user-select: none;
+  @include not-disabled {
+    cursor: pointer;
+    &:focus {
+      outline: none;
+    }
+  }
   &.normal {
     padding: get-theme-prop(layout, sizes, 4) get-theme-prop(layout, sizes, 5);
   }
@@ -17,12 +23,6 @@
   }
   &.block {
     width: 100%;
-  }
-  @include not-disabled {
-    cursor: pointer;
-    &:focus {
-      outline: none;
-    }
   }
   &.contained,
   &.raised {
@@ -67,17 +67,15 @@
     }
   }
   &.raised {
-    box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14),
-      0px 1px 5px 0px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
     @include not-disabled {
       &:hover,
       &:focus {
-        box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14),
-          0px 1px 10px 0px rgba(0, 0, 0, 0.12);
+        box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12);
       }
       &:active {
-        box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 8px 10px 1px rgba(0, 0, 0, 0.14),
-          0px 3px 14px 2px rgba(0, 0, 0, 0.12);
+        box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2), 0 8px 10px 1px rgba(0, 0, 0, 0.14),
+          0 3px 14px 2px rgba(0, 0, 0, 0.12);
       }
     }
   }

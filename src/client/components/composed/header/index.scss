@@ -1,9 +1,9 @@
-@import "~@/client/styles/variables.scss";
+@import "~@/client/styles/variables";
 
 .header {
+  background-color: get-shadow-color(background, 0.6);
   position: fixed;
   width: 100%;
-  background-color: get-shadow-color(background, 0.6);
 }
 
 .content {

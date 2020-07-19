@@ -1,16 +1,16 @@
-@import "~@/client/styles/variables.scss";
+@import "~@/client/styles/variables";
 
 .form-group {
   margin-bottom: get-theme-prop(layout, sizes, 6);
   .container {
-    display: flex;
     align-items: center;
-    position: relative;
-    width: 100%;
-    border-radius: get-theme-prop(layout, shape);
-    transition: transition((background-color));
     background-color: get-color(background, darken-1);
+    border-radius: get-theme-prop(layout, shape);
+    display: flex;
     overflow: hidden;
+    position: relative;
+    transition: transition((background-color));
+    width: 100%;
     @each $k, $v in map-get($colors, light) {
       &.#{$k} {
         &:hover {
@@ -19,14 +19,14 @@
         &:focus-within {
           background-color: get-color(background, darken-1);
           .label {
-            transform: translate3d(0, -130%, 0) scale(0.875);
             color: get-color($k);
+            transform: translate3d(0, -130%, 0) scale(0.875);
           }
           .effect {
             &::before,
             &::after {
-              width: 50%;
               opacity: 1;
+              width: 50%;
             }
             &::after {
               left: 0;
@@ -36,13 +36,13 @@
       }
     }
     .input {
-      padding: get-theme-prop(layout, sizes, 8) get-theme-prop(layout, sizes, 4) get-theme-prop(layout, sizes, 4);
+      background-color: transparent;
+      border: 0;
       color: get-color(background, contrast);
       flex: 1;
-      border: none;
-      background-color: transparent;
-      line-height: get-theme-prop(layout, sizes, 5);
       font-size: get-theme-prop(typography, sizes, 2);
+      line-height: get-theme-prop(layout, sizes, 5);
+      padding: get-theme-prop(layout, sizes, 8) get-theme-prop(layout, sizes, 4) get-theme-prop(layout, sizes, 4);
       width: 100%;
       &:not(:placeholder-shown):not(:focus) + .label {
         transform: translate3d(0, -130%, 0) scale(0.875);
@@ -55,44 +55,44 @@
       padding: 0 get-theme-prop(layout, sizes, 3);
     }
     .label {
-      font-size: get-theme-prop(typography, sizes, 2);
+      backface-visibility: hidden;
       color: get-color(muted);
+      display: inline-block;
+      font-size: get-theme-prop(typography, sizes, 2);
       font-weight: get-theme-prop(typography, weights, 2);
       left: get-theme-prop(layout, sizes, 4);
-      transition: transition((transform, color));
-      transform-origin: 0 0;
+      perspective: 1000;
+      pointer-events: none;
+      position: absolute;
       top: 50%;
       transform: translate3d(0, -50%, 0) scale(1);
-      display: inline-block;
-      position: absolute;
-      pointer-events: none;
-      user-select: none;
+      transform-origin: 0 0;
       transform-style: preserve-3d;
-      backface-visibility: hidden;
-      perspective: 1000;
+      transition: transition((transform, color));
+      user-select: none;
       &.error {
         color: get-color(error) !important;
       }
     }
     .effect {
-      position: absolute;
       bottom: 0;
-      left: 0;
       height: 2px;
+      left: 0;
+      position: absolute;
       width: 100%;
       @each $k, $v in map-get($colors, light) {
         &.#{$k} {
           &::before,
           &::after {
+            background-color: get-color($k);
             content: "";
             display: block;
-            position: absolute;
             height: 100%;
-            background-color: get-color($k);
-            width: 0;
-            opacity: 0;
             left: 50%;
+            opacity: 0;
+            position: absolute;
             transition: transition((left, width, opacity, background-color));
+            width: 0;
           }
         }
       }
@@ -105,10 +105,10 @@
     }
   }
   .helper {
-    margin-top: get-theme-prop(layout, sizes, 3);
-    transition: transition((color));
-    padding-left: get-theme-prop(layout, sizes, 4);
     font-size: get-theme-prop(typography, sizes, 1);
+    margin-top: get-theme-prop(layout, sizes, 3);
+    padding-left: get-theme-prop(layout, sizes, 4);
+    transition: transition((color));
     &.error {
       color: get-color(error) !important;
     }

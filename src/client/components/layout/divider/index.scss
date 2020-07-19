@@ -1,9 +1,9 @@
-@import "~@/client/styles/variables.scss";
+@import "~@/client/styles/variables";
 
 .divider {
-  display: block;
-  border: none;
+  border: 0;
   border-top: 1px solid;
+  display: block;
   @media (prefers-color-scheme: dark) {
     border-color: get-color(paper, lighten-2);
   }

@@ -1,8 +1,8 @@
 @import "~@/client/styles/variables";
 
 .calendar {
-  grid-template-columns: repeat(7, minmax(0, 1fr));
   gap: #{get-theme-prop(layout, gap) / 2};
+  grid-template-columns: repeat(7, minmax(0, 1fr));
   .min {
     min-height: get-theme-prop(layout, sizes, 9);
   }
@@ -14,8 +14,8 @@
 }
 
 .years {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: #{get-theme-prop(layout, gap) / 2};
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   max-height: 287px;
   overflow-y: auto;
 }

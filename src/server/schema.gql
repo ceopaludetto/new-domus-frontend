@@ -100,9 +100,9 @@ type Local {
 }
 
 type Mutation {
-  createCondominium(input: CondominiumInsertInput!): Int!
   login(input: AuthenticationInput!): User!
   register(input: UserInsertInput!): User!
+  createCondominium(input: CondominiumInsertInput!): Int!
 }
 
 type Person {
@@ -147,14 +147,14 @@ input PhoneInsertInput {
 }
 
 type Query {
-  showCondominiums(first: Int, skip: Int): [Condominium!]!
-  findCondominiumByID(id: ID!): Condominium!
-  showPeople(first: Int, skip: Int): [Person!]!
-  findPersonByID(id: ID!): Person!
   showUsers(first: Int, skip: Int): [User!]!
   findUserByID(id: ID!): User!
   findUserByLogin(login: String!): User!
+  showPeople(first: Int, skip: Int): [Person!]!
+  findPersonByID(id: ID!): Person!
   profile: User!
+  showCondominiums(first: Int, skip: Int): [Condominium!]!
+  findCondominiumByID(id: ID!): Condominium!
   showStates(first: Int, skip: Int): [State!]!
   findStateByID(id: ID!): State!
   showCities(first: Int, skip: Int): [City!]!

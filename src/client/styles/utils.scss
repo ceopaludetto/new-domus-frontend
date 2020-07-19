@@ -40,12 +40,12 @@ $align: flex-start flex-end center baseline stretch;
 }
 
 .grid-template {
-  grid-template-columns: repeat(get-theme-prop(layout, base), minmax(0, 1fr));
   column-gap: #{get-theme-prop(layout, gap) * 2};
+  grid-template-columns: repeat(get-theme-prop(layout, base), minmax(0, 1fr));
   @each $k, $v in get-theme-prop(layout, breakpoints) {
     @media (min-width: $v) {
       @for $i from 1 through get-theme-prop(layout, base) {
-        & .#{$k}-#{$i} {
+        .#{$k}-#{$i} {
           grid-column: span #{$i};
         }
       }

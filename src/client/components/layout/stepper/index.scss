@@ -1,13 +1,13 @@
 @import "~@/client/styles/variables";
 
 .stepper {
-  margin-top: get-theme-prop(layout, sizes, 3);
   margin-bottom: get-theme-prop(layout, sizes, 7);
+  margin-top: get-theme-prop(layout, sizes, 3);
 }
 
 .item {
-  display: flex;
   align-items: center;
+  display: flex;
   &.clickable {
     cursor: pointer;
   }
@@ -37,8 +37,8 @@
 }
 
 .line {
-  height: 2px;
   border-radius: 999px;
+  height: 2px;
   &:not(.active) {
     background-color: get-color(muted);
   }

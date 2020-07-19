@@ -1,12 +1,12 @@
-@import "~@/client/styles/variables.scss";
+@import "~@/client/styles/variables";
 
 .sub-title {
-  text-transform: uppercase;
   display: block;
-  font-weight: get-theme-prop(typography, weights, 2);
   font-size: get-theme-prop(typography, sizes, 1);
-  margin-top: 0;
+  font-weight: get-theme-prop(typography, weights, 2);
   margin-bottom: get-theme-prop(layout, sizes, 2);
+  margin-top: 0;
+  text-transform: uppercase;
   @each $k, $v in map-get($colors, light) {
     &.#{$k} {
       color: get-color($k);
