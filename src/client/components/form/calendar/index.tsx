@@ -41,7 +41,7 @@ interface CalendarProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "onCh
   animate?: boolean;
 }
 
-export function Calendar({
+export default function Calendar({
   value,
   disableFuture,
   disablePast,

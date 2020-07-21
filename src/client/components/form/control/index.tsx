@@ -27,12 +27,13 @@ export const Control = React.forwardRef<HTMLInputElement, ControlProps>(
       append,
       helperText,
       color = "primary",
+      className,
       ...rest
     },
     ref
   ) => {
     return (
-      <div className={clsx({ [s["form-group"]]: margin })}>
+      <div className={clsx({ [s["form-group"]]: margin }, className)}>
         <div className={clsx(s.container, s[color])}>
           <input
             aria-invalid={error ? "true" : "false"}

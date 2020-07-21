@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Controller, useFormContext } from "react-hook-form";
+import { Controller, useFormContext, get } from "react-hook-form";
 
 import { parseISO, isValid } from "date-fns";
 
@@ -10,8 +10,9 @@ type FormCalendarProps = Omit<
   "name" | "value" | "onChange" | "onBlur"
 > & { name: string };
 
-export function FormCalendar({ name, ...rest }: FormCalendarProps) {
-  const { control } = useFormContext();
+export function FormCalendar({ name, helperText, ...rest }: FormCalendarProps) {
+  const { control, errors } = useFormContext();
+  const message = get(errors, `${name}.message`, helperText);
 
   return (
     <Controller
@@ -34,7 +35,7 @@ export function FormCalendar({ name, ...rest }: FormCalendarProps) {
           v = new Date();
         }
 
-        return <CalendarControl value={v} {...props} {...rest} />;
+        return <CalendarControl value={v} error={!!errors[name]} helperText={message} {...props} {...rest} />;
       }}
     />
   );

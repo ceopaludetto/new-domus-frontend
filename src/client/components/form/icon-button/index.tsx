@@ -12,21 +12,19 @@ interface IconButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> 
   color?: keyof Colors;
 }
 
-export function IconButton({
-  color = "primary",
-  size = "normal",
-  type = "button",
-  children,
-  className,
-  ...rest
-}: IconButtonProps) {
-  const classes = clsx(s.button, s[color], s[size], className);
+export const IconButton = React.forwardRef(
+  (
+    { color = "primary", size = "normal", type = "button", children, className, ...rest }: IconButtonProps,
+    ref: React.Ref<HTMLButtonElement>
+  ) => {
+    const classes = clsx(s.button, s[color], s[size], className);
 
-  return (
-    <button type={type} className={classes} {...rest}>
-      {React.cloneElement(children, {
-        size: size === "small" ? 20 : 24,
-      })}
-    </button>
-  );
-}
+    return (
+      <button ref={ref} type={type} className={classes} {...rest}>
+        {React.cloneElement(children, {
+          size: size === "small" ? 20 : 24,
+        })}
+      </button>
+    );
+  }
+);

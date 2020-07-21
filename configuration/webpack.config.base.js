@@ -213,7 +213,7 @@ module.exports = (isServer = false) => ({
     alias: {
       "@": path.resolve("src"),
       "lodash-es": "lodash",
-      "./hotPoll.js": require.resolve("./hotPoll.js"),
+      "webpack/hot/poll": require.resolve("webpack/hot/poll"),
     },
     extensions: [".js", ".jsx", ".tsx", ".ts", ".json", ".scss", ".sass", ".gql", ".graphql"],
   },

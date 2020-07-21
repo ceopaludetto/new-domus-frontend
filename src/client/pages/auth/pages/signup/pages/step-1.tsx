@@ -4,7 +4,7 @@ import { useForm, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers";
 import clsx from "clsx";
 
-import { FormControl, MaskedFormControl, Button, FormCalendar } from "@/client/components";
+import { FormControl, MaskedFormControl, Button, FormCalendar, FormSelect } from "@/client/components";
 import * as Masks from "@/client/helpers/masks";
 import { SignUpStep1Schema, SignUpStep1Values } from "@/client/helpers/validations/signup.schema";
 import { StepperContext } from "@/client/hooks";
@@ -51,7 +51,17 @@ export default function Step1() {
             />
           </div>
           <div className={clsx(u["xs-12"], u["md-6"])}>
-            <FormControl name="gender" id="gender" label="Gênero" required />
+            <FormSelect
+              name="gender"
+              id="gender"
+              label="Gênero"
+              items={[
+                { value: "M", label: "Masculino" },
+                { value: "F", label: "Feminino" },
+                { value: "O", label: "Outro" },
+              ]}
+              required
+            />
           </div>
           <div className={clsx(u["xs-12"], u["md-6"])}>
             <MaskedFormControl

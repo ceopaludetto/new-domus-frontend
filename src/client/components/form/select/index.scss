@@ -1,0 +1,67 @@
+@import "~@/client/styles/variables";
+
+.select {
+  position: relative;
+  z-index: get-theme-prop(layout, zindex, select);
+  .content {
+    left: 0;
+    position: absolute;
+    top: -#{get-theme-prop(layout, sizes, 6)};
+    width: 100%;
+  }
+  &.enter {
+    opacity: 0;
+    transform: translate3d(0, -15px, 0);
+  }
+  &.enter-active {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    transition: transition((opacity, transform));
+  }
+  &.enter-done {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+  &.exit {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+  &.exit-active {
+    opacity: 0;
+    transform: translate3d(0, -15px, 0);
+    transition: transition((opacity, transform));
+  }
+  &.exit-done {
+    opacity: 0;
+    transform: translate3d(0, -15px, 0);
+  }
+}
+
+.control {
+  input {
+    cursor: default;
+  }
+}
+
+.content {
+  background-color: get-color(paper, lighten-1);
+  max-height: 300px;
+  padding: get-theme-prop(layout, sizes, 4) 0 !important;
+  .item {
+    background-color: get-color(paper, lighten-1);
+    cursor: pointer;
+    padding: get-theme-prop(layout, sizes, 4);
+    width: 100%;
+    &:hover,
+    &:focus {
+      background-color: get-color(paper, lighten-2);
+    }
+    &:focus {
+      outline: none;
+    }
+    &.active {
+      background-color: get-shadow-color(primary, 0.1);
+      color: get-color(primary);
+    }
+  }
+}

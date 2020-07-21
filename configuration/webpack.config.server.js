@@ -28,11 +28,11 @@ module.exports = merge(baseConfig(true), {
   },
   externals: [
     NodeExternals({
-      whitelist: [...(isProd ? [] : ["./hotPoll.js?300"]), /\.(scss|sass|gql|graphql)$/],
+      whitelist: [...(isProd ? [] : ["webpack/hot/poll?300"]), /\.(scss|sass|gql|graphql)$/],
     }),
   ],
   entry: [
-    ...(isProd ? [] : ["razzle-dev-utils/prettyNodeErrors", "./hotPoll.js?300"]),
+    ...(isProd ? [] : ["razzle-dev-utils/prettyNodeErrors", "webpack/hot/poll?300"]),
     "reflect-metadata",
     path.resolve("src", "server", "index.ts"),
   ],

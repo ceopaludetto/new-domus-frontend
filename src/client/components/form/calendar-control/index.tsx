@@ -1,15 +1,17 @@
 import * as React from "react";
 import { FiCalendar } from "react-icons/fi";
 
+import loadable from "@loadable/component";
 import { format, parse, isValid, isEqual } from "date-fns";
 import { Rifm } from "rifm";
 
 import { Modal } from "@/client/components/layout";
 import * as Masks from "@/client/helpers/masks";
 
-import { Calendar } from "../calendar";
 import { Control } from "../control";
 import { IconButton } from "../icon-button";
+
+const Calendar = loadable(() => import("../calendar"));
 
 type CalendarControlProps = Omit<React.ComponentPropsWithRef<typeof Control>, "value" | "onChange"> &
   React.ComponentProps<typeof Calendar>;
@@ -68,7 +70,13 @@ export const CalendarControl = React.forwardRef(
               value={value}
               onChange={onChange}
               append={
-                <IconButton type="button" tabIndex={-1} onClick={handleOpen}>
+                <IconButton
+                  aria-label="Acessar Calendário"
+                  onFocus={() => Calendar.load()}
+                  onMouseOver={() => Calendar.load()}
+                  type="button"
+                  onClick={handleOpen}
+                >
                   <FiCalendar />
                 </IconButton>
               }
