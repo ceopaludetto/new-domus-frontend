@@ -40,11 +40,12 @@
 .control {
   input {
     cursor: default;
+    user-select: none;
   }
 }
 
 .content {
-  background-color: get-color(paper, lighten-1);
+  background-color: get-color(paper, lighten-1) !important;
   max-height: 300px;
   padding: get-theme-prop(layout, sizes, 4) 0 !important;
   .item {
@@ -54,7 +55,8 @@
     width: 100%;
     &:hover,
     &:focus {
-      background-color: get-color(paper, lighten-2);
+      background-color: get-color(paper, lighten-2) !important;
+      color: get-color(paper, contrast) !important;
     }
     &:focus {
       outline: none;

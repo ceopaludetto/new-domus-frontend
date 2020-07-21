@@ -5,6 +5,7 @@ import { yupResolver } from "@hookform/resolvers";
 import clsx from "clsx";
 
 import { FormControl, MaskedFormControl, Button, FormCalendar, FormSelect } from "@/client/components";
+import { Gender } from "@/client/graphql/operations";
 import * as Masks from "@/client/helpers/masks";
 import { SignUpStep1Schema, SignUpStep1Values } from "@/client/helpers/validations/signup.schema";
 import { StepperContext } from "@/client/hooks";
@@ -56,9 +57,9 @@ export default function Step1() {
               id="gender"
               label="Gênero"
               items={[
-                { value: "M", label: "Masculino" },
-                { value: "F", label: "Feminino" },
-                { value: "O", label: "Outro" },
+                { value: Gender.M, label: "Masculino" },
+                { value: Gender.F, label: "Feminino" },
+                { value: Gender.N, label: "Outro" },
               ]}
               required
             />

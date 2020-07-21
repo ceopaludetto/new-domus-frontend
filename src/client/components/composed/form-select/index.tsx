@@ -3,7 +3,7 @@ import { useFormContext, Controller, get } from "react-hook-form";
 
 import { Select } from "@/client/components/form";
 
-type FormSelect = React.ComponentProps<typeof Select> & { name: string };
+type FormSelect = Omit<React.ComponentProps<typeof Select>, "name" | "onChange" | "value"> & { name: string };
 
 export function FormSelect({ name, items, helperText, ...rest }: FormSelect) {
   const { control, errors } = useFormContext();

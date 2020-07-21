@@ -13,6 +13,7 @@ export interface ControlProps extends React.InputHTMLAttributes<HTMLInputElement
   append?: React.ReactElement<{ size?: "small" | "normal" }>;
   error?: boolean;
   helperText?: React.ReactNode | string;
+  labelProps?: React.LabelHTMLAttributes<HTMLLabelElement>;
 }
 
 export const Control = React.forwardRef<HTMLInputElement, ControlProps>(
@@ -28,6 +29,7 @@ export const Control = React.forwardRef<HTMLInputElement, ControlProps>(
       helperText,
       color = "primary",
       className,
+      labelProps,
       ...rest
     },
     ref
@@ -45,7 +47,7 @@ export const Control = React.forwardRef<HTMLInputElement, ControlProps>(
             {...rest}
           />
           {label && (
-            <label className={clsx(s.label, error && s.error)} htmlFor={id}>
+            <label className={clsx(s.label, error && s.error)} htmlFor={id} {...labelProps}>
               {label}
               {required && " *"}
             </label>
