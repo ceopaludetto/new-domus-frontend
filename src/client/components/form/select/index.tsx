@@ -1,7 +1,7 @@
 import * as React from "react";
 import { FiChevronDown } from "react-icons/fi";
 import { CSSTransition } from "react-transition-group";
-import { usePrevious, useClickAway } from "react-use";
+import { useClickAway } from "react-use";
 
 import clsx from "clsx";
 
