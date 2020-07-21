@@ -45,18 +45,55 @@
 }
 
 .content {
-  background-color: get-color(paper, lighten-1) !important;
   max-height: 300px;
+  overflow-y: auto;
   padding: get-theme-prop(layout, sizes, 4) 0 !important;
+  @include on-dark {
+    background-color: get-color(paper, lighten-1) !important;
+    &::-webkit-scrollbar-thumb {
+      background-color: get-color(paper);
+    }
+    &::-webkit-scrollbar-track {
+      background-color: get-color(paper, lighten-1);
+    }
+  }
+  @include on-light {
+    background-color: get-color(background, lighten-1) !important;
+    &::-webkit-scrollbar-thumb {
+      background-color: get-color(background);
+    }
+    &::-webkit-scrollbar-track {
+      background-color: get-color(background, lighten-1);
+    }
+  }
+  &:focus {
+    outline: none;
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: get-theme-prop(layout, shape);
+  }
+  &::-webkit-scrollbar-track {
+    border-radius: get-theme-prop(layout, shape);
+  }
   .item {
-    background-color: get-color(paper, lighten-1);
     cursor: pointer;
     padding: get-theme-prop(layout, sizes, 4);
     width: 100%;
-    &:hover,
-    &:focus {
-      background-color: get-color(paper, lighten-2) !important;
-      color: get-color(paper, contrast) !important;
+    @include on-dark {
+      background-color: get-color(paper, lighten-1);
+      &:hover,
+      &:focus {
+        background-color: get-color(paper, lighten-2) !important;
+        color: get-color(paper, contrast) !important;
+      }
+    }
+    @include on-light {
+      background-color: get-color(background, lighten-1);
+      &:hover,
+      &:focus {
+        background-color: get-color(paper, darken-2) !important;
+        color: get-color(paper, contrast) !important;
+      }
     }
     &:focus {
       outline: none;

@@ -8,7 +8,7 @@
       0 80px 72px rgba(0, 0, 0, 0.017);
   }
   &.outline {
-    @media (prefers-color-scheme: dark) {
+    @include on-dark {
       &:not(.no-horizontal-borders) {
         border: 1px solid get-color(paper, lighten-2);
       }
@@ -17,7 +17,7 @@
         border-top: 1px solid get-color(paper, lighten-2);
       }
     }
-    @media (prefers-color-scheme: light) {
+    @include on-light {
       &:not(.no-horizontal-borders) {
         border: 1px solid get-color(background, darken-2);
       }

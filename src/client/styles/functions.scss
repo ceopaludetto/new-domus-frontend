@@ -115,3 +115,15 @@
     @content;
   }
 }
+
+@mixin on-dark {
+  @media (prefers-color-scheme: dark) {
+    @content;
+  }
+}
+
+@mixin on-light {
+  @media (prefers-color-scheme: light) {
+    @content;
+  }
+}

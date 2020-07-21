@@ -1,10 +1,21 @@
 import * as React from "react";
 import { useForm, FormProvider, get } from "react-hook-form";
 
+import { useQuery, ApolloClient } from "@apollo/client";
 import { yupResolver } from "@hookform/resolvers";
 import clsx from "clsx";
 
-import { MaskedFormControl, FormControl, FormRadioCard, Button, Switch, ColorText } from "@/client/components";
+import {
+  MaskedFormControl,
+  FormControl,
+  FormSelect,
+  FormRadioCard,
+  Button,
+  Switch,
+  ColorText,
+} from "@/client/components";
+import { ShowStatesQuery } from "@/client/graphql/operations";
+import { ShowStates } from "@/client/graphql/state.gql";
 import * as Masks from "@/client/helpers/masks";
 import { SignUpStep3Schema, SignUpStep3Values } from "@/client/helpers/validations/signup.schema";
 import { StepperContext } from "@/client/hooks";
@@ -21,10 +32,12 @@ export default function Step3() {
     defaultValues: values,
   });
   const type = methods.watch("type");
+  const state = methods.watch("state");
+  const { data } = useQuery<ShowStatesQuery>(ShowStates);
 
-  const submit = methods.handleSubmit((data) => {
+  const submit = methods.handleSubmit((datas) => {
     if (values) {
-      setValues({ ...values, ...clean(data) });
+      setValues({ ...values, ...clean(datas) });
       next();
     }
   });
@@ -70,10 +83,34 @@ export default function Step3() {
                 <FormControl name="number" id="number" label="Número" required />
               </div>
               <div className={clsx(u["xs-12"], u["md-4"])}>
-                <FormControl name="state" id="state" label="Estado" required />
+                <FormSelect
+                  items={
+                    data?.showStates.map((st) => ({
+                      value: st.id,
+                      label: st.name,
+                    })) ?? []
+                  }
+                  name="state"
+                  id="state"
+                  label="Estado"
+                  required
+                />
               </div>
               <div className={clsx(u["xs-12"], u["md-8"])}>
-                <FormControl name="city" id="city" label="Cidade" required />
+                <FormSelect
+                  items={
+                    data?.showStates
+                      ?.find((st) => st.id === state)
+                      ?.cities.map((c) => ({
+                        value: c.id,
+                        label: c.name,
+                      })) ?? []
+                  }
+                  name="city"
+                  id="city"
+                  label="Cidade"
+                  required
+                />
               </div>
             </div>
           </>
@@ -93,3 +130,7 @@ export default function Step3() {
     </FormProvider>
   );
 }
+
+Step3.fetchBefore = async (client: ApolloClient<object>) => {
+  await client.query<ShowStatesQuery>({ query: ShowStates });
+};

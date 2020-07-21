@@ -94,10 +94,10 @@
       flex: 1;
       padding-left: 50px;
       user-select: none;
-      @media (prefers-color-scheme: dark) {
+      @include on-dark {
         color: get-color(muted, lighten-2);
       }
-      @media (prefers-color-scheme: light) {
+      @include on-light {
         color: get-color(muted, darken-2);
       }
     }

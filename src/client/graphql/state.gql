@@ -1,0 +1,10 @@
+query ShowStates {
+  showStates {
+    id
+    name
+    cities {
+      id
+      name
+    }
+  }
+}
