@@ -16,10 +16,12 @@
 .years {
   gap: #{get-theme-prop(layout, gap) / 2};
   grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 0 -#{get-theme-prop(layout, gap) * 2};
   max-height: 287px;
   overflow-y: auto;
+  padding: 0 #{get-theme-prop(layout, gap) * 2};
 }
 
 .width {
-  min-width: 310px;
+  min-width: calc(310px + #{get-theme-prop(layout, gap) * 4});
 }

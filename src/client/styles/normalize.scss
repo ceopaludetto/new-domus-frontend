@@ -46,3 +46,28 @@ body {
 }
 
 @include gen-colors($colors);
+
+*::-webkit-scrollbar {
+  width: 7px;
+}
+
+*::-webkit-scrollbar-track {
+  background-color: get-color(paper);
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: get-color(paper);
+  border-radius: 0;
+}
+
+* {
+  scrollbar-color: get-color(paper) get-color(paper);
+  scrollbar-width: thin;
+}
+
+*:hover {
+  scrollbar-color: get-color(paper, lighten-2) get-color(paper);
+  &::-webkit-scrollbar-thumb {
+    background-color: get-color(paper, lighten-2);
+  }
+}
