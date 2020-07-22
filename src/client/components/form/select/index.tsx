@@ -68,12 +68,14 @@ export function Select({ items, value, onChange, id, ...props }: SelectProps) {
 
           if (/[A-Za-z]/.test(e.key) && e.key.length === 1) {
             let finded!: HTMLElement;
-            for (let i = 0; i < (els?.length ?? 0); i += 1) {
+            let i = 0;
+            while (!finded) {
               const el = els?.item(i);
 
               if (el?.textContent?.toLowerCase()?.startsWith(e.key.toLowerCase())) {
                 finded = el as HTMLElement;
               }
+              i += 1;
             }
 
             if (finded) {

@@ -8,10 +8,10 @@ import type { ShowAll, Mapped } from "@/server/utils/common.dto";
 export class LocalService {
   public constructor(@InjectModel(Local) private readonly localModel: typeof Local) {}
 
-  public async showAll({ skip = 0, first }: ShowAll, mapped: Mapped<Local>) {
+  public async showAll({ skip = 0, take }: ShowAll, mapped: Mapped<Local>) {
     return this.localModel.findAll({
       offset: skip,
-      limit: first,
+      limit: take,
       attributes: mapped.keys(),
       include: mapped.includes(),
     });

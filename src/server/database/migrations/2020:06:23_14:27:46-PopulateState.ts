@@ -12,14 +12,25 @@ export default {
 
     return queryInterface.bulkInsert(
       STATE,
-      res.data.map((s) => ({
-        id: generate(),
-        name: s.nome,
-        initials: s.sigla,
-        code: s.id,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      }))
+      res.data
+        .sort((a, b) => {
+          if (a.nome < b.nome) {
+            return -1;
+          }
+          if (a.nome > b.nome) {
+            return 1;
+          }
+
+          return 0;
+        })
+        .map((s) => ({
+          id: generate(),
+          name: s.nome,
+          initials: s.sigla,
+          code: s.id,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        }))
     );
   },
 

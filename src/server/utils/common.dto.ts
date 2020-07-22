@@ -1,10 +1,19 @@
-import { ArgsType, Field, ID, Int } from "@nestjs/graphql";
+import { ArgsType, Field, ID, Int, registerEnumType } from "@nestjs/graphql";
 import { IsString, IsObject, IsInt, IsNumber, IsOptional } from "class-validator";
 import { Request, Response } from "express";
 import type { IncludeOptions } from "sequelize";
 import type { Model } from "sequelize-typescript";
 
 import { IsShortID } from "./validations";
+
+export enum Order {
+  ASC = "ASC",
+  DESC = "DESC",
+}
+
+registerEnumType(Order, {
+  name: "Order",
+});
 
 @ArgsType()
 export class FindByID {
@@ -20,14 +29,16 @@ export class ShowAll {
   @IsNumber()
   @IsInt()
   @Field(() => Int, { nullable: true })
-  public first?: number;
+  public take?: number;
 
   @IsOptional()
   @IsNumber()
   @IsInt()
-  @Field(() => Int, { nullable: true })
+  @Field(() => Int, { nullable: true, defaultValue: 0 })
   public skip?: number;
 }
+
+export type ShowAllWithSort<T, U extends keyof T> = ShowAll & { sort?: Pick<{ [P in keyof T]?: Order }, U> };
 
 export class ContextType {
   @IsObject()

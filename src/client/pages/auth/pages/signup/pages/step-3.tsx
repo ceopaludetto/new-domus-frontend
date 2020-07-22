@@ -96,22 +96,24 @@ export default function Step3() {
                   required
                 />
               </div>
-              <div className={clsx(u["xs-12"], u["md-8"])}>
-                <FormSelect
-                  items={
-                    data?.showStates
-                      ?.find((st) => st.id === state)
-                      ?.cities.map((c) => ({
-                        value: c.id,
-                        label: c.name,
-                      })) ?? []
-                  }
-                  name="city"
-                  id="city"
-                  label="Cidade"
-                  required
-                />
-              </div>
+              {!!state && (
+                <div className={clsx(u["xs-12"], u["md-8"])}>
+                  <FormSelect
+                    items={
+                      data?.showStates
+                        ?.find((st) => st.id === state)
+                        ?.cities.map((c) => ({
+                          value: c.id,
+                          label: c.name,
+                        })) ?? []
+                    }
+                    name="city"
+                    id="city"
+                    label="Cidade"
+                    required
+                  />
+                </div>
+              )}
             </div>
           </>
         )}

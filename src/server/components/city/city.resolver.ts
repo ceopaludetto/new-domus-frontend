@@ -12,8 +12,8 @@ export class CityResolver {
   public constructor(private readonly cityService: CityService) {}
 
   @Query(() => [City])
-  public async showCities(@Args() { first, skip }: ShowAll, @MapFields(City) mapped: Mapped<City>) {
-    return this.cityService.showAll({ skip, first }, mapped);
+  public async showCities(@Args() { take, skip }: ShowAll, @MapFields(City) mapped: Mapped<City>) {
+    return this.cityService.showAll({ skip, take }, mapped);
   }
 
   @Query(() => City)

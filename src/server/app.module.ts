@@ -53,8 +53,9 @@ import { ComplexityPlugin } from "@/server/utils/plugins/query.complexity.plugin
         password: database.password,
         ssl: database.ssl || false,
         logging: database.logger ? (sql) => logger.debug(sql) : false,
-        models: Entities,
+        minifyAliases: true,
         native: true,
+        models: Entities,
       }),
     }),
     MailerModule.forRootAsync({

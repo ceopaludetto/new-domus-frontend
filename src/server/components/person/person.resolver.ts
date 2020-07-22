@@ -12,8 +12,8 @@ export class PersonResolver {
   public constructor(private readonly personService: PersonService) {}
 
   @Query(() => [Person])
-  public async showPeople(@Args() { skip, first }: ShowAll, @MapFields(Person) mapped: Mapped<Person>) {
-    return this.personService.showAll({ skip, first }, mapped);
+  public async showPeople(@Args() { skip, take }: ShowAll, @MapFields(Person) mapped: Mapped<Person>) {
+    return this.personService.showAll({ skip, take }, mapped);
   }
 
   @Query(() => Person)

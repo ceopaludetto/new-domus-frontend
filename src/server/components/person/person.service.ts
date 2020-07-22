@@ -8,11 +8,11 @@ import type { Mapped, ShowAll } from "@/server/utils/common.dto";
 export class PersonService {
   public constructor(@InjectModel(Person) private readonly personModel: typeof Person) {}
 
-  public async showAll({ skip = 0, first }: ShowAll, mapped: Mapped<Person>) {
+  public async showAll({ skip = 0, take }: ShowAll, mapped: Mapped<Person>) {
     return this.personModel.findAll({
       attributes: mapped.keys(),
       offset: skip,
-      limit: first,
+      limit: take,
       include: mapped.includes(),
     });
   }

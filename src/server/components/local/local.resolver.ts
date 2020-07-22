@@ -12,8 +12,8 @@ export class LocalResolver {
   public constructor(private readonly localService: LocalService) {}
 
   @Query(() => [Local])
-  public showLocals(@Args() { first, skip }: ShowAll, @MapFields(Local) mapped: Mapped<Local>) {
-    return this.localService.showAll({ first, skip }, mapped);
+  public showLocals(@Args() { take, skip }: ShowAll, @MapFields(Local) mapped: Mapped<Local>) {
+    return this.localService.showAll({ take, skip }, mapped);
   }
 
   @Query(() => Local)

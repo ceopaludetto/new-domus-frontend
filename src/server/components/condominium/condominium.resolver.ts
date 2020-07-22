@@ -13,8 +13,8 @@ export class CondominiumResolver {
   public constructor(private readonly condominiumService: CondominiumService) {}
 
   @Query(() => [Condominium])
-  public async showCondominiums(@Args() { first, skip }: ShowAll, @MapFields(Condominium) mapped: Mapped<Condominium>) {
-    return this.condominiumService.showAll({ first, skip }, mapped);
+  public async showCondominiums(@Args() { take, skip }: ShowAll, @MapFields(Condominium) mapped: Mapped<Condominium>) {
+    return this.condominiumService.showAll({ take, skip }, mapped);
   }
 
   @Query(() => Condominium)

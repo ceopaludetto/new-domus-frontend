@@ -105,6 +105,11 @@ type Mutation {
   register(input: UserInsertInput!): User!
 }
 
+enum Order {
+  ASC
+  DESC
+}
+
 type Person {
   id: ID!
   createdAt: DateTime!
@@ -147,17 +152,17 @@ input PhoneInsertInput {
 }
 
 type Query {
-  showCondominiums(first: Int, skip: Int): [Condominium!]!
+  showCondominiums(take: Int, skip: Int = 0): [Condominium!]!
   findCondominiumByID(id: ID!): Condominium!
-  showPeople(first: Int, skip: Int): [Person!]!
+  showPeople(take: Int, skip: Int = 0): [Person!]!
   findPersonByID(id: ID!): Person!
-  showUsers(first: Int, skip: Int): [User!]!
+  showUsers(take: Int, skip: Int = 0): [User!]!
   findUserByID(id: ID!): User!
   findUserByLogin(login: String!): User!
   profile: User!
-  showStates(first: Int, skip: Int): [State!]!
+  showStates(sort: StateSortArgs, take: Int, skip: Int = 0): [State!]!
   findStateByID(id: ID!): State!
-  showCities(first: Int, skip: Int): [City!]!
+  showCities(take: Int, skip: Int = 0): [City!]!
   findCityByID(id: ID!): City!
   findCitiesByStateID(id: ID!): [City!]!
 }
@@ -171,6 +176,10 @@ type State {
   initials: String!
   code: Float!
   cities: [City!]!
+}
+
+input StateSortArgs {
+  name: Order
 }
 
 type User {

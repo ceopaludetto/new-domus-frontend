@@ -29,6 +29,7 @@ export async function installMiddlewares(app: INestApplication) {
     if (process.env.NODE_ENV === "production") {
       app.use(compression());
     }
+
     app.use(
       process.env.PUBLIC_PATH,
       serve(process.env.STATIC_FOLDER as string, {

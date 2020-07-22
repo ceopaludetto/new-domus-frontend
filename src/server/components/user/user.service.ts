@@ -15,11 +15,11 @@ export class UserService {
     @InjectQueue("mail") private readonly mailQueue: Queue
   ) {}
 
-  public async showAll({ skip = 0, first }: ShowAll, mapped: Mapped<User>) {
+  public async showAll({ skip = 0, take }: ShowAll, mapped: Mapped<User>) {
     return this.userModel.findAll({
       attributes: mapped.keys(),
       offset: skip,
-      limit: first,
+      limit: take,
       include: mapped.includes(),
     });
   }
