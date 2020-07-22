@@ -26,7 +26,7 @@ import { WizardContext } from "../providers";
 
 export default function Step3() {
   const { setValues, values } = React.useContext(WizardContext);
-  const { next, prev } = React.useContext(StepperContext);
+  const { prev } = React.useContext(StepperContext);
   const methods = useForm<SignUpStep3Values>({
     resolver: yupResolver(SignUpStep3Schema),
     defaultValues: values,
@@ -38,7 +38,6 @@ export default function Step3() {
   const submit = methods.handleSubmit((datas) => {
     if (values) {
       setValues({ ...values, ...clean(datas) });
-      next();
     }
   });
 
@@ -62,7 +61,7 @@ export default function Step3() {
           <>
             <div className={clsx(u.grid, u["grid-template"])}>
               <div className={clsx(u["xs-12"], u["md-6"])}>
-                <FormControl name="razaoSocial" id="razaoSocial" label="Razão Social" required />
+                <FormControl name="companyName" id="companyName" label="Razão Social" required />
               </div>
               <div className={clsx(u["xs-12"], u["md-6"])}>
                 <MaskedFormControl
@@ -77,7 +76,7 @@ export default function Step3() {
                 <MaskedFormControl rifm={{ format: Masks.cep, mask: true }} name="zip" id="zip" label="CEP" required />
               </div>
               <div className={clsx(u["xs-12"], u["md-7"])}>
-                <FormControl name="endereco" id="endereco" label="Endereço" required />
+                <FormControl name="address" id="address" label="Endereço" required />
               </div>
               <div className={clsx(u["xs-12"], u["md-2"])}>
                 <FormControl name="number" id="number" label="Número" required />

@@ -25,6 +25,35 @@ export const SignUpStep2Schema = Yup.object({
 
 export const SignUpStep3Schema = Yup.object({
   type: Yup.string().oneOf(["enter", "create", null], Messages.STEP_3_TYPE).required(Messages.REQUIRED),
+  companyName: Yup.string().when("type", {
+    is: "create",
+    then: (schema: Yup.StringSchema) => schema.required(Messages.REQUIRED),
+  }),
+  cnpj: Yup.string().when("type", {
+    is: "create",
+    then: (schema: Yup.StringSchema) =>
+      schema.matches(/\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}/, Messages.CNPJ).required(Messages.REQUIRED),
+  }),
+  zip: Yup.string().when("type", {
+    is: "create",
+    then: (schema: Yup.StringSchema) => schema.matches(/\d{5}-\d{3}/, Messages.ZIP).required(Messages.REQUIRED),
+  }),
+  address: Yup.string().when("type", {
+    is: "create",
+    then: (schema: Yup.StringSchema) => schema.required(Messages.REQUIRED),
+  }),
+  number: Yup.string().when("type", {
+    is: "create",
+    then: (schema: Yup.StringSchema) => schema.required(Messages.REQUIRED),
+  }),
+  state: Yup.string().when("type", {
+    is: "create",
+    then: (schema: Yup.StringSchema) => schema.required(Messages.REQUIRED),
+  }),
+  city: Yup.string().when("type", {
+    is: "create",
+    then: (schema: Yup.StringSchema) => schema.required(Messages.REQUIRED),
+  }),
 });
 
 export type SignUpStep1Values = Yup.InferType<typeof SignUpStep1Schema>;

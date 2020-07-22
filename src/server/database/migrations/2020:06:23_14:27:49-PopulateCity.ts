@@ -18,15 +18,26 @@ export default {
 
         return queryInterface.bulkInsert(
           CITY,
-          inner.data.map((c) => ({
-            id: generate(),
-            stateID: r.id,
-            name: c.nome,
-            code: c.id,
-            slug: slugify(c.nome, { lower: true, strict: true }),
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          }))
+          inner.data
+            .sort((a, b) => {
+              if (a.nome < b.nome) {
+                return -1;
+              }
+              if (a.nome > b.nome) {
+                return 1;
+              }
+
+              return 0;
+            })
+            .map((c) => ({
+              id: generate(),
+              stateID: r.id,
+              name: c.nome,
+              code: c.id,
+              slug: slugify(c.nome, { lower: true, strict: true }),
+              createdAt: new Date(),
+              updatedAt: new Date(),
+            }))
         );
       })
     );

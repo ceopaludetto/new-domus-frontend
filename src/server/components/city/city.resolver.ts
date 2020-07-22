@@ -12,7 +12,7 @@ export class CityResolver {
   public constructor(private readonly cityService: CityService) {}
 
   @Query(() => [City])
-  public async showCities(@Args() { take, skip }: ShowAll, @MapFields(City) mapped: Mapped<City>) {
+  public async showCities(@Args({ nullable: true }) { take, skip }: ShowAll, @MapFields(City) mapped: Mapped<City>) {
     return this.cityService.showAll({ skip, take }, mapped);
   }
 

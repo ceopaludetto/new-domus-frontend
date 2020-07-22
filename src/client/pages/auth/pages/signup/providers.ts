@@ -12,6 +12,13 @@ export interface WizardContextProps {
     password: string;
     repeatPassword: string;
     type: "create" | "enter" | "";
+    companyName?: string;
+    address?: string;
+    cnpj?: string;
+    city?: string;
+    state?: string;
+    zip?: string;
+    number?: string;
   };
   setValues: React.Dispatch<React.SetStateAction<WizardContextProps["values"]>>;
 }
@@ -28,6 +35,13 @@ export const WizardContext = React.createContext<WizardContextProps>({
     password: "",
     repeatPassword: "",
     type: "",
+    companyName: "",
+    address: "",
+    cnpj: "",
+    state: "",
+    city: "",
+    zip: "",
+    number: "",
   },
   setValues: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
 });

@@ -52,6 +52,11 @@ type City {
   state: State!
 }
 
+input CitySortInput {
+  name: Order
+  slug: Order
+}
+
 type Condominium {
   id: ID!
   createdAt: DateTime!
@@ -160,11 +165,11 @@ type Query {
   findUserByID(id: ID!): User!
   findUserByLogin(login: String!): User!
   profile: User!
-  showStates(sort: StateSortArgs, take: Int, skip: Int = 0): [State!]!
-  findStateByID(id: ID!): State!
   showCities(take: Int, skip: Int = 0): [City!]!
   findCityByID(id: ID!): City!
   findCitiesByStateID(id: ID!): [City!]!
+  showStates(sort: StateSortInput, take: Int, skip: Int = 0): [State!]!
+  findStateByID(id: ID!): State!
 }
 
 type State {
@@ -178,8 +183,9 @@ type State {
   cities: [City!]!
 }
 
-input StateSortArgs {
+input StateSortInput {
   name: Order
+  cities: CitySortInput
 }
 
 type User {

@@ -38,7 +38,9 @@ export class ShowAll {
   public skip?: number;
 }
 
-export type ShowAllWithSort<T, U extends keyof T> = ShowAll & { sort?: Pick<{ [P in keyof T]?: Order }, U> };
+export type Sort<T, U extends keyof T> = Pick<{ [P in keyof T]?: Order }, U>;
+
+export type ShowAllWithSort<T, U extends keyof T> = ShowAll & { sort?: Sort<T, U> };
 
 export class ContextType {
   @IsObject()
@@ -48,10 +50,12 @@ export class ContextType {
   public res!: Response;
 }
 
-export type Mapped<T, U = Omit<T, keyof Model<T>>> = {
+export type ExcludeSequelize<T> = Omit<T, keyof Model<T>>;
+
+export type Mapped<T, U = ExcludeSequelize<T>> = {
   [P in keyof U]: U[P] extends object ? Mapped<U[P]> : {};
 } & { keys: () => string[]; includes: () => IncludeOptions[] };
 
-export type KeepOptions<T, U = Omit<T, keyof Model<T>>> = {
+export type KeepOptions<T, U = ExcludeSequelize<T>> = {
   [P in keyof U]?: U[P] extends object ? KeepOptions<U[P]> : boolean;
 };

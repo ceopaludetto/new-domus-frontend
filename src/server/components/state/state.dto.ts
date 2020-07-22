@@ -1,13 +1,14 @@
 import { InputType, Field } from "@nestjs/graphql";
-import { IsEnum, IsString, IsOptional } from "class-validator";
+import { IsOptional, ValidateNested } from "class-validator";
 
-import { Order } from "@/server/utils/common.dto";
+import { CitySortInput } from "@/server/components/city/city.dto";
+import { State } from "@/server/models";
+import { Sortable } from "@/server/utils/sort";
 
 @InputType()
-export class StateSortArgs {
+export class StateSortInput extends Sortable(State, ["name"]) {
   @IsOptional()
-  @IsEnum(Order)
-  @IsString()
-  @Field(() => Order, { nullable: true })
-  public name?: Order;
+  @ValidateNested()
+  @Field(() => CitySortInput, { nullable: true })
+  public cities?: CitySortInput;
 }

@@ -3,6 +3,7 @@ import { InjectModel } from "@nestjs/sequelize";
 
 import { State } from "@/server/models";
 import type { Mapped, ShowAllWithSort } from "@/server/utils/common.dto";
+import { getSort } from "@/server/utils/sort";
 
 @Injectable()
 export class StateService {
@@ -13,7 +14,7 @@ export class StateService {
       attributes: mapped.keys(),
       offset: skip,
       limit: take,
-      order: Object.entries(sort ?? {}) as [],
+      order: getSort(State, sort),
       include: mapped.includes(),
     });
   }

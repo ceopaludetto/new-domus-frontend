@@ -12,7 +12,7 @@ export class LocalResolver {
   public constructor(private readonly localService: LocalService) {}
 
   @Query(() => [Local])
-  public showLocals(@Args() { take, skip }: ShowAll, @MapFields(Local) mapped: Mapped<Local>) {
+  public showLocals(@Args({ nullable: true }) { take, skip }: ShowAll, @MapFields(Local) mapped: Mapped<Local>) {
     return this.localService.showAll({ take, skip }, mapped);
   }
 

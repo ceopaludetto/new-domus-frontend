@@ -13,7 +13,7 @@ export class UserResolver {
   public constructor(private readonly userService: UserService) {}
 
   @Query(() => [User])
-  public async showUsers(@Args() { skip, take }: ShowAll, @MapFields(User) mapped: Mapped<User>) {
+  public async showUsers(@Args({ nullable: true }) { skip, take }: ShowAll, @MapFields(User) mapped: Mapped<User>) {
     return this.userService.showAll({ skip, take }, mapped);
   }
 

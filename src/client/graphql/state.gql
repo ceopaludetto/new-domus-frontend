@@ -1,5 +1,5 @@
 query ShowStates {
-  showStates {
+  showStates(sort: { name: ASC, cities: { slug: ASC } }) {
     id
     name
     cities {

@@ -8,3 +8,5 @@ export const STEP_3_TYPE = "Seleção obrigatória";
 export const MIN = "O campo deve conter no mínimo ${min} caracteres";
 export const ONE_NUMBER = "O campo deve conter pelo menos 1 número";
 export const ONE_UPPER = "O campo deve conter pelo menos 1 caractere maiúsculo";
+export const ZIP = "CEP inválido";
+export const CNPJ = "CNPJ inválido";

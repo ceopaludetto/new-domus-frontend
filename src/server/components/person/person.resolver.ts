@@ -12,7 +12,10 @@ export class PersonResolver {
   public constructor(private readonly personService: PersonService) {}
 
   @Query(() => [Person])
-  public async showPeople(@Args() { skip, take }: ShowAll, @MapFields(Person) mapped: Mapped<Person>) {
+  public async showPeople(
+    @Args({ nullable: true }) { skip, take }: ShowAll,
+    @MapFields(Person) mapped: Mapped<Person>
+  ) {
     return this.personService.showAll({ skip, take }, mapped);
   }
 
