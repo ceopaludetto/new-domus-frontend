@@ -46,14 +46,18 @@ export const SignUpStep3Schema = Yup.object({
     is: "create",
     then: (schema: Yup.StringSchema) => schema.required(Messages.REQUIRED),
   }),
-  state: Yup.string().when("type", {
-    is: "create",
-    then: (schema: Yup.StringSchema) => schema.required(Messages.REQUIRED),
-  }),
-  city: Yup.string().when("type", {
-    is: "create",
-    then: (schema: Yup.StringSchema) => schema.required(Messages.REQUIRED),
-  }),
+  state: Yup.string()
+    .nullable()
+    .when("type", {
+      is: "create",
+      then: (schema: Yup.StringSchema) => schema.required(Messages.REQUIRED),
+    }),
+  city: Yup.string()
+    .nullable()
+    .when("type", {
+      is: "create",
+      then: (schema: Yup.StringSchema) => schema.required(Messages.REQUIRED),
+    }),
 });
 
 export type SignUpStep1Values = Yup.InferType<typeof SignUpStep1Schema>;

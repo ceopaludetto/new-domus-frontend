@@ -15,8 +15,8 @@ export interface WizardContextProps {
     companyName?: string;
     address?: string;
     cnpj?: string;
-    city?: string;
-    state?: string;
+    city?: string | null;
+    state?: string | null;
     zip?: string;
     number?: string;
   };
@@ -38,8 +38,8 @@ export const WizardContext = React.createContext<WizardContextProps>({
     companyName: "",
     address: "",
     cnpj: "",
-    state: "",
-    city: "",
+    state: null,
+    city: null,
     zip: "",
     number: "",
   },

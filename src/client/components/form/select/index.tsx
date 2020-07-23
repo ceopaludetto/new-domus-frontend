@@ -1,11 +1,11 @@
 import * as React from "react";
-import { FiChevronDown } from "react-icons/fi";
+import { FiChevronDown, FiChevronUp } from "react-icons/fi";
 import { CSSTransition } from "react-transition-group";
-import { useClickAway } from "react-use";
 
 import clsx from "clsx";
+import { useSelect } from "downshift";
 
-import { Paper, FocusTrap } from "@/client/components/layout";
+import { Paper } from "@/client/components/layout";
 
 import { Control } from "../control";
 import { IconButton } from "../icon-button";
@@ -21,145 +21,74 @@ type SelectProps = Omit<React.ComponentProps<typeof Control>, "onChange" | "valu
 
 export function Select({ items, value, onChange, id, ...props }: SelectProps) {
   const ref = React.useRef<HTMLDivElement>(null);
-  const divRef = React.useRef<HTMLDivElement>(null);
-  const selectedRef = React.useRef<HTMLDivElement>(null);
-  const arrowRef = React.useRef<HTMLButtonElement>(null);
-  const [isOpen, setIsOpen] = React.useState(false);
-  const selected = React.useMemo(() => items.find((i) => i.value === value), [value, items]);
-
-  useClickAway(ref, () => {
-    setIsOpen(false);
+  const buttonRef = React.useRef<HTMLButtonElement>(null);
+  const {
+    isOpen,
+    selectedItem,
+    highlightedIndex,
+    getItemProps,
+    getToggleButtonProps,
+    getMenuProps,
+    getLabelProps,
+    toggleMenu,
+  } = useSelect({
+    items,
+    itemToString: (i) => i?.label ?? "",
+    onSelectedItemChange: (i) => onChange(i.selectedItem?.value),
+    selectedItem: items.find((i) => i.value === value) ?? null,
+    id,
   });
-
-  const onItemChange = React.useCallback(
-    (item: Item) => {
-      onChange(item.value);
-      setIsOpen(false);
-    },
-    [onChange]
-  );
-
-  const onKeyPress = React.useCallback(
-    (item: Item) => {
-      return (e: React.KeyboardEvent) => {
-        if (e.key === "Enter") {
-          onItemChange(item);
-        } else {
-          const els = ref.current?.querySelectorAll('div[tabindex="0"]');
-
-          if (e.key === "ArrowDown" || e.key === "ArrowUp") {
-            let active!: HTMLElement;
-            for (let i = 0; i < (els?.length ?? 0); i += 1) {
-              if (els?.item(i) === window.document.activeElement) {
-                if (i + 1 === els.length && e.key === "ArrowDown") {
-                  active = els.item(0) as HTMLElement;
-                } else if (i === 0 && e.key === "ArrowUp") {
-                  active = els.item(els.length - 1) as HTMLElement;
-                } else {
-                  active = els.item(i + (e.key === "ArrowUp" ? -1 : 1)) as HTMLElement;
-                }
-              }
-            }
-
-            if (active) {
-              active.focus();
-            }
-          }
-
-          if (/[A-Za-z]/.test(e.key) && e.key.length === 1) {
-            let finded!: HTMLElement;
-            let i = 0;
-            while (!finded) {
-              const el = els?.item(i);
-
-              if (el?.textContent?.toLowerCase()?.startsWith(e.key.toLowerCase())) {
-                finded = el as HTMLElement;
-              }
-              i += 1;
-            }
-
-            if (finded) {
-              finded.focus();
-            }
-          }
-        }
-      };
-    },
-    [onItemChange, ref]
-  );
 
   return (
     <>
       <Control
         readOnly
         className={s.control}
-        value={selected?.label ?? ""}
-        onFocus={() => setIsOpen(true)}
+        value={selectedItem?.label ?? ""}
         append={
-          <IconButton
-            aria-describedby={`${id}-label ${id}-toggle-button`}
-            aria-haspopup="listbox"
-            aria-expanded={isOpen}
-            id={`${id}-toggle-button`}
-            ref={arrowRef}
-            tabIndex={0}
-            onClick={() => setIsOpen(true)}
-          >
-            <FiChevronDown />
+          <IconButton {...getToggleButtonProps({ ref: buttonRef })}>
+            {isOpen ? <FiChevronUp /> : <FiChevronDown />}
           </IconButton>
         }
-        labelProps={{
-          id: `${id}-label`,
-        }}
-        {...props}
-      />
-      <CSSTransition
-        in={isOpen}
-        timeout={125}
-        classNames={{
-          enter: s.enter,
-          enterActive: s["enter-active"],
-          enterDone: s["enter-done"],
-          exit: s.exit,
-          exitActive: s["exit-active"],
-          exitDone: s["exit-done"],
-        }}
-        nodeRef={divRef}
-        onEntering={() => {
-          if (selectedRef.current) {
-            selectedRef.current.focus();
+        onFocus={() => {
+          toggleMenu();
+          if (buttonRef.current) {
+            buttonRef.current.focus();
           }
         }}
-        unmountOnExit
-      >
-        <div ref={divRef} className={s.select}>
-          <FocusTrap nodeRef={ref}>
-            <Paper
-              tabIndex={-1}
-              role="listbox"
-              aria-describedby={`${id}-label`}
-              aria-expanded={isOpen}
-              ref={ref}
-              className={s.content}
-            >
-              {items.map((item) => (
+        labelProps={getLabelProps()}
+        {...props}
+      />
+      <div {...getMenuProps()} className={s.select}>
+        <CSSTransition
+          in={isOpen}
+          timeout={125}
+          classNames={{
+            enter: s.enter,
+            enterActive: s["enter-active"],
+            enterDone: s["enter-done"],
+            exit: s.exit,
+            exitActive: s["exit-active"],
+            exitDone: s["exit-done"],
+          }}
+          nodeRef={ref}
+          unmountOnExit
+        >
+          <Paper ref={ref} className={s.content}>
+            <div className={s.scroll}>
+              {items.map((item, index) => (
                 <div
-                  tabIndex={0}
-                  role="option"
-                  ref={item === selected ? selectedRef : undefined}
-                  aria-selected={item === selected}
-                  className={clsx(s.item, item.value === value && s.active)}
-                  onClick={() => onItemChange(item)}
-                  onKeyDown={onKeyPress(item)}
+                  className={clsx(s.item, highlightedIndex === index && s.active)}
                   key={item.value}
+                  {...getItemProps({ item, index })}
                 >
                   {item.label}
                 </div>
               ))}
-            </Paper>
-          </FocusTrap>
-        </div>
-      </CSSTransition>
+            </div>
+          </Paper>
+        </CSSTransition>
+      </div>
     </>
   );
 }
