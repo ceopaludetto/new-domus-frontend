@@ -1,15 +1,15 @@
-import type { Type } from "@nestjs/common";
-import { InputType, Field, TypeMetadataStorage } from "@nestjs/graphql";
+import { Type, Injectable, PipeTransform } from "@nestjs/common";
+import { InputType, Field, TypeMetadataStorage, Args } from "@nestjs/graphql";
 import { IsString, IsEnum, IsOptional } from "class-validator";
 import type { Order as SequelizeOrder } from "sequelize";
 
-import { Order, ExcludeSequelize, Sort } from "./common.dto";
+import { Order, ExcludeSequelize, Sort } from "../common.dto";
 
 export function Sortable<T, K extends string & keyof ExcludeSequelize<T>>(
   model: Type<T>,
   props: readonly K[],
   defaults?: { [P in K]?: Order }
-): Type<{ [P in keyof Pick<T, typeof props[number]>]?: Order }> {
+): Type<{ [P in keyof Pick<T, typeof props[number]>]?: Order } & { get(): SequelizeOrder }> {
   @InputType(`${model.name}SortInput`, { isAbstract: true })
   abstract class AbstractSort {}
 
@@ -50,3 +50,14 @@ export function getSort<T>(model: Type<T>, sort?: Sort<T, keyof T>): SequelizeOr
 
   return undefined;
 }
+
+@Injectable()
+class SequelizeOrderPipe<T> implements PipeTransform {
+  public constructor(private readonly model: Type<T>) {}
+
+  public transform(value: Sort<T, keyof T>) {
+    return { get: () => getSort(this.model, value) };
+  }
+}
+
+export const SortFields = <T>(model: Type<T>) => Args("sort", { nullable: true }, new SequelizeOrderPipe(model));

@@ -165,11 +165,11 @@ type Query {
   findUserByID(id: ID!): User!
   findUserByLogin(login: String!): User!
   profile: User!
-  showStates(sort: StateSortInput, take: Int, skip: Int = 0): [State!]!
-  findStateByID(id: ID!): State!
   showCities(take: Int, skip: Int = 0): [City!]!
   findCityByID(id: ID!): City!
   findCitiesByStateID(id: ID!): [City!]!
+  showStates(sort: StateSortInput, take: Int, skip: Int = 0): [State!]!
+  findStateByID(id: ID!): State!
 }
 
 type State {
@@ -185,6 +185,7 @@ type State {
 
 input StateSortInput {
   name: Order
+  initials: Order
   cities: CitySortInput
 }
 

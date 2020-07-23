@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
-import { createParamDecorator, ExecutionContext } from "@nestjs/common";
-import { GqlExecutionContext, TypeMetadataStorage } from "@nestjs/graphql";
+import { Injectable, PipeTransform, Type } from "@nestjs/common";
+import { TypeMetadataStorage, Info } from "@nestjs/graphql";
 import type { GraphQLResolveInfo } from "graphql";
 import GraphQLFields from "graphql-fields";
 import type { IncludeOptions } from "sequelize";
@@ -53,17 +53,21 @@ function mapKeep<T>(fields: Record<string, any>, kp: KeepOptions<T>) {
   });
 }
 
-export const MapFields = <T>(target: new () => T, keep?: KeepOptions<T>) =>
-  createParamDecorator(
-    (data: unknown, context: ExecutionContext): Record<string, any> => {
-      const gqlContext = GqlExecutionContext.create(context);
-      const info = gqlContext.getInfo<GraphQLResolveInfo>();
-      const fields = GraphQLFields(info as any, {}, { excludedFields: ["__typename"] });
+@Injectable()
+class MapFieldsPipe<T> implements PipeTransform {
+  public constructor(private readonly model: Type<T>, private readonly keep?: KeepOptions<T>) {}
 
-      if (keep) {
-        mapKeep(fields, keep);
-      }
+  public transform(value: GraphQLResolveInfo) {
+    const fields = GraphQLFields(value as any, {}, { excludedFields: ["__typename"] });
 
-      return map(target, fields);
+    if (this.keep) {
+      mapKeep(fields, this.keep);
     }
-  )();
+
+    const mapped = map(this.model, fields);
+
+    return { attributes: mapped.keys(), include: mapped.includes() };
+  }
+}
+
+export const MapFields = <T>(target: new () => T, keep?: KeepOptions<T>) => Info(new MapFieldsPipe(target, keep));

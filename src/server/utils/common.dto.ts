@@ -1,7 +1,7 @@
 import { ArgsType, Field, ID, Int, registerEnumType } from "@nestjs/graphql";
 import { IsString, IsObject, IsInt, IsNumber, IsOptional } from "class-validator";
 import { Request, Response } from "express";
-import type { IncludeOptions } from "sequelize";
+import type { IncludeOptions, Order as SequelizeOrder, FindAttributeOptions } from "sequelize";
 import type { Model } from "sequelize-typescript";
 
 import { IsShortID } from "./validations";
@@ -40,7 +40,7 @@ export class ShowAll {
 
 export type Sort<T, U extends keyof T> = Pick<{ [P in keyof T]?: Order }, U>;
 
-export type ShowAllWithSort<T, U extends keyof T> = ShowAll & { sort?: Sort<T, U> };
+export type ShowAllWithSort = ShowAll & { sort?: SequelizeOrder };
 
 export class ContextType {
   @IsObject()
@@ -52,9 +52,10 @@ export class ContextType {
 
 export type ExcludeSequelize<T> = Omit<T, keyof Model<T>>;
 
-export type Mapped<T, U = ExcludeSequelize<T>> = {
-  [P in keyof U]: U[P] extends object ? Mapped<U[P]> : {};
-} & { keys: () => string[]; includes: () => IncludeOptions[] };
+export type Mapped = {
+  attributes: FindAttributeOptions;
+  include: IncludeOptions[];
+};
 
 export type KeepOptions<T, U = ExcludeSequelize<T>> = {
   [P in keyof U]?: U[P] extends object ? KeepOptions<U[P]> : boolean;

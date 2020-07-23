@@ -22,7 +22,7 @@ export class AuthenticationService {
     return this.jwtService.sign({ id: user.id });
   }
 
-  public async login({ login, password }: AuthenticationInput, res: Response, mapped: Mapped<User>) {
+  public async login({ login, password }: AuthenticationInput, res: Response, mapped?: Mapped) {
     try {
       const user = await this.userService.findByLogin(login, mapped);
       if (!user) {

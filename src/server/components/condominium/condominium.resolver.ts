@@ -3,7 +3,7 @@ import { Resolver, Query, Args, Mutation, Int } from "@nestjs/graphql";
 import { Condominium } from "@/server/models";
 import { ShowAll, FindByID } from "@/server/utils/common.dto";
 import type { Mapped } from "@/server/utils/common.dto";
-import { MapFields } from "@/server/utils/plugins/fields.plugin.decorator";
+import { MapFields } from "@/server/utils/plugins";
 
 import { CondominiumService } from "./condominium.service";
 import { CondominiumInsertInput } from "./condonimium.dto";
@@ -15,13 +15,13 @@ export class CondominiumResolver {
   @Query(() => [Condominium])
   public async showCondominiums(
     @Args({ nullable: true }) { take, skip }: ShowAll,
-    @MapFields(Condominium) mapped: Mapped<Condominium>
+    @MapFields(Condominium) mapped: Mapped
   ) {
     return this.condominiumService.showAll({ take, skip }, mapped);
   }
 
   @Query(() => Condominium)
-  public async findCondominiumByID(@Args() { id }: FindByID, @MapFields(Condominium) mapped: Mapped<Condominium>) {
+  public async findCondominiumByID(@Args() { id }: FindByID, @MapFields(Condominium) mapped: Mapped) {
     return this.condominiumService.findByID(id, mapped);
   }
 

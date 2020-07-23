@@ -15,35 +15,32 @@ export class UserService {
     @InjectQueue("mail") private readonly mailQueue: Queue
   ) {}
 
-  public async showAll({ skip = 0, take }: ShowAll, mapped: Mapped<User>) {
+  public async showAll({ skip = 0, take }: ShowAll, mapped?: Mapped) {
     return this.userModel.findAll({
-      attributes: mapped.keys(),
       offset: skip,
       limit: take,
-      include: mapped.includes(),
+      ...mapped,
     });
   }
 
-  public async findByLogin(login: string, mapped: Mapped<User>) {
+  public async findByLogin(login: string, mapped?: Mapped) {
     return this.userModel.findOne({
-      attributes: mapped.keys(),
       where: { login },
-      include: mapped.includes(),
+      ...mapped,
     });
   }
 
-  public async findByID(id: string, mapped?: Mapped<User>) {
+  public async findByID(id: string, mapped?: Mapped) {
     return this.userModel.findByPk(id, {
-      attributes: mapped?.keys() ?? undefined,
-      include: mapped?.includes() ?? [Person],
+      attributes: mapped?.attributes,
+      include: mapped?.include ?? [Person],
     });
   }
 
-  public async findByPersonID(id: string, mapped: Mapped<User>) {
+  public async findByPersonID(id: string, mapped?: Mapped) {
     return this.userModel.findOne({
-      attributes: mapped.keys(),
       where: { personID: id },
-      include: mapped.includes(),
+      ...mapped,
     });
   }
 

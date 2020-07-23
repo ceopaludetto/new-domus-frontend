@@ -8,27 +8,22 @@ import type { Mapped, ShowAll } from "@/server/utils/common.dto";
 export class CityService {
   public constructor(@InjectModel(City) private readonly cityModel: typeof City) {}
 
-  public async showAll({ skip = 0, take }: ShowAll, mapped: Mapped<City>) {
+  public async showAll({ skip = 0, take }: ShowAll, mapped?: Mapped) {
     return this.cityModel.findAll({
-      attributes: mapped.keys(),
       offset: skip,
       limit: take,
-      include: mapped.includes(),
+      ...mapped,
     });
   }
 
-  public async findByID(id: string, mapped: Mapped<City>) {
-    return this.cityModel.findByPk(id, {
-      attributes: mapped.keys(),
-      include: mapped.includes(),
-    });
+  public async findByID(id: string, mapped?: Mapped) {
+    return this.cityModel.findByPk(id, mapped);
   }
 
-  public async findByState(stateID: string, mapped: Mapped<City>) {
+  public async findByState(stateID: string, mapped?: Mapped) {
     return this.cityModel.findAll({
-      attributes: mapped.keys(),
       where: { stateID },
-      include: mapped.includes(),
+      ...mapped,
     });
   }
 }
