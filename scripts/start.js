@@ -31,8 +31,6 @@ if (verbose) {
 
 const smp = new SpeedMeasurePlugin({ disable: !measure });
 
-let stats = {};
-
 function printMessage(messages, name) {
   if (messages.warnings.length) {
     logger.log(chalk.yellow(`${name} warnings`));
@@ -41,22 +39,11 @@ function printMessage(messages, name) {
   }
 }
 
-function log() {
+function log(stats) {
   if (!measure && !verbose) clearConsole();
+
   stats.server.warnings = stats.server.warnings.filter((x) => !/\/client/.test(x));
   stats.server.errors = stats.server.errors.filter((x) => !/\/client/.test(x));
-
-  if (
-    !stats.client.warnings.length &&
-    !stats.client.errors.length &&
-    !stats.server.warnings.length &&
-    !stats.server.errors.length
-  ) {
-    logger.done("Aplication compiled successfully");
-    logger.log(
-      `Access it in ${envs.PROTOCOL}://${envs.HOST}:${envs.PORT} or ${envs.PROTOCOL}://${ip.address()}:${envs.PORT}\n`
-    );
-  }
 
   const serverMessages = formatWebpackMessages(stats.server);
   const clientMessages = formatWebpackMessages(stats.client);
@@ -65,16 +52,17 @@ function log() {
     logger.error("Failed to compile.\n");
     serverMessages.errors.forEach((e) => logger.log(`${e.message || e}\n`));
     clientMessages.errors.forEach((e) => logger.log(`${e.message || e}\n`));
-  } else if (
-    !serverMessages.errors.length &&
-    !clientMessages.errors.length &&
-    (serverMessages.warnings.length || clientMessages.warnings.length)
-  ) {
+  } else if (serverMessages.warnings.length || clientMessages.warnings.length) {
     logger.warning("Compiled with warnings.\n");
     printMessage(serverMessages, "Server");
     printMessage(clientMessages, "Client");
     logger.log(`\nSearch for the ${chalk.underline(chalk.yellow("keywords"))} to learn more about each warning.`);
     logger.log(`To ignore, add ${chalk.cyan("// eslint-disable-next-line")} to the line before.\n`);
+  } else {
+    logger.done("Aplication compiled successfully");
+    logger.log(
+      `Access it in ${envs.PROTOCOL}://${envs.HOST}:${envs.PORT} or ${envs.PROTOCOL}://${ip.address()}:${envs.PORT}\n`
+    );
   }
 }
 
@@ -90,12 +78,18 @@ function compile(config) {
 }
 
 function main(port = 3001) {
-  if (!measure && !verbose) clearConsole();
-  logger.wait("Compiling...");
-  fs.emptyDirSync(serverConfig.output.path);
+  let stats = {};
 
-  const clientCompiler = compile(smp.wrap(clientConfig));
-  const serverCompiler = compile(smp.wrap(serverConfig));
+  if (!measure && !verbose) clearConsole();
+
+  const client = clientConfig(port);
+  const server = serverConfig(port);
+
+  logger.wait("Compiling...");
+  fs.emptyDirSync(server.output.path);
+
+  const clientCompiler = compile(smp.wrap(client));
+  const serverCompiler = compile(smp.wrap(server));
 
   let watching = null;
   const finished = { client: false, server: false };
@@ -110,7 +104,7 @@ function main(port = 3001) {
       stats = { ...stats, [st.compilation.compiler.name]: { ...st.toJson({}, true) } };
 
       finished[st.compilation.compiler.name] = true;
-      if (finished.client && finished.server && st.compilation.compiler.name !== "client") log();
+      if (finished.client && finished.server && st.compilation.compiler.name !== "client") log(stats);
       if (cb) cb();
     };
   }
@@ -134,20 +128,12 @@ function main(port = 3001) {
   );
   serverCompiler.hooks.done.tap("done", done());
 
-  const clientDevServer = new SilentDevServer(clientCompiler, { ...clientConfig.devServer, verbose });
+  const clientDevServer = new SilentDevServer(clientCompiler, { ...client.devServer, verbose });
 
   clientDevServer.listen(envs.DEV_PORT || port, (err) => {
     if (err) {
       logger.error(err);
     }
-  });
-
-  ["SIGINT", "SIGTERM"].forEach((sig) => {
-    process.on(sig, async () => {
-      await watching.close();
-      await clientDevServer.close();
-      process.exit();
-    });
   });
 }
 

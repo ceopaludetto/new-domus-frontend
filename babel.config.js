@@ -51,6 +51,7 @@ module.exports = (isServer = false, isTest = false) => ({
       },
     ],
     ["transform-react-remove-prop-types", { mode: "remove", removeImport: true }],
+    ...(!isServer && !isProd ? ["react-refresh/babel"] : []),
     ...(isTest
       ? ["babel-plugin-dynamic-import-node", ["@babel/plugin-transform-modules-commonjs", { loose: true }]]
       : []),

@@ -17,47 +17,44 @@ if (process.env.INSPECT_BRK) {
   nodeArgs.push(process.env.INSPECT);
 }
 
-module.exports = merge(baseConfig(true), {
-  name: "server",
-  watch: !isProd,
-  target: "node",
-  node: {
-    __console: false,
-    __dirname: false,
-    __filename: false,
-  },
-  externals: [
-    NodeExternals({
-      whitelist: [...(isProd ? [] : ["webpack/hot/poll?300"]), /\.(scss|sass|gql|graphql)$/],
-    }),
-  ],
-  entry: [
-    ...(isProd ? [] : ["razzle-dev-utils/prettyNodeErrors", "webpack/hot/poll?300"]),
-    "reflect-metadata",
-    path.resolve("src", "server", "index.ts"),
-  ],
-  output: {
-    pathinfo: isProd,
-    path: path.resolve("dist"),
-    publicPath: isProd ? "/static/" : `${envs.PROTOCOL}://${envs.HOST}:${envs.DEV_PORT}/static/`,
-    libraryTarget: "commonjs2",
-    filename: "index.js",
-    futureEmitAssets: isProd,
-    devtoolModuleFilenameTemplate: (info) => path.resolve(info.resourcePath).replace(/\\/g, "/"),
-  },
-  plugins: [
-    ...(isProd
-      ? []
-      : [
-          new StartServerWebpackPlugin({
-            name: "index.js",
-            keyboard: !isProd,
-            nodeArgs,
-          }),
-          new webpack.HotModuleReplacementPlugin({ quiet: true }),
-        ]),
-    new webpack.optimize.LimitChunkCountPlugin({
-      maxChunks: 1,
-    }),
-  ],
-});
+module.exports = (devPort = 3001) =>
+  merge(baseConfig(true), {
+    name: "server",
+    watch: !isProd,
+    target: "node",
+    node: {
+      __console: false,
+      __dirname: false,
+      __filename: false,
+    },
+    externals: [
+      NodeExternals({
+        whitelist: [!isProd && "webpack/hot/poll?300", /\.(scss|sass|gql|graphql)$/].filter(Boolean),
+      }),
+    ],
+    entry: [
+      !isProd && "razzle-dev-utils/prettyNodeErrors",
+      !isProd && "webpack/hot/poll?300",
+      "reflect-metadata",
+      path.resolve("src", "server", "index.ts"),
+    ].filter(Boolean),
+    output: {
+      path: path.resolve("dist"),
+      publicPath: isProd ? "/static/" : `${envs.PROTOCOL}://${envs.HOST}:${devPort}/static/`,
+      libraryTarget: "commonjs2",
+      filename: "index.js",
+      futureEmitAssets: isProd,
+    },
+    plugins: [
+      !isProd &&
+        new StartServerWebpackPlugin({
+          name: "index.js",
+          keyboard: !isProd,
+          nodeArgs,
+        }),
+      !isProd && new webpack.HotModuleReplacementPlugin({ quiet: true }),
+      new webpack.optimize.LimitChunkCountPlugin({
+        maxChunks: 1,
+      }),
+    ].filter(Boolean),
+  });

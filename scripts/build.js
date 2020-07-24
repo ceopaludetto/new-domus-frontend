@@ -75,21 +75,21 @@ function build(previousFileSizes, config, isServer = false) {
   });
 }
 
-Promise.all([
-  measureFileSizesBeforeBuild(serverConfig.output.path),
-  measureFileSizesBeforeBuild(clientConfig.output.path),
-])
+const client = clientConfig();
+const server = serverConfig();
+
+Promise.all([measureFileSizesBeforeBuild(server.output.path), measureFileSizesBeforeBuild(client.output.path)])
   .then(async (prevFileSizes) => {
     logger.wait("Compiling...");
-    await fs.emptyDir(serverConfig.output.path);
+    await fs.emptyDir(server.output.path);
     return prevFileSizes;
   })
   .then((prevFileSizes) => {
     normalizeFileSizes(prevFileSizes[0], true);
     normalizeFileSizes(prevFileSizes[1], false);
     return Promise.all([
-      build(prevFileSizes[0], smp.wrap(serverConfig), true),
-      build(prevFileSizes[1], smp.wrap(clientConfig), false),
+      build(prevFileSizes[0], smp.wrap(server), true),
+      build(prevFileSizes[1], smp.wrap(client), false),
     ]);
   })
   .then(
@@ -103,11 +103,7 @@ Promise.all([
         }
         logger.done(`${i === 0 ? "Server" : "Client"} Compiled done.`);
         logger.log("File sizes after gzip:\n");
-        printFileSizesAfterBuild(
-          stats,
-          previousFileSizes,
-          i === 0 ? serverConfig.output.path : clientConfig.output.path
-        );
+        printFileSizesAfterBuild(stats, previousFileSizes, i === 0 ? server.output.path : client.output.path);
         logger.log();
       });
     },

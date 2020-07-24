@@ -12,7 +12,6 @@ const webpack = require("webpack");
 const babelOptions = require("../babel.config");
 
 const isProd = process.env.NODE_ENV === "production";
-
 const isDebug = process.env.INSPECT_BRK || process.env.INSPECT || false;
 
 function resolveDevTool() {
@@ -33,9 +32,6 @@ module.exports = (isServer = false) => ({
     ignored: [/node_modules/, /dist/],
   },
   optimization: {
-    removeAvailableModules: isProd,
-    removeEmptyChunks: isProd,
-    minimize: isProd,
     minimizer: [
       new TerserPlugin({
         sourceMap: true,
@@ -215,13 +211,12 @@ module.exports = (isServer = false) => ({
       "lodash-es": "lodash",
       "webpack/hot/poll": require.resolve("webpack/hot/poll"),
     },
-    extensions: [".js", ".jsx", ".tsx", ".ts", ".json", ".scss", ".sass", ".gql", ".graphql"],
+    extensions: [".js", ".jsx", ".tsx", ".ts", ".json", ".scss", ".gql", ".graphql"],
   },
   plugins: [
     new webpack.EnvironmentPlugin({
       TARGET: isServer ? "server" : "web",
       PUBLIC_PATH: "/static/",
-      PUBLIC_URL: "/static",
       STATIC_FOLDER: path.resolve("dist", "static"),
       MANIFEST: path.resolve("dist", "static", "manifest.json"),
       BASE_DIR: path.resolve("."),
