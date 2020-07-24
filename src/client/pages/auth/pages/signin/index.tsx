@@ -43,14 +43,14 @@ export default function SignIn() {
 
   return (
     <FormProvider {...methods}>
-      <form noValidate onSubmit={submit}>
+      <form noValidate autoComplete="on" onSubmit={submit}>
         <Helmet>
           <title>Login</title>
         </Helmet>
         <SubTitle>Login</SubTitle>
         <Title>Bem vindo de volta</Title>
         {genericError && <ColorText color="error">Falha ao realizar login</ColorText>}
-        <FormControl label="Login" name="login" id="login" />
+        <FormControl autoFocus label="Login" name="login" id="login" />
         <FormControl
           label="Senha"
           name="password"
@@ -67,7 +67,7 @@ export default function SignIn() {
             <PreloadLink as={Button} variant="flat" to="/auth/signup/step-1">
               Cadastre-se
             </PreloadLink>{" "}
-            <Button variant="raised" type="submit">
+            <Button disabled={methods.formState.isSubmitting} variant="raised" type="submit">
               Entrar
             </Button>
           </div>

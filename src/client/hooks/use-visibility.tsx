@@ -51,7 +51,7 @@ export function useMultipleVisibility<T extends string | symbol>(names: T[], ini
         append: (
           <IconButton
             tabIndex={-1}
-            aria-label={isVisible[name] ? "Esconder senha" : "Mostrar senha"}
+            aria-label={isVisible[name] ? "Esconder senha" : "Mostrar senha como texto sem formatação"}
             onClick={toggleVisible(name)}
           >
             {isVisible[name] ? <FiEyeOff /> : <FiEye />}

@@ -22,7 +22,7 @@ export default function Forgot() {
 
   return (
     <FormProvider {...methods}>
-      <form noValidate onSubmit={submit}>
+      <form noValidate autoComplete="on" onSubmit={submit}>
         <Helmet>
           <title>Esqueceu a senha</title>
         </Helmet>
@@ -32,6 +32,7 @@ export default function Forgot() {
           label="Login"
           name="login"
           id="login"
+          autoFocus
           helperText={
             <PreloadLink as={Link} to="/auth/signin">
               Está perdido?
@@ -40,7 +41,7 @@ export default function Forgot() {
         />
         <div className={clsx(u.row, u["justify-content-xs-flex-end"])}>
           <div className={u.col}>
-            <Button variant="raised" type="submit">
+            <Button disabled={methods.formState.isSubmitting} variant="raised" type="submit">
               Recuperar
             </Button>
           </div>

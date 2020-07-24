@@ -31,7 +31,7 @@ export async function installMiddlewares(app: INestApplication) {
     }
 
     app.use(
-      `${process.env.PUBLIC_URL}/`,
+      `${process.env.PUBLIC_URL as string}/`,
       serve(process.env.STATIC_FOLDER as string, {
         maxAge: process.env.NODE_ENV === "production" ? "1y" : undefined,
       })

@@ -44,6 +44,7 @@ export const Control = React.forwardRef<HTMLInputElement, ControlProps>(
             className={s.input}
             id={id}
             placeholder={placeholder}
+            required={required}
             {...rest}
           />
           {label && (

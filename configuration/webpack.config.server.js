@@ -44,6 +44,7 @@ module.exports = (devPort = 3001) =>
       libraryTarget: "commonjs2",
       filename: "index.js",
       futureEmitAssets: isProd,
+      devtoolModuleFilenameTemplate: (info) => path.resolve(info.resourcePath).replace(/\\/g, "/"),
     },
     plugins: [
       !isProd &&

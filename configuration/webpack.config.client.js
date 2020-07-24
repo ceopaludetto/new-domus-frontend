@@ -44,6 +44,7 @@ module.exports = (devPort = 3001) =>
       filename: isProd ? "js/[name].[contenthash:8].js" : "index.js",
       chunkFilename: isProd ? "js/[name].[contenthash:8].js" : "[name].chunk.js",
       futureEmitAssets: true,
+      devtoolModuleFilenameTemplate: (info) => path.resolve(info.resourcePath).replace(/\\/g, "/"),
     },
     devServer: {
       disableHostCheck: true,

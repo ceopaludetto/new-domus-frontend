@@ -34,13 +34,13 @@ export default function Step1() {
       <form noValidate onSubmit={submit}>
         <div className={clsx(u.grid, u["grid-template"])}>
           <div className={clsx(u["xs-12"], u["md-6"])}>
-            <FormControl name="login" id="login" label="Login" required />
+            <FormControl autoFocus name="login" id="login" label="Login" required />
           </div>
           <div className={clsx(u["xs-12"], u["md-6"])}>
             <FormControl name="name" id="name" label="Nome" required />
           </div>
           <div className={clsx(u["xs-12"])}>
-            <FormControl name="email" id="email" label="E-mail" required />
+            <FormControl type="email" name="email" id="email" label="E-mail" required />
           </div>
           <div className={clsx(u["xs-12"], u["md-6"])}>
             <MaskedFormControl
@@ -69,6 +69,7 @@ export default function Step1() {
               rifm={{ format: Masks.tel, accept: /\d+/g, mask: true }}
               name="tel"
               id="tel"
+              type="tel"
               label="Telefone"
               required
             />

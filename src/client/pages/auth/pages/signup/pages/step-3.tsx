@@ -46,7 +46,7 @@ export default function Step3() {
       <form noValidate onSubmit={submit}>
         <div className={clsx(u.grid, u["grid-template"])}>
           <div className={clsx(u["xs-12"], u["md-6"])}>
-            <FormRadioCard name="type" value="enter" label="Ingressar condomínio" />
+            <FormRadioCard autoFocus name="type" value="enter" label="Ingressar condomínio" />
           </div>
           <div className={clsx(u["xs-12"], u["md-6"])}>
             <FormRadioCard name="type" value="create" label="Criar novo condomínio" />

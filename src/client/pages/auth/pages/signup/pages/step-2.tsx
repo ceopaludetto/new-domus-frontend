@@ -42,20 +42,36 @@ export default function Step2() {
       <form noValidate onSubmit={submit}>
         <div className={clsx(u.grid, u["grid-template"])}>
           <div className={clsx(u["xs-12"], u["md-6"], u["order-xs-2"], u["order-md-1"], u["mt-xs-4"], u["mt-md-0"])}>
-            <FormControl name="password" id="password" label="Senha" required {...getVisibilityProps("password")} />
+            <FormControl
+              autoFocus
+              name="password"
+              id="password"
+              label="Senha"
+              required
+              autoComplete="off"
+              aria-describedby="password-constraint-1 password-constraint-2 password-constraint-3"
+              {...getVisibilityProps("password")}
+            />
             <FormControl
               name="repeatPassword"
               id="repeatPassword"
               label="Repetir Senha"
               required
+              autoComplete="off"
               {...getVisibilityProps("repeatPassword")}
             />
           </div>
           <div className={clsx(u["xs-12"], u["md-6"], u["order-xs-1"], u["order-md-2"])}>
             <Label htmlFor="password">Dicas de Senha</Label>
-            <PasswordHelper active={passwordHelp.oneNumber}>Pelo menos 1 número.</PasswordHelper>
-            <PasswordHelper active={passwordHelp.oneUpper}>Pelo menos 1 caractere maiúsculo.</PasswordHelper>
-            <PasswordHelper active={passwordHelp.min}>No mínimo 6 caracteres.</PasswordHelper>
+            <PasswordHelper id="password-constraint-1" active={passwordHelp.oneNumber}>
+              Pelo menos 1 número.
+            </PasswordHelper>
+            <PasswordHelper id="password-constraint-2" active={passwordHelp.oneUpper}>
+              Pelo menos 1 caractere maiúsculo.
+            </PasswordHelper>
+            <PasswordHelper id="password-constraint-3" active={passwordHelp.min}>
+              No mínimo 6 caracteres.
+            </PasswordHelper>
           </div>
         </div>
         <div className={clsx(u.row, u["justify-content-xs-flex-end"])}>

@@ -43,6 +43,7 @@ module.exports = (isServer = false) => ({
           module: true,
           keep_classnames: isServer,
           keep_fnames: isServer,
+          sourceMap: true,
           output: {
             ecma: isServer ? 8 : 5,
             comments: false,
@@ -216,7 +217,7 @@ module.exports = (isServer = false) => ({
   plugins: [
     new webpack.EnvironmentPlugin({
       TARGET: isServer ? "server" : "web",
-      PUBLIC_PATH: "/static/",
+      PUBLIC_URL: "/static",
       STATIC_FOLDER: path.resolve("dist", "static"),
       MANIFEST: path.resolve("dist", "static", "manifest.json"),
       BASE_DIR: path.resolve("."),
