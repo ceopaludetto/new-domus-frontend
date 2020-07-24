@@ -90,7 +90,7 @@ module.exports = (devPort = 3001) =>
           analyzerMode: "static",
           openAnalyzer: false,
         }),
-      !isProd && new ReactRefreshWebpackPlugin({ overlay: { sockPort: 3001 } }),
+      !isProd && new ReactRefreshWebpackPlugin({ overlay: { sockPort: devPort } }),
       new StylelintWebpackPlugin(),
       new CopyWebpackPlugin([
         {
