@@ -1,4 +1,4 @@
-/* eslint-disable global-require, @typescript-eslint/camelcase */
+/* eslint-disable global-require */
 const eslintFormatter = require("react-dev-utils/eslintFormatter");
 
 const LodashPlugin = require("lodash-webpack-plugin");

@@ -132,6 +132,6 @@ export default function Step3() {
   );
 }
 
-Step3.fetchBefore = async (client: ApolloClient<object>) => {
+Step3.fetchBefore = async (client: ApolloClient<Record<string, unknown>>) => {
   await client.query<ShowStatesQuery>({ query: ShowStates });
 };

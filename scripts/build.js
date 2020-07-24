@@ -92,24 +92,24 @@ Promise.all([measureFileSizesBeforeBuild(server.output.path), measureFileSizesBe
       build(prevFileSizes[1], smp.wrap(client), false),
     ]);
   })
-  .then(
-    (info) => {
-      info.forEach(({ stats, previousFileSizes, warnings }, i) => {
-        if (warnings.length) {
-          logger.warning("Compiled with warnings.\n");
-          logger.log(warnings.join("\n\n"));
-          logger.log(`\nSearch for the ${chalk.underline(chalk.yellow("keywords"))} to learn more about each warning.`);
-          logger.log(`To ignore, add ${chalk.cyan("// eslint-disable-next-line")} to the line before.\n`);
-        }
-        logger.done(`${i === 0 ? "Server" : "Client"} Compiled done.`);
-        logger.log("File sizes after gzip:\n");
-        printFileSizesAfterBuild(stats, previousFileSizes, i === 0 ? server.output.path : client.output.path);
-        logger.log();
-      });
-    },
-    (err) => {
-      logger.error("Failed to compile.\n");
-      logger.log(`${err.message || err}\n`);
-      process.exit(1);
-    }
-  );
+  .then((info) => {
+    info.forEach(({ stats, previousFileSizes, warnings }, i) => {
+      if (warnings.length) {
+        logger.warning("Compiled with warnings.\n");
+        logger.log(warnings.join("\n\n"));
+        logger.log(`\nSearch for the ${chalk.underline(chalk.yellow("keywords"))} to learn more about each warning.`);
+        logger.log(`To ignore, add ${chalk.cyan("// eslint-disable-next-line")} to the line before.\n`);
+      }
+      logger.done(`${i === 0 ? "Server" : "Client"} Compiled done.`);
+      logger.log("File sizes after gzip:\n");
+      printFileSizesAfterBuild(stats, previousFileSizes, i === 0 ? server.output.path : client.output.path);
+      logger.log();
+    });
+
+    return info;
+  })
+  .catch((err) => {
+    logger.error("Failed to compile.\n");
+    logger.log(`${err.message || err}\n`);
+    process.exit(1);
+  });

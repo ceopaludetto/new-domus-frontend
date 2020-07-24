@@ -31,7 +31,7 @@ export class ReactService {
         statsFile: process.env.MANIFEST as string,
       });
       const context: { url?: string } = {};
-      const helmetContext: FilledContext | {} = {};
+      let helmetContext!: FilledContext;
       const client = createClient(true, new SchemaLink({ schema: this.configService.schema }));
 
       if (process.env.NODE_ENV === "production") {

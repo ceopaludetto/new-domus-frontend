@@ -125,7 +125,7 @@ program
     const { stderr, stdout } = await child(`npx sequelize ${cmd} --env ${p.e || "development"}`);
     if (program.verbose) {
       if (stderr) {
-        throw stderr;
+        throw new Error(stderr);
       }
 
       logger.verbose(stdout);

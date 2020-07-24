@@ -75,7 +75,6 @@ module.exports = (devPort = 3001) =>
       http2: "empty",
       net: "empty",
       tls: "empty",
-      // eslint-disable-next-line @typescript-eslint/camelcase
       child_process: "empty",
     },
     plugins: [

@@ -55,10 +55,9 @@ export default function SignUp({ routes }: RouteComponentProps) {
             },
           ]}
           clickable={false}
-          onStepChange={(index: number) => {
-            run(`/auth/signup/step-${index + 1}`).then(() => {
-              history.push(`/auth/signup/step-${index + 1}`);
-            });
+          onStepChange={async (index: number) => {
+            await run(`/auth/signup/step-${index + 1}`);
+            history.push(`/auth/signup/step-${index + 1}`);
           }}
         />
         <Switch>

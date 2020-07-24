@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-unused-expressions
-process.env.NODE_ENV === "development";
+process.env.NODE_ENV = "development";
 process.noDeprecation = true;
 
 process.env.INSPECT_BRK = process.argv.find((arg) => arg.match(/--inspect-brk(=|$)/)) || "";

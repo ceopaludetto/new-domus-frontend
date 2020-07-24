@@ -58,5 +58,5 @@ export type Mapped = {
 };
 
 export type KeepOptions<T, U = ExcludeSequelize<T>> = {
-  [P in keyof U]?: U[P] extends object ? KeepOptions<U[P]> : boolean;
+  [P in keyof U]?: U[P] extends Record<string, unknown> ? KeepOptions<U[P]> : boolean;
 };

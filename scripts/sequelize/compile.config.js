@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/camelcase */
 const path = require("path");
 const NodeExternals = require("webpack-node-externals");
 
