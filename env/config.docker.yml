@@ -27,4 +27,4 @@ auth:
   secret: teste
 
 graphql:
-  schema: src/server/schema.gql
+  schema: src/server/schema.graphql

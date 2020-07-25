@@ -15,7 +15,7 @@ import {
   ColorText,
 } from "@/client/components";
 import { ShowStatesQuery } from "@/client/graphql/operations";
-import { ShowStates } from "@/client/graphql/state.gql";
+import { ShowStates } from "@/client/graphql/state.graphql";
 import * as Masks from "@/client/helpers/masks";
 import { SignUpStep3Schema, SignUpStep3Values } from "@/client/helpers/validations/signup.schema";
 import { StepperContext } from "@/client/hooks";

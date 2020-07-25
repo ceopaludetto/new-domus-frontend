@@ -1,7 +1,7 @@
 overwrite: true
 schema:
-  - "./src/server/schema.gql"
-  - "./src/client/graphql/schema.gql"
+  - "./src/server/schema.graphql"
+  - "./src/client/graphql/schema.graphql"
 documents: "src/**/*.(graphql|gql)"
 generates:
   src/client/graphql/operations.ts:
@@ -19,7 +19,7 @@ generates:
   src/:
     preset: near-operation-file
     presetConfig:
-      extension: .gql.d.ts
+      extension: .graphql.d.ts
       baseTypesPath: "client/graphql/operations.ts"
     config:
       prefix: "./"

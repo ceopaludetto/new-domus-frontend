@@ -215,7 +215,7 @@ module.exports = (isServer = false) => ({
       "lodash-es": "lodash",
       "webpack/hot/poll": require.resolve("webpack/hot/poll"),
     },
-    extensions: [".js", ".jsx", ".tsx", ".ts", ".json", ".scss", ".gql", ".graphql"],
+    extensions: [".js", ".jsx", ".tsx", ".ts", ".json", ".scss", ".graphql"],
   },
   plugins: [
     new webpack.EnvironmentPlugin({

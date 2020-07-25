@@ -16,7 +16,8 @@
     "strict": true,
     "noEmit": true,
     "noEmitHelpers": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "allowJs": true
   },
   "include": ["src/**/*", "configuration/**/*", "scripts/**/*"],
   "exclude": ["node_modules", "dist", "coverage", "certs", "env"]
