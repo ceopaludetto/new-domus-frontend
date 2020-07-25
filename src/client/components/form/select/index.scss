@@ -3,35 +3,35 @@
 .select {
   position: relative;
   .content {
-    left: 0;
-    position: absolute;
-    top: -#{get-theme-prop(layout, sizes, 6)};
     width: 100%;
-    &.enter {
-      opacity: 0;
-      transform: translate3d(0, -15px, 0);
-    }
-    &.enter-active {
-      opacity: 1;
-      transform: translate3d(0, 0, 0);
-      transition: transition((opacity, transform));
-    }
-    &.enter-done {
-      opacity: 1;
-      transform: translate3d(0, 0, 0);
-    }
-    &.exit {
-      opacity: 1;
-      transform: translate3d(0, 0, 0);
-    }
-    &.exit-active {
-      opacity: 0;
-      transform: translate3d(0, -15px, 0);
-      transition: transition((opacity, transform));
-    }
-    &.exit-done {
-      opacity: 0;
-      transform: translate3d(0, -15px, 0);
+    z-index: get-theme-prop(layout, zindex, select);
+    .menu {
+      &.enter {
+        opacity: 0;
+        transform: translate3d(0, -15px, 0);
+      }
+      &.enter-active {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+        transition: transition((opacity, transform));
+      }
+      &.enter-done {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+      }
+      &.exit {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+      }
+      &.exit-active {
+        opacity: 0;
+        transform: translate3d(0, -15px, 0);
+        transition: transition((opacity, transform));
+      }
+      &.exit-done {
+        opacity: 0;
+        transform: translate3d(0, -15px, 0);
+      }
     }
   }
 }
@@ -43,11 +43,10 @@
   }
 }
 
-.content {
+.menu {
   border-radius: get-theme-prop(layout, shape);
   overflow: hidden;
   padding: 0 !important;
-  z-index: get-theme-prop(layout, zindex, select);
   @include on-dark {
     background-color: get-color(paper, lighten-1) !important;
   }

@@ -14,6 +14,7 @@ export interface ControlProps extends React.InputHTMLAttributes<HTMLInputElement
   error?: boolean;
   helperText?: React.ReactNode | string;
   labelProps?: React.LabelHTMLAttributes<HTMLLabelElement>;
+  containerRef?: React.Ref<HTMLDivElement>;
 }
 
 export const Control = React.forwardRef<HTMLInputElement, ControlProps>(
@@ -30,13 +31,14 @@ export const Control = React.forwardRef<HTMLInputElement, ControlProps>(
       color = "primary",
       className,
       labelProps,
+      containerRef,
       ...rest
     },
     ref
   ) => {
     return (
       <div className={clsx({ [s["form-group"]]: margin }, className)}>
-        <div className={clsx(s.container, s[color])}>
+        <div ref={containerRef} className={clsx(s.container, s[color])}>
           <input
             aria-invalid={error ? "true" : "false"}
             aria-describedby={error ? `${id}-error` : undefined}

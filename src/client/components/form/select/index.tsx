@@ -1,5 +1,6 @@
 import * as React from "react";
 import { FiChevronDown, FiChevronUp } from "react-icons/fi";
+import { usePopper } from "react-popper";
 import { CSSTransition } from "react-transition-group";
 
 import clsx from "clsx";
@@ -20,8 +21,10 @@ type SelectProps = Omit<React.ComponentProps<typeof Control>, "onChange" | "valu
 };
 
 export function Select({ items, value, onChange, id, ...props }: SelectProps) {
-  const ref = React.useRef<HTMLDivElement>(null);
-  const buttonRef = React.useRef<HTMLButtonElement>(null);
+  const [menu, setMenu] = React.useState<HTMLDivElement | null>(null);
+  const [control, setControl] = React.useState<HTMLDivElement | null>(null);
+  const transition = React.useRef<HTMLDivElement>(null);
+  const button = React.useRef<HTMLButtonElement>(null);
   const {
     isOpen,
     selectedItem,
@@ -38,22 +41,24 @@ export function Select({ items, value, onChange, id, ...props }: SelectProps) {
     selectedItem: items.find((i) => i.value === value) ?? null,
     id,
   });
+  const { styles, attributes } = usePopper(control, menu);
 
   return (
     <>
       <Control
         readOnly
+        containerRef={setControl}
         className={s.control}
         value={selectedItem?.label ?? ""}
         append={
-          <IconButton {...getToggleButtonProps({ ref: buttonRef })}>
+          <IconButton {...getToggleButtonProps({ ref: button })}>
             {isOpen ? <FiChevronUp /> : <FiChevronDown />}
           </IconButton>
         }
         onFocus={() => {
           toggleMenu();
-          if (buttonRef.current) {
-            buttonRef.current.focus();
+          if (button.current) {
+            button.current.focus();
           }
         }}
         labelProps={getLabelProps()}
@@ -71,22 +76,24 @@ export function Select({ items, value, onChange, id, ...props }: SelectProps) {
             exitActive: s["exit-active"],
             exitDone: s["exit-done"],
           }}
-          nodeRef={ref}
+          nodeRef={transition}
           unmountOnExit
         >
-          <Paper ref={ref} className={s.content}>
-            <div className={s.scroll}>
-              {items.map((item, index) => (
-                <div
-                  className={clsx(s.item, highlightedIndex === index && s.active)}
-                  key={item.value}
-                  {...getItemProps({ item, index })}
-                >
-                  {item.label}
-                </div>
-              ))}
-            </div>
-          </Paper>
+          <div ref={setMenu} style={styles.popper} className={s.content} {...attributes.popper}>
+            <Paper ref={transition} className={s.menu}>
+              <div className={s.scroll}>
+                {items.map((item, index) => (
+                  <div
+                    className={clsx(s.item, highlightedIndex === index && s.active)}
+                    key={item.value}
+                    {...getItemProps({ item, index })}
+                  >
+                    {item.label}
+                  </div>
+                ))}
+              </div>
+            </Paper>
+          </div>
         </CSSTransition>
       </div>
     </>
