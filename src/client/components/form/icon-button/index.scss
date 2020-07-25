@@ -3,7 +3,7 @@
 .button {
   background-color: transparent;
   border: 0;
-  border-radius: get-theme-prop(layout, shape);
+  border-radius: 9999px;
   display: inline-flex;
   transition: transition((background-color, color));
   @include not-disabled {
@@ -28,7 +28,7 @@
     padding: get-theme-prop(layout, sizes, 4);
   }
   &.small {
-    padding: get-theme-prop(layout, sizes, 3);
+    padding: get-theme-prop(layout, sizes, 3) * 1.25;
   }
   &:focus {
     outline: none;

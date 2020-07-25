@@ -3,10 +3,10 @@
 .button {
   border: 0;
   border-radius: get-theme-prop(layout, shape);
+  font-size: get-theme-prop(typography, sizes, 1);
   font-weight: get-theme-prop(typography, weights, 2);
-  letter-spacing: 1.15px;
+  letter-spacing: 1px;
   position: relative;
-  text-transform: uppercase;
   transition: transition((background-color, box-shadow));
   user-select: none;
   @include not-disabled {
@@ -15,11 +15,14 @@
       outline: none;
     }
   }
-  &.normal {
-    padding: get-theme-prop(layout, sizes, 4) get-theme-prop(layout, sizes, 5);
-  }
   &.small {
-    padding: get-theme-prop(layout, sizes, 3) get-theme-prop(layout, sizes, 4);
+    padding: get-theme-prop(layout, sizes, 3) get-theme-prop(layout, sizes, 5);
+  }
+  &.normal {
+    padding: get-theme-prop(layout, sizes, 4) get-theme-prop(layout, sizes, 6);
+  }
+  &.large {
+    padding: get-theme-prop(layout, sizes, 5) get-theme-prop(layout, sizes, 7);
   }
   &.block {
     width: 100%;

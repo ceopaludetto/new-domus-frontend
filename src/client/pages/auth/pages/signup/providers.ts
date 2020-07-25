@@ -4,6 +4,7 @@ export interface WizardContextProps {
   values?: {
     login: string;
     name: string;
+    lastName: string;
     email: string;
     cpf: string;
     gender: "M" | "F" | "O" | "";
@@ -27,6 +28,7 @@ export const WizardContext = React.createContext<WizardContextProps>({
   values: {
     login: "",
     name: "",
+    lastName: "",
     email: "",
     cpf: "",
     gender: "",

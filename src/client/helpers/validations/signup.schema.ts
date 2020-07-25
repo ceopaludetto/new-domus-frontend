@@ -5,10 +5,9 @@ import * as Messages from "../constants";
 export const SignUpStep1Schema = Yup.object({
   login: Yup.string().required(Messages.REQUIRED),
   name: Yup.string().required(Messages.REQUIRED),
+  lastName: Yup.string().required(Messages.REQUIRED),
   email: Yup.string().email(Messages.EMAIL).required(Messages.REQUIRED),
-  tel: Yup.string()
-    .matches(/\([\d]{2}\) \d?[\d]{4}-[\d]{4}/, Messages.TEL)
-    .required(Messages.REQUIRED),
+  tel: Yup.string().matches(/\([\d]{2}\) \d?[\d]{4}-[\d]{4}/, Messages.TEL),
   birthdate: Yup.date().typeError(Messages.DATE).required(Messages.REQUIRED),
 });
 

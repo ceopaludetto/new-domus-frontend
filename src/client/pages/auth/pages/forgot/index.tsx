@@ -28,23 +28,16 @@ export default function Forgot() {
         </Helmet>
         <SubTitle>Esqueceu a senha</SubTitle>
         <Title>Recuperar Senha</Title>
-        <FormControl
-          label="Login"
-          name="login"
-          id="login"
-          autoFocus
-          helperText={
-            <PreloadLink as={Link} to="/auth/signin">
-              Está perdido?
-            </PreloadLink>
-          }
-        />
-        <div className={clsx(u.row, u["justify-content-xs-flex-end"])}>
-          <div className={u.col}>
-            <Button disabled={methods.formState.isSubmitting} variant="raised" type="submit">
-              Recuperar
-            </Button>
-          </div>
+        <FormControl label="Login" name="login" id="login" autoFocus />
+        <div className={u["pt-xs-2"]}>
+          <Button disabled={methods.formState.isSubmitting} block variant="raised" type="submit">
+            Recuperar Senha
+          </Button>
+        </div>
+        <div className={clsx(u["text-align-xs-center"], u["mt-xs-5"])}>
+          <PreloadLink as={Link} button color="primary" to="/auth/signin">
+            Voltar para Login
+          </PreloadLink>
         </div>
       </form>
     </FormProvider>

@@ -29,10 +29,10 @@
   }
   &:not(.no-gutter) {
     &.normal {
-      padding: get-theme-prop(layout, sizes, 6);
+      padding: get-theme-prop(layout, sizes, 7);
     }
     &.large {
-      padding: get-theme-prop(layout, sizes, 8);
+      padding: get-theme-prop(layout, sizes, 9);
     }
   }
 }

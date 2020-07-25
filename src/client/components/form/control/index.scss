@@ -1,10 +1,10 @@
 @import "~@/client/styles/variables";
 
 .form-group {
-  margin-bottom: get-theme-prop(layout, sizes, 6);
+  margin-bottom: get-theme-prop(layout, gap) * 2;
   .container {
     align-items: center;
-    background-color: get-color(background, darken-1);
+    background-color: get-color(background);
     border-radius: get-theme-prop(layout, shape);
     display: flex;
     overflow: hidden;
@@ -14,22 +14,19 @@
     @each $k, $v in map-get($colors, light) {
       &.#{$k} {
         &:hover {
-          background-color: get-color(background, darken-2);
+          background-color: get-color(background, darken-1);
         }
         &:focus-within {
-          background-color: get-color(background, darken-1);
+          background-color: get-color(background);
           .label {
             color: get-color($k);
             transform: translate3d(0, -130%, 0) scale(0.875);
           }
           .effect {
-            &::before,
-            &::after {
-              opacity: 1;
-              width: 50%;
-            }
-            &::after {
+            &::before {
               left: 0;
+              opacity: 1;
+              width: 100%;
             }
           }
         }
@@ -52,7 +49,7 @@
       }
     }
     .append {
-      padding: 0 get-theme-prop(layout, sizes, 3);
+      padding: 0 get-theme-prop(layout, sizes, 4);
     }
     .label {
       backface-visibility: hidden;
@@ -82,8 +79,7 @@
       width: 100%;
       @each $k, $v in map-get($colors, light) {
         &.#{$k} {
-          &::before,
-          &::after {
+          &::before {
             background-color: get-color($k);
             content: "";
             display: block;
@@ -97,8 +93,7 @@
         }
       }
       &.error {
-        &::before,
-        &::after {
+        &::before {
           background-color: get-color(error) !important;
         }
       }

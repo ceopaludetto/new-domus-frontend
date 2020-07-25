@@ -1,8 +1,8 @@
 @import "~@/client/styles/variables";
 
 .stepper {
-  margin-bottom: get-theme-prop(layout, sizes, 7);
-  margin-top: get-theme-prop(layout, sizes, 3);
+  margin-bottom: get-theme-prop(layout, gap) * 2.5;
+  margin-top: get-theme-prop(layout, sizes, 1);
 }
 
 .item {

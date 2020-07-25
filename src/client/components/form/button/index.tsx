@@ -10,7 +10,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   block?: boolean;
   variant?: "contained" | "flat" | "raised";
   color?: keyof Colors;
-  size?: "normal" | "small";
+  size?: "normal" | "small" | "large";
 }
 
 export const Button = React.forwardRef(

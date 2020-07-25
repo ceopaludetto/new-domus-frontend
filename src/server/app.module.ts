@@ -77,14 +77,19 @@ import { ComplexityPlugin } from "@/server/utils/plugins/query.complexity.plugin
     }),
     GraphQLModule.forRootAsync({
       inject: [ConfigurationService],
-      useFactory: async ({ graphql, setSchema }: ConfigurationService) => ({
+      useFactory: async ({ graphql, schema }: ConfigurationService) => ({
         autoSchemaFile: graphql.schema ?? true,
         installSubscriptionHandlers: true,
         debug: process.env.NODE_ENV === "development",
         playground: process.env.NODE_ENV === "development",
+        introspection: process.env.NODE_ENV === "development",
+        cors: {
+          credentials: true,
+          maxAge: 7200,
+        },
         context: ({ req, res }: ContextType) => ({ req, res }),
-        transformSchema: (schema: GraphQLSchema) => {
-          setSchema(schema);
+        transformSchema: (s: GraphQLSchema) => {
+          schema = s;
           return schema;
         },
       }),

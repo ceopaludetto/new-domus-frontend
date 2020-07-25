@@ -4,7 +4,7 @@ import { useForm, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers";
 import clsx from "clsx";
 
-import { FormControl, MaskedFormControl, Button, FormCalendar, FormSelect } from "@/client/components";
+import { FormControl, MaskedFormControl, Button, FormCalendar, FormSelect, PreloadLink } from "@/client/components";
 import { Gender } from "@/client/graphql/operations";
 import * as Masks from "@/client/helpers/masks";
 import { SignUpStep1Schema, SignUpStep1Values } from "@/client/helpers/validations/signup.schema";
@@ -34,15 +34,18 @@ export default function Step1() {
       <form noValidate onSubmit={submit}>
         <div className={clsx(u.grid, u["grid-template"])}>
           <div className={clsx(u["xs-12"], u["md-6"])}>
-            <FormControl autoFocus name="login" id="login" label="Login" required />
+            <FormControl autoFocus name="name" id="name" label="Nome" required />
           </div>
           <div className={clsx(u["xs-12"], u["md-6"])}>
-            <FormControl name="name" id="name" label="Nome" required />
+            <FormControl name="lastName" id="lastName" label="Sobrenome" required />
           </div>
-          <div className={clsx(u["xs-12"])}>
+          <div className={clsx(u["xs-12"], u["md-3"])}>
+            <FormControl name="login" id="login" label="Login" required />
+          </div>
+          <div className={clsx(u["xs-12"], u["md-6"])}>
             <FormControl type="email" name="email" id="email" label="E-mail" required />
           </div>
-          <div className={clsx(u["xs-12"], u["md-6"])}>
+          <div className={clsx(u["xs-12"], u["md-3"])}>
             <MaskedFormControl
               rifm={{ format: Masks.cpf, accept: /\d+/g, mask: true }}
               name="cpf"
@@ -51,7 +54,7 @@ export default function Step1() {
               required
             />
           </div>
-          <div className={clsx(u["xs-12"], u["md-6"])}>
+          <div className={clsx(u["xs-12"], u["md-4"])}>
             <FormSelect
               name="gender"
               id="gender"
@@ -64,22 +67,24 @@ export default function Step1() {
               required
             />
           </div>
-          <div className={clsx(u["xs-12"], u["md-6"])}>
+          <div className={clsx(u["xs-12"], u["md-4"])}>
+            <FormCalendar disableFuture name="birthdate" id="birthdate" label="Data de Nascimento" required />
+          </div>
+          <div className={clsx(u["xs-12"], u["md-4"])}>
             <MaskedFormControl
               rifm={{ format: Masks.tel, accept: /\d+/g, mask: true }}
               name="tel"
               id="tel"
               type="tel"
               label="Telefone"
-              required
             />
-          </div>
-          <div className={clsx(u["xs-12"], u["md-6"])}>
-            <FormCalendar disableFuture name="birthdate" id="birthdate" label="Data de Nascimento" required />
           </div>
         </div>
         <div className={clsx(u.row, u["justify-content-xs-flex-end"])}>
           <div className={u.col}>
+            <PreloadLink as={Button} variant="flat" to="/auth/signin">
+              Já possuo uma conta
+            </PreloadLink>{" "}
             <Button variant="raised" type="submit">
               Próximo
             </Button>

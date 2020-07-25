@@ -5,7 +5,7 @@
   background-color: get-color(paper, lighten-1);
   border-radius: get-theme-prop(layout, shape);
   display: flex;
-  margin-bottom: get-theme-prop(layout, sizes, 5);
+  margin-bottom: get-theme-prop(layout, gap) * 2;
   padding: get-theme-prop(layout, sizes, 6) get-theme-prop(layout, sizes, 4);
   position: relative;
   transition: transition((border-color));
