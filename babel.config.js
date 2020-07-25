@@ -15,6 +15,7 @@ module.exports = (isServer) => {
 
   return {
     sourceMaps: true,
+    inputSourceMap: true,
     presets: [
       [
         "@babel/preset-env",
