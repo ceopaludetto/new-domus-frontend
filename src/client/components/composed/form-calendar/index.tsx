@@ -1,8 +1,6 @@
 import * as React from "react";
 import { Controller, useFormContext, get } from "react-hook-form";
 
-import { parseISO, isValid } from "date-fns";
-
 import { CalendarControl } from "@/client/components/form";
 
 type FormCalendarProps = Omit<
@@ -19,23 +17,7 @@ export function FormCalendar({ name, helperText, ...rest }: FormCalendarProps) {
       name={name}
       control={control}
       render={({ value = new Date(), ...props }) => {
-        let v!: Date;
-
-        if (value) {
-          if (value instanceof Date && isValid(value)) {
-            v = value;
-          } else {
-            const parsed = parseISO(value);
-
-            if (isValid(parsed)) {
-              v = parsed;
-            }
-          }
-        } else {
-          v = new Date();
-        }
-
-        return <CalendarControl value={v} error={!!errors[name]} helperText={message} {...props} {...rest} />;
+        return <CalendarControl value={value} error={!!errors[name]} helperText={message} {...props} {...rest} />;
       }}
     />
   );

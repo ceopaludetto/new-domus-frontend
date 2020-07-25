@@ -5,7 +5,6 @@ const CopyWebpackPlugin = require("copy-webpack-plugin");
 const path = require("path");
 const StylelintWebpackPlugin = require("stylelint-webpack-plugin");
 const webpack = require("webpack");
-const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
 const merge = require("webpack-merge");
 
 const envs = require("./envs");
@@ -41,9 +40,9 @@ module.exports = (devPort = 3001) =>
       publicPath: isProd ? "/static/" : `${envs.PROTOCOL}://${envs.HOST}:${devPort}/static/`,
       path: path.resolve("dist", "static"),
       libraryTarget: "var",
-      filename: isProd ? "js/[name].[contenthash:8].js" : "index.js",
-      chunkFilename: isProd ? "js/[name].[contenthash:8].js" : "[name].chunk.js",
-      futureEmitAssets: true,
+      filename: isProd ? `js/[name].[contenthash:8].js` : "index.js",
+      chunkFilename: isProd ? `js/[name].[contenthash:8].js` : "[name].chunk.js",
+      futureEmitAssets: isProd,
       devtoolModuleFilenameTemplate: (info) => path.resolve(info.resourcePath).replace(/\\/g, "/"),
     },
     devServer: {
@@ -84,11 +83,6 @@ module.exports = (devPort = 3001) =>
           exclude: /(\.map|\.LICENSE|\.json)/,
           cache: true,
           minRatio: Number.MAX_SAFE_INTEGER,
-        }),
-      isProd &&
-        new BundleAnalyzerPlugin({
-          analyzerMode: "static",
-          openAnalyzer: false,
         }),
       !isProd && new ReactRefreshWebpackPlugin({ overlay: { sockPort: devPort } }),
       new StylelintWebpackPlugin(),

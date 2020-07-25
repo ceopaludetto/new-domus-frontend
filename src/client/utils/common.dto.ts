@@ -14,7 +14,7 @@ export type Colors = {
   text: string;
 };
 
-export type Client = ApolloClient<object>;
+export type Client = ApolloClient<Record<string, any>>;
 
 export type Route = Omit<RouteProps, "component"> & {
   name: string;

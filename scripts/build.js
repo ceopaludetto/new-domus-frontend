@@ -18,6 +18,10 @@ const measure = process.argv.some((arg) => arg === "--measure");
 
 const smp = new SpeedMeasurePlugin({ disable: !measure });
 
+function capitalize(str) {
+  return str.substr(0, 1).toUpperCase() + str.substr(1);
+}
+
 function normalizeFileSizes(prevFileSizes, isServer = false) {
   if (isServer)
     Object.keys(prevFileSizes.sizes).forEach((x) =>
@@ -78,19 +82,19 @@ function build(previousFileSizes, config, isServer = false) {
 const client = clientConfig();
 const server = serverConfig();
 
-Promise.all([measureFileSizesBeforeBuild(server.output.path), measureFileSizesBeforeBuild(client.output.path)])
+const configs = [server, client];
+
+Promise.all(configs.map((c) => measureFileSizesBeforeBuild(c.output.path)))
   .then(async (prevFileSizes) => {
     logger.wait("Compiling...");
     await fs.emptyDir(server.output.path);
     return prevFileSizes;
   })
   .then((prevFileSizes) => {
-    normalizeFileSizes(prevFileSizes[0], true);
-    normalizeFileSizes(prevFileSizes[1], false);
-    return Promise.all([
-      build(prevFileSizes[0], smp.wrap(server), true),
-      build(prevFileSizes[1], smp.wrap(client), false),
-    ]);
+    configs.forEach((c, i) => {
+      normalizeFileSizes(prevFileSizes[i], true);
+    });
+    return Promise.all(configs.map((c, i) => build(prevFileSizes[i], smp.wrap(c), c.target === "node")));
   })
   .then((info) => {
     info.forEach(({ stats, previousFileSizes, warnings }, i) => {
@@ -100,9 +104,10 @@ Promise.all([measureFileSizesBeforeBuild(server.output.path), measureFileSizesBe
         logger.log(`\nSearch for the ${chalk.underline(chalk.yellow("keywords"))} to learn more about each warning.`);
         logger.log(`To ignore, add ${chalk.cyan("// eslint-disable-next-line")} to the line before.\n`);
       }
-      logger.done(`${i === 0 ? "Server" : "Client"} Compiled done.`);
+
+      logger.done(`${capitalize(configs[i].name)} Compiled done.`);
       logger.log("File sizes after gzip:\n");
-      printFileSizesAfterBuild(stats, previousFileSizes, i === 0 ? server.output.path : client.output.path);
+      printFileSizesAfterBuild(stats, previousFileSizes, configs[i].output.path);
       logger.log();
     });
 

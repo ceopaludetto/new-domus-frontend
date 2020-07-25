@@ -9,7 +9,7 @@ const safePostCssParser = require("postcss-safe-parser");
 const TerserPlugin = require("terser-webpack-plugin");
 const webpack = require("webpack");
 
-const babelOptions = require("../babel.config");
+const babel = require("../babel.config");
 
 const isProd = process.env.NODE_ENV === "production";
 const isDebug = process.env.INSPECT_BRK || process.env.INSPECT || false;
@@ -44,6 +44,9 @@ module.exports = (isServer = false) => ({
           keep_classnames: isServer,
           keep_fnames: isServer,
           sourceMap: true,
+          compress: {
+            ecma: isServer ? 8 : 5,
+          },
           output: {
             ecma: isServer ? 8 : 5,
             comments: false,
@@ -123,8 +126,8 @@ module.exports = (isServer = false) => ({
                 options: {
                   esModule: true,
                   onlyLocals: isServer,
-                  importLoaders: 2,
                   sourceMap: true,
+                  importLoaders: 2,
                   modules: {
                     localIdentName: isProd ? "_[hash:base64:5]" : "[path][name]__[local]--[hash:base64:5]",
                   },
@@ -175,7 +178,7 @@ module.exports = (isServer = false) => ({
                   cacheDirectory: true,
                   cacheCompression: !isProd,
                   compact: !isProd,
-                  ...babelOptions(isServer),
+                  ...babel(isServer),
                 },
               },
               {

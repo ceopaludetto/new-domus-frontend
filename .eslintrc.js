@@ -56,6 +56,7 @@ module.exports = {
     ],
     // Some rules that causes some issues
     "react/button-has-type": "off",
+    "react/require-default-props": "off",
     "react/prop-types": "off",
     "react/jsx-props-no-spreading": "off",
     "jsx-a11y/label-has-for": "off",

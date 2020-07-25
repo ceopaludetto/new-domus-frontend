@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useForm, FormProvider, get } from "react-hook-form";
 
-import { useQuery, ApolloClient } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { yupResolver } from "@hookform/resolvers";
 import clsx from "clsx";
 
@@ -21,6 +21,7 @@ import { SignUpStep3Schema, SignUpStep3Values } from "@/client/helpers/validatio
 import { StepperContext } from "@/client/hooks";
 import u from "@/client/styles/utils.scss";
 import { clean } from "@/client/utils/clean";
+import { Client } from "@/client/utils/common.dto";
 
 import { WizardContext } from "../providers";
 
@@ -132,6 +133,6 @@ export default function Step3() {
   );
 }
 
-Step3.fetchBefore = async (client: ApolloClient<Record<string, unknown>>) => {
+Step3.fetchBefore = async (client: Client) => {
   await client.query<ShowStatesQuery>({ query: ShowStates });
 };

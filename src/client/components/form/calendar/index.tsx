@@ -2,25 +2,7 @@ import * as React from "react";
 import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 
 import clsx from "clsx";
-import {
-  getYear,
-  getDate,
-  addDays,
-  addMonths,
-  subMonths,
-  setYear,
-  format,
-  startOfWeek,
-  startOfMonth,
-  endOfMonth,
-  isSameMonth,
-  isSameDay,
-  isFuture,
-  isPast,
-  isAfter,
-  isBefore,
-  isSameYear,
-} from "date-fns";
+import dayjs from "dayjs";
 
 import { Paper, Divider } from "@/client/components/layout";
 import { ColorText } from "@/client/components/typography";
@@ -52,18 +34,19 @@ export default function Calendar({
   animate = false,
 }: CalendarProps) {
   const today = React.useMemo(() => new Date(), []);
-  const [currentDate, setCurrentDate] = React.useState(value);
+  const [currentDate, setCurrentDate] = React.useState(dayjs(value));
   const [daysOfWeek, setDaysOfWeek] = React.useState<string[]>([]);
   const [yearMode, setYearMode] = React.useState(false);
-  const selectedYear = React.useMemo(() => getYear(value), [value]);
+  const selectedYear = React.useMemo(() => dayjs(value).get("year"), [value]);
   const currentYearRef = React.useRef<HTMLButtonElement>(null);
 
   React.useEffect(() => {
-    const day = startOfWeek(new Date());
+    const now = dayjs();
+    const day = now.startOf("week");
     const days: string[] = [];
 
     for (let i = 0; i <= 6; i += 1) {
-      days.push(format(addDays(day, i), "eee"));
+      days.push(day.add(i, "day").format("ddd"));
     }
 
     setDaysOfWeek(days);
@@ -79,49 +62,49 @@ export default function Calendar({
   }, [currentYearRef, yearMode, animate]);
 
   const changeDate = React.useCallback(
-    (date: Date) => {
-      onChange(date);
+    (date: dayjs.Dayjs) => {
+      onChange(date.toDate());
     },
     [onChange]
   );
 
   const resolveDisabled = React.useCallback(
-    (date: Date) => {
-      if (isSameDay(currentDate, date)) {
+    (date: dayjs.Dayjs) => {
+      if (currentDate.isSame(date, "day")) {
         return false;
       }
 
-      if (maxDate && isAfter(date, maxDate)) {
+      if (maxDate && date.isAfter(maxDate)) {
         return true;
       }
 
-      if (minDate && isBefore(date, minDate)) {
+      if (minDate && date.isBefore(minDate)) {
         return true;
       }
 
-      if (disableFuture && isFuture(date)) {
+      if (disableFuture && date.isAfter(today)) {
         return true;
       }
 
-      if (disablePast && isPast(date)) {
+      if (disablePast && date.isBefore(today)) {
         return true;
       }
 
       return false;
     },
-    [currentDate, disableFuture, disablePast, maxDate, minDate]
+    [currentDate, disableFuture, disablePast, maxDate, minDate, today]
   );
 
   const daysOfMonth = React.useCallback(() => {
-    const monthStart = startOfMonth(currentDate);
-    const monthWeekStart = startOfWeek(monthStart);
+    const monthStart = currentDate.startOf("month");
+    const monthWeekStart = monthStart.startOf("week");
     const days: JSX.Element[] = [];
 
     let i = 0;
 
     while (i < 42) {
-      const actual = addDays(monthWeekStart, i);
-      if (!isSameMonth(actual, currentDate)) {
+      const actual = monthWeekStart.add(i, "day");
+      if (!actual.isSame(currentDate, "month")) {
         days.push(<div key={i} className={clsx(u["xs-1"], u["my-xs-1"], s.min)} />);
       } else {
         days.push(
@@ -130,11 +113,11 @@ export default function Calendar({
               className={s.button}
               disabled={resolveDisabled(actual)}
               onClick={() => changeDate(actual)}
-              color={isSameDay(value, actual) ? "primary" : "text"}
+              color={actual.isSame(value, "day") ? "primary" : "text"}
               variant="flat"
               size="small"
             >
-              {getDate(actual)}
+              {actual.get("date")}
             </Button>
           </div>
         );
@@ -146,19 +129,19 @@ export default function Calendar({
     return days;
   }, [currentDate, value, resolveDisabled, changeDate]);
 
-  const getNextMonthFirstDay = React.useCallback((date: Date) => {
-    return startOfMonth(addMonths(date, 1));
+  const getNextMonthFirstDay = React.useCallback((date: dayjs.Dayjs) => {
+    return date.add(1, "month").startOf("month");
   }, []);
 
-  const getPrevMonthLastDay = React.useCallback((date: Date) => {
-    return endOfMonth(subMonths(date, 1));
+  const getPrevMonthLastDay = React.useCallback((date: dayjs.Dayjs) => {
+    return date.subtract(1, "month").endOf("month");
   }, []);
 
   const years = React.useCallback(() => {
     const y: JSX.Element[] = [];
 
     for (let i = 1899; i <= 2099; i += 1) {
-      const actual = setYear(value, i);
+      const actual = dayjs(value).set("year", i);
       const selected = selectedYear === i;
 
       y.push(
@@ -166,10 +149,10 @@ export default function Calendar({
           <Button
             ref={selected ? currentYearRef : undefined}
             size="small"
-            disabled={resolveDisabled(actual) && !isSameYear(today, actual)}
+            disabled={resolveDisabled(actual) && !actual.isSame(today, "year")}
             onClick={() => {
-              if (isSameYear(actual, today) && resolveDisabled(actual)) {
-                const max = setYear(today, i);
+              if (actual.isSame(today, "year") && resolveDisabled(actual)) {
+                const max = dayjs(today).set("year", i);
                 changeDate(max);
                 setCurrentDate(max);
               } else {
@@ -199,7 +182,7 @@ export default function Calendar({
       </div>
       <div className={clsx(u["w-100"], u["mt-xs-2"])}>
         <Button color={yearMode ? "muted" : "text"} onClick={() => setYearMode(false)} size="small" variant="flat">
-          {format(value, "eeee, dd 'de' MMMM")}
+          {dayjs(value).format("dddd, DD [de] MMMM")}
         </Button>
       </div>
       <Divider />
@@ -209,19 +192,19 @@ export default function Calendar({
             <div className={u.col}>
               <IconButton
                 disabled={resolveDisabled(getPrevMonthLastDay(currentDate))}
-                onClick={() => setCurrentDate(subMonths(currentDate, 1))}
+                onClick={() => setCurrentDate(currentDate.subtract(1, "month"))}
                 size="small"
               >
                 <FiArrowLeft />
               </IconButton>
             </div>
             <div className={u.col}>
-              {format(currentDate, "MMMM")} - {getYear(currentDate)}
+              {currentDate.format("MMMM")} - {currentDate.get("year")}
             </div>
             <div className={u.col}>
               <IconButton
                 disabled={resolveDisabled(getNextMonthFirstDay(currentDate))}
-                onClick={() => setCurrentDate(addMonths(currentDate, 1))}
+                onClick={() => setCurrentDate(currentDate.add(1, "month"))}
                 size="small"
               >
                 <FiArrowRight />

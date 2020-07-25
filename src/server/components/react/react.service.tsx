@@ -31,7 +31,7 @@ export class ReactService {
         statsFile: process.env.MANIFEST as string,
       });
       const context: { url?: string } = {};
-      let helmetContext!: FilledContext;
+      const helmetContext: FilledContext | Record<string, any> = {};
       const client = createClient(true, new SchemaLink({ schema: this.configService.schema }));
 
       if (process.env.NODE_ENV === "production") {
@@ -69,7 +69,6 @@ export class ReactService {
 
       return res.send(`<!DOCTYPE html>${fullHTML}`);
     } catch (error) {
-      console.error(error);
       this.logger.error(error?.message ?? error ?? "Falha ao renderizar React");
       return res.send({ error: true, message: "Falha ao renderizar React" });
     }
