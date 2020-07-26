@@ -7,8 +7,8 @@ import { static as serve } from "express";
 import helmet from "helmet";
 import { PinoLogger } from "nestjs-pino";
 
-import { GenericExceptionFilter } from "./plugins/exception.filter";
 import { LoggingInterceptor } from "./plugins/logging.interceptor";
+import { SequelizeExceptionFilter } from "./plugins/sequelize.exception.filter";
 import { formatErrors } from "./validations/format";
 
 export async function installMiddlewares(app: INestApplication) {
@@ -19,7 +19,7 @@ export async function installMiddlewares(app: INestApplication) {
       exceptionFactory: (errors) => new UserInputError("Erro de validação", formatErrors(errors)),
     })
   );
-  app.useGlobalFilters(new GenericExceptionFilter());
+  app.useGlobalFilters(new SequelizeExceptionFilter());
   app.useGlobalInterceptors(new LoggingInterceptor(await app.resolve(PinoLogger)));
 
   app.use(helmet());
@@ -39,6 +39,6 @@ export async function installMiddlewares(app: INestApplication) {
 
   app.use(cookie());
   if (process.env.NODE_ENV === "production") {
-    app.use(csurf({ cookie: true }));
+    app.use(csurf({ cookie: { sameSite: true, httpOnly: true }, value: (req) => req.cookies["X-XSRF-TOKEN"] }));
   }
 }

@@ -2,6 +2,7 @@ import { ObjectType, Field } from "@nestjs/graphql";
 import { Table, Column, Default, BelongsToMany, HasMany, HasOne } from "sequelize-typescript";
 
 import { CONDOMINIUM } from "@/server/utils/constants";
+import * as Messages from "@/server/utils/validations/messages";
 
 import { Address } from "./address.model";
 import { BaseModel } from "./base.model";
@@ -18,7 +19,7 @@ export class Condominium extends BaseModel<Condominium> {
   public companyName!: string;
 
   @Field()
-  @Column({ allowNull: false })
+  @Column({ allowNull: false, unique: { name: "cnpj", msg: Messages.UNIQUE } })
   public cnpj!: string;
 
   @Field()

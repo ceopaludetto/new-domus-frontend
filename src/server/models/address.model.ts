@@ -12,7 +12,7 @@ import { Condominium } from "./condominium.model";
 export class Address extends BaseModel<Address> {
   @Field()
   @Column({ allowNull: false })
-  public cep!: string;
+  public zip!: string;
 
   @Field()
   @Column({ allowNull: false })

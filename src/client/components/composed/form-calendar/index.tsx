@@ -10,14 +10,22 @@ type FormCalendarProps = Omit<
 
 export function FormCalendar({ name, helperText, ...rest }: FormCalendarProps) {
   const { control, errors } = useFormContext();
-  const message = get(errors, `${name}.message`, helperText);
+  const error = get(errors, name);
 
   return (
     <Controller
       name={name}
       control={control}
       render={({ value = new Date(), ...props }) => {
-        return <CalendarControl value={value} error={!!errors[name]} helperText={message} {...props} {...rest} />;
+        return (
+          <CalendarControl
+            value={value}
+            error={!!error}
+            helperText={error?.message ?? helperText}
+            {...props}
+            {...rest}
+          />
+        );
       }}
     />
   );

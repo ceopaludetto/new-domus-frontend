@@ -2,6 +2,7 @@ import { ObjectType, Field, registerEnumType } from "@nestjs/graphql";
 import { Table, Column, DataType, HasOne, BelongsToMany, HasMany } from "sequelize-typescript";
 
 import { PERSON } from "@/server/utils/constants";
+import * as Messages from "@/server/utils/validations/messages";
 
 import { BaseModel } from "./base.model";
 import { Condominium } from "./condominium.model";
@@ -27,7 +28,11 @@ export class Person extends BaseModel<Person> {
   public name!: string;
 
   @Field()
-  @Column({ unique: true, allowNull: false })
+  @Column({ allowNull: false })
+  public lastName!: string;
+
+  @Field()
+  @Column({ unique: { name: "email", msg: Messages.UNIQUE }, allowNull: false })
   public email!: string;
 
   @Field(() => Gender)

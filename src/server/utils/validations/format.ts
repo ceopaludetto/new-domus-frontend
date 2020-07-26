@@ -16,7 +16,7 @@ export function formatErrors(errors: ValidationError[]) {
   errors.forEach((e) => {
     const messages: string[] = [];
 
-    if (e.children.length) {
+    if (e?.children?.length) {
       children[e.property] = formatErrors(e.children);
     } else {
       if (e.constraints) {

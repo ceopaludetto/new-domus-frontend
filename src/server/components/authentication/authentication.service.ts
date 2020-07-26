@@ -33,7 +33,10 @@ export class AuthenticationService {
         throw new UserInputError("Senha incorreta", { fields: ["password"] });
       }
 
-      res.cookie("auth", `Bearer ${this.generate(user)}`);
+      res.cookie("auth", `Bearer ${this.generate(user)}`, {
+        sameSite: true,
+        httpOnly: true,
+      });
 
       return user;
     } catch (error) {
@@ -45,15 +48,13 @@ export class AuthenticationService {
   }
 
   public async register(data: UserInsertInput, res: Response) {
-    try {
-      const user = await this.userService.create(data);
+    const user = await this.userService.create(data);
 
-      res.cookie("auth", `Bearer ${this.generate(user)}`);
+    res.cookie("auth", `Bearer ${this.generate(user)}`, {
+      sameSite: true,
+      httpOnly: true,
+    });
 
-      return user;
-    } catch (error) {
-      this.logger.error(error);
-      throw new AuthenticationError("Falha ao cadastrar usuário");
-    }
+    return user;
   }
 }

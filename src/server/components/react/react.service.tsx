@@ -37,7 +37,7 @@ export class ReactService {
       if (process.env.NODE_ENV === "production") {
         res.set(
           "Content-Security-Policy",
-          `default-src 'self'; script-src 'self' 'nonce-${nonce}'; style-src 'self' 'nonce-${nonce}'; font-src *;`
+          `default-src 'self'; script-src 'self' 'nonce-${nonce}'; style-src 'self' 'nonce-${nonce}'; font-src 'self';`
         );
       }
 

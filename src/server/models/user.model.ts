@@ -3,6 +3,7 @@ import { hash, compare } from "bcryptjs";
 import { Table, Column, BeforeSave, ForeignKey, BelongsTo } from "sequelize-typescript";
 
 import { USER } from "@/server/utils/constants";
+import * as Messages from "@/server/utils/validations/messages";
 
 import { BaseModel } from "./base.model";
 import { Person } from "./person.model";
@@ -11,7 +12,7 @@ import { Person } from "./person.model";
 @Table({ tableName: USER, modelName: USER })
 export class User extends BaseModel<User> {
   @Field()
-  @Column({ unique: true, allowNull: false })
+  @Column({ unique: { name: "login", msg: Messages.UNIQUE }, allowNull: false })
   public login!: string;
 
   @Column({ allowNull: false })

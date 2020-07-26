@@ -54,7 +54,6 @@
     "express": "^4.17.1",
     "graphql": "^14.6.0",
     "graphql-fields": "^2.0.3",
-    "graphql-query-complexity": "^0.6.0",
     "helmet": "^3.21.3",
     "lodash": "^4.17.19",
     "nestjs-pino": "^1.2.0",

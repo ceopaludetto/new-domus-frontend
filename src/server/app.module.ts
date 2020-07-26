@@ -21,7 +21,6 @@ import {
 import Entities from "@/server/models";
 import { ContextType } from "@/server/utils/common.dto";
 import { APP_NAME } from "@/server/utils/constants";
-import { ComplexityPlugin } from "@/server/utils/plugins/query.complexity.plugin";
 
 @Module({
   imports: [
@@ -83,10 +82,7 @@ import { ComplexityPlugin } from "@/server/utils/plugins/query.complexity.plugin
         debug: process.env.NODE_ENV === "development",
         playground: process.env.NODE_ENV === "development",
         introspection: process.env.NODE_ENV === "development",
-        cors: {
-          credentials: true,
-          maxAge: 7200,
-        },
+        cors: false,
         context: ({ req, res }: ContextType) => ({ req, res }),
         transformSchema: (s: GraphQLSchema) => {
           schema = s;
@@ -102,6 +98,5 @@ import { ComplexityPlugin } from "@/server/utils/plugins/query.complexity.plugin
     StateModule,
     CityModule,
   ],
-  providers: [ComplexityPlugin],
 })
 export class ApplicationModule {}

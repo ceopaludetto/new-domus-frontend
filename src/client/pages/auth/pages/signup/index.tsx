@@ -8,24 +8,13 @@ import { Title, SubTitle, Stepper } from "@/client/components";
 import { useStepper, StepperContext, usePreload } from "@/client/hooks";
 import { RouteComponentProps } from "@/client/utils/common.dto";
 
-import { WizardContext, WizardContextProps } from "./providers";
+import { WizardContext, WizardContextProps, initialValues } from "./providers";
 
 export default function SignUp({ routes }: RouteComponentProps) {
   const [, run] = usePreload();
   const history = useHistory();
   const [currentPage, methods] = useStepper(3);
-  const [values, setValues] = useLocalStorage<WizardContextProps["values"]>("@DOMUS:AUTH:SIGNUP", {
-    login: "",
-    name: "",
-    email: "",
-    cpf: "",
-    gender: "",
-    tel: "",
-    birthdate: new Date(),
-    password: "",
-    repeatPassword: "",
-    type: "",
-  });
+  const [values, setValues] = useLocalStorage<WizardContextProps["values"]>("@DOMUS:AUTH:SIGNUP", initialValues);
 
   React.useEffect(() => {
     history.replace("/auth/signup/step-1");

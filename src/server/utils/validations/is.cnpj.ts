@@ -6,7 +6,7 @@ import {
   ValidatorConstraintInterface,
 } from "class-validator";
 
-import { removeMask } from "@/server/utils/number";
+import { removeMask } from "@/server/utils/transforms";
 
 import * as Messages from "./messages";
 

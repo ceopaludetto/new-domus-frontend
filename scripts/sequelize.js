@@ -20,10 +20,10 @@ logger.info("Parsing commands...");
 function printOptions() {
   return new Promise((resolve) => {
     if (program.verbose) {
-      logger.option("verbose", true);
+      logger.option("Verbose", true);
     }
 
-    logger.option("enviroment", program.enviroment);
+    logger.option("Enviroment", program.enviroment);
 
     resolve();
   });

@@ -2,7 +2,7 @@ import { InputType, Field, ID } from "@nestjs/graphql";
 import { Transform } from "class-transformer";
 import { IsString, MaxLength } from "class-validator";
 
-import { removeMask } from "@/server/utils/number";
+import { removeMask } from "@/server/utils/transforms";
 import { IsShortID } from "@/server/utils/validations";
 import * as Messages from "@/server/utils/validations/messages";
 
@@ -12,7 +12,7 @@ export class AddressInsertInput {
   @IsString({ message: Messages.STRING })
   @MaxLength(8, { message: Messages.MAX_LENGTH })
   @Transform(removeMask)
-  public cep!: string;
+  public zip!: string;
 
   @Field()
   @IsString({ message: Messages.STRING })

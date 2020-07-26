@@ -7,7 +7,7 @@ type Address {
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime!
-  cep: String!
+  zip: String!
   address: String!
   number: String!
   cityID: ID!
@@ -17,7 +17,7 @@ type Address {
 }
 
 input AddressInsertInput {
-  cep: String!
+  zip: String!
   address: String!
   number: String!
   cityID: ID!
@@ -121,6 +121,7 @@ type Person {
   updatedAt: DateTime!
   deletedAt: DateTime!
   name: String!
+  lastName: String!
   email: String!
   gender: Gender!
   cpf: String!
@@ -132,6 +133,7 @@ type Person {
 
 input PersonInsertInput {
   name: String!
+  lastName: String!
   email: String!
   cpf: String!
   birthdate: DateTime!

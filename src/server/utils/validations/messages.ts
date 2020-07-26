@@ -1,6 +1,6 @@
 import { ValidationArguments } from "class-validator";
 
-import { capitalize } from "@/server/utils/string";
+import { capitalize } from "@/server/utils/transforms";
 
 export const STRING = "Campo deve ser do tipo texto";
 export const EMAIL = "E-mail inválido";
@@ -13,3 +13,4 @@ export const MAX_LENGTH = (args: ValidationArguments) => {
 export const CNPJ = "CNPJ inválido";
 export const CPF = "CPF inválido";
 export const DATE = "Campo deve ser do tipo data";
+export const UNIQUE = "Campo já cadastrado";

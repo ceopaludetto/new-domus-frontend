@@ -5,7 +5,7 @@ import { IsString, IsEmail, IsEnum, IsDate, ValidateNested } from "class-validat
 import { CondominiumInsertInput } from "@/server/components/condominium";
 import { PhoneInsertInput } from "@/server/components/phone";
 import { Gender } from "@/server/models/person.model";
-import { removeMask } from "@/server/utils/number";
+import { removeMask, trim, email } from "@/server/utils/transforms";
 import { IsCPF } from "@/server/utils/validations/is.cpf";
 import * as Messages from "@/server/utils/validations/messages";
 
@@ -13,11 +13,18 @@ import * as Messages from "@/server/utils/validations/messages";
 export class PersonInsertInput {
   @Field()
   @IsString({ message: Messages.STRING })
+  @Transform(trim)
   public name!: string;
 
   @Field()
   @IsString({ message: Messages.STRING })
+  @Transform(trim)
+  public lastName!: string;
+
+  @Field()
+  @IsString({ message: Messages.STRING })
   @IsEmail({ message: Messages.EMAIL })
+  @Transform(email)
   public email!: string;
 
   @Field()

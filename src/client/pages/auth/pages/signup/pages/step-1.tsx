@@ -34,21 +34,21 @@ export default function Step1() {
       <form noValidate onSubmit={submit}>
         <div className={clsx(u.grid, u["grid-template"])}>
           <div className={clsx(u["xs-12"], u["md-6"])}>
-            <FormControl autoFocus name="name" id="name" label="Nome" required />
+            <FormControl autoFocus name="person.name" id="name" label="Nome" required />
           </div>
           <div className={clsx(u["xs-12"], u["md-6"])}>
-            <FormControl name="lastName" id="lastName" label="Sobrenome" required />
+            <FormControl name="person.lastName" id="lastName" label="Sobrenome" required />
           </div>
           <div className={clsx(u["xs-12"], u["md-3"])}>
             <FormControl name="login" id="login" label="Login" required />
           </div>
           <div className={clsx(u["xs-12"], u["md-6"])}>
-            <FormControl type="email" name="email" id="email" label="E-mail" required />
+            <FormControl type="person.email" name="person.email" id="email" label="E-mail" required />
           </div>
           <div className={clsx(u["xs-12"], u["md-3"])}>
             <MaskedFormControl
               rifm={{ format: Masks.cpf, accept: /\d+/g, mask: true }}
-              name="cpf"
+              name="person.cpf"
               id="cpf"
               label="CPF"
               required
@@ -56,7 +56,7 @@ export default function Step1() {
           </div>
           <div className={clsx(u["xs-12"], u["md-4"])}>
             <FormSelect
-              name="gender"
+              name="person.gender"
               id="gender"
               label="Gênero"
               items={[
@@ -68,13 +68,13 @@ export default function Step1() {
             />
           </div>
           <div className={clsx(u["xs-12"], u["md-4"])}>
-            <FormCalendar disableFuture name="birthdate" id="birthdate" label="Data de Nascimento" required />
+            <FormCalendar disableFuture name="person.birthdate" id="birthdate" label="Data de Nascimento" required />
           </div>
           <div className={clsx(u["xs-12"], u["md-4"])}>
             <MaskedFormControl
               rifm={{ format: Masks.tel, accept: /\d+/g, mask: true }}
-              name="tel"
-              id="tel"
+              name="person.phone"
+              id="phone"
               type="tel"
               label="Telefone"
             />

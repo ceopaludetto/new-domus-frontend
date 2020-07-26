@@ -2,6 +2,7 @@
 export const REQUIRED = "Campo obrigatório";
 export const EMAIL = "E-mail inválido";
 export const TEL = "Telefone inválido";
+export const GENDER = "Gênero inválido";
 export const REPEAT_PASSWORD = "As senhas não condizem";
 export const DATE = "Data inválida";
 export const STEP_3_TYPE = "Seleção obrigatória";

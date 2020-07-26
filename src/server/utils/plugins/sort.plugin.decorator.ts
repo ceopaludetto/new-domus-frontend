@@ -4,6 +4,7 @@ import { IsString, IsEnum, IsOptional } from "class-validator";
 import type { Order as SequelizeOrder } from "sequelize";
 
 import { Order, ExcludeSequelize, Sort } from "../common.dto";
+import * as Messages from "../validations/messages";
 
 export function Sortable<T, K extends string & keyof ExcludeSequelize<T>>(
   model: Type<T>,
@@ -15,7 +16,7 @@ export function Sortable<T, K extends string & keyof ExcludeSequelize<T>>(
 
   props.forEach((p) => {
     IsOptional()(AbstractSort.prototype, p);
-    IsString()(AbstractSort.prototype, p);
+    IsString({ message: Messages.STRING })(AbstractSort.prototype, p);
     IsEnum(Order)(AbstractSort.prototype, p);
     Field(() => Order, { nullable: true, defaultValue: defaults?.[p] })(AbstractSort.prototype, p);
   });

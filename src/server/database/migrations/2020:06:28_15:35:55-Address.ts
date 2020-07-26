@@ -8,7 +8,7 @@ export default {
   async up(queryInterface: QueryInterface, Sequelize: typeof SequelizeStatic) {
     return queryInterface.createTable(ADDRESS, {
       ...migrationDefaults(Sequelize),
-      cep: {
+      zip: {
         type: Sequelize.STRING(8),
         allowNull: false,
       },

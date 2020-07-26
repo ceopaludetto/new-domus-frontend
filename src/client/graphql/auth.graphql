@@ -5,3 +5,9 @@ mutation Login($input: AuthenticationInput!) {
     ...UserValues
   }
 }
+
+mutation Register($input: UserInsertInput!) {
+  register(input: $input) {
+    ...UserValues
+  }
+}

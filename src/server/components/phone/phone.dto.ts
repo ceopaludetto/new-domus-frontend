@@ -2,7 +2,7 @@ import { InputType, Field, PartialType } from "@nestjs/graphql";
 import { Transform } from "class-transformer";
 import { IsString, MaxLength } from "class-validator";
 
-import { removeMask } from "@/server/utils/number";
+import { removeMask } from "@/server/utils/transforms";
 import * as Messages from "@/server/utils/validations/messages";
 
 @InputType()

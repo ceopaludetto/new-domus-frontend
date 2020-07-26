@@ -3,7 +3,7 @@ import { Transform, Type } from "class-transformer";
 import { IsString, MaxLength, ValidateNested } from "class-validator";
 
 import { AddressInsertInput } from "@/server/components/address";
-import { removeMask } from "@/server/utils/number";
+import { removeMask } from "@/server/utils/transforms";
 import { IsCNPJ } from "@/server/utils/validations/is.cnpj";
 import * as Messages from "@/server/utils/validations/messages";
 

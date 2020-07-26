@@ -1,7 +1,7 @@
 import * as React from "react";
-import { useForm, FormProvider, get } from "react-hook-form";
+import { useForm, FormProvider, get, useFieldArray } from "react-hook-form";
 
-import { useQuery } from "@apollo/client";
+import { useQuery, useMutation } from "@apollo/client";
 import { yupResolver } from "@hookform/resolvers";
 import clsx from "clsx";
 
@@ -14,16 +14,17 @@ import {
   Switch,
   ColorText,
 } from "@/client/components";
-import { ShowStatesQuery } from "@/client/graphql/operations";
-import { ShowStates } from "@/client/graphql/state.graphql";
+import { Register, ShowStates } from "@/client/graphql";
+import { ShowStatesQuery, RegisterMutation, RegisterMutationVariables, Gender } from "@/client/graphql/operations";
 import * as Masks from "@/client/helpers/masks";
 import { SignUpStep3Schema, SignUpStep3Values } from "@/client/helpers/validations/signup.schema";
 import { StepperContext } from "@/client/hooks";
 import u from "@/client/styles/utils.scss";
 import { clean } from "@/client/utils/clean";
 import { Client } from "@/client/utils/common.dto";
+import { splitPhone } from "@/client/utils/string";
 
-import { WizardContext } from "../providers";
+import { WizardContext, initialValues } from "../providers";
 
 export default function Step3() {
   const { setValues, values } = React.useContext(WizardContext);
@@ -33,12 +34,47 @@ export default function Step3() {
     defaultValues: values,
   });
   const type = methods.watch("type");
-  const state = methods.watch("state");
+  const state = methods.watch("condominium.address.stateID");
+  const [register] = useMutation<RegisterMutation, RegisterMutationVariables>(Register);
   const { data } = useQuery<ShowStatesQuery>(ShowStates);
 
-  const submit = methods.handleSubmit((datas) => {
-    if (values) {
-      setValues({ ...values, ...clean(datas) });
+  const submit = methods.handleSubmit(async (datas) => {
+    try {
+      if (values) {
+        setValues({ ...values, ...clean(datas) });
+        const {
+          login,
+          password,
+          person: { phone, gender, ...person },
+          condominium: {
+            address: { cityID, stateID, ...address },
+            ...condominium
+          },
+        } = values;
+
+        if (cityID) {
+          const res = await register({
+            variables: {
+              input: {
+                login,
+                password,
+                person: {
+                  ...person,
+                  gender: gender ?? Gender.M,
+                  phones: phone ? [splitPhone(phone)] : [],
+                  condominiums: [{ ...condominium, address: { cityID, ...address } }],
+                },
+              },
+            },
+          });
+
+          if (res && res.data) {
+            setValues(initialValues);
+          }
+        }
+      }
+    } catch (error) {
+      console.error(error);
     }
   });
 
@@ -62,25 +98,31 @@ export default function Step3() {
           <>
             <div className={clsx(u.grid, u["grid-template"])}>
               <div className={clsx(u["xs-12"], u["md-6"])}>
-                <FormControl name="companyName" id="companyName" label="Razão Social" required />
+                <FormControl name="condominium.companyName" array id="companyName" label="Razão Social" required />
               </div>
               <div className={clsx(u["xs-12"], u["md-6"])}>
                 <MaskedFormControl
                   rifm={{ format: Masks.cnpj, mask: true }}
-                  name="cnpj"
+                  name="condominium.cnpj"
                   id="cnpj"
                   label="CNPJ"
                   required
                 />
               </div>
               <div className={clsx(u["xs-12"], u["md-3"])}>
-                <MaskedFormControl rifm={{ format: Masks.cep, mask: true }} name="zip" id="zip" label="CEP" required />
+                <MaskedFormControl
+                  rifm={{ format: Masks.cep, mask: true }}
+                  name="condominium.address.zip"
+                  id="zip"
+                  label="CEP"
+                  required
+                />
               </div>
               <div className={clsx(u["xs-12"], u["md-7"])}>
-                <FormControl name="address" id="address" label="Endereço" required />
+                <FormControl name="condominium.address.address" id="address" label="Endereço" required />
               </div>
               <div className={clsx(u["xs-12"], u["md-2"])}>
-                <FormControl name="number" id="number" label="Número" required />
+                <FormControl name="condominium.address.number" id="number" label="Número" required />
               </div>
               <div className={clsx(u["xs-12"], u["md-4"])}>
                 <FormSelect
@@ -90,7 +132,7 @@ export default function Step3() {
                       label: st.name,
                     })) ?? []
                   }
-                  name="state"
+                  name="condominium.address.stateID"
                   id="state"
                   label="Estado"
                   required
@@ -107,7 +149,7 @@ export default function Step3() {
                           label: c.name,
                         })) ?? []
                     }
-                    name="city"
+                    name="condominium.address.cityID"
                     id="city"
                     label="Cidade"
                     required

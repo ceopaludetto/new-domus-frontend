@@ -1,7 +1,8 @@
 import { InjectQueue } from "@nestjs/bull";
 import { Injectable } from "@nestjs/common";
-import { InjectModel } from "@nestjs/sequelize";
+import { InjectModel, InjectConnection } from "@nestjs/sequelize";
 import { Queue } from "bull";
+import { Sequelize } from "sequelize";
 
 import { Person, User, Phone, Condominium, Address } from "@/server/models";
 import type { ShowAll, Mapped } from "@/server/utils/common.dto";
@@ -12,7 +13,8 @@ import { UserInsertInput } from "./user.dto";
 export class UserService {
   public constructor(
     @InjectModel(User) private readonly userModel: typeof User,
-    @InjectQueue("mail") private readonly mailQueue: Queue
+    @InjectQueue("mail") private readonly mailQueue: Queue,
+    @InjectConnection() private readonly sequelize: Sequelize
   ) {}
 
   public async showAll({ skip = 0, take }: ShowAll, mapped?: Mapped) {
@@ -45,29 +47,38 @@ export class UserService {
   }
 
   public async create(data: UserInsertInput) {
-    const user = await this.userModel.create(data, {
-      include: [
-        {
-          model: Person,
-          include: [
-            Phone,
-            {
-              model: Condominium,
-              include: [Address],
-            },
-          ],
+    const transaction = await this.sequelize.transaction();
+    try {
+      const user = await this.userModel.create(data, {
+        include: [
+          {
+            model: Person,
+            include: [
+              Phone,
+              {
+                model: Condominium,
+                include: [Address],
+              },
+            ],
+          },
+        ],
+        transaction,
+      });
+
+      await this.mailQueue.add("register", user, {
+        removeOnFail: true,
+        repeat: {
+          every: 1000,
+          limit: 5,
         },
-      ],
-    });
+      });
 
-    await this.mailQueue.add("register", user, {
-      removeOnFail: true,
-      repeat: {
-        every: 1000,
-        limit: 5,
-      },
-    });
+      await transaction.commit();
 
-    return user;
+      return user;
+    } catch (error) {
+      await transaction.rollback();
+      throw error;
+    }
   }
 }

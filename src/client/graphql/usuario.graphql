@@ -1,4 +1,4 @@
-#import "./fragments/user-values.gql"
+#import "./fragments/user-values.graphql"
 
 query ShowAllUsers {
   showUsers {
