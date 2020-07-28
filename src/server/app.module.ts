@@ -3,7 +3,7 @@ import { PugAdapter } from "@nestjs-modules/mailer/dist/adapters/pug.adapter";
 import { Module } from "@nestjs/common";
 import { GraphQLModule } from "@nestjs/graphql";
 import { SequelizeModule } from "@nestjs/sequelize";
-import { GraphQLSchema } from "graphql";
+import type { GraphQLSchema } from "graphql";
 import { LoggerModule, PinoLogger } from "nestjs-pino";
 
 import {
@@ -19,12 +19,11 @@ import {
   UserModule,
 } from "@/server/components";
 import Entities from "@/server/models";
-import { ContextType } from "@/server/utils/common.dto";
+import type { ContextType } from "@/server/utils/common.dto";
 import { APP_NAME } from "@/server/utils/constants";
 
 @Module({
   imports: [
-    QueueModule,
     LoggerModule.forRoot({
       pinoHttp: {
         name: APP_NAME,
@@ -90,6 +89,7 @@ import { APP_NAME } from "@/server/utils/constants";
         },
       }),
     }),
+    QueueModule,
     UserModule,
     PersonModule,
     AuthenticationModule,

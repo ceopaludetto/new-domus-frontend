@@ -74,7 +74,7 @@ module.exports = {
       }
     },
     {
-      files: ['configuration/**/*.js', 'scripts/**/*.js', 'src/client/utils/setup-test.tsx', 'babel.config.js', 'jest.config.js'],
+      files: ['configuration/**/*.js', 'scripts/**/*.js', 'src/client/utils/setup-test.tsx', 'babel.config.js', 'jest.config.js', 'database.config.js'],
       rules: {
         '@typescript-eslint/no-var-requires': 'off',
         "import/no-extraneous-dependencies": ["error", { devDependencies: true }],

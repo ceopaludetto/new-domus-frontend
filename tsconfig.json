@@ -19,6 +19,6 @@
     "sourceMap": true,
     "allowJs": true
   },
-  "include": ["src/**/*", "configuration/**/*", "scripts/**/*"],
+  "include": ["src/**/*", "configuration/**/*", "scripts/**/*", "database.config.js"],
   "exclude": ["node_modules", "dist", "coverage", "certs", "env"]
 }
