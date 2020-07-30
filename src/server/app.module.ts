@@ -26,7 +26,8 @@ import { APP_NAME } from "@/server/utils/constants";
   imports: [
     LoggerModule.forRoot({
       pinoHttp: {
-        name: APP_NAME,
+        base: { name: APP_NAME },
+        messageKey: "message",
         autoLogging: process.env.NODE_ENV === "production",
         level: process.env.NODE_ENV !== "production" ? "debug" : "info",
         prettyPrint:
