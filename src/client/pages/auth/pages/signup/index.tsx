@@ -1,57 +1,52 @@
 import * as React from "react";
+import { Helmet } from "react-helmet-async";
+import { FiUser, FiLock, FiMap } from "react-icons/fi";
 import { Switch, Route, useHistory } from "react-router-dom";
 import { useLocalStorage } from "react-use";
-
-import { OutlinePerson, OutlineLock, OutlineBusiness } from "mdi-norm";
 
 import { Title, SubTitle, Stepper } from "@/client/components";
 import { useStepper, StepperContext, usePreload } from "@/client/hooks";
 import { RouteComponentProps } from "@/client/utils/common.dto";
 
-import { WizardContext, WizardContextProps } from "./providers";
+import { WizardContext, WizardContextProps, initialValues } from "./providers";
 
 export default function SignUp({ routes }: RouteComponentProps) {
-  const [, { run }] = usePreload(false);
+  const [, run] = usePreload();
   const history = useHistory();
   const [currentPage, methods] = useStepper(3);
-  const [values, setValues] = useLocalStorage<WizardContextProps["values"]>("@DOMUS:AUTH:SIGNUP", {
-    login: "",
-    name: "",
-    email: "",
-    cpf: "",
-    gender: "",
-    tel: "",
-    birthdate: new Date(),
-    password: "",
-    repeatPassword: "",
-    type: "",
-  });
+  const [values, setValues] = useLocalStorage<WizardContextProps["values"]>("@DOMUS:AUTH:SIGNUP", initialValues);
+
+  React.useEffect(() => {
+    history.replace("/auth/signup/step-1");
+  }, [history]);
 
   return (
     <WizardContext.Provider value={{ values, setValues }}>
       <StepperContext.Provider value={{ currentPage, ...methods }}>
+        <Helmet>
+          <title>Cadastro</title>
+        </Helmet>
         <SubTitle>Cadastro</SubTitle>
-        <Title>Nova Conta</Title>
+        <Title>Bem vindo</Title>
         <Stepper
           items={[
             {
               content: "Usuário",
-              icon: OutlinePerson,
+              icon: FiUser,
             },
             {
               content: "Senha",
-              icon: OutlineLock,
+              icon: FiLock,
             },
             {
               content: "Condomínio",
-              icon: OutlineBusiness,
+              icon: FiMap,
             },
           ]}
           clickable={false}
-          onStepChange={(index: number) => {
-            run(`/auth/signup/step-${index + 1}`).then(() => {
-              history.push(`/auth/signup/step-${index + 1}`);
-            });
+          onStepChange={async (index: number) => {
+            await run(`/auth/signup/step-${index + 1}`);
+            history.push(`/auth/signup/step-${index + 1}`);
           }}
         />
         <Switch>

@@ -1,7 +1,7 @@
 import * as React from "react";
+import { FiCheckCircle } from "react-icons/fi";
 
 import clsx from "clsx";
-import { OutlineCheckCircle } from "mdi-norm";
 
 import u from "@/client/styles/utils.scss";
 
@@ -16,12 +16,12 @@ export function PasswordHelper({ children, active, ...rest }: PasswordHelperProp
     <ColorText
       bold
       small
-      className={clsx(u.row, u["align-items-xs-center"], u["mb-3"])}
+      className={clsx(u.row, u["align-items-xs-center"], u["mb-xs-3"])}
       color={active ? "success" : "muted"}
       {...rest}
     >
       <div className={clsx(u.col, u["inline-flex"])}>
-        <OutlineCheckCircle size={20} />
+        <FiCheckCircle size={20} />
       </div>
       <div className={clsx(u.col, u.xs)}>{children}</div>
     </ColorText>

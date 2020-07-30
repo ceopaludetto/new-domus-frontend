@@ -1,7 +1,0 @@
-#import "./fragments/user-values.gql"
-
-mutation Login($input: AuthenticationInput!) {
-  login(input: $input) {
-    ...UserValues
-  }
-}

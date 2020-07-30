@@ -1,38 +1,38 @@
-@import "~@/client/styles/variables.scss";
+@import "~@/client/styles/variables";
 
 .paper {
-  border-radius: get-theme-prop(layout, shape);
   background-color: get-color(paper);
+  border-radius: get-theme-prop(layout, shape);
   &:not(.outline) {
     box-shadow: 0 3.6px 3.3px rgba(0, 0, 0, 0.05), 0 10px 9px rgba(0, 0, 0, 0.033), 0 24.1px 21.7px rgba(0, 0, 0, 0.025),
       0 80px 72px rgba(0, 0, 0, 0.017);
   }
   &.outline {
-    @media (prefers-color-scheme: dark) {
+    @include on-dark {
       &:not(.no-horizontal-borders) {
-        border: 2px solid get-color(paper, lighten-2);
+        border: 1px solid get-color(paper, lighten-2);
       }
       &.no-horizontal-borders {
-        border-top: 2px solid get-color(paper, lighten-2);
-        border-bottom: 2px solid get-color(paper, lighten-2);
+        border-bottom: 1px solid get-color(paper, lighten-2);
+        border-top: 1px solid get-color(paper, lighten-2);
       }
     }
-    @media (prefers-color-scheme: light) {
+    @include on-light {
       &:not(.no-horizontal-borders) {
-        border: 2px solid get-color(background, darken-2);
+        border: 1px solid get-color(background, darken-2);
       }
       &.no-horizontal-borders {
-        border-top: 2px solid get-color(background, darken-2);
-        border-bottom: 2px solid get-color(background, darken-2);
+        border-bottom: 1px solid get-color(background, darken-2);
+        border-top: 1px solid get-color(background, darken-2);
       }
     }
   }
   &:not(.no-gutter) {
     &.normal {
-      padding: get-theme-prop(layout, sizes, 6);
+      padding: get-theme-prop(layout, sizes, 7);
     }
     &.large {
-      padding: get-theme-prop(layout, sizes, 8);
+      padding: get-theme-prop(layout, sizes, 9);
     }
   }
 }

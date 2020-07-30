@@ -3,7 +3,7 @@ process.env.BABEL_ENV = "test";
 process.noDeprecation = true;
 
 process.on("unhandledRejection", (err) => {
-  throw err;
+  throw Error(err.message || err);
 });
 
 const jest = require("jest");

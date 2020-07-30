@@ -4,6 +4,7 @@
     "module": "ESNext",
     "lib": ["ESNext", "DOM"],
     "baseUrl": ".",
+    "jsx": "preserve",
     "paths": {
       "@/*": ["src/*"]
     },
@@ -14,9 +15,10 @@
     "experimentalDecorators": true,
     "strict": true,
     "noEmit": true,
-    "jsx": "preserve",
-    "sourceMap": true
+    "noEmitHelpers": true,
+    "sourceMap": true,
+    "allowJs": true
   },
-  "include": ["src/**/*", "configuration/**/*", "scripts/**/*"],
+  "include": ["src/**/*", "configuration/**/*", "scripts/**/*", "database.config.js"],
   "exclude": ["node_modules", "dist", "coverage", "certs", "env"]
 }

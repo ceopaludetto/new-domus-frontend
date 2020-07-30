@@ -1,7 +1,7 @@
-@import "~@/client/styles/variables.scss";
+@import "~@/client/styles/variables";
 
 .container {
-  padding: 0 get-theme-prop(layout, sizes, 5);
+  padding: 0 get-theme-prop(layout, gap);
   &:not(.fluid) {
     margin: 0 auto;
     @each $k, $v in get-theme-prop(layout, breakpoints) {

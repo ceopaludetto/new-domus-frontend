@@ -4,7 +4,8 @@ import { UserInputError, AuthenticationError } from "apollo-server-express";
 import { Response } from "express";
 import { InjectPinoLogger, PinoLogger } from "nestjs-pino";
 
-import { UserInsertInput, UserService, User } from "@/server/components/user";
+import { UserInsertInput, UserService } from "@/server/components/user";
+import { User } from "@/server/models";
 import type { Mapped } from "@/server/utils/common.dto";
 
 import { AuthenticationInput } from "./authentication.dto";
@@ -21,7 +22,7 @@ export class AuthenticationService {
     return this.jwtService.sign({ id: user.id });
   }
 
-  public async login({ login, password }: AuthenticationInput, res: Response, mapped: Mapped<User>) {
+  public async login({ login, password }: AuthenticationInput, res: Response, mapped?: Mapped) {
     try {
       const user = await this.userService.findByLogin(login, mapped);
       if (!user) {
@@ -32,7 +33,10 @@ export class AuthenticationService {
         throw new UserInputError("Senha incorreta", { fields: ["password"] });
       }
 
-      res.cookie("auth", `Bearer ${this.generate(user)}`);
+      res.cookie("auth", `Bearer ${this.generate(user)}`, {
+        sameSite: true,
+        httpOnly: true,
+      });
 
       return user;
     } catch (error) {
@@ -44,15 +48,13 @@ export class AuthenticationService {
   }
 
   public async register(data: UserInsertInput, res: Response) {
-    try {
-      const user = await this.userService.create(data);
+    const user = await this.userService.create(data);
 
-      res.cookie("auth", `Bearer ${this.generate(user)}`);
+    res.cookie("auth", `Bearer ${this.generate(user)}`, {
+      sameSite: true,
+      httpOnly: true,
+    });
 
-      return user;
-    } catch (error) {
-      this.logger.error(error);
-      throw new AuthenticationError("Falha ao cadastrar usuário");
-    }
+    return user;
   }
 }

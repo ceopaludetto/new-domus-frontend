@@ -1,0 +1,5 @@
+fragment PersonValues on Person {
+  id
+  name
+  email
+}

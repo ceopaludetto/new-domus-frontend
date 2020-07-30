@@ -1,7 +1,7 @@
 import { RouteProps } from "react-router-dom";
 
+import { ApolloClient } from "@apollo/client";
 import { LoadableComponent } from "@loadable/component";
-import { ApolloClient } from "apollo-client";
 
 export type Colors = {
   primary: string;
@@ -11,9 +11,10 @@ export type Colors = {
   muted: string;
   error: string;
   success: string;
+  text: string;
 };
 
-export type Client = ApolloClient<object>;
+export type Client = ApolloClient<Record<string, any>>;
 
 export type Route = Omit<RouteProps, "component"> & {
   name: string;

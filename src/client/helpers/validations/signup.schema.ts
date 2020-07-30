@@ -1,15 +1,23 @@
 import * as Yup from "yup";
 
+import { Gender } from "@/client/graphql/operations";
+
 import * as Messages from "../constants";
 
 export const SignUpStep1Schema = Yup.object({
   login: Yup.string().required(Messages.REQUIRED),
-  name: Yup.string().required(Messages.REQUIRED),
-  email: Yup.string().email(Messages.EMAIL).required(Messages.REQUIRED),
-  tel: Yup.string()
-    .matches(/\([\d]{2}\) \d?[\d]{4}-[\d]{4}/, Messages.TEL)
-    .required(Messages.REQUIRED),
-  birthdate: Yup.date().typeError(Messages.DATE).required(Messages.REQUIRED),
+  person: Yup.object({
+    name: Yup.string().required(Messages.REQUIRED),
+    lastName: Yup.string().required(Messages.REQUIRED),
+    cpf: Yup.string().required(Messages.REQUIRED),
+    gender: Yup.mixed<Gender>()
+      .nullable()
+      .oneOf([null, Gender.M, Gender.F, Gender.N], Messages.GENDER)
+      .required(Messages.REQUIRED),
+    email: Yup.string().email(Messages.EMAIL).required(Messages.REQUIRED),
+    birthdate: Yup.date().typeError(Messages.DATE).required(Messages.REQUIRED),
+    phone: Yup.string().matches(/\([\d]{2}\) \d?[\d]{4}-[\d]{4}/, Messages.TEL),
+  }),
 });
 
 export const SignUpStep2Schema = Yup.object({
@@ -24,7 +32,27 @@ export const SignUpStep2Schema = Yup.object({
 });
 
 export const SignUpStep3Schema = Yup.object({
-  type: Yup.string().oneOf(["enter", "create", null], Messages.STEP_3_TYPE).required(Messages.REQUIRED),
+  type: Yup.mixed<"enter" | "create" | null>()
+    .oneOf(["enter", "create", null], Messages.STEP_3_TYPE)
+    .required(Messages.REQUIRED),
+  condominium: Yup.object({
+    companyName: Yup.string().required(Messages.REQUIRED),
+    cnpj: Yup.string()
+      .matches(/\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}/, Messages.CNPJ)
+      .required(Messages.REQUIRED),
+    address: Yup.object({
+      zip: Yup.string()
+        .matches(/\d{5}-\d{3}/, Messages.ZIP)
+        .required(Messages.REQUIRED),
+      address: Yup.string().required(Messages.REQUIRED),
+      number: Yup.string().required(Messages.REQUIRED),
+      stateID: Yup.string().nullable().required(Messages.REQUIRED),
+      cityID: Yup.string().nullable().required(Messages.REQUIRED),
+    }),
+  }).when("type", {
+    is: "create",
+    then: (schema: Yup.ObjectSchema<any>) => schema.required(Messages.REQUIRED),
+  }),
 });
 
 export type SignUpStep1Values = Yup.InferType<typeof SignUpStep1Schema>;

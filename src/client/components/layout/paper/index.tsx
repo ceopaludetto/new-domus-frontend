@@ -4,38 +4,41 @@ import clsx from "clsx";
 
 import s from "./index.scss";
 
-type PaperProps<T extends React.ElementType<any> = "div"> = {
-  as?: T;
+type PaperProps = {
   size?: "large" | "normal";
   outline?: boolean;
   noGutter?: boolean;
   noHorizontalBorders?: boolean;
-} & React.ComponentProps<T>;
+} & React.HTMLAttributes<HTMLDivElement>;
 
-export function Paper<T extends React.ElementType<any> = "div">({
-  as: Component = "div",
-  children,
-  className,
-  size = "normal",
-  outline = false,
-  noGutter = false,
-  noHorizontalBorders = false,
-  ...rest
-}: PaperProps<T>) {
-  const classes = clsx(
-    s.paper,
-    s[size],
+export const Paper = React.forwardRef(
+  (
     {
-      [s.outline]: outline,
-      [s["no-gutter"]]: noGutter,
-      [s["no-horizontal-borders"]]: noHorizontalBorders,
-    },
-    className
-  );
+      children,
+      className,
+      size = "normal",
+      outline = false,
+      noGutter = false,
+      noHorizontalBorders = false,
+      ...rest
+    }: PaperProps,
+    ref: React.Ref<HTMLDivElement>
+  ) => {
+    const classes = clsx(
+      s.paper,
+      s[size],
+      {
+        [s.outline]: outline,
+        [s["no-gutter"]]: noGutter,
+        [s["no-horizontal-borders"]]: noHorizontalBorders,
+      },
+      className
+    );
 
-  return (
-    <Component className={classes} {...rest}>
-      {children}
-    </Component>
-  );
-}
+    return (
+      <div ref={ref} className={classes} {...rest}>
+        {children}
+      </div>
+    );
+  }
+);

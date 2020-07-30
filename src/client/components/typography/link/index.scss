@@ -5,4 +5,9 @@
   &:hover {
     text-decoration: underline;
   }
+  &.button {
+    font-size: get-theme-prop(typography, sizes, 1);
+    font-weight: get-theme-prop(typography, weights, 2);
+    letter-spacing: 1px;
+  }
 }

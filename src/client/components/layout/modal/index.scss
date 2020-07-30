@@ -1,0 +1,54 @@
+@import "~@/client/styles/variables";
+
+.modal {
+  align-items: center;
+  background-color: get-shadow-color(background, 0.75);
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+  left: 0;
+  position: fixed;
+  top: 0;
+  width: 100vw;
+  z-index: get-theme-prop(layout, zindex, modal);
+  &.enter {
+    opacity: 0;
+    .content {
+      transform: translate3d(0, -15px, 0);
+    }
+  }
+  &.enter-active {
+    opacity: 1;
+    transition: transition((opacity));
+    .content {
+      transform: translate3d(0, 0, 0);
+      transition: transition((transform));
+    }
+  }
+  &.enter-done {
+    opacity: 1;
+    .content {
+      transform: translate3d(0, 0, 0);
+    }
+  }
+  &.exit {
+    opacity: 1;
+    .content {
+      transform: translate3d(0, 0, 0);
+    }
+  }
+  &.exit-active {
+    opacity: 0;
+    transition: transition((opacity));
+    .content {
+      transform: translate3d(0, -15px, 0);
+      transition: transition((transform));
+    }
+  }
+  &.exit-done {
+    opacity: 0;
+    .content {
+      transform: translate3d(0, -15px, 0);
+    }
+  }
+}

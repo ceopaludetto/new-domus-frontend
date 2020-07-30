@@ -1,0 +1,7 @@
+#import "./fragments/user-values.graphql"
+
+query ShowAllUsers {
+  showUsers {
+    ...UserValues
+  }
+}

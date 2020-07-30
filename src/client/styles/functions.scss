@@ -3,7 +3,7 @@
     @if type-of($val) == list {
       $n: ();
       @each $v in $val {
-        $n: append($n, if(type-of($v) == "number", $v / $rem-ratio, $v));
+        $n: append($n, if(type-of($v) == "number" and $v != 0, $v / $rem-ratio, $v));
       }
       @return $n;
     }
@@ -14,7 +14,7 @@
         $n: map-merge(
           $n,
           (
-            $k: if(type-of($v) == "number", $v / $rem-ratio, $v),
+            $k: if(type-of($v) == "number" and $v != 0, $v / $rem-ratio, $v),
           )
         );
       }
@@ -100,4 +100,30 @@
   }
 
   @return $value;
+}
+
+@mixin disabled {
+  &:disabled,
+  &[disabled] {
+    @content;
+  }
+}
+
+@mixin not-disabled {
+  &:not(:disabled),
+  &:not([disabled]) {
+    @content;
+  }
+}
+
+@mixin on-dark {
+  @media (prefers-color-scheme: dark) {
+    @content;
+  }
+}
+
+@mixin on-light {
+  @media (prefers-color-scheme: light) {
+    @content;
+  }
 }

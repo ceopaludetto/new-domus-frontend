@@ -6,7 +6,7 @@ $align: flex-start flex-end center baseline stretch;
 .row {
   display: flex;
   flex-wrap: wrap;
-  margin: 0 -#{get-theme-prop(layout, sizes, 3)};
+  margin: 0 -#{get-theme-prop(layout, gap)};
   @each $k, $v in get-theme-prop(layout, breakpoints) {
     @media (min-width: $v) {
       @for $i from 1 through length($justify) {
@@ -24,15 +24,29 @@ $align: flex-start flex-end center baseline stretch;
 }
 
 .col {
-  padding: 0 #{get-theme-prop(layout, sizes, 3)};
+  padding: 0 #{get-theme-prop(layout, gap)};
   @each $k, $v in get-theme-prop(layout, breakpoints) {
     @media (min-width: $v) {
       &.#{$k} {
         flex: 1;
       }
-      @for $i from 1 through 12 {
+      @for $i from 1 through get-theme-prop(layout, base) {
         &.#{$k}-#{$i} {
-          flex: 0 0 #{100% / 12 * $i};
+          flex: 0 0 #{100% / get-theme-prop(layout, base) * $i};
+        }
+      }
+    }
+  }
+}
+
+.grid-template {
+  column-gap: #{get-theme-prop(layout, gap) * 2};
+  grid-template-columns: repeat(get-theme-prop(layout, base), minmax(0, 1fr));
+  @each $k, $v in get-theme-prop(layout, breakpoints) {
+    @media (min-width: $v) {
+      @for $i from 1 through get-theme-prop(layout, base) {
+        .#{$k}-#{$i} {
+          grid-column: span #{$i};
         }
       }
     }
@@ -68,42 +82,86 @@ $props: (
   p: padding,
 );
 
-@for $i from 1 through length(get-theme-prop(layout, sizes)) {
-  @each $pk, $pv in $props {
-    .#{$pk}-#{$i} {
-      #{$pv}: get-theme-prop(layout, sizes, $i);
-    }
-    .-#{$pk}-#{$i} {
-      #{$pv}: -#{get-theme-prop(layout, sizes, $i)};
-    }
-    @each $k, $v in $sides {
-      @if type-of($v) == list {
-        .#{$pk}#{$k}-#{$i} {
-          @for $j from 1 through length($v) {
-            #{$pv}-#{nth($v, $j)}: get-theme-prop(layout, sizes, $i);
+@each $bk, $bv in get-theme-prop(layout, breakpoints) {
+  @media (min-width: $bv) {
+    @each $pk, $pv in $props {
+      .#{$pk}-#{$bk}-0 {
+        #{$pv}: 0;
+      }
+      @each $k, $v in $sides {
+        @if type-of($v) == list {
+          .#{$pk}#{$k}-#{$bk}-0 {
+            @for $j from 1 through length($v) {
+              #{$pv}-#{nth($v, $j)}: 0;
+            }
+          }
+        } @else {
+          .#{$pk}#{$k}-#{$bk}-0 {
+            #{$pv}-#{$v}: 0;
           }
         }
-        .-#{$pk}#{$k}-#{$i} {
-          @for $j from 1 through length($v) {
-            #{$pv}-#{nth($v, $j)}: -#{get-theme-prop(layout, sizes, $i)};
+      }
+    }
+    @for $i from 1 through length(get-theme-prop(layout, sizes)) {
+      @each $pk, $pv in $props {
+        .#{$pk}-#{$bk}-#{$i} {
+          #{$pv}: get-theme-prop(layout, sizes, $i);
+        }
+        .-#{$pk}-#{$bk}-#{$i} {
+          #{$pv}: -#{get-theme-prop(layout, sizes, $i)};
+        }
+        @each $k, $v in $sides {
+          @if type-of($v) == list {
+            .#{$pk}#{$k}-#{$bk}-#{$i} {
+              @for $j from 1 through length($v) {
+                #{$pv}-#{nth($v, $j)}: get-theme-prop(layout, sizes, $i);
+              }
+            }
+            .-#{$pk}#{$k}-#{$bk}-#{$i} {
+              @for $j from 1 through length($v) {
+                #{$pv}-#{nth($v, $j)}: -#{get-theme-prop(layout, sizes, $i)};
+              }
+            }
+          } @else {
+            .#{$pk}#{$k}-#{$bk}-#{$i} {
+              #{$pv}-#{$v}: get-theme-prop(layout, sizes, $i);
+            }
+            .-#{$pk}#{$k}-#{$bk}-#{$i} {
+              #{$pv}-#{$v}: -#{get-theme-prop(layout, sizes, $i)};
+            }
           }
-        }
-      } @else {
-        .#{$pk}#{$k}-#{$i} {
-          #{$pv}-#{$v}: get-theme-prop(layout, sizes, $i);
-        }
-        .-#{$pk}#{$k}-#{$i} {
-          #{$pv}-#{$v}: -#{get-theme-prop(layout, sizes, $i)};
         }
       }
     }
   }
 }
 
-$displays: flex, inline-flex, block, inline-block;
+$displays: flex, inline-flex, block, inline-block, grid;
 
 @for $i from 1 through length($displays) {
   .#{nth($displays, $i)} {
     display: #{nth($displays, $i)};
+  }
+}
+
+@each $bk, $bv in get-theme-prop(layout, breakpoints) {
+  @media (min-width: $bv) {
+    @for $i from 1 through get-theme-prop(layout, base) {
+      .order-#{$bk}-#{$i} {
+        order: $i;
+      }
+    }
+  }
+}
+
+$texts: left right center;
+
+@each $bk, $bv in get-theme-prop(layout, breakpoints) {
+  @media (min-width: $bv) {
+    @for $i from 1 through length($texts) {
+      .text-align-#{$bk}-#{nth($texts, $i)} {
+        text-align: #{nth($texts, $i)};
+      }
+    }
   }
 }

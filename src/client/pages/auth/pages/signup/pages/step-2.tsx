@@ -1,23 +1,23 @@
 import * as React from "react";
-import { useForm, FormContext } from "react-hook-form";
+import { useForm, FormProvider } from "react-hook-form";
 
+import { yupResolver } from "@hookform/resolvers";
 import clsx from "clsx";
 
 import { FormControl, Button, Label, PasswordHelper } from "@/client/components";
 import { SignUpStep2Schema, SignUpStep2Values } from "@/client/helpers/validations/signup.schema";
-import { StepperContext, useYupValidationResolver, useMultipleVisibility } from "@/client/hooks";
+import { StepperContext, useMultipleVisibility } from "@/client/hooks";
 import u from "@/client/styles/utils.scss";
 import { clean } from "@/client/utils/clean";
 
 import { WizardContext } from "../providers";
 
 export default function Step2() {
-  const validationResolver = useYupValidationResolver(SignUpStep2Schema);
   const [getVisibilityProps] = useMultipleVisibility(["password", "repeatPassword"]);
   const { setValues, values } = React.useContext(WizardContext);
   const { next, prev } = React.useContext(StepperContext);
   const methods = useForm<SignUpStep2Values>({
-    validationResolver,
+    resolver: yupResolver(SignUpStep2Schema),
     defaultValues: values,
   });
   const password = methods.watch("password");
@@ -30,32 +30,48 @@ export default function Step2() {
     };
   }, [password]);
 
-  function submit(data: SignUpStep2Values) {
+  const submit = methods.handleSubmit((data) => {
     if (values) {
       setValues({ ...values, ...clean(data) });
       next();
     }
-  }
+  });
 
   return (
-    <FormContext {...methods}>
-      <form noValidate onSubmit={methods.handleSubmit(submit)}>
-        <div className={u.row}>
-          <div className={clsx(u.col, u["xs-12"], u.md)}>
-            <FormControl name="password" id="password" label="Senha" required {...getVisibilityProps("password")} />
+    <FormProvider {...methods}>
+      <form noValidate onSubmit={submit}>
+        <div className={clsx(u.grid, u["grid-template"])}>
+          <div className={clsx(u["xs-12"], u["md-6"], u["order-xs-2"], u["order-md-1"], u["mt-xs-4"], u["mt-md-0"])}>
+            <FormControl
+              autoFocus
+              name="password"
+              id="password"
+              label="Senha"
+              required
+              autoComplete="off"
+              aria-describedby="password-constraint-1 password-constraint-2 password-constraint-3"
+              {...getVisibilityProps("password")}
+            />
             <FormControl
               name="repeatPassword"
               id="repeatPassword"
               label="Repetir Senha"
               required
+              autoComplete="off"
               {...getVisibilityProps("repeatPassword")}
             />
           </div>
-          <div className={clsx(u.col, u["xs-12"], u.md)}>
+          <div className={clsx(u["xs-12"], u["md-6"], u["order-xs-1"], u["order-md-2"])}>
             <Label htmlFor="password">Dicas de Senha</Label>
-            <PasswordHelper active={passwordHelp.oneNumber}>Pelo menos 1 número.</PasswordHelper>
-            <PasswordHelper active={passwordHelp.oneUpper}>Pelo menos 1 caractere maiúsculo.</PasswordHelper>
-            <PasswordHelper active={passwordHelp.min}>No mínimo 6 caracteres.</PasswordHelper>
+            <PasswordHelper id="password-constraint-1" active={passwordHelp.oneNumber}>
+              Pelo menos 1 número.
+            </PasswordHelper>
+            <PasswordHelper id="password-constraint-2" active={passwordHelp.oneUpper}>
+              Pelo menos 1 caractere maiúsculo.
+            </PasswordHelper>
+            <PasswordHelper id="password-constraint-3" active={passwordHelp.min}>
+              No mínimo 6 caracteres.
+            </PasswordHelper>
           </div>
         </div>
         <div className={clsx(u.row, u["justify-content-xs-flex-end"])}>
@@ -69,6 +85,6 @@ export default function Step2() {
           </div>
         </div>
       </form>
-    </FormContext>
+    </FormProvider>
   );
 }

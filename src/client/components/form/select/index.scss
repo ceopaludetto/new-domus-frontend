@@ -1,0 +1,104 @@
+@import "~@/client/styles/variables";
+
+.select {
+  position: relative;
+  .content {
+    width: 100%;
+    z-index: get-theme-prop(layout, zindex, select);
+    .menu {
+      &.enter {
+        opacity: 0;
+        transform: translate3d(0, -15px, 0);
+      }
+      &.enter-active {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+        transition: transition((opacity, transform));
+      }
+      &.enter-done {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+      }
+      &.exit {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+      }
+      &.exit-active {
+        opacity: 0;
+        transform: translate3d(0, -15px, 0);
+        transition: transition((opacity, transform));
+      }
+      &.exit-done {
+        opacity: 0;
+        transform: translate3d(0, -15px, 0);
+      }
+    }
+  }
+}
+
+.control {
+  input {
+    cursor: default;
+    user-select: none;
+  }
+}
+
+.menu {
+  border-radius: get-theme-prop(layout, shape);
+  overflow: hidden;
+  padding: 0 !important;
+  @include on-dark {
+    background-color: get-color(paper, lighten-1) !important;
+  }
+  @include on-light {
+    background-color: get-color(background, lighten-1) !important;
+  }
+  .scroll {
+    max-height: 300px;
+    overflow: auto;
+    padding: get-theme-prop(layout, sizes, 4) 0 !important;
+    @include on-dark {
+      scrollbar-color: get-color(paper, darken-1) get-color(paper, lighten-1);
+      &::-webkit-scrollbar-track {
+        background-color: get-color(paper, lighten-1);
+      }
+      &::-webkit-scrollbar-thumb {
+        background-color: get-color(paper, darken-1);
+      }
+    }
+    @include on-light {
+      scrollbar-color: get-color(background) get-color(background, lighten-2);
+      &::-webkit-scrollbar-track {
+        background-color: get-color(background, lighten-2);
+      }
+      &::-webkit-scrollbar-thumb {
+        background-color: get-color(background);
+      }
+    }
+    .item {
+      cursor: pointer;
+      padding: get-theme-prop(layout, sizes, 4);
+      width: 100%;
+      @include on-dark {
+        background-color: get-color(paper, lighten-1);
+        &.active {
+          background-color: get-color(paper, lighten-2) !important;
+          color: get-color(paper, contrast) !important;
+        }
+      }
+      @include on-light {
+        background-color: get-color(background, lighten-1);
+        &.active {
+          background-color: get-color(paper, darken-2) !important;
+          color: get-color(paper, contrast) !important;
+        }
+      }
+      &:focus {
+        outline: none;
+      }
+    }
+  }
+  &:focus {
+    outline: none;
+  }
+}

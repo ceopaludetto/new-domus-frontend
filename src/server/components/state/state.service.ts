@@ -1,24 +1,23 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/sequelize";
 
-import type { ShowAll, Mapped } from "@/server/utils/common.dto";
-
-import { State } from "./state.model";
+import { State } from "@/server/models";
+import type { Mapped, ShowAllWithSort } from "@/server/utils/common.dto";
 
 @Injectable()
 export class StateService {
   public constructor(@InjectModel(State) private readonly stateModel: typeof State) {}
 
-  public async showAll({ skip = 0, first }: ShowAll, mapped: Mapped<State>) {
+  public async showAll({ skip = 0, take, sort }: ShowAllWithSort, mapped?: Mapped) {
     return this.stateModel.findAll({
-      attributes: mapped.keys(),
       offset: skip,
-      limit: first,
-      include: mapped.includes(),
+      limit: take,
+      order: sort,
+      ...mapped,
     });
   }
 
-  public async findByID(id: string, mapped: Mapped<State>) {
-    return this.stateModel.findByPk(id, { attributes: mapped.keys(), include: mapped.includes() });
+  public async findByID(id: string, mapped?: Mapped) {
+    return this.stateModel.findByPk(id, mapped);
   }
 }

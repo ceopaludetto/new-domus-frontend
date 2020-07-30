@@ -1,4 +1,4 @@
-/* eslint-disable global-require, @typescript-eslint/camelcase */
+/* eslint-disable global-require */
 const eslintFormatter = require("react-dev-utils/eslintFormatter");
 
 const LodashPlugin = require("lodash-webpack-plugin");
@@ -9,18 +9,17 @@ const safePostCssParser = require("postcss-safe-parser");
 const TerserPlugin = require("terser-webpack-plugin");
 const webpack = require("webpack");
 
-const babelOptions = require("../babel.config");
+const babel = require("../babel.config");
 
 const isProd = process.env.NODE_ENV === "production";
-
 const isDebug = process.env.INSPECT_BRK || process.env.INSPECT || false;
 
 function resolveDevTool() {
-  if (isDebug) {
-    return "cheap-module-eval-source-map";
+  if (isDebug || isProd) {
+    return "source-map";
   }
 
-  return isProd ? "source-map" : "inline-source-map";
+  return "inline-source-map";
 }
 
 module.exports = (isServer = false) => ({
@@ -33,9 +32,6 @@ module.exports = (isServer = false) => ({
     ignored: [/node_modules/, /dist/],
   },
   optimization: {
-    removeAvailableModules: isProd,
-    removeEmptyChunks: isProd,
-    minimize: isProd,
     minimizer: [
       new TerserPlugin({
         sourceMap: true,
@@ -44,24 +40,17 @@ module.exports = (isServer = false) => ({
         extractComments: false,
         terserOptions: {
           safari10: !isServer,
+          module: true,
           keep_classnames: isServer,
           keep_fnames: isServer,
+          sourceMap: true,
+          compress: {
+            ecma: isServer ? 8 : 5,
+          },
           output: {
             ecma: isServer ? 8 : 5,
             comments: false,
           },
-          parse: {
-            ecma: 8,
-          },
-          compress: {
-            comparisons: true,
-            inline: 2,
-          },
-          mangle: !isServer
-            ? {
-                safari10: true,
-              }
-            : null,
         },
       }),
       new OptimizeCSSAssetsPlugin({
@@ -131,14 +120,14 @@ module.exports = (isServer = false) => ({
             use: [
               !isServer && !isProd && { loader: "style-loader" },
               !isServer && isProd && { loader: MiniCssPlugin.loader, options: { esModule: true, sourceMap: true } },
-              "css-modules-types-generator-loader",
+              { loader: "css-modules-types-generator-loader", options: { index: true } },
               {
                 loader: "css-loader",
                 options: {
                   esModule: true,
                   onlyLocals: isServer,
-                  importLoaders: 2,
                   sourceMap: true,
+                  importLoaders: 2,
                   modules: {
                     localIdentName: isProd ? "_[hash:base64:5]" : "[path][name]__[local]--[hash:base64:5]",
                   },
@@ -165,7 +154,7 @@ module.exports = (isServer = false) => ({
                           fontFace: true,
                           defaultExtractor: (content) => content.match(/[\w-/:]+(?<!:)/g) || [],
                         }),
-                      require("postcss-normalize")(),
+                      require("postcss-normalize"),
                     ].filter(Boolean),
                 },
               },
@@ -189,7 +178,7 @@ module.exports = (isServer = false) => ({
                   cacheDirectory: true,
                   cacheCompression: !isProd,
                   compact: !isProd,
-                  ...babelOptions(isServer),
+                  ...babel(isServer),
                 },
               },
               {
@@ -224,20 +213,19 @@ module.exports = (isServer = false) => ({
     alias: {
       "@": path.resolve("src"),
       "lodash-es": "lodash",
-      "./hotPoll.js": require.resolve("./hotPoll.js"),
+      "webpack/hot/poll": require.resolve("webpack/hot/poll"),
     },
-    extensions: [".js", ".jsx", ".tsx", ".ts", ".json", ".scss", ".gql", ".graphql"],
+    extensions: [".js", ".jsx", ".tsx", ".ts", ".json", ".scss", ".graphql"],
   },
   plugins: [
     new webpack.EnvironmentPlugin({
       TARGET: isServer ? "server" : "web",
-      PUBLIC_PATH: "/static/",
       PUBLIC_URL: "/static",
       STATIC_FOLDER: path.resolve("dist", "static"),
       MANIFEST: path.resolve("dist", "static", "manifest.json"),
       BASE_DIR: path.resolve("."),
     }),
-    new webpack.WatchIgnorePlugin([/\.scss\.d\.ts/g]),
+    new webpack.WatchIgnorePlugin([/\.scss\.d\.ts/g, "src/server/schema.gql"]),
     new LodashPlugin(),
     isProd &&
       new MiniCssPlugin({

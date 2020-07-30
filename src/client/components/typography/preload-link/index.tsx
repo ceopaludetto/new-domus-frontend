@@ -8,19 +8,17 @@ const hasPathname = (to: { pathname: string } | string): to is { pathname: strin
 type PreloadLinkProps<T extends React.ElementType<any> = Link> = {
   as?: T;
   to: { pathname: string } | string;
-  nested?: boolean;
 } & React.ComponentProps<T>;
 
 export function PreloadLink<T extends React.ComponentType<any> = Link>({
   to,
   children,
   onClick,
-  nested = false,
   as: Component = Link,
   ...rest
 }: PreloadLinkProps<T>) {
   const path = hasPathname(to) ? to.pathname : to;
-  const [handleClick] = usePreload<T>(nested, onClick);
+  const [handleClick] = usePreload<T>(onClick);
 
   return (
     <Component onClick={handleClick(path)} {...rest}>

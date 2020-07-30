@@ -1,8 +1,8 @@
 node_modules
 dist
 
-# env/config.*.yml
-# !env/config.example.yml
+env/config.*.yml
+!env/config.example.yml
 
 .vscode
 tmp
@@ -10,6 +10,5 @@ tmp
 *.scss.d.ts
 *.gql.d.ts
 src/client/graphql/operations.ts
-
 
 coverage

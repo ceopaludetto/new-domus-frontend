@@ -1,30 +1,22 @@
 import * as React from "react";
 import { useHistory } from "react-router-dom";
 
-import { useApolloClient } from "@apollo/react-hooks";
+import { useApolloClient } from "@apollo/client";
 
 import { ProgressContext } from "@/client/providers/progress";
 import { preload } from "@/client/utils/preload";
 
-type UsePreloadReturn<T> = [
-  (to: string) => (e: React.MouseEvent<T>) => Promise<void>,
-  {
-    run: (to: string) => Promise<void>;
-  }
-];
+type UsePreloadReturn<T> = [(to: string) => (e: React.MouseEvent<T>) => Promise<void>, (to: string) => Promise<void>];
 
-export function usePreload<T>(
-  nested = false,
-  onClick?: (e: React.MouseEvent<T, MouseEvent>) => void
-): UsePreloadReturn<T> {
-  const { start, changeStep, step, done } = React.useContext(ProgressContext);
+export function usePreload<T>(onClick?: (e: React.MouseEvent<T, MouseEvent>) => void): UsePreloadReturn<T> {
+  const { toggle } = React.useContext(ProgressContext);
   const client = useApolloClient();
   const history = useHistory();
 
   async function run(to: string) {
-    start();
-    await preload(to, { client, nested, changeStep, step });
-    done();
+    toggle();
+    await preload(to, { client });
+    toggle();
   }
 
   function handleClick(to: string) {
@@ -47,5 +39,5 @@ export function usePreload<T>(
     };
   }
 
-  return [handleClick, { run }];
+  return [handleClick, run];
 }

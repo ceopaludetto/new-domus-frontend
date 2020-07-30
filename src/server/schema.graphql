@@ -1,0 +1,208 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Address {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  zip: String!
+  address: String!
+  number: String!
+  cityID: ID!
+  condominiumID: ID!
+  condominium: Condominium!
+  city: City!
+}
+
+input AddressInsertInput {
+  zip: String!
+  address: String!
+  number: String!
+  cityID: ID!
+}
+
+input AuthenticationInput {
+  login: String!
+  password: String!
+}
+
+type Block {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  name: String
+  number: Float!
+  condominiumID: ID!
+  condominium: Condominium!
+  locals: [Local!]
+}
+
+type City {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  name: String!
+  code: Float!
+  slug: String!
+  stateID: ID!
+  state: State!
+}
+
+input CitySortInput {
+  name: Order
+  slug: Order
+}
+
+type Condominium {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  companyName: String!
+  cnpj: String!
+  character: String!
+  people: [Person!]!
+  blocks: [Block!]!
+  locals: [Local!]!
+  address: Address!
+}
+
+input CondominiumInsertInput {
+  companyName: String!
+  cnpj: String!
+  character: String = "#"
+  address: AddressInsertInput!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+enum Gender {
+  M
+  F
+  N
+}
+
+type Local {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  name: String!
+  description: String
+  capacity: Float!
+  image: String
+  blockID: ID
+  condominiumID: ID!
+  block: Block
+  condominium: Condominium!
+}
+
+type Mutation {
+  createCondominium(input: CondominiumInsertInput!): Int!
+  login(input: AuthenticationInput!): User!
+  register(input: UserInsertInput!): User!
+}
+
+enum Order {
+  ASC
+  DESC
+}
+
+type Person {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  name: String!
+  lastName: String!
+  email: String!
+  gender: Gender!
+  cpf: String!
+  birthdate: DateTime!
+  phones: [Phone!]!
+  user: User!
+  condominiums: [Condominium!]!
+}
+
+input PersonInsertInput {
+  name: String!
+  lastName: String!
+  email: String!
+  cpf: String!
+  birthdate: DateTime!
+  gender: Gender!
+  phones: [PhoneInsertInput!]!
+  condominiums: [CondominiumInsertInput!]!
+}
+
+type Phone {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  ddd: String!
+  number: String!
+  personID: ID!
+  person: Person!
+}
+
+input PhoneInsertInput {
+  ddd: String!
+  number: String!
+}
+
+type Query {
+  showCondominiums(take: Int, skip: Int = 0): [Condominium!]!
+  findCondominiumByID(id: ID!): Condominium!
+  showPeople(take: Int, skip: Int = 0): [Person!]!
+  findPersonByID(id: ID!): Person!
+  showUsers(take: Int, skip: Int = 0): [User!]!
+  findUserByID(id: ID!): User!
+  findUserByLogin(login: String!): User!
+  profile: User!
+  showStates(sort: StateSortInput, take: Int, skip: Int = 0): [State!]!
+  findStateByID(id: ID!): State!
+  showCities(take: Int, skip: Int = 0): [City!]!
+  findCityByID(id: ID!): City!
+  findCitiesByStateID(id: ID!): [City!]!
+}
+
+type State {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  name: String!
+  initials: String!
+  code: Float!
+  cities: [City!]!
+}
+
+input StateSortInput {
+  name: Order
+  initials: Order
+  cities: CitySortInput
+}
+
+type User {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  login: String!
+  personID: ID!
+  person: Person!
+}
+
+input UserInsertInput {
+  login: String!
+  password: String!
+  person: PersonInsertInput!
+}

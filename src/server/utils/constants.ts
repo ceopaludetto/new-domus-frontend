@@ -9,9 +9,15 @@ export const USER = "User";
 export const PERSON = "Person";
 export const STATE = "State";
 export const CITY = "City";
+export const CONDOMINIUM = "Condominium";
+export const PERSON_CONDOMINIUM = `${PERSON}${CONDOMINIUM}`;
+export const LOCAL = "Local";
+export const BLOCK = "Block";
+export const PHONE = "Phone";
+export const ADDRESS = "Address";
 
 // GraphQL
-export const COMPLEXITY = 20;
+export const COMPLEXITY = 25;
 
 // Mailer
 export const MAILER = "@MAILER";

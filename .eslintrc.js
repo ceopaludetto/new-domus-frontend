@@ -1,6 +1,7 @@
 const path = require("path");
 
 module.exports = {
+  root: true,
   parser: "@typescript-eslint/parser",
   env: {
     node: true,
@@ -8,21 +9,15 @@ module.exports = {
     jest: true,
   },
   extends: [
-    "airbnb",
+    "airbnb-typescript",
     "airbnb/hooks",
     "plugin:@typescript-eslint/recommended",
-    "plugin:import/errors",
-    "plugin:import/warnings",
-    "plugin:import/typescript",
+    "plugin:promise/recommended",
     "prettier",
     "prettier/react",
     "prettier/@typescript-eslint",
   ],
-  plugins: ["@typescript-eslint", "import-helpers", "prettier"],
-  globals: {
-    Atomics: "readonly",
-    SharedArrayBuffer: "readonly",
-  },
+  plugins: ["@typescript-eslint", "promise", "import-helpers", "prettier"],
   parserOptions: {
     ecmaFeatures: {
       jsx: true,
@@ -33,18 +28,24 @@ module.exports = {
     project: path.resolve("tsconfig.json"),
   },
   rules: {
+    // Prettier for autofix
     "prettier/prettier": "error",
+    // Some logic need reassign (such sequelize hooks)
     "no-param-reassign": "off",
+    // DI in Nest
     "no-useless-constructor": "off",
-    "max-classes-per-file": ["error", 4],
     "class-methods-use-this": "off",
-    "@typescript-eslint/no-var-requires": "off",
+    // Nest dtos
+    "max-classes-per-file": ["error", 4],
+    // Use inference of type
     "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    // Allow any in some logic
     "@typescript-eslint/no-explicit-any": "off",
-    "@typescript-eslint/no-empty-function": 'off',
+    // In server-side cycles are common
+    'import/no-cycle': ['error', { maxDepth: 1 }],
+    // Import ordering and allow no default
     "import/prefer-default-export": "off",
-    "import/no-extraneous-dependencies": ["error", { devDependencies: true }],
-    "import/no-cycle": ["error", { maxDepth: 1 }],
     "import-helpers/order-imports": [
       "warn",
       {
@@ -53,32 +54,14 @@ module.exports = {
         alphabetize: { order: "asc", ignoreCase: true },
       },
     ],
-    "react/jsx-filename-extension": [
-      "warn",
-      {
-        extensions: [".jsx", ".tsx"],
-      },
-    ],
+    // Some rules that causes some issues
     "react/button-has-type": "off",
+    "react/require-default-props": "off",
     "react/prop-types": "off",
     "react/jsx-props-no-spreading": "off",
     "jsx-a11y/label-has-for": "off",
-    "import/extensions": [
-      "error",
-      "ignorePackages",
-      {
-        js: "never",
-        jsx: "never",
-        ts: "never",
-        tsx: "never",
-      },
-    ],
   },
   settings: {
-    "import/parsers": {
-      "@typescript-eslint/parser": [".ts", ".tsx"],
-    },
-    "import/extensions": [".js", ".jsx", ".ts", ".tsx", ".scss"],
     "import/resolver": {
       typescript: {},
     },
@@ -88,6 +71,13 @@ module.exports = {
       files: ['src/server/models/*.ts'],
       rules: {
         "import/no-cycle": 'off',
+      }
+    },
+    {
+      files: ['configuration/**/*.js', 'scripts/**/*.js', 'src/client/utils/setup-test.tsx', 'babel.config.js', 'jest.config.js', 'database.config.js'],
+      rules: {
+        '@typescript-eslint/no-var-requires': 'off',
+        "import/no-extraneous-dependencies": ["error", { devDependencies: true }],
       }
     }
   ]

@@ -1,48 +1,45 @@
 import * as React from "react";
-import { useForm, FormContext } from "react-hook-form";
+import { Helmet } from "react-helmet-async";
+import { useForm, FormProvider } from "react-hook-form";
 
+import { yupResolver } from "@hookform/resolvers";
 import clsx from "clsx";
 
 import { SubTitle, Title, FormControl, Button, PreloadLink, Link } from "@/client/components";
 import { ForgotSchema, ForgotValues } from "@/client/helpers/validations/forgot.schema";
-import { useYupValidationResolver } from "@/client/hooks";
 import u from "@/client/styles/utils.scss";
 
 export default function Forgot() {
-  const validationResolver = useYupValidationResolver(ForgotSchema);
-  const methods = useForm<ForgotValues>({ validationResolver });
+  const methods = useForm<ForgotValues>({ resolver: yupResolver(ForgotSchema) });
 
-  function submit(data: ForgotValues) {
+  const submit = methods.handleSubmit((data) => {
     console.log(data); // eslint-disable-line no-console
     /**
      * TODO:
      * [] Forgot logic
      */
-  }
+  });
 
   return (
-    <FormContext {...methods}>
-      <form noValidate onSubmit={methods.handleSubmit(submit)}>
+    <FormProvider {...methods}>
+      <form noValidate autoComplete="on" onSubmit={submit}>
+        <Helmet>
+          <title>Esqueceu a senha</title>
+        </Helmet>
         <SubTitle>Esqueceu a senha</SubTitle>
         <Title>Recuperar Senha</Title>
-        <FormControl
-          label="Login"
-          name="login"
-          id="login"
-          helperText={
-            <PreloadLink as={Link} to="/auth/signin">
-              Está perdido?
-            </PreloadLink>
-          }
-        />
-        <div className={clsx(u.row, u["justify-content-xs-flex-end"])}>
-          <div className={u.col}>
-            <Button variant="raised" type="submit">
-              Recuperar
-            </Button>
-          </div>
+        <FormControl label="Login" name="login" id="login" autoFocus />
+        <div className={u["pt-xs-2"]}>
+          <Button disabled={methods.formState.isSubmitting} block variant="raised" type="submit">
+            Recuperar Senha
+          </Button>
+        </div>
+        <div className={clsx(u["text-align-xs-center"], u["mt-xs-5"])}>
+          <PreloadLink as={Link} button color="primary" to="/auth/signin">
+            Voltar para Login
+          </PreloadLink>
         </div>
       </form>
-    </FormContext>
+    </FormProvider>
   );
 }

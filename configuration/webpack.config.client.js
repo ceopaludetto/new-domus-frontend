@@ -1,9 +1,9 @@
-const errorOverlayMiddleware = require("react-dev-utils/errorOverlayMiddleware");
-
 const LoadablePlugin = require("@loadable/webpack-plugin");
+const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 const CompressionPlugin = require("compression-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const path = require("path");
+const StylelintWebpackPlugin = require("stylelint-webpack-plugin");
 const webpack = require("webpack");
 const merge = require("webpack-merge");
 
@@ -12,100 +12,89 @@ const baseConfig = require("./webpack.config.base");
 
 const isProd = process.env.NODE_ENV === "production";
 
-module.exports = merge(baseConfig(false), {
-  name: "client",
-  target: "web",
-  entry: [!isProd && "razzle-dev-utils/webpackHotDevClient", path.resolve("src", "client", "index.tsx")].filter(
-    Boolean
-  ),
-  optimization: {
-    splitChunks: {
-      chunks: "all",
-      cacheGroups: {
-        styles: {
-          name: "style",
-          chunks: "all",
-          test: /\.(s?css|sass)$/,
-          enforce: true, // force css in new chunks (ignores all other options)
+module.exports = (devPort = 3001) =>
+  merge(baseConfig(false), {
+    name: "client",
+    target: "web",
+    entry: [path.resolve("src", "client", "index.tsx")],
+    optimization: {
+      splitChunks: isProd
+        ? {
+            chunks: "all",
+            cacheGroups: {
+              styles: {
+                name: "style",
+                chunks: "all",
+                test: /\.(s?css|sass)$/,
+                enforce: true, // force css in new chunks (ignores all other options)
+              },
+            },
+          }
+        : false,
+      moduleIds: isProd ? "hashed" : false,
+      runtimeChunk: {
+        name: "runtime",
+      },
+    },
+    output: {
+      publicPath: isProd ? "/static/" : `${envs.PROTOCOL}://${envs.HOST}:${devPort}/static/`,
+      path: path.resolve("dist", "static"),
+      libraryTarget: "var",
+      filename: isProd ? `js/[name].[contenthash:8].js` : "index.js",
+      chunkFilename: isProd ? `js/[name].[contenthash:8].js` : "[name].chunk.js",
+      futureEmitAssets: isProd,
+      devtoolModuleFilenameTemplate: (info) => path.resolve(info.resourcePath).replace(/\\/g, "/"),
+    },
+    devServer: {
+      disableHostCheck: true,
+      clientLogLevel: "none",
+      compress: true,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+      },
+      historyApiFallback: {
+        disableDotRule: true,
+      },
+      hot: true,
+      noInfo: true,
+      overlay: false,
+      publicPath: "/static/",
+      host: envs.HOST,
+      port: envs.DEV_PORT,
+      quiet: true,
+      watchOptions: {
+        ignored: ["node_modules/**", "src/**/*.d.ts", "dist/**", "src/server/schema.gql"],
+      },
+    },
+    node: {
+      module: "empty",
+      dgram: "empty",
+      dns: "mock",
+      fs: "empty",
+      http2: "empty",
+      net: "empty",
+      tls: "empty",
+      child_process: "empty",
+    },
+    plugins: [
+      isProd && new webpack.optimize.AggressiveMergingPlugin(),
+      isProd &&
+        new CompressionPlugin({
+          exclude: /(\.map|\.LICENSE|\.json)/,
+          cache: true,
+          minRatio: Number.MAX_SAFE_INTEGER,
+        }),
+      !isProd && new ReactRefreshWebpackPlugin({ overlay: { sockPort: devPort } }),
+      new StylelintWebpackPlugin(),
+      new CopyWebpackPlugin([
+        {
+          from: path.resolve("public"),
+          to: path.resolve("dist", "static", "public"),
         },
-      },
-    },
-    moduleIds: isProd ? "hashed" : false,
-    runtimeChunk: {
-      name: "runtime",
-    },
-  },
-  output: {
-    pathinfo: true,
-    publicPath: isProd ? "/static/" : `${envs.PROTOCOL}://${envs.HOST}:${envs.DEV_PORT}/static/`,
-    path: path.resolve("dist", "static"),
-    libraryTarget: "var",
-    filename: isProd ? "js/[name].[contenthash:8].js" : "index.js",
-    chunkFilename: isProd ? "js/[name].[contenthash:8].js" : "[name].chunk.js",
-    futureEmitAssets: true,
-    devtoolModuleFilenameTemplate: (info) => path.resolve(info.resourcePath).replace(/\\/g, "/"),
-  },
-  devServer: {
-    disableHostCheck: true,
-    clientLogLevel: "none",
-    compress: true,
-    headers: {
-      "Access-Control-Allow-Origin": "*",
-    },
-    historyApiFallback: {
-      disableDotRule: true,
-    },
-    hot: true,
-    noInfo: true,
-    overlay: false,
-    publicPath: "/static/",
-    host: envs.HOST,
-    port: envs.DEV_PORT,
-    quiet: true,
-    watchOptions: {
-      ignored: ["node_modules/**", "src/**/*.d.ts", "dist/**"],
-    },
-    before(app) {
-      app.use(errorOverlayMiddleware());
-    },
-  },
-  node: {
-    module: "empty",
-    dgram: "empty",
-    dns: "mock",
-    fs: "empty",
-    http2: "empty",
-    net: "empty",
-    tls: "empty",
-    // eslint-disable-next-line @typescript-eslint/camelcase
-    child_process: "empty",
-  },
-  plugins: [
-    ...(isProd
-      ? [
-          new webpack.HashedModuleIdsPlugin(),
-          new webpack.optimize.AggressiveMergingPlugin(),
-          new CompressionPlugin({
-            exclude: /(\.map|\.LICENSE|\.json)/,
-            cache: true,
-            minRatio: Number.MAX_SAFE_INTEGER,
-          }),
-        ]
-      : [
-          new webpack.HotModuleReplacementPlugin({
-            multiStep: true,
-            quiet: true,
-          }),
-        ]),
-    new CopyWebpackPlugin([
-      {
-        from: path.resolve("public"),
-        to: path.resolve("dist", "static", "public"),
-      },
-    ]),
-    new LoadablePlugin({
-      filename: "manifest.json",
-      writeToDisk: true,
-    }),
-  ],
-});
+      ]),
+      new LoadablePlugin({
+        filename: "manifest.json",
+        writeToDisk: true,
+      }),
+    ].filter(Boolean),
+  });

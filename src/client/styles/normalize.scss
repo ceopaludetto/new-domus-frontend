@@ -1,25 +1,21 @@
 @import-normalize;
-@import "./variables.scss";
+@import "./variables";
 
 @font-face {
+  font-display: swap;
   font-family: "Open Sans";
   font-style: normal;
   font-weight: 400;
-  font-display: swap;
   src: local("Open Sans Regular"), local("OpenSans-Regular"),
     url("~@/client/assets/fonts/open-sans-400.woff2") format("woff2");
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC,
-    U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 @font-face {
+  font-display: swap;
   font-family: "Open Sans";
   font-style: normal;
   font-weight: 600;
-  font-display: swap;
   src: local("Open Sans SemiBold"), local("OpenSans-SemiBold"),
     url("~@/client/assets/fonts/open-sans-600.woff2") format("woff2");
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC,
-    U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
 *,
@@ -29,24 +25,57 @@
 }
 
 html {
+  font-family: get-theme-prop(typography, family);
   font-size: $base-px;
-  font-family: map-get($typography, family);
   text-size-adjust: 100%;
 }
 
 body {
-  margin: 0;
   background-color: get-color(background);
   color: get-color(background, contrast);
+  margin: 0;
 }
 
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
   *::after {
-    transition: none;
     animation: none;
+    transition: none;
   }
 }
 
 @include gen-colors($colors);
+
+*::-webkit-scrollbar {
+  width: 7px;
+}
+
+* {
+  scrollbar-width: thin;
+
+  &::-webkit-scrollbar-track {
+    background-color: get-color(paper);
+    border-radius: get-theme-prop(layout, shape);
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: get-color(paper);
+  }
+}
+
+@include on-light {
+  * {
+    scrollbar-color: get-color(background, darken-2) get-color(paper);
+    &::-webkit-scrollbar-thumb {
+      background-color: get-color(background, darken-2);
+    }
+  }
+}
+@include on-dark {
+  * {
+    scrollbar-color: get-color(paper, lighten-2) get-color(paper);
+    &::-webkit-scrollbar-thumb {
+      background-color: get-color(paper, lighten-2);
+    }
+  }
+}

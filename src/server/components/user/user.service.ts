@@ -1,64 +1,84 @@
 import { InjectQueue } from "@nestjs/bull";
 import { Injectable } from "@nestjs/common";
-import { InjectModel } from "@nestjs/sequelize";
+import { InjectModel, InjectConnection } from "@nestjs/sequelize";
 import { Queue } from "bull";
+import { Sequelize } from "sequelize";
 
-import { Person } from "@/server/components/person";
+import { Person, User, Phone, Condominium, Address } from "@/server/models";
 import type { ShowAll, Mapped } from "@/server/utils/common.dto";
 
 import { UserInsertInput } from "./user.dto";
-import { User } from "./user.model";
 
 @Injectable()
 export class UserService {
   public constructor(
     @InjectModel(User) private readonly userModel: typeof User,
-    @InjectQueue("mail") private readonly mailQueue: Queue
+    @InjectQueue("mail") private readonly mailQueue: Queue,
+    @InjectConnection() private readonly sequelize: Sequelize
   ) {}
 
-  public async showAll({ skip = 0, first }: ShowAll, mapped: Mapped<User>) {
+  public async showAll({ skip = 0, take }: ShowAll, mapped?: Mapped) {
     return this.userModel.findAll({
-      attributes: mapped.keys(),
       offset: skip,
-      limit: first,
-      include: mapped.includes(),
+      limit: take,
+      ...mapped,
     });
   }
 
-  public async findByLogin(login: string, mapped: Mapped<User>) {
+  public async findByLogin(login: string, mapped?: Mapped) {
     return this.userModel.findOne({
-      attributes: mapped.keys(),
       where: { login },
-      include: mapped.includes(),
+      ...mapped,
     });
   }
 
-  public async findByID(id: string, mapped: Mapped<User>) {
+  public async findByID(id: string, mapped?: Mapped) {
     return this.userModel.findByPk(id, {
-      attributes: mapped.keys(),
-      include: mapped.includes(),
+      attributes: mapped?.attributes,
+      include: mapped?.include ?? [Person],
     });
   }
 
-  public async findByPersonID(id: string, mapped: Mapped<User>) {
+  public async findByPersonID(id: string, mapped?: Mapped) {
     return this.userModel.findOne({
-      attributes: mapped.keys(),
       where: { personID: id },
-      include: mapped.includes(),
+      ...mapped,
     });
   }
 
   public async create(data: UserInsertInput) {
-    const user = await this.userModel.create(data, { include: [Person] });
+    const transaction = await this.sequelize.transaction();
+    try {
+      const user = await this.userModel.create(data, {
+        include: [
+          {
+            model: Person,
+            include: [
+              Phone,
+              {
+                model: Condominium,
+                include: [Address],
+              },
+            ],
+          },
+        ],
+        transaction,
+      });
 
-    await this.mailQueue.add("register", user, {
-      removeOnFail: true,
-      repeat: {
-        every: 1000,
-        limit: 5,
-      },
-    });
+      await this.mailQueue.add("register", user, {
+        removeOnFail: true,
+        repeat: {
+          every: 1000,
+          limit: 5,
+        },
+      });
 
-    return user;
+      await transaction.commit();
+
+      return user;
+    } catch (error) {
+      await transaction.rollback();
+      throw error;
+    }
   }
 }

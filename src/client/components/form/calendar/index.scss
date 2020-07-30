@@ -1,0 +1,27 @@
+@import "~@/client/styles/variables";
+
+.calendar {
+  gap: #{get-theme-prop(layout, gap) / 2};
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  .min {
+    min-height: get-theme-prop(layout, sizes, 9);
+  }
+}
+
+.button {
+  padding: get-theme-prop(layout, sizes, 3) !important;
+  width: 40px;
+}
+
+.years {
+  gap: #{get-theme-prop(layout, gap) / 2};
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 0 -#{get-theme-prop(layout, gap) * 2};
+  max-height: 287px;
+  overflow-y: auto;
+  padding: 0 #{get-theme-prop(layout, gap) * 2};
+}
+
+.width {
+  min-width: calc(310px + #{get-theme-prop(layout, gap) * 4});
+}

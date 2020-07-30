@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useFormContext, ErrorMessage, Controller } from "react-hook-form";
+import { useFormContext, Controller, get } from "react-hook-form";
 
 import { Rifm } from "rifm";
 
@@ -10,29 +10,30 @@ interface MaskedFormControlProps extends Omit<React.ComponentProps<typeof Contro
   rifm: Omit<React.ComponentProps<typeof Rifm>, "value" | "onChange" | "children">;
 }
 
-export function MaskedFormControl({ name, helperText, rifm, ...rest }: MaskedFormControlProps) {
+export function MaskedFormControl({ name, helperText, rifm, defaultValue, ...rest }: MaskedFormControlProps) {
   const { control, errors } = useFormContext();
-  const message = errors[name] ? <ErrorMessage errors={errors} name={name} /> : helperText;
+  const error = get(errors, name);
 
   return (
     <Controller
-      as={
-        <Rifm value="" onChange={() => {}} {...rifm}>
+      defaultValue={defaultValue}
+      render={({ onBlur, ...props }) => (
+        <Rifm {...props} {...rifm}>
           {({ onChange, value }) => (
             <Control
               onChange={onChange}
               value={value}
+              onBlur={onBlur}
               name={name}
-              error={!!errors[name]}
-              helperText={message}
+              error={!!error}
+              helperText={error?.message ?? helperText}
               {...rest}
             />
           )}
         </Rifm>
-      }
+      )}
       control={control}
       name={name}
-      {...rifm}
     />
   );
 }

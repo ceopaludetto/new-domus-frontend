@@ -1,7 +1,9 @@
-import { Module } from "@nestjs/common";
+import { Module, OnModuleInit } from "@nestjs/common";
 import { SequelizeModule } from "@nestjs/sequelize";
+import { InjectPinoLogger, PinoLogger } from "nestjs-pino";
 
-import { State } from "./state.model";
+import { State } from "@/server/models";
+
 import { StateResolver } from "./state.resolver";
 import { StateService } from "./state.service";
 
@@ -10,4 +12,10 @@ import { StateService } from "./state.service";
   providers: [StateService, StateResolver],
   exports: [StateService],
 })
-export class StateModule {}
+export class StateModule implements OnModuleInit {
+  public constructor(@InjectPinoLogger(StateModule.name) private readonly logger: PinoLogger) {}
+
+  public onModuleInit() {
+    this.logger.info("StateModule successfully started");
+  }
+}

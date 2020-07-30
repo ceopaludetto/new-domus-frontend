@@ -10,25 +10,38 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   block?: boolean;
   variant?: "contained" | "flat" | "raised";
   color?: keyof Colors;
-  size?: "normal" | "small";
+  size?: "normal" | "small" | "large";
 }
 
-export function Button({
-  children,
-  variant = "contained",
-  color = "primary",
-  block = false,
-  size = "normal",
-  type = "button",
-  ...rest
-}: ButtonProps) {
-  const classes = clsx(s.button, s[size], s[variant], s[color], {
-    [s.block]: block,
-  });
+export const Button = React.forwardRef(
+  (
+    {
+      children,
+      variant = "contained",
+      color = "primary",
+      block = false,
+      size = "normal",
+      type = "button",
+      className,
+      ...rest
+    }: ButtonProps,
+    ref: React.Ref<HTMLButtonElement>
+  ) => {
+    const classes = clsx(
+      s.button,
+      s[size],
+      s[variant],
+      s[color],
+      {
+        [s.block]: block,
+      },
+      className
+    );
 
-  return (
-    <button type={type} className={classes} {...rest}>
-      {children}
-    </button>
-  );
-}
+    return (
+      <button ref={ref} type={type} className={classes} {...rest}>
+        {children}
+      </button>
+    );
+  }
+);

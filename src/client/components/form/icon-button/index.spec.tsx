@@ -1,6 +1,5 @@
 import * as React from "react";
-
-import { Visibility } from "mdi-norm";
+import { FiEye } from "react-icons/fi";
 
 import { render, fireEvent } from "@/client/utils/setup-test";
 
@@ -10,7 +9,7 @@ describe("IconButton", () => {
   it("should render", () => {
     const { getByTestId } = render(
       <IconButton data-testid="1">
-        <Visibility />
+        <FiEye />
       </IconButton>
     );
 
@@ -25,7 +24,7 @@ describe("IconButton", () => {
     const handleClick = jest.fn();
     const { getByTestId } = render(
       <IconButton data-testid="1" onClick={handleClick}>
-        <Visibility />
+        <FiEye />
       </IconButton>
     );
 
@@ -39,7 +38,7 @@ describe("IconButton", () => {
   it("should have correct color", () => {
     const { getByTestId } = render(
       <IconButton data-testid="1" color="secondary">
-        <Visibility />
+        <FiEye />
       </IconButton>
     );
 
@@ -51,7 +50,7 @@ describe("IconButton", () => {
   it("should render icon", () => {
     const { getByTestId } = render(
       <IconButton data-testid="1">
-        <Visibility />
+        <FiEye />
       </IconButton>
     );
 
@@ -65,7 +64,7 @@ describe("IconButton", () => {
   it("should have correct size", () => {
     const { getByTestId } = render(
       <IconButton data-testid="1" size="small">
-        <Visibility />
+        <FiEye />
       </IconButton>
     );
 

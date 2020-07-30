@@ -1,8 +1,6 @@
 [production]
-last 2 version
-> 2%
-not dead
+defaults
+not ie 11
 
 [development]
-last 2 chrome version
-last 2 firefox version
+defaults

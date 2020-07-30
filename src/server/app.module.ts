@@ -3,28 +3,27 @@ import { PugAdapter } from "@nestjs-modules/mailer/dist/adapters/pug.adapter";
 import { Module } from "@nestjs/common";
 import { GraphQLModule } from "@nestjs/graphql";
 import { SequelizeModule } from "@nestjs/sequelize";
-import { GraphQLSchema } from "graphql";
+import type { GraphQLSchema } from "graphql";
 import { LoggerModule, PinoLogger } from "nestjs-pino";
 
 import {
-  ConfigurationModule,
   ConfigurationService,
-  UserModule,
   AuthenticationModule,
+  ConfigurationModule,
+  CondominiumModule,
+  PersonModule,
   ReactModule,
   QueueModule,
-  PersonModule,
   StateModule,
   CityModule,
+  UserModule,
 } from "@/server/components";
-import Entities from "@/server/components/entities";
-import { ContextType } from "@/server/utils/common.dto";
+import Entities from "@/server/models";
+import type { ContextType } from "@/server/utils/common.dto";
 import { APP_NAME } from "@/server/utils/constants";
-import { ComplexityPlugin } from "@/server/utils/plugins/query.complexity.plugin";
 
 @Module({
   imports: [
-    QueueModule,
     LoggerModule.forRoot({
       pinoHttp: {
         name: APP_NAME,
@@ -52,6 +51,8 @@ import { ComplexityPlugin } from "@/server/utils/plugins/query.complexity.plugin
         password: database.password,
         ssl: database.ssl || false,
         logging: database.logger ? (sql) => logger.debug(sql) : false,
+        minifyAliases: true,
+        native: true,
         models: Entities,
       }),
     }),
@@ -74,25 +75,28 @@ import { ComplexityPlugin } from "@/server/utils/plugins/query.complexity.plugin
     }),
     GraphQLModule.forRootAsync({
       inject: [ConfigurationService],
-      useFactory: async ({ graphql, setSchema }: ConfigurationService) => ({
+      useFactory: async ({ graphql, schema }: ConfigurationService) => ({
         autoSchemaFile: graphql.schema ?? true,
         installSubscriptionHandlers: true,
         debug: process.env.NODE_ENV === "development",
         playground: process.env.NODE_ENV === "development",
+        introspection: process.env.NODE_ENV === "development",
+        cors: false,
         context: ({ req, res }: ContextType) => ({ req, res }),
-        transformSchema: (schema: GraphQLSchema) => {
-          setSchema(schema);
+        transformSchema: (s: GraphQLSchema) => {
+          schema = s;
           return schema;
         },
       }),
     }),
+    QueueModule,
     UserModule,
     PersonModule,
     AuthenticationModule,
+    CondominiumModule,
     ReactModule,
     StateModule,
     CityModule,
   ],
-  providers: [ComplexityPlugin],
 })
 export class ApplicationModule {}

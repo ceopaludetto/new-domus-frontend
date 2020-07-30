@@ -16,8 +16,8 @@ async function bootstrap() {
   await installMiddlewares(app);
 
   const port = process.env.PORT || 3333;
-  await app.listenAsync(port);
-  logger.log(`Application started in port ${port}`);
+  await app.listen(port);
+  logger.log(`Application listen in port ${port}`);
 
   if (module.hot) {
     module.hot.accept();
@@ -25,8 +25,4 @@ async function bootstrap() {
   }
 }
 
-bootstrap().catch((err) => {
-  if (err) {
-    console.error(err); // eslint-disable-line no-console
-  }
-});
+bootstrap().catch((err) => console.error(err)); // eslint-disable-line no-console

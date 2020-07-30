@@ -1,7 +1,0 @@
-#import "./fragments/user-values.gql"
-
-query ShowAllUsers {
-  showUsers {
-    ...UserValues
-  }
-}

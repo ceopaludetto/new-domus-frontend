@@ -7,6 +7,7 @@ database:
   port:
   username:
   password:
+  logger:
 
 queue:
   host:

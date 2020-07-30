@@ -1,25 +1,26 @@
 import * as React from "react";
-import { useForm, FormContext } from "react-hook-form";
+import { Helmet } from "react-helmet-async";
+import { useForm, FormProvider } from "react-hook-form";
 
-import { useMutation } from "@apollo/react-hooks";
+import { useMutation } from "@apollo/client";
+import { yupResolver } from "@hookform/resolvers";
 import type { UserInputError } from "apollo-server-express";
 import clsx from "clsx";
 
 import { Title, SubTitle, Button, FormControl, Link, PreloadLink, ColorText } from "@/client/components";
-import { Login } from "@/client/graphql/auth.gql";
+import { Login } from "@/client/graphql/auth.graphql";
 import { LoginMutation, LoginMutationVariables } from "@/client/graphql/operations";
 import { SignInSchema, SignInValues } from "@/client/helpers/validations/signin.schema";
-import { useVisibility, useYupValidationResolver } from "@/client/hooks";
+import { useVisibility } from "@/client/hooks";
 import u from "@/client/styles/utils.scss";
 
 export default function SignIn() {
   const [genericError, setGenericError] = React.useState(false);
-  const validationResolver = useYupValidationResolver(SignInSchema);
   const [login] = useMutation<LoginMutation, LoginMutationVariables>(Login);
-  const methods = useForm<SignInValues>({ validationResolver });
+  const methods = useForm<SignInValues>({ resolver: yupResolver(SignInSchema) });
   const [getFieldProps] = useVisibility();
 
-  async function submit(data: SignInValues) {
+  const submit = methods.handleSubmit(async (data) => {
     try {
       await login({
         variables: {
@@ -30,20 +31,26 @@ export default function SignIn() {
       const graphQLError = (error.graphQLErrors as UserInputError[])[0];
       if (graphQLError.extensions.fields) {
         const field: "login" | "password" = graphQLError.extensions.fields[0];
-        methods.setError(field, "graphql", graphQLError.message);
+        methods.setError(field, {
+          type: "graphql",
+          message: graphQLError.message,
+        });
       } else {
         setGenericError(true);
       }
     }
-  }
+  });
 
   return (
-    <FormContext {...methods}>
-      <form noValidate onSubmit={methods.handleSubmit(submit)}>
+    <FormProvider {...methods}>
+      <form noValidate autoComplete="on" onSubmit={submit}>
+        <Helmet>
+          <title>Login</title>
+        </Helmet>
         <SubTitle>Login</SubTitle>
-        <Title>Entrar</Title>
+        <Title>Bem vindo de volta</Title>
         {genericError && <ColorText color="error">Falha ao realizar login</ColorText>}
-        <FormControl label="Login" name="login" id="login" />
+        <FormControl autoFocus label="Login" name="login" id="login" />
         <FormControl
           label="Senha"
           name="password"
@@ -55,17 +62,17 @@ export default function SignIn() {
           }
           {...getFieldProps()}
         />
-        <div className={clsx(u.row, u["justify-content-xs-flex-end"])}>
-          <div className={u.col}>
-            <PreloadLink as={Button} variant="flat" to="/auth/signup/step-1">
-              Cadastre-se
-            </PreloadLink>{" "}
-            <Button variant="raised" type="submit">
-              Entrar
-            </Button>
-          </div>
+        <div className={u["pt-xs-2"]}>
+          <Button disabled={methods.formState.isSubmitting} block variant="raised" type="submit">
+            Entrar
+          </Button>
+        </div>
+        <div className={clsx(u["text-align-xs-center"], u["mt-xs-5"])}>
+          <PreloadLink as={Link} button color="primary" to="/auth/signup/step-1">
+            Cadastre-se
+          </PreloadLink>
         </div>
       </form>
-    </FormContext>
+    </FormProvider>
   );
 }

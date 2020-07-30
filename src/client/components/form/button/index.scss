@@ -1,69 +1,85 @@
-@import "~@/client/styles/variables.scss";
+@import "~@/client/styles/variables";
 
 .button {
-  cursor: pointer;
-  user-select: none;
-  border: none;
-  text-transform: uppercase;
-  letter-spacing: 1.15px;
+  border: 0;
   border-radius: get-theme-prop(layout, shape);
+  font-size: get-theme-prop(typography, sizes, 1);
   font-weight: get-theme-prop(typography, weights, 2);
-  transition: transition((background-color, box-shadow));
+  letter-spacing: 1px;
   position: relative;
-  &.normal {
-    padding: get-theme-prop(layout, sizes, 4) get-theme-prop(layout, sizes, 5);
+  transition: transition((background-color, box-shadow));
+  user-select: none;
+  @include not-disabled {
+    cursor: pointer;
+    &:focus {
+      outline: none;
+    }
   }
   &.small {
-    padding: get-theme-prop(layout, sizes, 3) get-theme-prop(layout, sizes, 4);
+    padding: get-theme-prop(layout, sizes, 3) get-theme-prop(layout, sizes, 5);
   }
-  &:focus {
-    outline: none;
+  &.normal {
+    padding: get-theme-prop(layout, sizes, 4) get-theme-prop(layout, sizes, 6);
+  }
+  &.large {
+    padding: get-theme-prop(layout, sizes, 5) get-theme-prop(layout, sizes, 7);
   }
   &.block {
     width: 100%;
   }
   &.contained,
   &.raised {
-    @each $k, $v in map-get($colors, light) {
-      &.#{$k} {
-        background-color: get-color($k);
-        color: get-color($k, contrast);
-        &:hover,
-        &:focus {
-          background-color: get-color($k, darken-1);
-        }
-        &:active {
-          background-color: get-color($k, darken-2);
+    @include not-disabled {
+      @each $k, $v in map-get($colors, light) {
+        &.#{$k} {
+          background-color: get-color($k);
+          color: get-color($k, contrast);
+          &:hover,
+          &:focus {
+            background-color: get-color($k, darken-1);
+          }
+          &:active {
+            background-color: get-color($k, darken-2);
+          }
         }
       }
+    }
+    @include disabled {
+      background-color: get-color(muted);
+      color: get-color(muted, contrast);
     }
   }
   &.flat {
-    @each $k, $v in map-get($colors, light) {
-      &.#{$k} {
-        background-color: transparent;
-        color: get-color($k);
-        &:hover,
-        &:focus {
-          background-color: get-shadow-color($k, 0.2);
-        }
-        &:active {
-          background-color: get-shadow-color($k, 0.3);
+    background-color: transparent;
+    @include not-disabled {
+      @each $k, $v in map-get($colors, light) {
+        &.#{$k} {
+          color: get-color($k);
+          &:hover,
+          &:focus {
+            background-color: get-shadow-color($k, 0.2);
+          }
+          &:active {
+            background-color: get-shadow-color($k, 0.3);
+          }
         }
       }
     }
+    @include disabled {
+      color: get-color(muted);
+    }
   }
   &.raised {
-    box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14),
-      0px 1px 5px 0px rgba(0, 0, 0, 0.12);
-    &:hover,
-    &:focus {
-      box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14),
-        0px 1px 10px 0px rgba(0, 0, 0, 0.12);
-    }
-    &:active {
-      box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 8px 10px 1px rgba(0, 0, 0, 0.14),
-        0px 3px 14px 2px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    @include not-disabled {
+      &:hover,
+      &:focus {
+        box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12);
+      }
+      &:active {
+        box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2), 0 8px 10px 1px rgba(0, 0, 0, 0.14),
+          0 3px 14px 2px rgba(0, 0, 0, 0.12);
+      }
     }
   }
 }

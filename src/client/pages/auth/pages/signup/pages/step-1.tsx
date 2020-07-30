@@ -1,81 +1,96 @@
 import * as React from "react";
-import { useForm, FormContext } from "react-hook-form";
+import { useForm, FormProvider } from "react-hook-form";
 
+import { yupResolver } from "@hookform/resolvers";
 import clsx from "clsx";
 
-import { FormControl, MaskedFormControl, Button } from "@/client/components";
+import { FormControl, MaskedFormControl, Button, FormCalendar, FormSelect, PreloadLink } from "@/client/components";
+import { Gender } from "@/client/graphql/operations";
 import * as Masks from "@/client/helpers/masks";
 import { SignUpStep1Schema, SignUpStep1Values } from "@/client/helpers/validations/signup.schema";
-import { StepperContext, useYupValidationResolver } from "@/client/hooks";
+import { StepperContext } from "@/client/hooks";
 import u from "@/client/styles/utils.scss";
 import { clean } from "@/client/utils/clean";
 
 import { WizardContext } from "../providers";
 
 export default function Step1() {
-  const validationResolver = useYupValidationResolver(SignUpStep1Schema);
   const { setValues, values } = React.useContext(WizardContext);
   const { next } = React.useContext(StepperContext);
   const methods = useForm<SignUpStep1Values>({
-    validationResolver,
+    resolver: yupResolver(SignUpStep1Schema),
     defaultValues: values,
   });
 
-  function submit(data: SignUpStep1Values) {
+  const submit = methods.handleSubmit((data) => {
     if (values) {
       setValues({ ...values, ...clean(data) });
       next();
     }
-  }
+  });
 
   return (
-    <FormContext {...methods}>
-      <form noValidate onSubmit={methods.handleSubmit(submit)}>
-        <div className={u.row}>
-          <div className={clsx(u.col, u.xs)}>
+    <FormProvider {...methods}>
+      <form noValidate onSubmit={submit}>
+        <div className={clsx(u.grid, u["grid-template"])}>
+          <div className={clsx(u["xs-12"], u["md-6"])}>
+            <FormControl autoFocus name="person.name" id="name" label="Nome" required />
+          </div>
+          <div className={clsx(u["xs-12"], u["md-6"])}>
+            <FormControl name="person.lastName" id="lastName" label="Sobrenome" required />
+          </div>
+          <div className={clsx(u["xs-12"], u["md-3"])}>
             <FormControl name="login" id="login" label="Login" required />
           </div>
-          <div className={clsx(u.col, u.xs)}>
-            <FormControl name="name" id="name" label="Nome" required />
+          <div className={clsx(u["xs-12"], u["md-6"])}>
+            <FormControl type="person.email" name="person.email" id="email" label="E-mail" required />
           </div>
-        </div>
-        <FormControl name="email" id="email" label="E-mail" required />
-        <div className={u.row}>
-          <div className={clsx(u.col, u.xs)}>
+          <div className={clsx(u["xs-12"], u["md-3"])}>
             <MaskedFormControl
               rifm={{ format: Masks.cpf, accept: /\d+/g, mask: true }}
-              name="cpf"
+              name="person.cpf"
               id="cpf"
               label="CPF"
               required
             />
           </div>
-          <div className={clsx(u.col, u.xs)}>
-            <FormControl name="gender" id="gender" label="Gênero" required />
-          </div>
-        </div>
-        <div className={u.row}>
-          <div className={clsx(u.col, u.xs)}>
-            <MaskedFormControl
-              rifm={{ format: Masks.tel, accept: /\d+/g, mask: true }}
-              name="tel"
-              id="tel"
-              label="Telefone"
+          <div className={clsx(u["xs-12"], u["md-4"])}>
+            <FormSelect
+              name="person.gender"
+              id="gender"
+              label="Gênero"
+              items={[
+                { value: Gender.M, label: "Masculino" },
+                { value: Gender.F, label: "Feminino" },
+                { value: Gender.N, label: "Outro" },
+              ]}
               required
             />
           </div>
-          <div className={clsx(u.col, u.xs)}>
-            <FormControl name="birthdate" id="birthdate" label="Data de Nascimento" required />
+          <div className={clsx(u["xs-12"], u["md-4"])}>
+            <FormCalendar disableFuture name="person.birthdate" id="birthdate" label="Data de Nascimento" required />
+          </div>
+          <div className={clsx(u["xs-12"], u["md-4"])}>
+            <MaskedFormControl
+              rifm={{ format: Masks.tel, accept: /\d+/g, mask: true }}
+              name="person.phone"
+              id="phone"
+              type="tel"
+              label="Telefone"
+            />
           </div>
         </div>
         <div className={clsx(u.row, u["justify-content-xs-flex-end"])}>
           <div className={u.col}>
+            <PreloadLink as={Button} variant="flat" to="/auth/signin">
+              Já possuo uma conta
+            </PreloadLink>{" "}
             <Button variant="raised" type="submit">
               Próximo
             </Button>
           </div>
         </div>
       </form>
-    </FormContext>
+    </FormProvider>
   );
 }

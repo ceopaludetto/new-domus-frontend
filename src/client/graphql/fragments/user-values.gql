@@ -1,9 +1,0 @@
-fragment UserValues on User {
-  id
-  login
-  person {
-    id
-    name
-    email
-  }
-}

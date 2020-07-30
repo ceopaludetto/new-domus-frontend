@@ -1,23 +1,26 @@
 process.env.NODE_ENV = "production";
 process.noDeprecation = true;
 
-const clearConsole = require("react-dev-utils/clearConsole");
 const { measureFileSizesBeforeBuild, printFileSizesAfterBuild } = require("react-dev-utils/FileSizeReporter");
 const formatWebpackMessages = require("react-dev-utils/formatWebpackMessages");
 
 const chalk = require("chalk");
 const fs = require("fs-extra");
-const logger = require("razzle-dev-utils/logger");
 const printErrors = require("razzle-dev-utils/printErrors");
 const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
 const webpack = require("webpack");
 
 const clientConfig = require("../configuration/webpack.config.client");
 const serverConfig = require("../configuration/webpack.config.server");
+const logger = require("./utils/logger");
 
 const measure = process.argv.some((arg) => arg === "--measure");
 
 const smp = new SpeedMeasurePlugin({ disable: !measure });
+
+function capitalize(str) {
+  return str.substr(0, 1).toUpperCase() + str.substr(1);
+}
 
 function normalizeFileSizes(prevFileSizes, isServer = false) {
   if (isServer)
@@ -76,46 +79,42 @@ function build(previousFileSizes, config, isServer = false) {
   });
 }
 
-Promise.all([
-  measureFileSizesBeforeBuild(serverConfig.output.path),
-  measureFileSizesBeforeBuild(clientConfig.output.path),
-])
-  .then((prevFileSizes) => {
-    clearConsole();
-    logger.start("Compiling...");
-    fs.emptyDir(serverConfig.output.path);
+const client = clientConfig();
+const server = serverConfig();
+
+const configs = [server, client];
+
+Promise.all(configs.map((c) => measureFileSizesBeforeBuild(c.output.path)))
+  .then(async (prevFileSizes) => {
+    logger.wait("Compiling...");
+    await fs.emptyDir(server.output.path);
     return prevFileSizes;
   })
   .then((prevFileSizes) => {
-    normalizeFileSizes(prevFileSizes[0], true);
-    normalizeFileSizes(prevFileSizes[1], false);
-    return Promise.all([
-      build(prevFileSizes[0], smp.wrap(serverConfig), true),
-      build(prevFileSizes[1], smp.wrap(clientConfig), false),
-    ]);
+    configs.forEach((c, i) => {
+      normalizeFileSizes(prevFileSizes[i], true);
+    });
+    return Promise.all(configs.map((c, i) => build(prevFileSizes[i], smp.wrap(c), c.target === "node")));
   })
-  .then(
-    (info) => {
-      info.forEach(({ stats, previousFileSizes, warnings }, i) => {
-        if (warnings.length) {
-          logger.warn("Compiled with warnings.\n");
-          logger.log(warnings.join("\n\n"));
-          logger.log(`\nSearch for the ${chalk.underline(chalk.yellow("keywords"))} to learn more about each warning.`);
-          logger.log(`To ignore, add ${chalk.cyan("// eslint-disable-next-line")} to the line before.\n`);
-        }
-        logger.done(`[${i === 0 ? "SERVER" : "CLIENT"}] Compiled done.`);
-        logger.log("File sizes after gzip:\n");
-        printFileSizesAfterBuild(
-          stats,
-          previousFileSizes,
-          i === 0 ? serverConfig.output.path : clientConfig.output.path
-        );
-        logger.log();
-      });
-    },
-    (err) => {
-      logger.error("Failed to compile.\n");
-      logger.log(`${err.message || err}\n`);
-      process.exit(1);
-    }
-  );
+  .then((info) => {
+    info.forEach(({ stats, previousFileSizes, warnings }, i) => {
+      if (warnings.length) {
+        logger.warning("Compiled with warnings.\n");
+        logger.log(warnings.join("\n\n"));
+        logger.log(`\nSearch for the ${chalk.underline(chalk.yellow("keywords"))} to learn more about each warning.`);
+        logger.log(`To ignore, add ${chalk.cyan("// eslint-disable-next-line")} to the line before.\n`);
+      }
+
+      logger.done(`${capitalize(configs[i].name)} Compiled done.`);
+      logger.log("File sizes after gzip:\n");
+      printFileSizesAfterBuild(stats, previousFileSizes, configs[i].output.path);
+      logger.log();
+    });
+
+    return info;
+  })
+  .catch((err) => {
+    logger.error("Failed to compile.\n");
+    logger.log(`${err.message || err}\n`);
+    process.exit(1);
+  });

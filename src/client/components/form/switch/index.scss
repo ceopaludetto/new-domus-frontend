@@ -1,20 +1,20 @@
-@import "~@/client/styles/variables.scss";
+@import "~@/client/styles/variables";
 
 .form-group {
   margin-bottom: get-theme-prop(layout, sizes, 5);
   .switch-container {
-    position: relative;
-    height: 22px;
-    display: flex;
     align-items: center;
+    display: flex;
+    height: 22px;
+    position: relative;
     .input {
-      position: absolute;
-      top: 0;
+      cursor: pointer;
+      height: 100%;
       left: 0;
       opacity: 0;
+      position: absolute;
+      top: 0;
       width: 40px;
-      height: 100%;
-      cursor: pointer;
       &:focus + .switch::before {
         background-color: get-color(background, darken-1);
       }
@@ -22,7 +22,7 @@
         &:active,
         &:checked,
         &[checked] {
-          & + .switch.#{$k} {
+          + .switch.#{$k} {
             &::before {
               background-color: get-color($k);
             }
@@ -34,7 +34,7 @@
         &:focus {
           &:checked,
           &[checked] {
-            & + .switch.#{$k}::before {
+            + .switch.#{$k}::before {
               background-color: get-color($k, darken-1);
             }
           }
@@ -42,62 +42,62 @@
       }
       &:checked,
       &[checked] {
-        & + .switch::after {
+        + .switch::after {
           transform: translateX(18px);
         }
       }
       &:active {
-        & + .switch::after {
+        + .switch::after {
           width: 20px;
         }
         &:checked,
         &[checked] {
-          & + .switch::after {
+          + .switch::after {
             transform: translateX(14px);
           }
         }
       }
     }
     .switch {
-      top: 0;
-      position: absolute;
       height: 22px;
-      width: 40px;
       pointer-events: none;
+      position: absolute;
+      top: 0;
+      width: 40px;
       &::before,
       &::after {
         content: "";
-        position: absolute;
         display: block;
+        position: absolute;
       }
       &::after {
+        background-color: get-color(background, contrast);
+        border-radius: 999px;
         height: 16px;
-        width: 16px;
         left: 3px;
         top: 3px;
-        border-radius: 999px;
-        background-color: get-color(background, contrast);
         transition: transition((background-color, transform, width));
+        width: 16px;
       }
       &::before {
+        background-color: get-color(background, darken-2);
+        border-radius: 999px;
+        height: 22px;
         left: 0;
         top: 0;
-        width: 40px;
-        height: 22px;
-        border-radius: 999px;
-        background-color: get-color(background, darken-2);
         transition: transition((background-color));
+        width: 40px;
       }
     }
     .info {
       display: inline-block;
+      flex: 1;
       padding-left: 50px;
       user-select: none;
-      flex: 1;
-      @media (prefers-color-scheme: dark) {
+      @include on-dark {
         color: get-color(muted, lighten-2);
       }
-      @media (prefers-color-scheme: light) {
+      @include on-light {
         color: get-color(muted, darken-2);
       }
     }

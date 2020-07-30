@@ -97,9 +97,9 @@ export class ConfigurationService {
     return this.envConfig.mailer;
   }
 
-  public setSchema = (schema: GraphQLSchema) => {
+  public set schema(schema: GraphQLSchema) {
     this.graphqlSchema = schema;
-  };
+  }
 
   public get schema() {
     return this.graphqlSchema;
