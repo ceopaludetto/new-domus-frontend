@@ -1,7 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import fs from "fs";
 import { GraphQLSchema } from "graphql";
-import { PinoLogger } from "nestjs-pino";
+import { InjectPinoLogger, PinoLogger } from "nestjs-pino";
+import path from "path";
 import { Dialect } from "sequelize";
 import yaml from "yaml";
 import * as Yup from "yup";
@@ -53,15 +54,17 @@ export class ConfigurationService {
 
   private graphqlSchema!: GraphQLSchema;
 
-  public constructor(filePath: string, private readonly logger: PinoLogger) {
-    this.logger.setContext(ConfigurationService.name);
+  public constructor(@InjectPinoLogger(ConfigurationService.name) private readonly logger: PinoLogger) {
+    const deployment = (process.env.DEPLOYMENT as string) || "development";
+    const filePath = path.resolve(process.env.BASE_DIR as string, "env", `config.${deployment}.yml`);
+
     const config = yaml.parse(fs.readFileSync(filePath, "UTF-8"));
     const validated = this.validateInput(config);
     if (validated !== false) {
       this.envConfig = validated;
     }
 
-    this.logger.info(`Deployment: ${(process.env.DEPLOYMENT as string) || "development"}`);
+    this.logger.info("Deployment setted to %s", deployment);
   }
 
   private validateInput = (config: any) => {
