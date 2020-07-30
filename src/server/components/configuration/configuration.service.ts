@@ -54,6 +54,7 @@ export class ConfigurationService {
   private graphqlSchema!: GraphQLSchema;
 
   public constructor(filePath: string, private readonly logger: PinoLogger) {
+    this.logger.setContext(ConfigurationService.name);
     const config = yaml.parse(fs.readFileSync(filePath, "UTF-8"));
     const validated = this.validateInput(config);
     if (validated !== false) {

@@ -6,7 +6,7 @@ import GraphQLFields from "graphql-fields";
 import type { IncludeOptions } from "sequelize";
 
 import type { KeepOptions } from "@/server/utils/common.dto";
-import { keys as ks } from "@/server/utils/keys";
+import { cleanTruthy } from "@/server/utils/transforms";
 
 function map<T>(target: any, fields: { [P in keyof T]: T[P] }): Record<string, any> {
   const res: Record<string, any> = {};
@@ -27,7 +27,7 @@ function map<T>(target: any, fields: { [P in keyof T]: T[P] }): Record<string, a
     }
   });
 
-  res.keys = () => ks(res, ["keys", "includes"]);
+  res.keys = () => cleanTruthy(res, ["keys", "includes"]);
   res.includes = (): IncludeOptions[] => {
     const includes: IncludeOptions[] = [];
 

@@ -1,11 +1,15 @@
 /* eslint-disable no-template-curly-in-string */
 const path = require("path");
 
-const isTest = process.env.NODE_ENV === "test";
 const isProd = process.env.NODE_ENV === "production";
 
-module.exports = (isServer) => {
+module.exports = (api) => {
   let targets;
+
+  const isServer = api.caller((caller) => caller.target === "node");
+  const isTest = api.caller((caller) => caller.name === "babel-jest");
+
+  api.cache(false);
 
   if (isServer || isTest) {
     targets = {
@@ -55,9 +59,10 @@ module.exports = (isServer) => {
         },
       ],
       ["transform-react-remove-prop-types", { mode: "remove", removeImport: true }],
-      !isServer && !isProd && "react-refresh/babel",
-      isTest && "babel-plugin-dynamic-import-node",
+      !isServer && !isProd && !isTest && "react-refresh/babel",
       isTest && ["@babel/plugin-transform-modules-commonjs", { loose: true }],
+      isTest && "dynamic-import-node",
+      isTest && "transform-require-context",
     ].filter(Boolean),
     overrides: [
       {
