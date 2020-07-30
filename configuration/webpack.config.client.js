@@ -4,7 +4,6 @@ const CompressionPlugin = require("compression-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const path = require("path");
 const StylelintWebpackPlugin = require("stylelint-webpack-plugin");
-const webpack = require("webpack");
 const merge = require("webpack-merge");
 
 const envs = require("./envs");
@@ -77,7 +76,6 @@ module.exports = (devPort = 3001) =>
       child_process: "empty",
     },
     plugins: [
-      isProd && new webpack.optimize.AggressiveMergingPlugin(),
       isProd &&
         new CompressionPlugin({
           exclude: /(\.map|\.LICENSE|\.json)/,
