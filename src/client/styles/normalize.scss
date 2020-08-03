@@ -63,7 +63,7 @@ body {
   }
 }
 
-@include on-light {
+@include theme(light) {
   * {
     scrollbar-color: get-color(background, darken-2) get-color(paper);
     &::-webkit-scrollbar-thumb {
@@ -71,7 +71,7 @@ body {
     }
   }
 }
-@include on-dark {
+@include theme(dark) {
   * {
     scrollbar-color: get-color(paper, lighten-2) get-color(paper);
     &::-webkit-scrollbar-thumb {

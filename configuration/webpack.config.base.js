@@ -143,7 +143,10 @@ module.exports = (isServer = false) => ({
                         autoprefixer: {
                           flexbox: "no-2009",
                         },
-                        stage: 3,
+                        features: {
+                          "prefers-color-scheme-query": false,
+                        },
+                        stage: 1,
                       }),
                       isProd &&
                         require("@fullhuman/postcss-purgecss")({

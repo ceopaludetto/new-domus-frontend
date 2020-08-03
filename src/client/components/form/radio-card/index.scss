@@ -10,10 +10,10 @@
   padding: get-theme-prop(layout, sizes, 6) get-theme-prop(layout, sizes, 4);
   position: relative;
   transition: transition((border-color));
-  @include on-dark {
+  @include theme(dark) {
     border: 2px solid get-color(paper, lighten-2);
   }
-  @include on-light {
+  @include theme(light) {
     border: 2px solid get-color(background, darken-2);
   }
   @each $k, $v in map-get($colors, light) {

@@ -47,17 +47,17 @@
   border-radius: get-theme-prop(layout, shape);
   overflow: hidden;
   padding: 0 !important;
-  @include on-dark {
+  @include theme(dark) {
     background-color: get-color(paper, lighten-1) !important;
   }
-  @include on-light {
+  @include theme(light) {
     background-color: get-color(background, lighten-1) !important;
   }
   .scroll {
     max-height: 300px;
     overflow: auto;
     padding: get-theme-prop(layout, sizes, 4) 0 !important;
-    @include on-dark {
+    @include theme(dark) {
       scrollbar-color: get-color(paper, darken-1) get-color(paper, lighten-1);
       &::-webkit-scrollbar-track {
         background-color: get-color(paper, lighten-1);
@@ -66,7 +66,7 @@
         background-color: get-color(paper, darken-1);
       }
     }
-    @include on-light {
+    @include theme(light) {
       scrollbar-color: get-color(background) get-color(background, lighten-2);
       &::-webkit-scrollbar-track {
         background-color: get-color(background, lighten-2);
@@ -79,14 +79,14 @@
       cursor: pointer;
       padding: get-theme-prop(layout, sizes, 4);
       width: 100%;
-      @include on-dark {
+      @include theme(dark) {
         background-color: get-color(paper, lighten-1);
         &.active {
           background-color: get-color(paper, lighten-2) !important;
           color: get-color(paper, contrast) !important;
         }
       }
-      @include on-light {
+      @include theme(light) {
         background-color: get-color(background, lighten-1);
         &.active {
           background-color: get-color(paper, darken-2) !important;

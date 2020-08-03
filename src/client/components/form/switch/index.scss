@@ -87,10 +87,10 @@
       flex: 1;
       padding-left: 50px;
       user-select: none;
-      @include on-dark {
+      @include theme(dark) {
         color: get-color(muted, lighten-2);
       }
-      @include on-light {
+      @include theme(light) {
         color: get-color(muted, darken-2);
       }
     }

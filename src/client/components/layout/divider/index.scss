@@ -4,10 +4,10 @@
   border: 0;
   border-top: 1px solid;
   display: block;
-  @include on-dark {
+  @include theme(dark) {
     border-color: get-color(paper, lighten-2);
   }
-  @include on-light {
+  @include theme(light) {
     border-color: get-color(background, darken-2);
   }
 }
