@@ -8,13 +8,4 @@ export { Phone } from "./phone.model";
 export { State } from "./state.model";
 export { User } from "./user.model";
 export { Address } from "./address.model";
-
-const context = require.context(".", false, /^(?!base).*\.model$/);
-const entities = context.keys().map((k) => {
-  const model = context(k);
-  return Object.keys(model)
-    .filter((i) => typeof model[i] === "function")
-    .map((i) => model[i])[0];
-});
-
-export default entities;
+export { BaseModel } from "./base.model";

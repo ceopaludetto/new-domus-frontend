@@ -6,7 +6,7 @@ type Address {
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
-  deletedAt: DateTime!
+  deletedAt: DateTime
   zip: String!
   address: String!
   number: String!
@@ -32,7 +32,7 @@ type Block {
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
-  deletedAt: DateTime!
+  deletedAt: DateTime
   name: String
   number: Float!
   condominiumID: ID!
@@ -44,7 +44,7 @@ type City {
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
-  deletedAt: DateTime!
+  deletedAt: DateTime
   name: String!
   code: Float!
   slug: String!
@@ -61,7 +61,7 @@ type Condominium {
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
-  deletedAt: DateTime!
+  deletedAt: DateTime
   companyName: String!
   cnpj: String!
   character: String!
@@ -93,7 +93,7 @@ type Local {
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
-  deletedAt: DateTime!
+  deletedAt: DateTime
   name: String!
   description: String
   capacity: Float!
@@ -119,7 +119,7 @@ type Person {
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
-  deletedAt: DateTime!
+  deletedAt: DateTime
   name: String!
   lastName: String!
   email: String!
@@ -146,7 +146,7 @@ type Phone {
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
-  deletedAt: DateTime!
+  deletedAt: DateTime
   ddd: String!
   number: String!
   personID: ID!
@@ -178,7 +178,7 @@ type State {
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
-  deletedAt: DateTime!
+  deletedAt: DateTime
   name: String!
   initials: String!
   code: Float!
@@ -195,7 +195,7 @@ type User {
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
-  deletedAt: DateTime!
+  deletedAt: DateTime
   login: String!
   personID: ID!
   person: Person!

@@ -2,8 +2,15 @@ import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { PrimaryKey, CreatedAt, UpdatedAt, DeletedAt, Column, Model, Default } from "sequelize-typescript";
 import { generate } from "shortid";
 
+interface BaseModelAttributes {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt?: Date;
+}
+
 @ObjectType()
-export abstract class BaseModel<T> extends Model<T> {
+export abstract class BaseModel<T, U = { [P in keyof T]: T[P] }> extends Model<T, U & BaseModelAttributes> {
   @Default(generate)
   @PrimaryKey
   @Column
@@ -18,7 +25,7 @@ export abstract class BaseModel<T> extends Model<T> {
   @UpdatedAt
   public updatedAt!: Date;
 
-  @Field()
+  @Field({ nullable: true })
   @DeletedAt
-  public deletedAt!: Date;
+  public deletedAt?: Date;
 }

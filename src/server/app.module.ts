@@ -18,7 +18,7 @@ import {
   CityModule,
   UserModule,
 } from "@/server/components";
-import Entities from "@/server/models";
+import * as entities from "@/server/models";
 import type { ContextType } from "@/server/utils/common.dto";
 import { APP_NAME } from "@/server/utils/constants";
 
@@ -54,7 +54,7 @@ import { APP_NAME } from "@/server/utils/constants";
         logging: database.logger ? (sql) => logger.debug(sql) : false,
         minifyAliases: true,
         native: true,
-        models: Entities,
+        models: Object.values(entities).filter((x) => typeof x === "function") as any,
       }),
     }),
     MailerModule.forRootAsync({
