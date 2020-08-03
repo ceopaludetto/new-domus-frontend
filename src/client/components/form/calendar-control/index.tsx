@@ -29,7 +29,7 @@ export const CalendarControl = React.forwardRef(
     }: CalendarControlProps,
     ref: React.Ref<HTMLInputElement>
   ) => {
-    const plugin = React.useRef<{ default: dayjs.PluginFunc<any> }>(null);
+    const plugin = React.useRef<{ default: dayjs.PluginFunc<any> } & dayjs.PluginFunc<any>>(null);
     const [open, setOpen] = React.useState(false);
     const [controlValue, setControlValue] = React.useState(() => dayjs(calendarValue).format("DD/MM/YYYY"));
 
@@ -42,19 +42,16 @@ export const CalendarControl = React.forwardRef(
     }
 
     React.useEffect(() => {
-      if (controlValue.length >= 10) {
-        const parsed = dayjs(controlValue, "DD/MM/YYYY");
-        if (parsed.isValid() && !parsed.isSame(calendarValue)) {
-          onCalendarChange(parsed.toDate());
+      if (plugin.current) {
+        dayjs.extend(plugin.current?.default ?? plugin.current);
+        if (controlValue.length >= 10) {
+          const parsed = dayjs(controlValue, "DD/MM/YYYY");
+          if (parsed.isValid() && !parsed.isSame(calendarValue)) {
+            onCalendarChange(parsed.toDate());
+          }
         }
       }
     }, [controlValue, onCalendarChange, calendarValue]);
-
-    React.useEffect(() => {
-      if (plugin.current) {
-        dayjs.extend(plugin.current.default);
-      }
-    }, [plugin]);
 
     return (
       <>
@@ -78,6 +75,7 @@ export const CalendarControl = React.forwardRef(
               name={name}
               value={value}
               onChange={onChange}
+              onFocus={() => DayJSCustomParseFormatPlugin.load()}
               append={
                 <IconButton
                   aria-label="Acessar Calendário"
