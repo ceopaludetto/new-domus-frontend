@@ -105,9 +105,9 @@ type Local {
 }
 
 type Mutation {
+  createCondominium(input: CondominiumInsertInput!): Int!
   login(input: AuthenticationInput!): User!
   register(input: UserInsertInput!): User!
-  createCondominium(input: CondominiumInsertInput!): Int!
 }
 
 enum Order {
@@ -159,14 +159,14 @@ input PhoneInsertInput {
 }
 
 type Query {
+  showCondominiums(take: Int, skip: Int = 0): [Condominium!]!
+  findCondominiumByID(id: ID!): Condominium!
+  showPeople(take: Int, skip: Int = 0): [Person!]!
+  findPersonByID(id: ID!): Person!
   showUsers(take: Int, skip: Int = 0): [User!]!
   findUserByID(id: ID!): User!
   findUserByLogin(login: String!): User!
-  showPeople(take: Int, skip: Int = 0): [Person!]!
-  findPersonByID(id: ID!): Person!
   profile: User!
-  showCondominiums(take: Int, skip: Int = 0): [Condominium!]!
-  findCondominiumByID(id: ID!): Condominium!
   showStates(sort: StateSortInput, take: Int, skip: Int = 0): [State!]!
   findStateByID(id: ID!): State!
   showCities(take: Int, skip: Int = 0): [City!]!

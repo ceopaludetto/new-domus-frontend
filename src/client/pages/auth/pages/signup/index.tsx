@@ -1,24 +1,21 @@
 import * as React from "react";
 import { Helmet } from "react-helmet-async";
 import { FiUser, FiLock, FiMap } from "react-icons/fi";
-import { Switch, Route, useHistory } from "react-router-dom";
+import { Switch, Route } from "react-router-dom";
 import { useLocalStorage } from "react-use";
 
 import { Title, SubTitle, Stepper } from "@/client/components";
-import { useStepper, StepperContext, usePreload } from "@/client/hooks";
+import { useStepper, StepperContext, usePreload, useRedirect } from "@/client/hooks";
 import { RouteComponentProps } from "@/client/utils/common.dto";
 
 import { WizardContext, WizardContextProps, initialValues } from "./providers";
 
-export default function SignUp({ routes }: RouteComponentProps) {
+export default function SignUp({ routes, history, location, staticContext }: RouteComponentProps) {
   const [, run] = usePreload();
-  const history = useHistory();
   const [currentPage, methods] = useStepper(3);
   const [values, setValues] = useLocalStorage<WizardContextProps["values"]>("@DOMUS:AUTH:SIGNUP", initialValues);
 
-  React.useEffect(() => {
-    history.replace("/auth/signup/step-1");
-  }, [history]);
+  useRedirect({ url: "/auth/signup/step-1", location, history, staticContext }, 301);
 
   return (
     <WizardContext.Provider value={{ values, setValues }}>

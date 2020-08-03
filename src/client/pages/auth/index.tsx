@@ -21,7 +21,7 @@ export default function Auth({ routes }: RouteComponentProps) {
           <Paper outline size="large">
             <Switch>
               {routes?.map(({ name, component: Component, children, ...rest }) => (
-                <Route key={name} render={(props) => <Component routes={children} {...props} />} {...rest} />
+                <Route key={name} render={(props) => <Component {...props} routes={children} />} {...rest} />
               ))}
             </Switch>
           </Paper>

@@ -215,6 +215,7 @@ module.exports = (isServer = false) => ({
       "lodash-es": "lodash",
       "webpack/hot/poll": require.resolve("webpack/hot/poll"),
     },
+    mainFields: isServer ? ["main", "module"] : ["browser", "module", "main"],
     extensions: [".js", ".jsx", ".tsx", ".ts", ".json", ".scss", ".graphql"],
   },
   plugins: [

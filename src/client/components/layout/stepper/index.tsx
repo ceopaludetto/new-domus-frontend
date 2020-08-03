@@ -52,7 +52,7 @@ export function Stepper({ items, clickable = true, onStepChange }: StepperProps)
               onClick={clickable ? handleClick(index) : undefined}
               onKeyDown={clickable ? handleKeyDown(index) : undefined}
             >
-              <div className={clsx(u["pr-xs-4"], s.icon)}>
+              <div className={s.icon}>
                 <Icon size={20} />
               </div>
               <span className={s.content}>{content}</span>

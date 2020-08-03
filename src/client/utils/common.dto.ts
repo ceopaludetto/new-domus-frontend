@@ -1,4 +1,4 @@
-import { RouteProps } from "react-router-dom";
+import { RouteProps, RouteComponentProps as DefaultRouteComponentProps } from "react-router-dom";
 
 import { ApolloClient } from "@apollo/client";
 import { LoadableComponent } from "@loadable/component";
@@ -22,9 +22,14 @@ export type Route = Omit<RouteProps, "component"> & {
   component: LoadableComponent<any> & { fetchBefore?: (client: Client) => Promise<void> };
 };
 
+export interface ReactStaticContext {
+  url?: string;
+  statusCode?: number;
+}
+
 export type RouteComponentProps = {
   routes?: Route[];
-};
+} & DefaultRouteComponentProps<Record<string, any>, ReactStaticContext>;
 
 export type Breakpoints<T> = {
   xs?: T;

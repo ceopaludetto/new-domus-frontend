@@ -16,8 +16,8 @@ export const BLOCK = "Block";
 export const PHONE = "Phone";
 export const ADDRESS = "Address";
 
-// GraphQL
-export const COMPLEXITY = 25;
+// React
+export const STATS = "@STATS";
 
 // Mailer
 export const MAILER = "@MAILER";
