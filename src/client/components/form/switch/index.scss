@@ -19,9 +19,7 @@
         background-color: get-color(background, darken-1);
       }
       @each $k, $v in map-get($colors, light) {
-        &:active,
-        &:checked,
-        &[checked] {
+        &:matches(:active, :checked, [checked]) {
           + .switch.#{$k} {
             &::before {
               background-color: get-color($k);
@@ -31,17 +29,13 @@
             }
           }
         }
-        &:focus {
-          &:checked,
-          &[checked] {
-            + .switch.#{$k}::before {
-              background-color: get-color($k, darken-1);
-            }
+        &:focus:matches(:checked, [checked]) {
+          + .switch.#{$k}::before {
+            background-color: get-color($k, darken-1);
           }
         }
       }
-      &:checked,
-      &[checked] {
+      &:matches(:checked, [checked]) {
         + .switch::after {
           transform: translateX(18px);
         }
@@ -50,8 +44,7 @@
         + .switch::after {
           width: 20px;
         }
-        &:checked,
-        &[checked] {
+        &:matches(:checked, [checked]) {
           + .switch::after {
             transform: translateX(14px);
           }

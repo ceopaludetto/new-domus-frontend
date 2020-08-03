@@ -4,9 +4,9 @@ $justify: flex-start flex-end center space-between space-around;
 $align: flex-start flex-end center baseline stretch;
 
 .row {
+  column-gap: get-theme-prop(layout, gap);
   display: flex;
   flex-wrap: wrap;
-  margin: 0 -#{get-theme-prop(layout, gap)};
   @each $k, $v in get-theme-prop(layout, breakpoints) {
     @media (min-width: $v) {
       @for $i from 1 through length($justify) {
@@ -24,7 +24,6 @@ $align: flex-start flex-end center baseline stretch;
 }
 
 .col {
-  padding: 0 #{get-theme-prop(layout, gap)};
   @each $k, $v in get-theme-prop(layout, breakpoints) {
     @media (min-width: $v) {
       &.#{$k} {
