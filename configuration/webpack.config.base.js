@@ -9,8 +9,6 @@ const safePostCssParser = require("postcss-safe-parser");
 const TerserPlugin = require("terser-webpack-plugin");
 const webpack = require("webpack");
 
-const babel = require("../babel.config");
-
 const isProd = process.env.NODE_ENV === "production";
 const isDebug = process.env.INSPECT_BRK || process.env.INSPECT || false;
 
@@ -174,11 +172,10 @@ module.exports = (isServer = false) => ({
                 loader: "babel-loader",
                 options: {
                   babelrc: false,
-                  configFile: false,
+                  configFile: path.resolve("babel.config.js"),
                   cacheDirectory: true,
                   cacheCompression: !isProd,
                   compact: !isProd,
-                  ...babel(isServer),
                 },
               },
               {

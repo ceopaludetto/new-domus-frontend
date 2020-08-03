@@ -18,6 +18,6 @@ export function trim(val: string) {
  * This function is used to class-transformer transform decorator
  * @param val string
  */
-export function email(val: string) {
-  return val.trim().toLowerCase();
+export function mail(val: string) {
+  return trim(val).toLowerCase();
 }

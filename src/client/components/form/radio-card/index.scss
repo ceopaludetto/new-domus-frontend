@@ -4,6 +4,7 @@
   align-items: center;
   background-color: get-color(paper, lighten-1);
   border-radius: get-theme-prop(layout, shape);
+  column-gap: get-theme-prop(layout, gap);
   display: flex;
   margin-bottom: get-theme-prop(layout, gap) * 2;
   padding: get-theme-prop(layout, sizes, 6) get-theme-prop(layout, sizes, 4);
@@ -39,16 +40,13 @@
         background-color: get-color(background, darken-1);
       }
     }
-    &:checked,
-    &[checked] {
+    &:matches(:checked, [checked]) {
       + .radio::after {
         transform: scale(1);
       }
     }
     @each $k, $v in map-get($colors, light) {
-      &:active,
-      &[checked],
-      &:checked {
+      &:matches(:active, [checked], :checked) {
         + .radio.#{$k} {
           &::before {
             background-color: get-color($k);
@@ -58,19 +56,15 @@
           }
         }
       }
-      &:focus {
-        &:checked,
-        &[checked] {
-          + .radio.#{$k}::before {
-            background-color: get-color($k, darken-1);
-          }
+      &:focus:matches(:checked, [checked]) {
+        + .radio.#{$k}::before {
+          background-color: get-color($k, darken-1);
         }
       }
     }
   }
   .radio {
     height: 20px;
-    margin-right: get-theme-prop(layout, sizes, 4);
     pointer-events: none;
     position: relative;
     width: 20px;

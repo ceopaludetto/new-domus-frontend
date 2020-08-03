@@ -11,6 +11,6 @@ export class LoggingInterceptor implements NestInterceptor {
     const now = Date.now();
     return next
       .handle()
-      .pipe(tap(() => this.logger.debug(`Method(${context.getHandler().name}) took ${Date.now() - now}ms`)));
+      .pipe(tap(() => this.logger.debug("Method(%s) took %sms", context.getHandler().name, Date.now() - now)));
   }
 }
