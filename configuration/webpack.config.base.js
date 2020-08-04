@@ -38,15 +38,14 @@ module.exports = (isServer = false) => ({
         extractComments: false,
         terserOptions: {
           safari10: !isServer,
-          module: true,
           keep_classnames: isServer,
           keep_fnames: isServer,
           sourceMap: true,
+          ecma: 8,
           compress: {
-            ecma: isServer ? 8 : 5,
+            ecma: 5,
           },
           output: {
-            ecma: isServer ? 8 : 5,
             comments: false,
           },
         },
