@@ -9,6 +9,7 @@ import { SchemaLink } from "@apollo/client/link/schema";
 import { renderToStringWithData } from "@apollo/client/react/ssr";
 import { ChunkExtractor, ChunkExtractorManager } from "@loadable/server";
 import { Injectable, Inject } from "@nestjs/common";
+import { matchesUA } from "browserslist-useragent";
 import { Request, Response } from "express";
 import { PinoLogger, InjectPinoLogger } from "nestjs-pino";
 import { generate } from "shortid";
@@ -29,9 +30,16 @@ export class ReactService {
 
   public async render(req: Request, res: Response) {
     try {
+      let supportESM = false;
+      if (process.env.NODE_ENV === "production") {
+        const ua = req.get("User-Agent");
+        if (ua) {
+          supportESM = matchesUA(ua, { browsers: ["supports es6-module"] });
+        }
+      }
       const nonce = Buffer.from(generate()).toString("base64");
       const extractor = new ChunkExtractor({
-        stats: this.stats,
+        stats: this.stats[supportESM ? "esm" : "legacy"],
       });
       const context: ReactStaticContext = {};
       const helmetContext: FilledContext | Record<string, any> = {};

@@ -7,8 +7,11 @@ import { STATS } from "@/server/utils/constants";
 export const StatsProvider: Provider = {
   provide: STATS,
   useFactory: async () => {
-    const content = await promisify(fs.readFile)(process.env.MANIFEST as string, "UTF-8");
+    const readPromise = promisify(fs.readFile);
 
-    return JSON.parse(content);
+    const legacy = await readPromise(process.env.MANIFEST as string, "UTF-8");
+    const esm = await readPromise(process.env.MANIFEST_ESM as string, "UTF-8");
+
+    return { legacy: JSON.parse(legacy), esm: JSON.parse(esm) };
   },
 };

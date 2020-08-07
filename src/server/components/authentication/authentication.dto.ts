@@ -1,4 +1,4 @@
-import { InputType, Field } from "@nestjs/graphql";
+import { InputType, Field, OmitType } from "@nestjs/graphql";
 import { IsString } from "class-validator";
 
 import * as Messages from "@/server/utils/validations/messages";
@@ -13,3 +13,6 @@ export class AuthenticationInput {
   @IsString({ message: Messages.STRING })
   public password!: string;
 }
+
+@InputType()
+export class ForgotInput extends OmitType(AuthenticationInput, ["password"]) {}

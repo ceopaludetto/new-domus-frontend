@@ -32,6 +32,8 @@ module.exports = {
     "prettier/prettier": "error",
     // Some logic need reassign (such sequelize hooks)
     "no-param-reassign": "off",
+    // Allow for of
+    "no-restricted-syntax": "off",
     // DI in Nest
     "no-useless-constructor": "off",
     "class-methods-use-this": "off",
