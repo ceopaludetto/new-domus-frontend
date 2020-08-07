@@ -3,18 +3,42 @@ const path = require("path");
 
 const isProd = process.env.NODE_ENV === "production";
 
-module.exports = (api) => {
-  let targets;
+function isNode(caller) {
+  return caller.target === "node"
+}
 
-  const isServer = api.caller((caller) => caller.target === "node");
-  const isTest = api.caller((caller) => caller.name === "babel-jest");
+function isJest(caller) {
+  return caller.name === "babel-jest"
+}
+
+function isModule(caller) {
+  return caller.isESM;
+}
+
+module.exports = (api) => {
+  let env = {targets: {}};
+
+  const isServer = api.caller(isNode);
+  const isTest = api.caller(isJest);
+  const isESM = api.caller(isModule)
 
   api.cache(false);
 
   if (isServer || isTest) {
-    targets = {
+    env.targets = {
       node: "current",
     };
+  }
+
+  if(isESM) {
+    env.targets = {
+      esmodules: true
+    }
+  } else {
+    env = {
+      configPath: path.resolve(process.cwd()),
+      browserslistEnv: process.env.NODE_ENV || 'development',
+    }
   }
 
   return {
@@ -24,16 +48,12 @@ module.exports = (api) => {
       [
         "@babel/preset-env",
         {
-          loose: true,
           modules: false,
           useBuiltIns: "usage",
-          shippedProposals: true,
           corejs: 3,
           bugfixes: true,
           exclude: ["transform-typeof-symbol"],
-          configPath: path.resolve(process.cwd()),
-          browserslistEnv: process.env.NODE_ENV || "development",
-          targets,
+          ...env
         },
       ],
       [

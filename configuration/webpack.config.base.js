@@ -13,14 +13,18 @@ const isProd = process.env.NODE_ENV === "production";
 const isDebug = process.env.INSPECT_BRK || process.env.INSPECT || false;
 
 function resolveDevTool() {
-  if (isDebug || isProd) {
+  if (isDebug) {
     return "source-map";
+  }
+
+  if (isProd) {
+    return "hidden-source-map";
   }
 
   return "inline-source-map";
 }
 
-module.exports = (isServer = false) => ({
+module.exports = (isServer = false, isESM = false) => ({
   bail: isProd,
   name: isServer ? "Server" : "Client",
   devtool: resolveDevTool(),
@@ -42,6 +46,7 @@ module.exports = (isServer = false) => ({
           keep_fnames: isServer,
           sourceMap: true,
           ecma: 8,
+          module: isESM,
           compress: {
             ecma: 5,
           },
@@ -80,130 +85,129 @@ module.exports = (isServer = false) => ({
         enforce: "pre",
       },
       {
-        oneOf: [
+        test: /\.(bmp|gif|jpe?g|png)$/,
+        use: [
           {
-            test: /\.(bmp|gif|jpe?g|png)$/,
-            use: [
-              {
-                loader: "url-loader",
-                options: {
-                  limit: 10 * 1024,
-                },
+            loader: "url-loader",
+            options: {
+              limit: 10 * 1024,
+            },
+          },
+          isProd && "image-webpack-loader",
+        ].filter(Boolean),
+      },
+      {
+        test: /\.(graphql|gql)$/,
+        exclude: /node_modules/,
+        loader: "graphql-tag/loader",
+      },
+      {
+        test: /\.svg$/,
+        use: [
+          {
+            loader: "svg-url-loader",
+            options: {
+              limit: 10 * 1024,
+              noquotes: true,
+            },
+          },
+          isProd && "image-webpack-loader",
+        ].filter(Boolean),
+      },
+      {
+        test: /\.(s?css|sass)$/,
+        sideEffects: true,
+        use: [
+          !isServer && !isProd && { loader: "style-loader" },
+          !isServer && isProd && { loader: MiniCssPlugin.loader, options: { esModule: true, sourceMap: true } },
+          { loader: "css-modules-types-generator-loader", options: { index: true } },
+          {
+            loader: "css-loader",
+            options: {
+              esModule: true,
+              onlyLocals: isServer,
+              sourceMap: true,
+              importLoaders: 2,
+              modules: {
+                localIdentName: isProd ? "_[hash:base64:5]" : "[path][name]__[local]--[hash:base64:5]",
               },
-              isProd && "image-webpack-loader",
-            ].filter(Boolean),
+            },
           },
           {
-            test: /\.(graphql|gql)$/,
-            exclude: /node_modules/,
-            loader: "graphql-tag/loader",
+            loader: "postcss-loader",
+            options: {
+              sourceMap: true,
+              ident: "postcss",
+              plugins: () =>
+                [
+                  require("postcss-flexbugs-fixes"),
+                  require("postcss-preset-env")({
+                    autoprefixer: {
+                      flexbox: "no-2009",
+                    },
+                    features: {
+                      "prefers-color-scheme-query": false,
+                    },
+                    stage: 1,
+                  }),
+                  isProd &&
+                    require("@fullhuman/postcss-purgecss")({
+                      content: ["./src/**/*.tsx"],
+                      keyframes: true,
+                      fontFace: true,
+                      defaultExtractor: (content) => content.match(/[\w-/:]+(?<!:)/g) || [],
+                    }),
+                  require("postcss-normalize"),
+                ].filter(Boolean),
+            },
           },
           {
-            test: /\.svg$/,
-            use: [
-              {
-                loader: "svg-url-loader",
-                options: {
-                  limit: 10 * 1024,
-                  noquotes: true,
-                },
+            loader: "sass-loader",
+            options: {
+              sourceMap: true,
+            },
+          },
+        ].filter(Boolean),
+      },
+      {
+        test: /\.tsx?$/,
+        exclude: /(node_modules|bower_components)/,
+        use: [
+          {
+            loader: "babel-loader",
+            options: {
+              babelrc: false,
+              configFile: path.resolve("babel.config.js"),
+              cacheDirectory: true,
+              cacheCompression: !isProd,
+              compact: !isProd,
+              caller: {
+                isESM,
               },
-              isProd && "image-webpack-loader",
-            ].filter(Boolean),
+            },
           },
           {
-            test: /\.(s?css|sass)$/,
-            sideEffects: true,
-            use: [
-              !isServer && !isProd && { loader: "style-loader" },
-              !isServer && isProd && { loader: MiniCssPlugin.loader, options: { esModule: true, sourceMap: true } },
-              { loader: "css-modules-types-generator-loader", options: { index: true } },
-              {
-                loader: "css-loader",
-                options: {
-                  esModule: true,
-                  onlyLocals: isServer,
-                  sourceMap: true,
-                  importLoaders: 2,
-                  modules: {
-                    localIdentName: isProd ? "_[hash:base64:5]" : "[path][name]__[local]--[hash:base64:5]",
-                  },
-                },
-              },
-              {
-                loader: "postcss-loader",
-                options: {
-                  sourceMap: true,
-                  ident: "postcss",
-                  plugins: () =>
-                    [
-                      require("postcss-flexbugs-fixes"),
-                      require("postcss-preset-env")({
-                        autoprefixer: {
-                          flexbox: "no-2009",
-                        },
-                        features: {
-                          "prefers-color-scheme-query": false,
-                        },
-                        stage: 1,
-                      }),
-                      isProd &&
-                        require("@fullhuman/postcss-purgecss")({
-                          content: ["./src/**/*.tsx"],
-                          keyframes: true,
-                          fontFace: true,
-                          defaultExtractor: (content) => content.match(/[\w-/:]+(?<!:)/g) || [],
-                        }),
-                      require("postcss-normalize"),
-                    ].filter(Boolean),
-                },
-              },
-              {
-                loader: "sass-loader",
-                options: {
-                  sourceMap: true,
-                },
-              },
-            ].filter(Boolean),
-          },
-          {
-            test: /\.tsx?$/,
-            exclude: /(node_modules|bower_components)/,
-            use: [
-              {
-                loader: "babel-loader",
-                options: {
-                  babelrc: false,
-                  configFile: path.resolve("babel.config.js"),
-                  cacheDirectory: true,
-                  cacheCompression: !isProd,
-                  compact: !isProd,
-                },
-              },
-              {
-                loader: "ts-loader",
-                options: {
-                  transpileOnly: true,
-                  experimentalWatchApi: !isProd,
-                  configFile: path.resolve(`tsconfig.json`),
-                },
-              },
-            ],
-          },
-          {
-            exclude: [/\.(js|mjs|ts|tsx|scss|html|json)$/],
-            use: [
-              {
-                loader: "file-loader",
-                options: {
-                  name: "assets/[name].[contenthash:8].[ext]",
-                  emitFile: !isServer,
-                },
-              },
-              isProd && "image-webpack-loader",
-            ].filter(Boolean),
+            loader: "ts-loader",
+            options: {
+              transpileOnly: true,
+              experimentalWatchApi: !isProd,
+              configFile: path.resolve(`tsconfig.json`),
+            },
           },
         ],
+      },
+      {
+        exclude: [/\.(js|mjs|ts|tsx|scss|html|json|graphql|gql)$/],
+        use: [
+          {
+            loader: "file-loader",
+            options: {
+              name: "assets/[name].[contenthash:8].[ext]",
+              emitFile: !isServer,
+            },
+          },
+          isProd && "image-webpack-loader",
+        ].filter(Boolean),
       },
     ],
   },
@@ -213,6 +217,8 @@ module.exports = (isServer = false) => ({
       "@": path.resolve("src"),
       "lodash-es": "lodash",
       "webpack/hot/poll": require.resolve("webpack/hot/poll"),
+      "react-dom": isProd && !isServer ? "@pika/react-dom" : "react-dom",
+      react: isProd && !isServer ? "@pika/react" : "react",
     },
     mainFields: isServer ? ["main", "module"] : ["browser", "module", "main"],
     extensions: [".js", ".jsx", ".tsx", ".ts", ".json", ".scss", ".graphql"],
@@ -223,6 +229,7 @@ module.exports = (isServer = false) => ({
       PUBLIC_URL: "/static",
       STATIC_FOLDER: path.resolve("dist", "static"),
       MANIFEST: path.resolve("dist", "static", "manifest.json"),
+      MANIFEST_ESM: path.resolve("dist", "static", "manifest.esm.json"),
       BASE_DIR: path.resolve("."),
     }),
     new webpack.WatchIgnorePlugin([/\.scss\.d\.ts/g, "src/server/schema.gql"]),
