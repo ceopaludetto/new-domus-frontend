@@ -4,11 +4,11 @@ const path = require("path");
 const isProd = process.env.NODE_ENV === "production";
 
 function isNode(caller) {
-  return caller.target === "node"
+  return caller.target === "node";
 }
 
 function isJest(caller) {
-  return caller.name === "babel-jest"
+  return caller.name === "babel-jest";
 }
 
 function isModule(caller) {
@@ -16,29 +16,35 @@ function isModule(caller) {
 }
 
 module.exports = (api) => {
-  let env = {targets: {}};
+  let env = { targets: {} };
 
   const isServer = api.caller(isNode);
   const isTest = api.caller(isJest);
-  const isESM = api.caller(isModule)
+  const isESM = api.caller(isModule);
 
   api.cache(false);
 
   if (isServer || isTest) {
-    env.targets = {
-      node: "current",
+    env = {
+      ignoreBrowserslistConfig: true,
+      targets: {
+        node: "current",
+      },
     };
   }
 
-  if(isESM) {
-    env.targets = {
-      esmodules: true
-    }
+  if (isESM) {
+    env = {
+      ignoreBrowserslistConfig: true,
+      targets: {
+        esmodules: true,
+      },
+    };
   } else {
     env = {
       configPath: path.resolve(process.cwd()),
-      browserslistEnv: process.env.NODE_ENV || 'development',
-    }
+      browserslistEnv: process.env.NODE_ENV || "development",
+    };
   }
 
   return {
@@ -52,14 +58,15 @@ module.exports = (api) => {
           useBuiltIns: "usage",
           corejs: 3,
           bugfixes: true,
+          loose: isServer,
           exclude: ["transform-typeof-symbol"],
-          ...env
+          ...env,
         },
       ],
       [
         "@babel/preset-react",
         {
-          useBuiltIns: true,
+          useSpread: true,
           development: !isProd,
         },
       ],
@@ -82,7 +89,6 @@ module.exports = (api) => {
       !isServer && !isProd && !isTest && "react-refresh/babel",
       isTest && ["@babel/plugin-transform-modules-commonjs", { loose: true }],
       isTest && "dynamic-import-node",
-      isTest && "transform-require-context",
     ].filter(Boolean),
     overrides: [
       {
