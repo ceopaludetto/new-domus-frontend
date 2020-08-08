@@ -31,9 +31,7 @@ module.exports = (api) => {
         node: "current",
       },
     };
-  }
-
-  if (isESM) {
+  } else if (isESM) {
     env = {
       ignoreBrowserslistConfig: true,
       targets: {

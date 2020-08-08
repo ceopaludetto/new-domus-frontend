@@ -97,6 +97,19 @@ module.exports = (isServer = false, isESM = false) => ({
         ].filter(Boolean),
       },
       {
+        test: /\.(bmp|gif|jpe?g|png)$/,
+        use: [
+          {
+            loader: "file-loader",
+            options: {
+              name: "assets/[name].[contenthash:8].[ext]",
+              emitFile: !isServer,
+            },
+          },
+          isProd && "image-webpack-loader",
+        ].filter(Boolean),
+      },
+      {
         test: /\.(graphql|gql)$/,
         exclude: /node_modules/,
         loader: "graphql-tag/loader",
@@ -197,7 +210,7 @@ module.exports = (isServer = false, isESM = false) => ({
         ],
       },
       {
-        exclude: [/\.(js|mjs|ts|tsx|scss|html|json|graphql|gql)$/],
+        exclude: [/\.(m?jsx?|tsx?|s?css|html|json|graphql|gql|bmp|gif|jpe?g|png)$/],
         use: [
           {
             loader: "file-loader",
@@ -206,7 +219,6 @@ module.exports = (isServer = false, isESM = false) => ({
               emitFile: !isServer,
             },
           },
-          isProd && "image-webpack-loader",
         ].filter(Boolean),
       },
     ],
