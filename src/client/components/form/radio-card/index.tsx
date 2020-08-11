@@ -2,9 +2,9 @@ import * as React from "react";
 
 import clsx from "clsx";
 
-import { Colors } from "@/client/utils/common.dto";
+import type { Colors } from "@/client/utils/common.dto";
 
-import { Label } from "../../typography";
+import { Text } from "../../typography";
 import s from "./index.scss";
 
 interface RadioCardProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "type"> {
@@ -16,7 +16,7 @@ interface RadioCardProps extends Omit<React.InputHTMLAttributes<HTMLInputElement
 
 export const RadioCard = React.forwardRef<HTMLInputElement, RadioCardProps>(
   ({ color = "primary", error, helperText, id, label, className, ...rest }, ref) => {
-    const classes = clsx(s["radio-card"], s[color], error && s.error, className);
+    const classes = clsx(s["radio-card"], s[error ? "error" : color], className);
 
     return (
       <>
@@ -24,12 +24,16 @@ export const RadioCard = React.forwardRef<HTMLInputElement, RadioCardProps>(
           <input className={s.input} ref={ref} type="radio" {...rest} />
           <div className={clsx(s.radio, s[color])} />
           {label && (
-            <Label noMargin htmlFor={id}>
+            <Text as="label" htmlFor={id}>
               {label}
-            </Label>
+            </Text>
           )}
         </div>
-        {helperText && <div className={clsx(s.helper, error && s.error)}>{helperText}</div>}
+        {helperText && (
+          <Text as="span" variant="body-2" color={error && "error"} className={s.helper}>
+            {helperText}
+          </Text>
+        )}
       </>
     );
   }

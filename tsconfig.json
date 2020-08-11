@@ -17,7 +17,8 @@
     "noEmit": true,
     "noEmitHelpers": true,
     "sourceMap": true,
-    "allowJs": true
+    "allowJs": true,
+    "importsNotUsedAsValues": "error"
   },
   "include": [
     "src/**/*",

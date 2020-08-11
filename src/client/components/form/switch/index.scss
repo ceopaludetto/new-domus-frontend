@@ -83,16 +83,11 @@
       }
     }
     .info {
+      color: get-shadow-color(text, 0.7);
       display: inline-block;
       flex: 1;
       padding-left: 50px;
       user-select: none;
-      @include theme(dark) {
-        color: get-color(muted, lighten-2);
-      }
-      @include theme(light) {
-        color: get-color(muted, darken-2);
-      }
     }
   }
 }

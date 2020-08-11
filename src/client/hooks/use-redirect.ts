@@ -1,16 +1,17 @@
 import { useLocation, useHistory } from "react-router-dom";
 import { useEffectOnce } from "react-use";
 
-import { ReactStaticContext } from "@/client/utils/common.dto";
+import type { ReactStaticContext } from "@/client/utils/common.dto";
 
 interface RedirectOptions {
-  url: string;
-  location: ReturnType<typeof useLocation>;
-  history: ReturnType<typeof useHistory>;
+  status?: number;
   staticContext?: ReactStaticContext;
 }
 
-export function useRedirect({ url, location, history, staticContext }: RedirectOptions, status?: number) {
+export function useRedirect(url: string, { status = 301, staticContext = {} }: RedirectOptions) {
+  const location = useLocation();
+  const history = useHistory();
+
   useEffectOnce(() => {
     if (location.pathname !== url && typeof window !== "undefined") {
       history.replace(url);

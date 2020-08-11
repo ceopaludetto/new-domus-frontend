@@ -5,7 +5,7 @@ import { Strategy } from "passport-jwt";
 
 import { ConfigurationService } from "@/server/components/configuration";
 import { UserService } from "@/server/components/user";
-import { FindByID } from "@/server/utils/common.dto";
+import type { FindByID } from "@/server/utils/common.dto";
 
 import { extractor } from "./extractor";
 

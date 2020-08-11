@@ -39,7 +39,7 @@
 
 .line {
   border-radius: 999px;
-  height: 2px;
+  height: 1px;
   &:not(.active) {
     background-color: get-color(muted);
   }

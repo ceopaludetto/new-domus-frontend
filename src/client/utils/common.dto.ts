@@ -1,7 +1,7 @@
-import { RouteProps, RouteComponentProps as DefaultRouteComponentProps } from "react-router-dom";
+import type { RouteProps, RouteComponentProps as DefaultRouteComponentProps } from "react-router-dom";
 
-import { ApolloClient } from "@apollo/client";
-import { LoadableComponent } from "@loadable/component";
+import type { ApolloClient } from "@apollo/client";
+import type { LoadableComponent } from "@loadable/component";
 
 export type Colors = {
   primary: string;
@@ -13,6 +13,21 @@ export type Colors = {
   success: string;
   text: string;
 };
+
+export type Typography =
+  | "overline"
+  | "caption"
+  | "button"
+  | "body-1"
+  | "body-2"
+  | "subtitle-1"
+  | "subtitle-2"
+  | "headline-1"
+  | "headline-2"
+  | "headline-3"
+  | "headline-4"
+  | "headline-5"
+  | "headline-6";
 
 export type Client = ApolloClient<Record<string, any>>;
 

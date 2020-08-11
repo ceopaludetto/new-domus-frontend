@@ -5,7 +5,7 @@ import clsx from "clsx";
 
 import { Container, Paper } from "@/client/components";
 import u from "@/client/styles/utils.scss";
-import { RouteComponentProps } from "@/client/utils/common.dto";
+import type { RouteComponentProps } from "@/client/utils/common.dto";
 
 import s from "./index.scss";
 

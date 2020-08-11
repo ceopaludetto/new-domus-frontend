@@ -2,7 +2,7 @@ import * as React from "react";
 
 import clsx from "clsx";
 
-import { Colors } from "@/client/utils/common.dto";
+import type { Colors } from "@/client/utils/common.dto";
 
 import s from "./index.scss";
 

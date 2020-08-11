@@ -1,4 +1,4 @@
-import { Provider } from "@nestjs/common";
+import type { Provider } from "@nestjs/common";
 import fs from "fs";
 import { promisify } from "util";
 

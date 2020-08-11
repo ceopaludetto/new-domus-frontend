@@ -28,7 +28,7 @@ export class AuthenticationResolver {
     return this.authService.register(data, ctx.res);
   }
 
-  @Mutation(() => Boolean)
+  @Mutation(() => String)
   public forgot(@Args("input") data: ForgotInput) {
     return this.authService.forgot(data);
   }

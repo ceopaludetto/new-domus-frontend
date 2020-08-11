@@ -1,0 +1,81 @@
+@import "./functions";
+
+%button {
+  font-size: get-theme-prop(typography, sizes, 3);
+  font-weight: get-theme-prop(typography, weights, 2);
+  letter-spacing: rem(1.25px);
+  text-transform: uppercase;
+}
+
+%caption {
+  font-size: get-theme-prop(typography, sizes, 2);
+  font-weight: get-theme-prop(typography, weights, 1);
+  letter-spacing: rem(0.4px);
+}
+
+%overline {
+  font-size: get-theme-prop(typography, sizes, 1);
+  font-weight: get-theme-prop(typography, weights, 1);
+  letter-spacing: rem(1.5px);
+  text-transform: uppercase;
+}
+
+%body-2 {
+  font-size: get-theme-prop(typography, sizes, 3);
+  font-weight: get-theme-prop(typography, weights, 1);
+  letter-spacing: rem(0.25px);
+}
+
+%body-1 {
+  font-size: get-theme-prop(typography, sizes, 4);
+  font-weight: get-theme-prop(typography, weights, 1);
+  letter-spacing: rem(0.5px);
+}
+
+%subtitle-2 {
+  font-size: get-theme-prop(typography, sizes, 3);
+  font-weight: get-theme-prop(typography, weights, 2);
+  letter-spacing: rem(0.1px);
+}
+
+%subtitle-1 {
+  font-size: get-theme-prop(typography, sizes, 4);
+  font-weight: get-theme-prop(typography, weights, 1);
+  letter-spacing: rem(0.15px);
+}
+
+%headline-6 {
+  font-size: get-theme-prop(typography, sizes, 5);
+  font-weight: get-theme-prop(typography, weights, 2);
+  letter-spacing: rem(0.15px);
+}
+
+%headline-5 {
+  font-size: get-theme-prop(typography, sizes, 6);
+  font-weight: get-theme-prop(typography, weights, 1);
+  letter-spacing: 0;
+}
+
+%headline-4 {
+  font-size: get-theme-prop(typography, sizes, 7);
+  font-weight: get-theme-prop(typography, weights, 1);
+  letter-spacing: rem(0.25px);
+}
+
+%headline-3 {
+  font-size: get-theme-prop(typography, sizes, 8);
+  font-weight: get-theme-prop(typography, weights, 1);
+  letter-spacing: 0;
+}
+
+%headline-2 {
+  font-size: get-theme-prop(typography, sizes, 9);
+  font-weight: get-theme-prop(typography, weights, 1);
+  letter-spacing: rem(-0.5px);
+}
+
+%headline-1 {
+  font-size: get-theme-prop(typography, sizes, 10);
+  font-weight: get-theme-prop(typography, weights, 1);
+  letter-spacing: rem(-1.5px);
+}

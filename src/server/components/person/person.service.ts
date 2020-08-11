@@ -4,7 +4,7 @@ import { InjectModel } from "@nestjs/sequelize";
 import { Person } from "@/server/models";
 import type { Mapped, ShowAll, CreateOptions } from "@/server/utils/common.dto";
 
-import { PersonInsertInputWithoutRelation } from "./person.dto";
+import type { PersonInsertInputWithoutRelation } from "./person.dto";
 
 @Injectable()
 export class PersonService {

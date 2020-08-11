@@ -6,7 +6,7 @@ import { NProgress } from "@tanem/react-nprogress";
 import clsx from "clsx";
 
 import { ProgressContext } from "@/client/providers/progress";
-import { Colors } from "@/client/utils/common.dto";
+import type { Colors } from "@/client/utils/common.dto";
 
 import { NoSsr } from "../no-ssr";
 import s from "./index.scss";

@@ -4,7 +4,7 @@ import { useForm, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers";
 import clsx from "clsx";
 
-import { FormControl, Button, Label, PasswordHelper } from "@/client/components";
+import { FormControl, Button, PasswordHelper, Text } from "@/client/components";
 import { SignUpStep2Schema, SignUpStep2Values } from "@/client/helpers/validations/signup.schema";
 import { StepperContext, useMultipleVisibility } from "@/client/hooks";
 import u from "@/client/styles/utils.scss";
@@ -62,24 +62,28 @@ export default function Step2() {
             />
           </div>
           <div className={clsx(u["xs-12"], u["md-6"], u["order-xs-1"], u["order-md-2"])}>
-            <Label htmlFor="password">Dicas de Senha</Label>
-            <PasswordHelper id="password-constraint-1" active={passwordHelp.oneNumber}>
-              Pelo menos 1 número.
-            </PasswordHelper>
-            <PasswordHelper id="password-constraint-2" active={passwordHelp.oneUpper}>
-              Pelo menos 1 caractere maiúsculo.
-            </PasswordHelper>
-            <PasswordHelper id="password-constraint-3" active={passwordHelp.min}>
-              No mínimo 6 caracteres.
-            </PasswordHelper>
+            <Text as="label" variant="body-1" htmlFor="password">
+              Dicas de Senha
+            </Text>
+            <div className={u["mt-xs-3"]}>
+              <PasswordHelper id="password-constraint-1" active={passwordHelp.oneNumber}>
+                Pelo menos 1 número.
+              </PasswordHelper>
+              <PasswordHelper id="password-constraint-2" active={passwordHelp.oneUpper}>
+                Pelo menos 1 caractere maiúsculo.
+              </PasswordHelper>
+              <PasswordHelper id="password-constraint-3" active={passwordHelp.min}>
+                No mínimo 6 caracteres.
+              </PasswordHelper>
+            </div>
           </div>
         </div>
         <div className={clsx(u.row, u["justify-content-xs-flex-end"])}>
           <div className={u.col}>
-            <Button variant="flat" onClick={() => prev()}>
+            <Button variant="outlined" onClick={() => prev()}>
               Voltar
             </Button>{" "}
-            <Button variant="raised" type="submit">
+            <Button variant="contained" type="submit">
               Próximo
             </Button>
           </div>

@@ -1,6 +1,6 @@
 import { MailerService } from "@nestjs-modules/mailer";
 import { Processor, Process, OnQueueActive } from "@nestjs/bull";
-import { Job } from "bull";
+import type { Job } from "bull";
 import { InjectPinoLogger, PinoLogger } from "nestjs-pino";
 
 import type { User } from "@/server/models";

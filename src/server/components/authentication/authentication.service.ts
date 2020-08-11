@@ -3,8 +3,8 @@ import { Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { InjectConnection } from "@nestjs/sequelize";
 import { UserInputError, AuthenticationError } from "apollo-server-express";
-import { Queue } from "bull";
-import { Response } from "express";
+import type { Queue } from "bull";
+import type { Response } from "express";
 import { InjectPinoLogger, PinoLogger } from "nestjs-pino";
 import { Sequelize } from "sequelize";
 
@@ -12,7 +12,7 @@ import { UserInsertInput, UserService } from "@/server/components/user";
 import { User, Address, Person } from "@/server/models";
 import type { Mapped } from "@/server/utils/common.dto";
 
-import { AuthenticationInput, ForgotInput } from "./authentication.dto";
+import type { AuthenticationInput, ForgotInput } from "./authentication.dto";
 
 @Injectable()
 export class AuthenticationService {
@@ -100,17 +100,19 @@ export class AuthenticationService {
         include: [{ model: Person }],
       });
 
-      if (user) {
-        await this.mailQueue.add("forgot", user, {
-          attempts: 5,
-          backoff: {
-            type: "fixed",
-            delay: 2000,
-          },
-        });
+      if (!user) {
+        throw new Error("Usuário não encontrado");
       }
 
-      return true;
+      await this.mailQueue.add("forgot", user, {
+        attempts: 5,
+        backoff: {
+          type: "fixed",
+          delay: 2000,
+        },
+      });
+
+      return user.person.email;
     } catch (error) {
       this.logger.error(error);
       throw error;

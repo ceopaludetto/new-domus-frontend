@@ -2,29 +2,20 @@
 
 .radio-card {
   align-items: center;
-  background-color: get-color(paper, lighten-1);
+  border: 1px solid get-shadow-color(text, 0.12);
   border-radius: get-theme-prop(layout, shape);
   column-gap: get-theme-prop(layout, gap);
   display: flex;
   margin-bottom: get-theme-prop(layout, gap) * 2;
-  padding: get-theme-prop(layout, sizes, 6) get-theme-prop(layout, sizes, 4);
+  padding: get-theme-prop(layout, sizes, 5) get-theme-prop(layout, sizes, 4);
   position: relative;
-  transition: transition((border-color));
-  @include theme(dark) {
-    border: 2px solid get-color(paper, lighten-2);
-  }
-  @include theme(light) {
-    border: 2px solid get-color(background, darken-2);
-  }
+  transition: transition((border-color, background-color));
   @each $k, $v in map-get($colors, light) {
     &.#{$k} {
       &:focus-within {
         border-color: get-color($k);
       }
     }
-  }
-  &.error {
-    border-color: get-color(error) !important;
   }
   .input {
     cursor: pointer;
@@ -105,7 +96,4 @@
   margin-top: get-theme-prop(layout, sizes, 3);
   padding-left: get-theme-prop(layout, sizes, 4);
   transition: transition((color));
-  &.error {
-    color: get-color(error) !important;
-  }
 }

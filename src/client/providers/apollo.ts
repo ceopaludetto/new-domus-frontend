@@ -1,5 +1,5 @@
 import { InMemoryCache, ApolloClient, HttpLink } from "@apollo/client";
-import { SchemaLink } from "@apollo/client/link/schema";
+import type { SchemaLink } from "@apollo/client/link/schema";
 
 export function createClient(isSsr = false, link: HttpLink | SchemaLink) {
   const cache = new InMemoryCache();

@@ -11,3 +11,7 @@ mutation Register($input: UserInsertInput!) {
     ...UserValues
   }
 }
+
+mutation AuthForgot($input: ForgotInput!) {
+  forgot(input: $input)
+}

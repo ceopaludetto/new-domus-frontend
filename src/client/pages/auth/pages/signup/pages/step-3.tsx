@@ -1,19 +1,11 @@
 import * as React from "react";
-import { useForm, FormProvider, get, useFieldArray } from "react-hook-form";
+import { useForm, FormProvider, get } from "react-hook-form";
 
 import { useQuery, useMutation } from "@apollo/client";
 import { yupResolver } from "@hookform/resolvers";
 import clsx from "clsx";
 
-import {
-  MaskedFormControl,
-  FormControl,
-  FormSelect,
-  FormRadioCard,
-  Button,
-  Switch,
-  ColorText,
-} from "@/client/components";
+import { MaskedFormControl, FormControl, FormSelect, FormRadioCard, Button, Switch, Text } from "@/client/components";
 import { Register, ShowStates } from "@/client/graphql";
 import { ShowStatesQuery, RegisterMutation, RegisterMutationVariables, Gender } from "@/client/graphql/operations";
 import * as Masks from "@/client/helpers/masks";
@@ -21,7 +13,7 @@ import { SignUpStep3Schema, SignUpStep3Values } from "@/client/helpers/validatio
 import { StepperContext } from "@/client/hooks";
 import u from "@/client/styles/utils.scss";
 import { clean } from "@/client/utils/clean";
-import { Client } from "@/client/utils/common.dto";
+import type { Client } from "@/client/utils/common.dto";
 import { splitPhone } from "@/client/utils/string";
 
 import { WizardContext, initialValues } from "../providers";
@@ -90,9 +82,9 @@ export default function Step3() {
           </div>
         </div>
         {methods.errors.type && (
-          <ColorText className={clsx(u["ml-xs-4"], u["-mt-xs-3"], u["mb-xs-4"], u.block)} small color="error">
+          <Text variant="body-2" className={clsx(u["ml-xs-4"], u["-mt-xs-3"], u["mb-xs-4"], u.block)} color="error">
             {get(methods.errors, "type.message")}
-          </ColorText>
+          </Text>
         )}
         {type === "create" && (
           <>
@@ -162,10 +154,10 @@ export default function Step3() {
         <Switch label="Termos de uso" info="Ao assinar essa opção você concorda com nossos termos de uso." id="terms" />
         <div className={clsx(u.row, u["justify-content-xs-flex-end"])}>
           <div className={u.col}>
-            <Button variant="flat" onClick={() => prev()}>
+            <Button variant="outlined" onClick={() => prev()}>
               Voltar
             </Button>{" "}
-            <Button variant="raised" type="submit">
+            <Button variant="contained" type="submit">
               Cadastrar
             </Button>
           </div>

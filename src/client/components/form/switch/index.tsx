@@ -2,8 +2,9 @@ import * as React from "react";
 
 import clsx from "clsx";
 
-import { Label } from "@/client/components/typography";
-import { Colors } from "@/client/utils/common.dto";
+import { Text } from "@/client/components/typography";
+import u from "@/client/styles/utils.scss";
+import type { Colors } from "@/client/utils/common.dto";
 
 import s from "./index.scss";
 
@@ -18,14 +19,20 @@ export function Switch({ color = "primary", className, id, label, info, ...rest 
 
   return (
     <div className={s["form-group"]}>
-      {label && <Label htmlFor={id}>{label}</Label>}
+      {label && (
+        <div className={u["mb-xs-3"]}>
+          <Text as="label" htmlFor={id}>
+            {label}
+          </Text>
+        </div>
+      )}
       <div className={s["switch-container"]}>
         <input id={id} type="checkbox" {...rest} className={s.input} />
         <div className={classes} />
         {info && (
-          <label htmlFor={id} className={s.info}>
+          <Text as="label" htmlFor={id} className={s.info}>
             {info}
-          </label>
+          </Text>
         )}
       </div>
     </div>

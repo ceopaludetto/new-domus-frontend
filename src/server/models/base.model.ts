@@ -2,7 +2,7 @@ import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { PrimaryKey, CreatedAt, UpdatedAt, DeletedAt, Column, Model, Default } from "sequelize-typescript";
 import { generate } from "shortid";
 
-import { ExcludeSequelize } from "@/server/utils/common.dto";
+import type { ExcludeSequelize } from "@/server/utils/common.dto";
 
 interface BaseModelAttributes {
   id: string;

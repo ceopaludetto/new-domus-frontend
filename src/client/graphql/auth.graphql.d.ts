@@ -6,6 +6,7 @@ declare module "./auth.graphql" {
   const defaultDocument: DocumentNode;
   export const Login: DocumentNode;
   export const Register: DocumentNode;
+  export const AuthForgot: DocumentNode;
 
   export default defaultDocument;
 }

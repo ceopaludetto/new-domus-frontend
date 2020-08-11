@@ -22,11 +22,12 @@
 *::before,
 *::after {
   box-sizing: border-box;
+  font-family: get-theme-prop(typography, family);
 }
 
 html {
-  font-family: get-theme-prop(typography, family);
   font-size: $base-px;
+  line-height: 1.375;
   text-size-adjust: 100%;
 }
 

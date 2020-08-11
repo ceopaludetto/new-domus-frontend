@@ -1,4 +1,4 @@
-import { ValidationArguments } from "class-validator";
+import type { ValidationArguments } from "class-validator";
 
 import * as Messages from "./messages";
 

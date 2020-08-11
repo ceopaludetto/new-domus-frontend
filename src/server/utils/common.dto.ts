@@ -1,6 +1,6 @@
 import { ArgsType, Field, ID, Int, registerEnumType } from "@nestjs/graphql";
 import { IsString, IsObject, IsInt, IsNumber, IsOptional } from "class-validator";
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 import type { IncludeOptions, Order as SequelizeOrder, FindAttributeOptions, Transaction } from "sequelize";
 import type { Model } from "sequelize-typescript";
 

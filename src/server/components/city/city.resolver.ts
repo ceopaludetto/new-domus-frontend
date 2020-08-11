@@ -15,10 +15,10 @@ export class CityResolver {
   @Query(() => [City])
   public async showCities(
     @Args({ nullable: true }) { take, skip }: ShowAll,
-    @SortFields(City) sort: CitySortInput,
-    @MapFields(City) mapped: Mapped
+    @SortFields(City) sort?: CitySortInput,
+    @MapFields(City) mapped?: Mapped
   ) {
-    return this.cityService.showAll({ skip, take, sort: sort.get() }, mapped);
+    return this.cityService.showAll({ skip, take, sort: sort?.get() }, mapped);
   }
 
   @Query(() => City)

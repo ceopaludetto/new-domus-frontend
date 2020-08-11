@@ -1,6 +1,6 @@
 import { AuthenticationError } from "apollo-server-express";
-import { Request } from "express";
-import { JwtFromRequestFunction } from "passport-jwt";
+import type { Request } from "express";
+import type { JwtFromRequestFunction } from "passport-jwt";
 
 export function extractor(req: Request): JwtFromRequestFunction {
   const { auth } = req.cookies;

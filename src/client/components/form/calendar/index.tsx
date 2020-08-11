@@ -5,7 +5,7 @@ import clsx from "clsx";
 import dayjs from "dayjs";
 
 import { Paper, Divider } from "@/client/components/layout";
-import { ColorText } from "@/client/components/typography";
+import { Text } from "@/client/components/typography";
 import u from "@/client/styles/utils.scss";
 
 import { Button } from "../button";
@@ -214,9 +214,9 @@ export default function Calendar({
           <div className={clsx(u.grid, s.calendar)}>
             {daysOfWeek.map((d) => (
               <div key={d} className={clsx(u["xs-1"], u["text-align-xs-center"], u["mb-xs-3"])}>
-                <ColorText small color="muted">
+                <Text as="span" variant="body-2" color="muted">
                   {d}
-                </ColorText>
+                </Text>
               </div>
             ))}
           </div>

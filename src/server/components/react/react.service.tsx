@@ -10,7 +10,7 @@ import { renderToStringWithData } from "@apollo/client/react/ssr";
 import { ChunkExtractor, ChunkExtractorManager } from "@loadable/server";
 import { Injectable, Inject } from "@nestjs/common";
 import { matchesUA } from "browserslist-useragent";
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 import { PinoLogger, InjectPinoLogger } from "nestjs-pino";
 import { generate } from "shortid";
 

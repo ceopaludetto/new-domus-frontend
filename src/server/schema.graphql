@@ -112,7 +112,7 @@ type Mutation {
   createCondominium(input: CondominiumInsertInput!): Int!
   login(input: AuthenticationInput!): User!
   register(input: UserInsertInput!): User!
-  forgot(input: ForgotInput!): Boolean!
+  forgot(input: ForgotInput!): String!
 }
 
 enum Order {
