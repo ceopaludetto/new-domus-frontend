@@ -178,6 +178,10 @@ module.exports = (isServer = false, isESM = false) => ({
             loader: "sass-loader",
             options: {
               sourceMap: true,
+              implementation: require("sass"),
+              sassOptions: {
+                includePaths: [path.resolve("node_modules")],
+              },
             },
           },
         ].filter(Boolean),

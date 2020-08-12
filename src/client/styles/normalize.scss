@@ -47,36 +47,3 @@ body {
 }
 
 @include gen-colors($colors);
-
-*::-webkit-scrollbar {
-  width: 7px;
-}
-
-* {
-  scrollbar-width: thin;
-
-  &::-webkit-scrollbar-track {
-    background-color: get-color(paper);
-    border-radius: get-theme-prop(layout, shape);
-  }
-  &::-webkit-scrollbar-thumb {
-    background-color: get-color(paper);
-  }
-}
-
-@include theme(light) {
-  * {
-    scrollbar-color: get-color(background, darken-2) get-color(paper);
-    &::-webkit-scrollbar-thumb {
-      background-color: get-color(background, darken-2);
-    }
-  }
-}
-@include theme(dark) {
-  * {
-    scrollbar-color: get-color(paper, lighten-2) get-color(paper);
-    &::-webkit-scrollbar-thumb {
-      background-color: get-color(paper, lighten-2);
-    }
-  }
-}

@@ -3,7 +3,9 @@
 .button {
   border: 0;
   border-radius: get-theme-prop(layout, shape);
+  overflow: hidden;
   position: relative;
+  -webkit-tap-highlight-color: transparent;
   transition: transition((background-color, box-shadow, border-color));
   user-select: none;
   @include not-disabled {
@@ -57,10 +59,7 @@
           color: get-color($k);
           &:hover,
           &:focus {
-            background-color: get-shadow-color($k, 0.15);
-          }
-          &:active {
-            background-color: get-shadow-color($k, 0.075);
+            background-color: get-shadow-color($k, 0.12);
           }
         }
       }
@@ -74,7 +73,7 @@
     @include not-disabled {
       @each $k, $v in map-get($colors, light) {
         &.#{$k} {
-          border-color: get-shadow-color($k, 0.7);
+          border-color: get-shadow-color($k, 0.5);
           &:hover {
             border-color: get-color($k);
           }

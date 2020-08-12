@@ -18,6 +18,9 @@
         }
         &:focus-within {
           background-color: get-shadow-color(text, 0.09);
+          .input::placeholder {
+            opacity: 1;
+          }
           .label {
             color: get-color($k);
             transform: translate3d(0, -115%, 0) scale(0.875);
@@ -46,6 +49,12 @@
       }
       &:focus {
         outline: none;
+      }
+      &::placeholder {
+        color: get-shadow-color(text, 0.6);
+        opacity: 0;
+        transition: transition((opacity));
+        user-select: none;
       }
     }
     .append {

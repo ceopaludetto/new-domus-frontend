@@ -12,9 +12,14 @@
   transition: transition((border-color, background-color));
   @each $k, $v in map-get($colors, light) {
     &.#{$k} {
-      &:focus-within {
+      &:matches(:focus-within, :hover) {
         border-color: get-color($k);
       }
+    }
+  }
+  &:hover {
+    .radio::before {
+      background-color: get-shadow-color(text, 0.13);
     }
   }
   .input {
@@ -60,7 +65,7 @@
     position: relative;
     width: 20px;
     &::before {
-      background-color: get-color(background, darken-2);
+      background-color: get-shadow-color(text, 0.09);
       border-radius: 9999px;
       content: "";
       height: 100%;

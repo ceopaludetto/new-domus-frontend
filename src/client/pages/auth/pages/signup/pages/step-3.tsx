@@ -110,10 +110,10 @@ export default function Step3() {
                   required
                 />
               </div>
-              <div className={clsx(u["xs-12"], u["md-7"])}>
+              <div className={clsx(u["xs-12"], u["md-6"])}>
                 <FormControl name="condominium.address.address" id="address" label="Endereço" required />
               </div>
-              <div className={clsx(u["xs-12"], u["md-2"])}>
+              <div className={clsx(u["xs-12"], u["md-3"])}>
                 <FormControl name="condominium.address.number" id="number" label="Número" required />
               </div>
               <div className={clsx(u["xs-12"], u["md-4"])}>

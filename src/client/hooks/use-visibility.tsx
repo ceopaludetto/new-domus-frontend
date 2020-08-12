@@ -1,5 +1,5 @@
 import * as React from "react";
-import { FiEye, FiEyeOff } from "react-icons/fi";
+import { RiEyeLine, RiEyeOffLine } from "react-icons/ri";
 
 import { IconButton, Control } from "@/client/components";
 
@@ -17,7 +17,7 @@ export function useVisibility(initialValue?: boolean) {
       type: isVisible ? "text" : "password",
       append: (
         <IconButton tabIndex={-1} aria-label={isVisible ? "Esconder senha" : "Mostrar senha"} onClick={toggleVisible}>
-          {isVisible ? <FiEyeOff /> : <FiEye />}
+          {isVisible ? <RiEyeOffLine /> : <RiEyeLine />}
         </IconButton>
       ),
     };
@@ -54,7 +54,7 @@ export function useMultipleVisibility<T extends string | symbol>(names: T[], ini
             aria-label={isVisible[name] ? "Esconder senha" : "Mostrar senha como texto sem formatação"}
             onClick={toggleVisible(name)}
           >
-            {isVisible[name] ? <FiEyeOff /> : <FiEye />}
+            {isVisible[name] ? <RiEyeOffLine /> : <RiEyeLine />}
           </IconButton>
         ),
       };
