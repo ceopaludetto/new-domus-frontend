@@ -35,12 +35,13 @@
         &.#{$k} {
           background-color: get-color($k);
           color: get-color($k, contrast);
-          &:hover,
+          @media not all and (hover: none) {
+            &:hover {
+              background-color: get-color($k, lighten-1);
+            }
+          }
           &:focus {
             background-color: get-color($k, lighten-1);
-          }
-          &:active {
-            background-color: get-color($k, darken-1);
           }
         }
       }
@@ -57,7 +58,11 @@
       @each $k, $v in map-get($colors, light) {
         &.#{$k} {
           color: get-color($k);
-          &:hover,
+          @media not all and (hover: none) {
+            &:hover {
+              background-color: get-shadow-color($k, 0.12);
+            }
+          }
           &:focus {
             background-color: get-shadow-color($k, 0.12);
           }

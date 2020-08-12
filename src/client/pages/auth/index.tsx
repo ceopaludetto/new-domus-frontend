@@ -11,18 +11,21 @@ import s from "./index.scss";
 
 export default function Auth({ routes }: RouteComponentProps) {
   const location = useLocation();
+  const isRegister = React.useMemo(() => location.pathname.includes("/auth/signup"), [location]);
 
   return (
-    <Container className={s.container} fluid>
-      <div className={clsx(location.pathname.includes("/auth/signup") ? u["mw-900"] : u["mw-550"], u["w-100"])}>
-        <Paper outline size="large">
-          <Switch>
-            {routes?.map(({ name, component: Component, children, ...rest }) => (
-              <Route key={name} render={(props) => <Component {...props} routes={children} />} {...rest} />
-            ))}
-          </Switch>
-        </Paper>
-      </div>
-    </Container>
+    <>
+      <Container className={clsx(s.container, isRegister ? s["xs-register"] : s["xs-not-register"])} fluid>
+        <div className={clsx(isRegister ? u["mw-900"] : u["mw-550"], u["w-100"])}>
+          <Paper outline size="large">
+            <Switch>
+              {routes?.map(({ name, component: Component, children, ...rest }) => (
+                <Route key={name} render={(props) => <Component {...props} routes={children} />} {...rest} />
+              ))}
+            </Switch>
+          </Paper>
+        </div>
+      </Container>{" "}
+    </>
   );
 }

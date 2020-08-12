@@ -14,12 +14,13 @@
     @each $k, $v in map-get($colors, light) {
       &.#{$k} {
         color: get-color($k);
-        &:hover,
+        @media not all and (hover: none) {
+          &:hover {
+            background-color: get-shadow-color($k, 0.12);
+          }
+        }
         &:focus {
           background-color: get-shadow-color($k, 0.12);
-        }
-        &:active {
-          background-color: get-shadow-color($k, 0.08);
         }
       }
     }

@@ -11,7 +11,7 @@ RUN yarn
 
 COPY . .
 
-RUN yarn clean && yarn build
+RUN yarn build
 
 EXPOSE 5000
 

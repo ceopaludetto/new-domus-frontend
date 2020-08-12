@@ -61,7 +61,7 @@ export default function Step2() {
               {...getVisibilityProps("repeatPassword")}
             />
           </div>
-          <div className={clsx(u["xs-12"], u["md-6"], u["order-xs-1"], u["order-md-2"])}>
+          <div className={clsx(u["xs-12"], u["md-6"], u["order-xs-1"], u["order-md-2"], u["mb-xs-3"], u["mb-md-0"])}>
             <Text as="label" variant="body-1" htmlFor="password">
               Dicas de Senha
             </Text>
@@ -78,9 +78,9 @@ export default function Step2() {
             </div>
           </div>
         </div>
-        <div className={clsx(u.row, u["justify-content-xs-flex-end"])}>
+        <div className={clsx(u.row, u["justify-content-xs-flex-end"], u["mt-xs-3"])}>
           <div className={u.col}>
-            <Button variant="outlined" onClick={() => prev()}>
+            <Button variant="flat" onClick={() => prev()}>
               Voltar
             </Button>{" "}
             <Button variant="contained" type="submit">

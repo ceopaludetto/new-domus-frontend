@@ -52,17 +52,6 @@
     max-height: 300px;
     overflow: auto;
     padding: get-theme-prop(layout, sizes, 4) 0 !important;
-    .item {
-      cursor: pointer;
-      padding: get-theme-prop(layout, sizes, 4);
-      width: 100%;
-      &.active {
-        background-color: get-shadow-color(text, 0.09);
-      }
-      &:focus {
-        outline: none;
-      }
-    }
   }
   &:focus {
     outline: none;

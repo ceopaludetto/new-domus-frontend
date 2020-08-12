@@ -4,7 +4,6 @@
   font-size: get-theme-prop(typography, sizes, 3);
   font-weight: get-theme-prop(typography, weights, 2);
   letter-spacing: rem(1.25px);
-  text-transform: uppercase;
 }
 
 %caption {

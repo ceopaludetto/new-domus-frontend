@@ -3,10 +3,9 @@ import { FiChevronDown, FiChevronUp } from "react-icons/fi";
 import { usePopper } from "react-popper";
 import { CSSTransition } from "react-transition-group";
 
-import clsx from "clsx";
 import { useSelect } from "downshift";
 
-import { Paper } from "@/client/components/layout";
+import { Paper, MenuItem } from "@/client/components/layout";
 
 import { Control } from "../control";
 import { IconButton } from "../icon-button";
@@ -83,13 +82,9 @@ export function Select({ items, value, onChange, id, ...props }: SelectProps) {
             <Paper ref={transition} className={s.menu}>
               <div className={s.scroll}>
                 {items.map((item, index) => (
-                  <div
-                    className={clsx(s.item, highlightedIndex === index && s.active)}
-                    key={item.value}
-                    {...getItemProps({ item, index })}
-                  >
+                  <MenuItem key={item.value} active={highlightedIndex === index} {...getItemProps({ item, index })}>
                     {item.label}
-                  </div>
+                  </MenuItem>
                 ))}
               </div>
             </Paper>

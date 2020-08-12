@@ -80,10 +80,10 @@ export default function Step1() {
             />
           </div>
         </div>
-        <div className={clsx(u.row, u["justify-content-xs-flex-end"])}>
+        <div className={clsx(u.row, u["justify-content-xs-flex-end"], u["mt-xs-3"])}>
           <div className={u.col}>
-            <PreloadLink as={Button} variant="outlined" to="/auth/signin">
-              Já possuo uma conta
+            <PreloadLink as={Button} variant="flat" to="/auth/signin">
+              Faça login em vez disso
             </PreloadLink>{" "}
             <Button variant="contained" type="submit">
               Próximo

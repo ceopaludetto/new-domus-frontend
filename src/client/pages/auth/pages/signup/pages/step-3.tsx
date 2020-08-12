@@ -152,9 +152,9 @@ export default function Step3() {
           </>
         )}
         <Switch label="Termos de uso" info="Ao assinar essa opção você concorda com nossos termos de uso." id="terms" />
-        <div className={clsx(u.row, u["justify-content-xs-flex-end"])}>
+        <div className={clsx(u.row, u["justify-content-xs-flex-end"], u["mt-xs-3"])}>
           <div className={u.col}>
-            <Button variant="outlined" onClick={() => prev()}>
+            <Button variant="flat" onClick={() => prev()}>
               Voltar
             </Button>{" "}
             <Button variant="contained" type="submit">

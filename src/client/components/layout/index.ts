@@ -7,3 +7,4 @@ export { Stepper } from "./stepper";
 export { Divider } from "./divider";
 export { Modal } from "./modal";
 export { FocusTrap } from "./focus-trap";
+export { MenuItem } from "./menu-item";

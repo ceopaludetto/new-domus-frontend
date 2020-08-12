@@ -3,7 +3,7 @@ import * as React from "react";
 import s from "./use-ripple.scss";
 
 function isTouch(e: any): e is TouchEvent {
-  return Array.isArray(e.touches);
+  return "touches" in e;
 }
 
 interface UseRippleOptions {
@@ -24,7 +24,7 @@ export function useRipple(ref: React.RefObject<HTMLElement>, { center = false }:
       let size = Math.max(width, height) * 2;
 
       if (size < 100) {
-        size *= 2; // increase speed if element is too much small
+        size *= 1.5; // increase speed if element is too much small
       }
 
       const positionTop = clientX ? y - size / 2 : size / 2 - height / 2;
@@ -48,7 +48,7 @@ export function useRipple(ref: React.RefObject<HTMLElement>, { center = false }:
         const curr = timestamp - start;
 
         const opacity = Math.min(curr / 1000, 0.2);
-        const transform = Math.min(curr / 1000, 1);
+        const transform = Math.min(curr / 700, 1);
 
         ripple.style.opacity = String(opacity);
         ripple.style.transform = `scale(${transform})`;
@@ -101,12 +101,12 @@ export function useRipple(ref: React.RefObject<HTMLElement>, { center = false }:
     if (ref.current) {
       const instance = ref.current;
 
-      instance.addEventListener("mousedown", handleActivate);
-      instance.addEventListener("touchstart", handleActivate);
-      instance.addEventListener("mouseup", handleDeactivate);
-      instance.addEventListener("touchend", handleDeactivate);
-      instance.addEventListener("touchcancel", handleDeactivate);
-      instance.addEventListener("mouseleave", handleDeactivate);
+      instance.addEventListener("mousedown", handleActivate, { passive: true });
+      instance.addEventListener("touchstart", handleActivate, { passive: true });
+      instance.addEventListener("mouseup", handleDeactivate, { passive: true });
+      instance.addEventListener("touchend", handleDeactivate, { passive: true });
+      instance.addEventListener("touchcancel", handleDeactivate, { passive: true });
+      instance.addEventListener("mouseleave", handleDeactivate, { passive: true });
 
       return () => {
         instance.removeEventListener("mousedown", handleActivate);

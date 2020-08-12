@@ -7,6 +7,7 @@
   column-gap: get-theme-prop(layout, gap);
   display: flex;
   margin-bottom: get-theme-prop(layout, gap) * 2;
+  overflow: hidden;
   padding: get-theme-prop(layout, sizes, 5) get-theme-prop(layout, sizes, 4);
   position: relative;
   transition: transition((border-color, background-color));
@@ -28,6 +29,7 @@
     left: 0;
     opacity: 0;
     position: absolute;
+    -webkit-tap-highlight-color: transparent;
     top: 0;
     width: 100%;
     &:focus:not(:checked),

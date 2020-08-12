@@ -4,4 +4,5 @@
   display: block;
   pointer-events: none;
   position: absolute;
+  will-change: transform, opacity;
 }

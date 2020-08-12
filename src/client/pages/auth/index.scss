@@ -4,4 +4,22 @@
   display: grid;
   height: 100vh;
   place-items: center;
+  &.xs-not-register {
+    @media (max-width: 550px) {
+      height: auto !important;
+      place-items: start;
+      > div > div {
+        border: 0 !important;
+      }
+    }
+  }
+  &.xs-register {
+    @media (max-width: 900px) {
+      height: auto !important;
+      place-items: start;
+      > div > div {
+        border: 0 !important;
+      }
+    }
+  }
 }
