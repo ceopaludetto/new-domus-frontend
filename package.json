@@ -42,7 +42,7 @@
     "bcryptjs": "^2.4.3",
     "browserslist-useragent": "^3.0.3",
     "bull": "^3.13.0",
-    "class-transformer": "^0.2.3",
+    "class-transformer": "^0.3.1",
     "class-validator": "^0.11.0",
     "clsx": "^1.1.0",
     "compression": "^1.7.4",
