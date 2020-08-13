@@ -1,7 +1,7 @@
 const path = require("path");
 const StartServerWebpackPlugin = require("start-server-webpack-plugin");
 const webpack = require("webpack");
-const merge = require("webpack-merge");
+const { merge } = require("webpack-merge");
 const NodeExternals = require("webpack-node-externals");
 
 const envs = require("./envs");
@@ -29,7 +29,7 @@ module.exports = (devPort = 3001) =>
     },
     externals: [
       NodeExternals({
-        whitelist: [!isProd && "webpack/hot/poll?300", /\.(scss|sass|gql|graphql)$/].filter(Boolean),
+        allowlist: [!isProd && "webpack/hot/poll?300", /\.(scss|sass|gql|graphql)$/].filter(Boolean),
       }),
     ],
     entry: [

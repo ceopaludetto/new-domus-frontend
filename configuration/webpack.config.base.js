@@ -138,10 +138,10 @@ module.exports = (isServer = false, isESM = false) => ({
             loader: "css-loader",
             options: {
               esModule: true,
-              onlyLocals: isServer,
               sourceMap: true,
               importLoaders: 2,
               modules: {
+                exportOnlyLocals: isServer,
                 localIdentName: isProd ? "_[hash:base64:5]" : "[path][name]__[local]--[hash:base64:5]",
               },
             },

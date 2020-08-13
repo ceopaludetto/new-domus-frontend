@@ -22,7 +22,11 @@ export async function installMiddlewares(app: INestApplication) {
   app.useGlobalFilters(new SequelizeExceptionFilter());
   app.useGlobalInterceptors(new LoggingInterceptor(await app.resolve(PinoLogger)));
 
-  app.use(helmet());
+  app.use(
+    helmet({
+      contentSecurityPolicy: false,
+    })
+  );
 
   if (!process.env.NO_SERVE) {
     if (process.env.NODE_ENV === "production") {
