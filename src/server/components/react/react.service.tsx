@@ -8,29 +8,40 @@ import { ApolloProvider, NormalizedCacheObject } from "@apollo/client";
 import { SchemaLink } from "@apollo/client/link/schema";
 import { renderToStringWithData } from "@apollo/client/react/ssr";
 import { ChunkExtractor, ChunkExtractorManager } from "@loadable/server";
-import { Injectable } from "@nestjs/common";
-import { Request, Response } from "express";
+import { Injectable, Inject } from "@nestjs/common";
+import { matchesUA } from "browserslist-useragent";
+import type { Request, Response } from "express";
 import { PinoLogger, InjectPinoLogger } from "nestjs-pino";
 import { generate } from "shortid";
 
 import { App } from "@/client/App";
 import { createClient } from "@/client/providers/apollo";
+import type { ReactStaticContext } from "@/client/utils/common.dto";
 import { ConfigurationService } from "@/server/components/configuration";
+import { STATS } from "@/server/utils/constants";
 
 @Injectable()
 export class ReactService {
   public constructor(
     private readonly configService: ConfigurationService,
-    @InjectPinoLogger(ReactService.name) private readonly logger: PinoLogger
+    @InjectPinoLogger(ReactService.name) private readonly logger: PinoLogger,
+    @Inject(STATS) private readonly stats: Record<string, any>
   ) {}
 
   public async render(req: Request, res: Response) {
     try {
+      let supportESM = false;
+      if (process.env.NODE_ENV === "production") {
+        const ua = req.get("User-Agent");
+        if (ua) {
+          supportESM = matchesUA(ua, { browsers: ["supports es6-module"] });
+        }
+      }
       const nonce = Buffer.from(generate()).toString("base64");
       const extractor = new ChunkExtractor({
-        statsFile: process.env.MANIFEST as string,
+        stats: this.stats[supportESM ? "esm" : "legacy"],
       });
-      const context: { url?: string } = {};
+      const context: ReactStaticContext = {};
       const helmetContext: FilledContext | Record<string, any> = {};
       const client = createClient(true, new SchemaLink({ schema: this.configService.schema }));
 
@@ -55,6 +66,10 @@ export class ReactService {
         </React.StrictMode>
       );
 
+      if (context.statusCode) {
+        res.status(context.statusCode);
+      }
+
       if (context.url) {
         return res.redirect(context.url);
       }
@@ -64,7 +79,7 @@ export class ReactService {
       const fullHTML = this.markup(markup, initialState, extractor, (helmetContext as FilledContext).helmet, nonce);
 
       if (process.env.NODE_ENV === "production") {
-        res.cookie("X-XSRF-TOKEN", req.csrfToken());
+        res.cookie("X-XSRF-TOKEN", req.csrfToken(), { httpOnly: true, sameSite: "lax" });
       }
 
       return res.send(`<!DOCTYPE html>${fullHTML}`);

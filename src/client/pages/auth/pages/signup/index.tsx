@@ -1,24 +1,36 @@
 import * as React from "react";
 import { Helmet } from "react-helmet-async";
-import { FiUser, FiLock, FiMap } from "react-icons/fi";
-import { Switch, Route, useHistory } from "react-router-dom";
+import { RiBuilding4Line, RiUserLine, RiLockPasswordLine } from "react-icons/ri";
+import { Switch, Route } from "react-router-dom";
 import { useLocalStorage } from "react-use";
 
-import { Title, SubTitle, Stepper } from "@/client/components";
-import { useStepper, StepperContext, usePreload } from "@/client/hooks";
-import { RouteComponentProps } from "@/client/utils/common.dto";
+import { Stepper, Text } from "@/client/components";
+import { useStepper, StepperContext, usePreload, useRedirect } from "@/client/hooks";
+import type { RouteComponentProps } from "@/client/utils/common.dto";
 
 import { WizardContext, WizardContextProps, initialValues } from "./providers";
 
-export default function SignUp({ routes }: RouteComponentProps) {
+const items = [
+  {
+    content: "Usuário",
+    icon: RiUserLine,
+  },
+  {
+    content: "Senha",
+    icon: RiLockPasswordLine,
+  },
+  {
+    content: "Condomínio",
+    icon: RiBuilding4Line,
+  },
+];
+
+export default function SignUp({ routes, history, staticContext }: RouteComponentProps) {
   const [, run] = usePreload();
-  const history = useHistory();
   const [currentPage, methods] = useStepper(3);
   const [values, setValues] = useLocalStorage<WizardContextProps["values"]>("@DOMUS:AUTH:SIGNUP", initialValues);
 
-  React.useEffect(() => {
-    history.replace("/auth/signup/step-1");
-  }, [history]);
+  useRedirect("/auth/signup/step-1", { status: 301, staticContext });
 
   return (
     <WizardContext.Provider value={{ values, setValues }}>
@@ -26,23 +38,14 @@ export default function SignUp({ routes }: RouteComponentProps) {
         <Helmet>
           <title>Cadastro</title>
         </Helmet>
-        <SubTitle>Cadastro</SubTitle>
-        <Title>Bem vindo</Title>
+        <Text as="span" color="primary" variant="subtitle-1">
+          Cadastro
+        </Text>
+        <Text gutter as="h1" variant="headline-5">
+          Bem vindo
+        </Text>
         <Stepper
-          items={[
-            {
-              content: "Usuário",
-              icon: FiUser,
-            },
-            {
-              content: "Senha",
-              icon: FiLock,
-            },
-            {
-              content: "Condomínio",
-              icon: FiMap,
-            },
-          ]}
+          items={items}
           clickable={false}
           onStepChange={async (index: number) => {
             await run(`/auth/signup/step-${index + 1}`);

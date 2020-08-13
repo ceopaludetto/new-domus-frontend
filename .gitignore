@@ -8,7 +8,9 @@ env/config.*.yml
 tmp
 
 *.scss.d.ts
+*.graphql.d.ts
 *.gql.d.ts
+src/server/schema.graphql
 src/client/graphql/operations.ts
 
 coverage

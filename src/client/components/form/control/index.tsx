@@ -2,7 +2,8 @@ import * as React from "react";
 
 import clsx from "clsx";
 
-import { Colors } from "@/client/utils/common.dto";
+import { Text } from "@/client/components/typography";
+import type { Colors } from "@/client/utils/common.dto";
 
 import s from "./index.scss";
 
@@ -50,10 +51,10 @@ export const Control = React.forwardRef<HTMLInputElement, ControlProps>(
             {...rest}
           />
           {label && (
-            <label className={clsx(s.label, error && s.error)} htmlFor={id} {...labelProps}>
+            <Text as="label" className={clsx(s.label, error && s.error)} htmlFor={id} {...labelProps}>
               {label}
               {required && " *"}
-            </label>
+            </Text>
           )}
           {append && (
             <div className={s.append}>
@@ -66,9 +67,9 @@ export const Control = React.forwardRef<HTMLInputElement, ControlProps>(
           <div className={clsx(s.effect, s[color], error && s.error)} />
         </div>
         {helperText && (
-          <div id={`${id}-error`} className={clsx(s.helper, error && s.error)}>
+          <Text as="span" variant="body-2" id={`${id}-error`} className={clsx(s.helper, error && s.error)}>
             {helperText}
-          </div>
+          </Text>
         )}
       </div>
     );

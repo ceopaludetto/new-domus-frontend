@@ -4,7 +4,7 @@
   margin-bottom: get-theme-prop(layout, gap) * 2;
   .container {
     align-items: center;
-    background-color: get-color(background);
+    background-color: get-shadow-color(text, 0.09);
     border-radius: get-theme-prop(layout, shape);
     display: flex;
     overflow: hidden;
@@ -14,13 +14,16 @@
     @each $k, $v in map-get($colors, light) {
       &.#{$k} {
         &:hover {
-          background-color: get-color(background, darken-1);
+          background-color: get-shadow-color(text, 0.13);
         }
         &:focus-within {
-          background-color: get-color(background);
+          background-color: get-shadow-color(text, 0.09);
+          .input::placeholder {
+            opacity: 1;
+          }
           .label {
             color: get-color($k);
-            transform: translate3d(0, -130%, 0) scale(0.875);
+            transform: translate3d(0, -115%, 0) scale(0.875);
           }
           .effect {
             &::before {
@@ -33,32 +36,35 @@
       }
     }
     .input {
+      @extend %body-1;
+
       background-color: transparent;
       border: 0;
       color: get-color(background, contrast);
       flex: 1;
-      font-size: get-theme-prop(typography, sizes, 2);
-      line-height: get-theme-prop(layout, sizes, 5);
-      padding: get-theme-prop(layout, sizes, 8) get-theme-prop(layout, sizes, 4) get-theme-prop(layout, sizes, 4);
+      padding: get-theme-prop(layout, sizes, 8) get-theme-prop(layout, sizes, 4) get-theme-prop(layout, sizes, 3);
       width: 100%;
       &:not(:placeholder-shown):not(:focus) + .label {
-        transform: translate3d(0, -130%, 0) scale(0.875);
+        transform: translate3d(0, -115%, 0) scale(0.875);
       }
       &:focus {
         outline: none;
+      }
+      &::placeholder {
+        color: get-shadow-color(text, 0.6);
+        opacity: 0;
+        transition: transition((opacity));
+        user-select: none;
       }
     }
     .append {
       padding: 0 get-theme-prop(layout, sizes, 4);
     }
     .label {
-      backface-visibility: hidden;
-      color: get-color(muted);
+      color: get-shadow-color(text, 0.7);
       display: inline-block;
-      font-size: get-theme-prop(typography, sizes, 2);
       font-weight: get-theme-prop(typography, weights, 2);
       left: get-theme-prop(layout, sizes, 4);
-      perspective: 1000;
       pointer-events: none;
       position: absolute;
       top: 50%;
@@ -67,6 +73,7 @@
       transform-style: preserve-3d;
       transition: transition((transform, color));
       user-select: none;
+      will-change: transform, color;
       &.error {
         color: get-color(error) !important;
       }
@@ -89,18 +96,14 @@
             position: absolute;
             transition: transition((left, width, opacity, background-color));
             width: 0;
+            will-change: left, width, opacity, background-color;
           }
-        }
-      }
-      &.error {
-        &::before {
-          background-color: get-color(error) !important;
         }
       }
     }
   }
   .helper {
-    font-size: get-theme-prop(typography, sizes, 1);
+    display: inline-block;
     margin-top: get-theme-prop(layout, sizes, 3);
     padding-left: get-theme-prop(layout, sizes, 4);
     transition: transition((color));

@@ -32,7 +32,7 @@ describe("CityResolver", () => {
     const result = [new City()];
     jest.spyOn(cityService, "showAll").mockImplementation(() => Promise.resolve(result));
 
-    expect(await cityResolver.showCities({}, { attributes: [], include: [] })).toBe(result);
+    expect(await cityResolver.showCities({})).toBe(result);
   });
 
   it("findCityByID", async () => {

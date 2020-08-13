@@ -43,7 +43,7 @@ describe("Button", () => {
   });
 
   it("should have correct variant", () => {
-    const { getByText } = render(<Button variant="raised">Raised Button</Button>);
+    const { getByText } = render(<Button variant="contained">Raised Button</Button>);
 
     const button = getByText("Raised Button");
 

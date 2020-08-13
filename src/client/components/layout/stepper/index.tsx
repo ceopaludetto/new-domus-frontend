@@ -2,6 +2,7 @@ import * as React from "react";
 
 import clsx from "clsx";
 
+import { Text } from "@/client/components/typography";
 import { StepperContext } from "@/client/hooks";
 import u from "@/client/styles/utils.scss";
 
@@ -52,10 +53,12 @@ export function Stepper({ items, clickable = true, onStepChange }: StepperProps)
               onClick={clickable ? handleClick(index) : undefined}
               onKeyDown={clickable ? handleKeyDown(index) : undefined}
             >
-              <div className={clsx(u["pr-xs-4"], s.icon)}>
+              <div className={s.icon}>
                 <Icon size={20} />
               </div>
-              <span className={s.content}>{content}</span>
+              <Text as="span" className={s.content}>
+                {content}
+              </Text>
             </div>
           </div>
         </React.Fragment>

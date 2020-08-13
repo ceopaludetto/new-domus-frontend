@@ -5,18 +5,22 @@
   border: 0;
   border-radius: 9999px;
   display: inline-flex;
+  overflow: hidden;
+  position: relative;
+  -webkit-tap-highlight-color: transparent;
   transition: transition((background-color, color));
   @include not-disabled {
     cursor: pointer;
     @each $k, $v in map-get($colors, light) {
       &.#{$k} {
         color: get-color($k);
-        &:hover,
-        &:focus {
-          background-color: get-shadow-color($k, 0.2);
+        @media not all and (hover: none) {
+          &:hover {
+            background-color: get-shadow-color($k, 0.12);
+          }
         }
-        &:active {
-          background-color: get-shadow-color($k, 0.3);
+        &:focus {
+          background-color: get-shadow-color($k, 0.12);
         }
       }
     }
@@ -28,7 +32,7 @@
     padding: get-theme-prop(layout, sizes, 4);
   }
   &.small {
-    padding: get-theme-prop(layout, sizes, 3) * 1.25;
+    padding: get-theme-prop(layout, sizes, 3) * 1.45;
   }
   &:focus {
     outline: none;

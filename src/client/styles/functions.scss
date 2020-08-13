@@ -53,7 +53,7 @@
 
 @mixin gen-colors($color-schemes) {
   @each $scheme-name, $scheme in $color-schemes {
-    @media (prefers-color-scheme: $scheme-name) {
+    @include theme($scheme-name) {
       :root {
         @each $k, $v in $scheme {
           --#{$k}: #{$v};
@@ -103,27 +103,24 @@
 }
 
 @mixin disabled {
-  &:disabled,
-  &[disabled] {
+  &:matches(:disabled, [disabled]) {
     @content;
   }
 }
 
 @mixin not-disabled {
-  &:not(:disabled),
-  &:not([disabled]) {
+  &:not(:matches(:disabled, [disabled])) {
     @content;
   }
 }
 
-@mixin on-dark {
-  @media (prefers-color-scheme: dark) {
-    @content;
+@mixin theme($variant) {
+  $query: "(prefers-color-scheme: #{$variant})";
+  @if $default-color == $variant {
+    $query: $query + ", (prefers-color-scheme: no-preference)";
   }
-}
 
-@mixin on-light {
-  @media (prefers-color-scheme: light) {
+  @media #{unquote($query)} {
     @content;
   }
 }

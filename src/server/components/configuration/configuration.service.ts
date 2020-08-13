@@ -1,9 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import fs from "fs";
-import { GraphQLSchema } from "graphql";
+import type { GraphQLSchema } from "graphql";
 import { InjectPinoLogger, PinoLogger } from "nestjs-pino";
 import path from "path";
-import { Dialect } from "sequelize";
+import type { Dialect } from "sequelize";
 import yaml from "yaml";
 import * as Yup from "yup";
 

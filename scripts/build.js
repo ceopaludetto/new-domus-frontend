@@ -80,9 +80,10 @@ function build(previousFileSizes, config, isServer = false) {
 }
 
 const client = clientConfig();
+const esm = clientConfig(undefined, true);
 const server = serverConfig();
 
-const configs = [server, client];
+const configs = [server, client, esm];
 
 Promise.all(configs.map((c) => measureFileSizesBeforeBuild(c.output.path)))
   .then(async (prevFileSizes) => {
@@ -92,7 +93,7 @@ Promise.all(configs.map((c) => measureFileSizesBeforeBuild(c.output.path)))
   })
   .then((prevFileSizes) => {
     configs.forEach((c, i) => {
-      normalizeFileSizes(prevFileSizes[i], true);
+      normalizeFileSizes(prevFileSizes[i], i === 0);
     });
     return Promise.all(configs.map((c, i) => build(prevFileSizes[i], smp.wrap(c), c.target === "node")));
   })

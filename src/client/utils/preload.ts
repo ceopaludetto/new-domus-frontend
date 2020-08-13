@@ -1,11 +1,10 @@
-import * as React from "react";
+import type { ComponentType } from "react";
 import { matchPath } from "react-router-dom";
 
 import { routes } from "@/client/providers/routes";
-import { Route, Client } from "@/client/utils/common.dto";
+import type { Route, Client } from "@/client/utils/common.dto";
 
-const isDefaultExported = (component: any): component is { default: React.ComponentType<any> } =>
-  "default" in component;
+const isDefaultExported = (component: any): component is { default: ComponentType<any> } => "default" in component;
 
 const hasFetchBefore = (component: any): component is { fetchBefore: (client: Client) => Promise<void> } =>
   "fetchBefore" in component;

@@ -39,6 +39,6 @@ export async function installMiddlewares(app: INestApplication) {
 
   app.use(cookie());
   if (process.env.NODE_ENV === "production") {
-    app.use(csurf({ cookie: { sameSite: true, httpOnly: true }, value: (req) => req.cookies["X-XSRF-TOKEN"] }));
+    app.use(csurf({ cookie: { sameSite: "lax", httpOnly: true }, value: (req) => req.cookies["X-XSRF-TOKEN"] }));
   }
 }

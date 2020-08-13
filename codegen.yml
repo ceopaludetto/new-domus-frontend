@@ -12,7 +12,6 @@ generates:
       nonOptionalTypename: true
       scalars:
         DateTime: Date
-      # noExport: true
     plugins:
       - typescript
       - typescript-operations

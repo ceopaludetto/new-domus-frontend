@@ -2,15 +2,21 @@ import * as React from "react";
 
 import clsx from "clsx";
 
-import { Colors } from "@/client/utils/common.dto";
+import { Text } from "@/client/components/typography";
+import { useRipple } from "@/client/hooks";
+import type { Colors } from "@/client/utils/common.dto";
+import { merge } from "@/client/utils/merge.refs";
 
 import s from "./index.scss";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   block?: boolean;
-  variant?: "contained" | "flat" | "raised";
+  variant?: "contained" | "flat" | "outlined";
   color?: keyof Colors;
   size?: "normal" | "small" | "large";
+  disableRipple?: boolean;
+  centerRipple?: boolean;
+  noTouchRipple?: boolean;
 }
 
 export const Button = React.forwardRef(
@@ -22,11 +28,15 @@ export const Button = React.forwardRef(
       block = false,
       size = "normal",
       type = "button",
+      disableRipple = false,
+      noTouchRipple = false,
+      centerRipple = false,
       className,
       ...rest
     }: ButtonProps,
     ref: React.Ref<HTMLButtonElement>
   ) => {
+    const innerRef = React.useRef<HTMLButtonElement>(null);
     const classes = clsx(
       s.button,
       s[size],
@@ -37,10 +47,17 @@ export const Button = React.forwardRef(
       },
       className
     );
+    useRipple(innerRef, {
+      disabled: disableRipple,
+      noTouch: noTouchRipple,
+      center: centerRipple,
+    });
 
     return (
-      <button ref={ref} type={type} className={classes} {...rest}>
-        {children}
+      <button ref={merge([innerRef, ref])} type={type} className={classes} {...rest}>
+        <Text variant="button" as="span">
+          {children}
+        </Text>
       </button>
     );
   }

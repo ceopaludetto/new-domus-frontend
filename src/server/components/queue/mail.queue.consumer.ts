@@ -1,6 +1,6 @@
 import { MailerService } from "@nestjs-modules/mailer";
 import { Processor, Process, OnQueueActive } from "@nestjs/bull";
-import { Job } from "bull";
+import type { Job } from "bull";
 import { InjectPinoLogger, PinoLogger } from "nestjs-pino";
 
 import type { User } from "@/server/models";
@@ -33,6 +33,26 @@ export class MailQueueConsumer {
       return info;
     } catch (error) {
       this.logger.error("Falha ao enviar e-mail de registro", error);
+      throw error;
+    }
+  }
+
+  @Process("forgot")
+  public async sendForgotMail(job: Job<User>) {
+    try {
+      const info = await this.mailer.sendMail({
+        to: job.data.person.email,
+        from: '"Carlos Eduardo" <ceo.paludetto@gmail.com>',
+        subject: "[NestNewGraphql] Forgot",
+        template: "forgot",
+        context: {
+          name: job.data.person.name,
+        },
+      });
+
+      return info;
+    } catch (error) {
+      this.logger.error("Falha ao enviar e-mail de esqueci senha", error);
       throw error;
     }
   }

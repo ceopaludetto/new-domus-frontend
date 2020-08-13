@@ -1,7 +1,7 @@
 import { ArgsType, Field, ID, Int, registerEnumType } from "@nestjs/graphql";
 import { IsString, IsObject, IsInt, IsNumber, IsOptional } from "class-validator";
-import { Request, Response } from "express";
-import type { IncludeOptions, Order as SequelizeOrder, FindAttributeOptions } from "sequelize";
+import type { Request, Response } from "express";
+import type { IncludeOptions, Order as SequelizeOrder, FindAttributeOptions, Transaction } from "sequelize";
 import type { Model } from "sequelize-typescript";
 
 import { IsShortID } from "./validations";
@@ -53,10 +53,12 @@ export class ContextType {
 export type ExcludeSequelize<T> = Omit<T, keyof Model<T>>;
 
 export type Mapped = {
-  attributes: FindAttributeOptions;
+  attributes?: FindAttributeOptions;
   include: IncludeOptions[];
 };
 
 export type KeepOptions<T, U = ExcludeSequelize<T>> = {
   [P in keyof U]?: U[P] extends Record<string, unknown> ? KeepOptions<U[P]> : boolean;
 };
+
+export type CreateOptions = { transaction?: Transaction };

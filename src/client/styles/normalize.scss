@@ -3,31 +3,33 @@
 
 @font-face {
   font-display: swap;
-  font-family: "Open Sans";
+  font-family: "Roboto";
   font-style: normal;
   font-weight: 400;
-  src: local("Open Sans Regular"), local("OpenSans-Regular"),
-    url("~@/client/assets/fonts/open-sans-400.woff2") format("woff2");
+  src: local("Roboto Regular"), local("Roboto-Regular"), url("~@/client/assets/fonts/roboto-400.woff2") format("woff2");
 }
 @font-face {
   font-display: swap;
-  font-family: "Open Sans";
+  font-family: "Roboto";
   font-style: normal;
-  font-weight: 600;
-  src: local("Open Sans SemiBold"), local("OpenSans-SemiBold"),
-    url("~@/client/assets/fonts/open-sans-600.woff2") format("woff2");
+  font-weight: 500;
+  src: local("Roboto Medium"), local("Roboto-Medium"), url("~@/client/assets/fonts/roboto-500.woff2") format("woff2");
 }
 
 *,
 *::before,
 *::after {
   box-sizing: border-box;
+  font-family: get-theme-prop(typography, family);
 }
 
 html {
-  font-family: get-theme-prop(typography, family);
   font-size: $base-px;
+  line-height: 1.375;
   text-size-adjust: 100%;
+  @media (max-width: get-theme-prop(layout, breakpoints, sm)) {
+    font-size: $base-px * 0.875;
+  }
 }
 
 body {
@@ -46,36 +48,3 @@ body {
 }
 
 @include gen-colors($colors);
-
-*::-webkit-scrollbar {
-  width: 7px;
-}
-
-* {
-  scrollbar-width: thin;
-
-  &::-webkit-scrollbar-track {
-    background-color: get-color(paper);
-    border-radius: get-theme-prop(layout, shape);
-  }
-  &::-webkit-scrollbar-thumb {
-    background-color: get-color(paper);
-  }
-}
-
-@include on-light {
-  * {
-    scrollbar-color: get-color(background, darken-2) get-color(paper);
-    &::-webkit-scrollbar-thumb {
-      background-color: get-color(background, darken-2);
-    }
-  }
-}
-@include on-dark {
-  * {
-    scrollbar-color: get-color(paper, lighten-2) get-color(paper);
-    &::-webkit-scrollbar-thumb {
-      background-color: get-color(paper, lighten-2);
-    }
-  }
-}

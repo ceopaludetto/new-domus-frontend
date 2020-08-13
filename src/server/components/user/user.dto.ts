@@ -1,4 +1,4 @@
-import { InputType, ArgsType, Field, PartialType } from "@nestjs/graphql";
+import { InputType, ArgsType, Field, PartialType, OmitType } from "@nestjs/graphql";
 import { Type } from "class-transformer";
 import { IsString, ValidateNested } from "class-validator";
 
@@ -20,6 +20,9 @@ export class UserInsertInput {
   @ValidateNested()
   public person!: PersonInsertInput;
 }
+
+@InputType()
+export class UserInsertInputWithoutRelation extends OmitType(UserInsertInput, ["person"]) {}
 
 @InputType()
 export class UserUpdateInput extends PartialType(UserInsertInput) {}

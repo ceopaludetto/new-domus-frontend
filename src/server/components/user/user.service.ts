@@ -1,21 +1,14 @@
-import { InjectQueue } from "@nestjs/bull";
 import { Injectable } from "@nestjs/common";
-import { InjectModel, InjectConnection } from "@nestjs/sequelize";
-import { Queue } from "bull";
-import { Sequelize } from "sequelize";
+import { InjectModel } from "@nestjs/sequelize";
 
-import { Person, User, Phone, Condominium, Address } from "@/server/models";
-import type { ShowAll, Mapped } from "@/server/utils/common.dto";
+import { Person, User, Condominium, Phone } from "@/server/models";
+import type { ShowAll, Mapped, CreateOptions } from "@/server/utils/common.dto";
 
-import { UserInsertInput } from "./user.dto";
+import { UserInsertInputWithoutRelation, UserInsertInput } from "./user.dto";
 
 @Injectable()
 export class UserService {
-  public constructor(
-    @InjectModel(User) private readonly userModel: typeof User,
-    @InjectQueue("mail") private readonly mailQueue: Queue,
-    @InjectConnection() private readonly sequelize: Sequelize
-  ) {}
+  public constructor(@InjectModel(User) private readonly userModel: typeof User) {}
 
   public async showAll({ skip = 0, take }: ShowAll, mapped?: Mapped) {
     return this.userModel.findAll({
@@ -46,39 +39,11 @@ export class UserService {
     });
   }
 
-  public async create(data: UserInsertInput) {
-    const transaction = await this.sequelize.transaction();
-    try {
-      const user = await this.userModel.create(data, {
-        include: [
-          {
-            model: Person,
-            include: [
-              Phone,
-              {
-                model: Condominium,
-                include: [Address],
-              },
-            ],
-          },
-        ],
-        transaction,
-      });
-
-      await this.mailQueue.add("register", user, {
-        removeOnFail: true,
-        repeat: {
-          every: 1000,
-          limit: 5,
-        },
-      });
-
-      await transaction.commit();
-
-      return user;
-    } catch (error) {
-      await transaction.rollback();
-      throw error;
+  public async create(data: UserInsertInputWithoutRelation | UserInsertInput, { transaction }: CreateOptions = {}) {
+    if (data instanceof UserInsertInput) {
+      return this.userModel.create(data, { include: [{ model: Person, include: [Condominium, Phone] }], transaction });
     }
+
+    return this.userModel.create(data, { transaction });
   }
 }

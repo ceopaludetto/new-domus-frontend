@@ -5,7 +5,7 @@ import clsx from "clsx";
 
 import u from "@/client/styles/utils.scss";
 
-import { ColorText } from "../color-text";
+import { Text } from "../text";
 
 interface PasswordHelperProps extends Omit<React.HTMLAttributes<HTMLSpanElement>, "color"> {
   active: boolean;
@@ -13,9 +13,9 @@ interface PasswordHelperProps extends Omit<React.HTMLAttributes<HTMLSpanElement>
 
 export function PasswordHelper({ children, active, ...rest }: PasswordHelperProps) {
   return (
-    <ColorText
-      bold
-      small
+    <Text
+      as="span"
+      variant="body-2"
       className={clsx(u.row, u["align-items-xs-center"], u["mb-xs-3"])}
       color={active ? "success" : "muted"}
       {...rest}
@@ -24,6 +24,6 @@ export function PasswordHelper({ children, active, ...rest }: PasswordHelperProp
         <FiCheckCircle size={20} />
       </div>
       <div className={clsx(u.col, u.xs)}>{children}</div>
-    </ColorText>
+    </Text>
   );
 }

@@ -3,10 +3,11 @@ import { InjectPinoLogger, PinoLogger } from "nestjs-pino";
 
 import { ReactController } from "./react.controller";
 import { ReactService } from "./react.service";
+import { StatsProvider } from "./react.stats.provider";
 
 @Module({
   controllers: [ReactController],
-  providers: [ReactService],
+  providers: [StatsProvider, ReactService],
 })
 export class ReactModule implements OnModuleInit {
   public constructor(@InjectPinoLogger(ReactModule.name) private readonly logger: PinoLogger) {}

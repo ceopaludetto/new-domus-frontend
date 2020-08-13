@@ -1,0 +1,16 @@
+@import "~@/client/styles/variables";
+
+.item {
+  cursor: pointer;
+  overflow: hidden;
+  padding: get-theme-prop(layout, sizes, 4);
+  position: relative;
+  -webkit-tap-highlight-color: transparent;
+  width: 100%;
+  &.active {
+    background-color: get-shadow-color(text, 0.09);
+  }
+  &:focus {
+    outline: none;
+  }
+}

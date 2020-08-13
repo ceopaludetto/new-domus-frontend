@@ -7,9 +7,9 @@ import { yupResolver } from "@hookform/resolvers";
 import type { UserInputError } from "apollo-server-express";
 import clsx from "clsx";
 
-import { Title, SubTitle, Button, FormControl, Link, PreloadLink, ColorText } from "@/client/components";
+import { Button, FormControl, PreloadLink, Text } from "@/client/components";
 import { Login } from "@/client/graphql/auth.graphql";
-import { LoginMutation, LoginMutationVariables } from "@/client/graphql/operations";
+import type { LoginMutation, LoginMutationVariables } from "@/client/graphql/operations";
 import { SignInSchema, SignInValues } from "@/client/helpers/validations/signin.schema";
 import { useVisibility } from "@/client/hooks";
 import u from "@/client/styles/utils.scss";
@@ -47,28 +47,36 @@ export default function SignIn() {
         <Helmet>
           <title>Login</title>
         </Helmet>
-        <SubTitle>Login</SubTitle>
-        <Title>Bem vindo de volta</Title>
-        {genericError && <ColorText color="error">Falha ao realizar login</ColorText>}
+        <Text as="span" color="primary" variant="subtitle-1">
+          Login
+        </Text>
+        <Text gutter as="h1" variant="headline-5">
+          Bem vindo de volta
+        </Text>
+        {genericError && (
+          <Text variant="body-2" color="error">
+            Falha ao realizar login
+          </Text>
+        )}
         <FormControl autoFocus label="Login" name="login" id="login" />
         <FormControl
           label="Senha"
           name="password"
           id="password"
           helperText={
-            <PreloadLink as={Link} to="/auth/forgot">
+            <PreloadLink as={Text} variant="body-2" color="primary" link to="/auth/forgot">
               Esqueceu a senha?
             </PreloadLink>
           }
           {...getFieldProps()}
         />
         <div className={u["pt-xs-2"]}>
-          <Button disabled={methods.formState.isSubmitting} block variant="raised" type="submit">
+          <Button disabled={methods.formState.isSubmitting} block variant="contained" type="submit">
             Entrar
           </Button>
         </div>
-        <div className={clsx(u["text-align-xs-center"], u["mt-xs-5"])}>
-          <PreloadLink as={Link} button color="primary" to="/auth/signup/step-1">
+        <div className={clsx(u["text-align-xs-center"], u["mt-xs-4"])}>
+          <PreloadLink as={Button} variant="flat" block color="primary" to="/auth/signup/step-1">
             Cadastre-se
           </PreloadLink>
         </div>

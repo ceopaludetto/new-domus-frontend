@@ -1,4 +1,4 @@
-import { ValidationArguments } from "class-validator";
+import type { ValidationArguments } from "class-validator";
 
 import { capitalize } from "@/server/utils/transforms";
 

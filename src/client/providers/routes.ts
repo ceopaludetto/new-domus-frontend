@@ -1,6 +1,6 @@
 import loadable from "@loadable/component";
 
-import { Route } from "@/client/utils/common.dto";
+import type { Route } from "@/client/utils/common.dto";
 
 export const routes: Route[] = [
   {

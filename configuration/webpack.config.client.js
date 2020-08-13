@@ -3,7 +3,6 @@ const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin"
 const CompressionPlugin = require("compression-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const path = require("path");
-const StylelintWebpackPlugin = require("stylelint-webpack-plugin");
 const webpack = require("webpack");
 const merge = require("webpack-merge");
 
@@ -12,11 +11,11 @@ const baseConfig = require("./webpack.config.base");
 
 const isProd = process.env.NODE_ENV === "production";
 
-module.exports = (devPort = 3001) =>
-  merge(baseConfig(false), {
+module.exports = (devPort = 3001, isESM = false) =>
+  merge(baseConfig(false, isESM), {
     name: "client",
     target: "web",
-    entry: [path.resolve("src", "client", "index.tsx")],
+    entry: { main: [path.resolve("src", "client", "index.tsx")] },
     optimization: {
       splitChunks: isProd
         ? {
@@ -39,9 +38,10 @@ module.exports = (devPort = 3001) =>
     output: {
       publicPath: isProd ? "/static/" : `${envs.PROTOCOL}://${envs.HOST}:${devPort}/static/`,
       path: path.resolve("dist", "static"),
-      libraryTarget: "var",
-      filename: isProd ? `js/[name].[contenthash:8].js` : "index.js",
-      chunkFilename: isProd ? `js/[name].[contenthash:8].js` : "[name].chunk.js",
+      library: "_N_E",
+      libraryTarget: "assign",
+      filename: isProd ? `js/[name].[contenthash:8]${isESM ? ".esm" : ""}.js` : "index.js",
+      chunkFilename: isProd ? `js/[name].[contenthash:8]${isESM ? ".esm" : ""}.js` : "[name].chunk.js",
       futureEmitAssets: isProd,
       devtoolModuleFilenameTemplate: (info) => path.resolve(info.resourcePath).replace(/\\/g, "/"),
     },
@@ -85,7 +85,6 @@ module.exports = (devPort = 3001) =>
           minRatio: Number.MAX_SAFE_INTEGER,
         }),
       !isProd && new ReactRefreshWebpackPlugin({ overlay: { sockPort: devPort } }),
-      new StylelintWebpackPlugin(),
       new CopyWebpackPlugin([
         {
           from: path.resolve("public"),
@@ -93,7 +92,7 @@ module.exports = (devPort = 3001) =>
         },
       ]),
       new LoadablePlugin({
-        filename: "manifest.json",
+        filename: `manifest${isESM ? ".esm" : ""}.json`,
         writeToDisk: true,
       }),
     ].filter(Boolean),

@@ -6,10 +6,10 @@
     backdrop-filter: saturate(100%) blur(5px);
   }
   &.border {
-    @include on-dark {
+    @include theme(dark) {
       border-bottom: 2px solid get-color(background, lighten-2);
     }
-    @include on-light {
+    @include theme(light) {
       border-bottom: 2px solid get-color(background, darken-2);
     }
   }

@@ -1,25 +1,31 @@
+import { InjectQueue } from "@nestjs/bull";
 import { Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
+import { InjectConnection } from "@nestjs/sequelize";
 import { UserInputError, AuthenticationError } from "apollo-server-express";
-import { Response } from "express";
+import type { Queue } from "bull";
+import type { Response } from "express";
 import { InjectPinoLogger, PinoLogger } from "nestjs-pino";
+import { Sequelize } from "sequelize";
 
 import { UserInsertInput, UserService } from "@/server/components/user";
-import { User } from "@/server/models";
+import { User, Address, Person } from "@/server/models";
 import type { Mapped } from "@/server/utils/common.dto";
 
-import { AuthenticationInput } from "./authentication.dto";
+import type { AuthenticationInput, ForgotInput } from "./authentication.dto";
 
 @Injectable()
 export class AuthenticationService {
   public constructor(
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
+    @InjectQueue("mail") private readonly mailQueue: Queue,
+    @InjectConnection() private readonly sequelize: Sequelize,
     @InjectPinoLogger(AuthenticationService.name) private readonly logger: PinoLogger
   ) {}
 
   private generate(user: User) {
-    return this.jwtService.sign({ id: user.id });
+    return this.jwtService.sign({ id: user.id }, { expiresIn: "1h" });
   }
 
   public async login({ login, password }: AuthenticationInput, res: Response, mapped?: Mapped) {
@@ -48,13 +54,68 @@ export class AuthenticationService {
   }
 
   public async register(data: UserInsertInput, res: Response) {
-    const user = await this.userService.create(data);
+    const transaction = await this.sequelize.transaction();
 
-    res.cookie("auth", `Bearer ${this.generate(user)}`, {
-      sameSite: true,
-      httpOnly: true,
-    });
+    try {
+      const user = await this.userService.create(data, { transaction });
 
-    return user;
+      await Promise.all(
+        user.person.condominiums.map(async (c, i) => {
+          const address = await c.$create<Address>(
+            "address",
+            { ...data.person.condominiums[i].address, condominiumID: c.id },
+            { transaction }
+          );
+
+          user.person.condominiums[i].address = address;
+        })
+      );
+
+      await transaction.commit();
+
+      await this.mailQueue.add("register", user, {
+        attempts: 5,
+        backoff: {
+          type: "fixed",
+          delay: 2000,
+        },
+      });
+
+      res.cookie("auth", `Bearer ${this.generate(user)}`, {
+        sameSite: true,
+        httpOnly: true,
+      });
+
+      return user;
+    } catch (error) {
+      this.logger.error(error);
+      await transaction.rollback();
+      throw error;
+    }
+  }
+
+  public async forgot(data: ForgotInput) {
+    try {
+      const user = await this.userService.findByLogin(data.login, {
+        include: [{ model: Person }],
+      });
+
+      if (!user) {
+        throw new Error("Usuário não encontrado");
+      }
+
+      await this.mailQueue.add("forgot", user, {
+        attempts: 5,
+        backoff: {
+          type: "fixed",
+          delay: 2000,
+        },
+      });
+
+      return user.person.email;
+    } catch (error) {
+      this.logger.error(error);
+      throw error;
+    }
   }
 }
