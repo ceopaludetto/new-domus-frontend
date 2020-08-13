@@ -12,7 +12,7 @@ import s from "./index.scss";
 export function Header() {
   return (
     <header className={s.header}>
-      <Blurred border>
+      <Blurred className={u["px-xs-10"]} border>
         <Container>
           <div className={clsx(s.content, u.row, u["align-items-xs-center"])}>
             <div className={clsx(u.col, u.xs)}>

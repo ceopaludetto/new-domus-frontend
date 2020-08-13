@@ -35,6 +35,7 @@ export type Route = Omit<RouteProps, "component"> & {
   name: string;
   children?: Route[];
   component: LoadableComponent<any> & { fetchBefore?: (client: Client) => Promise<void> };
+  meta?: Record<string, any>;
 };
 
 export interface ReactStaticContext {

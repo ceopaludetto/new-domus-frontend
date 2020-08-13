@@ -3,7 +3,7 @@ import { Switch, Route, useLocation } from "react-router-dom";
 
 import clsx from "clsx";
 
-import { Container, Paper } from "@/client/components";
+import { Container, Paper, Footer } from "@/client/components";
 import u from "@/client/styles/utils.scss";
 import type { RouteComponentProps } from "@/client/utils/common.dto";
 
@@ -25,7 +25,8 @@ export default function Auth({ routes }: RouteComponentProps) {
             </Switch>
           </Paper>
         </div>
-      </Container>{" "}
+      </Container>
+      <Footer />
     </>
   );
 }

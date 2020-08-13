@@ -15,7 +15,7 @@ type TextProps<T extends React.ElementType<any> = "p"> = {
   gutter?: boolean;
 } & React.ComponentProps<T>;
 
-export function Text<T extends React.ElementType<any> = "p">({
+export function Text<T extends React.ComponentType<any>>({
   as: Component = "p",
   children,
   className,
@@ -26,8 +26,8 @@ export function Text<T extends React.ElementType<any> = "p">({
   ...rest
 }: TextProps<T>) {
   const classes = clsx(
-    s[variant],
-    color && s[color],
+    s[variant as Typography],
+    color && s[color as keyof Colors],
     link && s.link,
     gutter && [u["mt-xs-2"], u["mb-xs-7"]],
     className

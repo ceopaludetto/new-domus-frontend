@@ -5,9 +5,31 @@ import type { Route } from "@/client/utils/common.dto";
 export const routes: Route[] = [
   {
     name: "@MAIN",
-    path: "/",
+    path: ["/", "/about"],
     exact: true,
     component: loadable(() => import("@/client/pages/main")),
+    children: [
+      {
+        name: "@MAIN:HOME",
+        path: "/",
+        exact: true,
+        component: loadable(() => import("@/client/pages/main/pages/home")),
+        meta: {
+          displayName: "Home",
+          type: "company",
+        },
+      },
+      {
+        name: "@MAIN:ABOUT",
+        path: "/about",
+        exact: true,
+        component: loadable(() => import("@/client/pages/main/pages/about")),
+        meta: {
+          displayName: "About",
+          type: "company",
+        },
+      },
+    ],
   },
   {
     name: "@AUTH",
