@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useFormContext } from "react-hook-form";
+import { useFormContext, get } from "react-hook-form";
 
 import { RadioCard } from "../../form";
 
@@ -9,6 +9,7 @@ interface FormRadioCardProps extends Omit<React.ComponentProps<typeof RadioCard>
 
 export function FormRadioCard({ name, ...rest }: FormRadioCardProps) {
   const { register, errors } = useFormContext();
+  const error = get(errors, name);
 
-  return <RadioCard ref={register} name={name} error={!!errors[name]} {...rest} />;
+  return <RadioCard ref={register} name={name} error={!!error} {...rest} />;
 }

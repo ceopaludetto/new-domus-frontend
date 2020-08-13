@@ -18,6 +18,9 @@
       }
     }
   }
+  &.has-error {
+    border-color: get-color(error);
+  }
   &:hover {
     .radio::before {
       background-color: get-shadow-color(text, 0.13);
@@ -87,14 +90,6 @@
       transform: scale(0);
       transition: transition((background-color, transform));
       width: calc(100% - 8px);
-    }
-    &.error {
-      &::before {
-        background-color: get-color(error) !important;
-      }
-      &::after {
-        background-color: get-color(error, contrast) !important;
-      }
     }
   }
 }

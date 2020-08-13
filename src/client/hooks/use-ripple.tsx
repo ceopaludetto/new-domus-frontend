@@ -8,9 +8,16 @@ function isTouch(e: any): e is TouchEvent {
 
 interface UseRippleOptions {
   center?: boolean;
+  disabled?: boolean;
+  noTouch?: boolean;
 }
 
-export function useRipple(ref: React.RefObject<HTMLElement>, { center = false }: UseRippleOptions = {}) {
+export function useRipple(
+  ref: React.RefObject<HTMLElement>,
+  { center = false, disabled = false, noTouch = false }: UseRippleOptions = {}
+) {
+  const frame = React.useRef(0);
+
   const handleActivate = React.useCallback(
     (e: MouseEvent | TouchEvent) => {
       const { top, left, width, height } = (e.currentTarget as HTMLElement).getBoundingClientRect();
@@ -40,21 +47,18 @@ export function useRipple(ref: React.RefObject<HTMLElement>, { center = false }:
       ripple.style.transform = "scale(0)";
       ripple.classList.add(s.ripple);
 
-      let start!: number;
+      let opacity = 0;
+      let transform = 0;
 
-      function tween(timestamp: number) {
-        if (!start) start = timestamp;
-
-        const curr = timestamp - start;
-
-        const opacity = Math.min(curr / 1000, 0.2);
-        const transform = Math.min(curr / 700, 1);
+      function tween() {
+        opacity = Math.min(opacity + 0.02, 0.2);
+        transform = Math.min(transform + 0.03, 1);
 
         ripple.style.opacity = String(opacity);
         ripple.style.transform = `scale(${transform})`;
 
-        if (transform < 1 || opacity < 0.3) {
-          window.requestAnimationFrame(tween);
+        if (transform < 1 || opacity < 0.2) {
+          frame.current = window.requestAnimationFrame(tween);
         }
       }
 
@@ -64,60 +68,72 @@ export function useRipple(ref: React.RefObject<HTMLElement>, { center = false }:
     [center]
   );
 
-  const handleDeactivate = React.useCallback((e: MouseEvent | TouchEvent) => {
-    const els = (e.currentTarget as HTMLElement).querySelectorAll(`.${s.ripple}`);
-    const last = els[els.length - 1] as HTMLElement;
+  const handleDeactivate = React.useCallback(
+    (e: MouseEvent | TouchEvent) => {
+      const els = (e.currentTarget as HTMLElement).querySelectorAll(`.${s.ripple}`);
+      const last = els[els.length - 1] as HTMLElement;
 
-    if (last) {
-      let start!: number;
+      if (last) {
+        let opacity = Number(last.style.opacity);
+        let transform = Number(last.style.transform.replace("scale(", "").replace(")", ""));
 
-      let opacity = Number(last.style.opacity);
-      let transform = Number(last.style.transform.replace("scale(", "").replace(")", ""));
-
-      // eslint-disable-next-line no-inner-declarations
-      function finish(timestamp: number) {
-        if (!start) start = timestamp;
-
-        const curr = timestamp - start;
-
-        opacity = Math.max(opacity - curr / 20000, 0);
-        transform = Math.min(transform + curr / 3000, 1);
-
-        last.style.transform = `scale(${transform})`;
-        last.style.opacity = String(opacity);
-
-        if (opacity > 0) {
-          window.requestAnimationFrame(finish);
-        } else {
-          last.parentElement?.removeChild(last);
+        if (frame.current) {
+          window.cancelAnimationFrame(frame.current);
+          frame.current = 0;
         }
-      }
 
-      window.requestAnimationFrame(finish);
-    }
-  }, []);
+        let current = 0;
+
+        // eslint-disable-next-line no-inner-declarations
+        function finish() {
+          opacity = Math.max(opacity - 0.006, 0);
+          transform = Math.min(transform + 0.04, 1);
+
+          last.style.transform = `scale(${transform})`;
+          last.style.opacity = String(opacity);
+
+          if (opacity > 0) {
+            current = window.requestAnimationFrame(finish);
+          } else {
+            last.parentElement?.removeChild(last);
+            if (current) {
+              window.cancelAnimationFrame(current);
+              current = 0;
+            }
+          }
+        }
+
+        window.requestAnimationFrame(finish);
+      }
+    },
+    [frame]
+  );
 
   React.useEffect(() => {
-    if (ref.current) {
+    if (ref.current && !disabled) {
       const instance = ref.current;
 
       instance.addEventListener("mousedown", handleActivate, { passive: true });
-      instance.addEventListener("touchstart", handleActivate, { passive: true });
       instance.addEventListener("mouseup", handleDeactivate, { passive: true });
-      instance.addEventListener("touchend", handleDeactivate, { passive: true });
-      instance.addEventListener("touchcancel", handleDeactivate, { passive: true });
+      if (!noTouch) {
+        instance.addEventListener("touchstart", handleActivate, { passive: true });
+        instance.addEventListener("touchend", handleDeactivate, { passive: true });
+        instance.addEventListener("touchcancel", handleDeactivate, { passive: true });
+      }
       instance.addEventListener("mouseleave", handleDeactivate, { passive: true });
 
       return () => {
         instance.removeEventListener("mousedown", handleActivate);
-        instance.removeEventListener("touchstart", handleActivate);
         instance.removeEventListener("mouseup", handleDeactivate);
-        instance.removeEventListener("touchend", handleDeactivate);
-        instance.removeEventListener("touchcancel", handleDeactivate);
+        if (!noTouch) {
+          instance.removeEventListener("touchstart", handleActivate);
+          instance.removeEventListener("touchend", handleDeactivate);
+          instance.removeEventListener("touchcancel", handleDeactivate);
+        }
         instance.removeEventListener("mouseleave", handleDeactivate);
       };
     }
 
     return () => {};
-  }, [ref, handleActivate, handleDeactivate]);
+  }, [ref, handleActivate, handleDeactivate, noTouch, disabled]);
 }

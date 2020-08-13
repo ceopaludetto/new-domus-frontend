@@ -18,7 +18,7 @@ interface RadioCardProps extends Omit<React.InputHTMLAttributes<HTMLInputElement
 export const RadioCard = React.forwardRef<HTMLInputElement, RadioCardProps>(
   ({ color = "primary", error, helperText, id, label, className, ...rest }, ref) => {
     const innerRef = React.useRef<HTMLDivElement>(null);
-    const classes = clsx(s["radio-card"], s[error ? "error" : color], className);
+    const classes = clsx(s["radio-card"], s[color], error && s["has-error"], className);
     useRipple(innerRef);
 
     return (

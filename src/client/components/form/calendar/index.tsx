@@ -6,6 +6,7 @@ import dayjs from "dayjs";
 
 import { Paper, Divider } from "@/client/components/layout";
 import { Text } from "@/client/components/typography";
+import { useLocale } from "@/client/hooks";
 import u from "@/client/styles/utils.scss";
 
 import { Button } from "../button";
@@ -33,15 +34,16 @@ export default function Calendar({
   onClose,
   animate = false,
 }: CalendarProps) {
+  const locale = useLocale();
   const today = React.useMemo(() => new Date(), []);
-  const [currentDate, setCurrentDate] = React.useState(dayjs(value));
+  const [currentDate, setCurrentDate] = React.useState(dayjs(value).locale(locale));
   const [daysOfWeek, setDaysOfWeek] = React.useState<string[]>([]);
   const [yearMode, setYearMode] = React.useState(false);
-  const selectedYear = React.useMemo(() => dayjs(value).get("year"), [value]);
+  const selectedYear = React.useMemo(() => dayjs(value).locale(locale).get("year"), [value, locale]);
   const currentYearRef = React.useRef<HTMLButtonElement>(null);
 
   React.useEffect(() => {
-    const now = dayjs();
+    const now = dayjs().locale(locale);
     const day = now.startOf("week");
     const days: string[] = [];
 
@@ -50,7 +52,7 @@ export default function Calendar({
     }
 
     setDaysOfWeek(days);
-  }, []);
+  }, [locale]);
 
   React.useEffect(() => {
     if (yearMode && currentYearRef && currentYearRef.current) {
@@ -141,7 +143,7 @@ export default function Calendar({
     const y: JSX.Element[] = [];
 
     for (let i = 1899; i <= 2099; i += 1) {
-      const actual = dayjs(value).set("year", i);
+      const actual = dayjs(value).locale(locale).set("year", i);
       const selected = selectedYear === i;
 
       y.push(
@@ -152,7 +154,7 @@ export default function Calendar({
             disabled={resolveDisabled(actual) && !actual.isSame(today, "year")}
             onClick={() => {
               if (actual.isSame(today, "year") && resolveDisabled(actual)) {
-                const max = dayjs(today).set("year", i);
+                const max = dayjs(today).locale(locale).set("year", i);
                 changeDate(max);
                 setCurrentDate(max);
               } else {
@@ -171,7 +173,7 @@ export default function Calendar({
     }
 
     return y;
-  }, [value, changeDate, resolveDisabled, selectedYear, today]);
+  }, [value, changeDate, resolveDisabled, selectedYear, today, locale]);
 
   return (
     <Paper>
@@ -182,7 +184,7 @@ export default function Calendar({
       </div>
       <div className={clsx(u["w-100"], u["mt-xs-2"])}>
         <Button color={yearMode ? "muted" : "text"} onClick={() => setYearMode(false)} size="small" variant="flat">
-          {dayjs(value).format("dddd, DD [de] MMMM")}
+          {dayjs(value).locale(locale).format("dddd, DD [de] MMMM")}
         </Button>
       </div>
       <Divider />

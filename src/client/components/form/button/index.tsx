@@ -14,6 +14,9 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: "contained" | "flat" | "outlined";
   color?: keyof Colors;
   size?: "normal" | "small" | "large";
+  disableRipple?: boolean;
+  centerRipple?: boolean;
+  noTouchRipple?: boolean;
 }
 
 export const Button = React.forwardRef(
@@ -25,6 +28,9 @@ export const Button = React.forwardRef(
       block = false,
       size = "normal",
       type = "button",
+      disableRipple = false,
+      noTouchRipple = false,
+      centerRipple = false,
       className,
       ...rest
     }: ButtonProps,
@@ -41,7 +47,11 @@ export const Button = React.forwardRef(
       },
       className
     );
-    useRipple(innerRef);
+    useRipple(innerRef, {
+      disabled: disableRipple,
+      noTouch: noTouchRipple,
+      center: centerRipple,
+    });
 
     return (
       <button ref={merge([innerRef, ref])} type={type} className={classes} {...rest}>

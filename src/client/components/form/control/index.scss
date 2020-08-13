@@ -73,6 +73,7 @@
       transform-style: preserve-3d;
       transition: transition((transform, color));
       user-select: none;
+      will-change: transform, color;
       &.error {
         color: get-color(error) !important;
       }
@@ -95,12 +96,8 @@
             position: absolute;
             transition: transition((left, width, opacity, background-color));
             width: 0;
+            will-change: left, width, opacity, background-color;
           }
-        }
-      }
-      &.error {
-        &::before {
-          background-color: get-color(error) !important;
         }
       }
     }

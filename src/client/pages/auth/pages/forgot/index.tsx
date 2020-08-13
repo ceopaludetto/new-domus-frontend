@@ -74,7 +74,7 @@ export default function Forgot() {
             <Text variant="caption">
               Você será redirecionado em {time} segundo{time !== 1 && "s"}.
             </Text>
-            <div className={clsx(u["text-align-xs-right"], u["mt-xs-4"])}>
+            <div className={clsx(u["text-align-xs-right"], u["mt-xs-5"])}>
               <PreloadLink as={Button} variant="flat" to="/auth/signin">
                 Ir agora
               </PreloadLink>

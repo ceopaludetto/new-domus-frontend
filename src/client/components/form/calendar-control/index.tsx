@@ -2,11 +2,13 @@ import * as React from "react";
 import { FiCalendar } from "react-icons/fi";
 
 import loadable from "@loadable/component";
-import dayjs from "dayjs";
+import dayjs, { PluginFunc } from "dayjs";
 import { Rifm } from "rifm";
 
 import { Modal } from "@/client/components/layout";
 import * as Masks from "@/client/helpers/masks";
+import { useLocale } from "@/client/hooks";
+import { getModule } from "@/client/utils/lazy";
 
 import { Control } from "../control";
 import { IconButton } from "../icon-button";
@@ -29,7 +31,8 @@ export const CalendarControl = React.forwardRef(
     }: CalendarControlProps,
     ref: React.Ref<HTMLInputElement>
   ) => {
-    const plugin = React.useRef<{ default: dayjs.PluginFunc<any> } & dayjs.PluginFunc<any>>(null);
+    const locale = useLocale();
+    const plugin = React.useRef<PluginFunc<any> & { default: PluginFunc<any> }>(null);
     const [open, setOpen] = React.useState(false);
     const [controlValue, setControlValue] = React.useState(() => dayjs(calendarValue).format("DD/MM/YYYY"));
 
@@ -43,7 +46,7 @@ export const CalendarControl = React.forwardRef(
 
     React.useEffect(() => {
       if (plugin.current) {
-        dayjs.extend(plugin.current?.default ?? plugin.current);
+        dayjs.extend(getModule(plugin.current));
         if (controlValue.length >= 10) {
           const parsed = dayjs(controlValue, "DD/MM/YYYY");
           if (parsed.isValid() && !parsed.isSame(calendarValue)) {
@@ -63,7 +66,7 @@ export const CalendarControl = React.forwardRef(
             disableFuture={disableFuture}
             onChange={(date) => {
               onCalendarChange(date);
-              setControlValue(dayjs(date).format("DD/MM/YYYY"));
+              setControlValue(dayjs(date).locale(locale).format("DD/MM/YYYY"));
             }}
             onClose={() => setOpen(false)}
           />

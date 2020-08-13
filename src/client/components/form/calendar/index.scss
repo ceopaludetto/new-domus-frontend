@@ -23,5 +23,5 @@
 }
 
 .width {
-  min-width: calc(310px + #{get-theme-prop(layout, gap) * 4});
+  min-width: calc(316px + #{get-theme-prop(layout, gap) * 4});
 }
