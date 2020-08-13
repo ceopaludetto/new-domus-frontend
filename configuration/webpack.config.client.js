@@ -4,7 +4,7 @@ const CompressionPlugin = require("compression-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const path = require("path");
 const webpack = require("webpack");
-const merge = require("webpack-merge");
+const { merge } = require("webpack-merge");
 
 const envs = require("./envs");
 const baseConfig = require("./webpack.config.base");
@@ -85,12 +85,14 @@ module.exports = (devPort = 3001, isESM = false) =>
           minRatio: Number.MAX_SAFE_INTEGER,
         }),
       !isProd && new ReactRefreshWebpackPlugin({ overlay: { sockPort: devPort } }),
-      new CopyWebpackPlugin([
-        {
-          from: path.resolve("public"),
-          to: path.resolve("dist", "static", "public"),
-        },
-      ]),
+      new CopyWebpackPlugin({
+        patterns: [
+          {
+            from: path.resolve("public"),
+            to: path.resolve("dist", "static", "public"),
+          },
+        ],
+      }),
       new LoadablePlugin({
         filename: `manifest${isESM ? ".esm" : ""}.json`,
         writeToDisk: true,
