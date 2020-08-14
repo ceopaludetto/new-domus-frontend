@@ -18,7 +18,7 @@ export class AuthenticationResolver {
   public login(
     @Args("input") data: AuthenticationInput,
     @Context() ctx: ContextType,
-    @MapFields(User, { password: true }) mapped: Mapped
+    @MapFields(User, { password: true }) mapped?: Mapped
   ) {
     return this.authService.login(data, ctx.res, mapped);
   }

@@ -15,13 +15,13 @@ export class CondominiumResolver {
   @Query(() => [Condominium])
   public async showCondominiums(
     @Args({ nullable: true }) { take, skip }: ShowAll,
-    @MapFields(Condominium) mapped: Mapped
+    @MapFields(Condominium) mapped?: Mapped
   ) {
     return this.condominiumService.showAll({ take, skip }, mapped);
   }
 
   @Query(() => Condominium)
-  public async findCondominiumByID(@Args() { id }: FindByID, @MapFields(Condominium) mapped: Mapped) {
+  public async findCondominiumByID(@Args() { id }: FindByID, @MapFields(Condominium) mapped?: Mapped) {
     return this.condominiumService.findByID(id, mapped);
   }
 

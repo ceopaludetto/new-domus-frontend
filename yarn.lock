@@ -2118,6 +2118,17 @@
     prop-types "^15.7.2"
     react-use "^15.3.3"
 
+"@teamsupercell/typings-for-css-modules-loader@^2.2.1":
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/@teamsupercell/typings-for-css-modules-loader/-/typings-for-css-modules-loader-2.2.1.tgz#747017a9688805ba14e5e46200af03d40ee22bc2"
+  integrity sha512-Pv+OXrZAVwTMhUUD5NkbjNsxNSzzWrtqwyJ3RQ6KONdlS5QBnR7RAU3ygt3XJykxjEknokZK0H47C3kjxSPTHA==
+  dependencies:
+    camelcase "^5.3.1"
+    loader-utils "1.2.3"
+    schema-utils "^2.0.1"
+  optionalDependencies:
+    prettier "*"
+
 "@testing-library/dom@^7.17.1":
   version "7.22.2"
   resolved "https://registry.yarnpkg.com/@testing-library/dom/-/dom-7.22.2.tgz#6deaa828500993cc94bdd62875c251b5b5b70d69"
@@ -5677,14 +5688,6 @@ css-loader@^4.2.1:
     schema-utils "^2.7.0"
     semver "^7.3.2"
 
-css-modules-types-generator-loader@^1.0.5:
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/css-modules-types-generator-loader/-/css-modules-types-generator-loader-1.0.5.tgz#7a3258a276206f096d681bc062c8490178b13b5e"
-  integrity sha512-OGrHRJGoHwtY6w4yStBsrK+bEPUODUv7Zssf+G25PO0lTQIupngyAmUMQ6Na3C7X0xtYIz6QPuiEBX6UZ+cBaA==
-  dependencies:
-    humps "^2.0.1"
-    loader-utils "^1.2.3"
-
 css-prefers-color-scheme@^3.1.1:
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/css-prefers-color-scheme/-/css-prefers-color-scheme-3.1.1.tgz#6f830a2714199d4f0d0d0bb8a27916ed65cff1f4"
@@ -8760,11 +8763,6 @@ humanize-ms@^1.2.1:
   integrity sha1-xG4xWaKT9riW2ikxbYtv6Lt5u+0=
   dependencies:
     ms "^2.0.0"
-
-humps@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/humps/-/humps-2.0.1.tgz#dd02ea6081bd0568dc5d073184463957ba9ef9aa"
-  integrity sha1-3QLqYIG9BWjcXQcxhEY5V7qe+ao=
 
 hyphenate-style-name@^1.0.2:
   version "1.0.4"
@@ -13679,7 +13677,7 @@ prettier-linter-helpers@^1.0.0:
   dependencies:
     fast-diff "^1.1.2"
 
-prettier@^2.0.5:
+prettier@*, prettier@^2.0.5:
   version "2.0.5"
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.0.5.tgz#d6d56282455243f2f92cc1716692c08aa31522d4"
   integrity sha512-7PtVymN48hGcO4fGjybyBSIWDsLU4H4XlvOHfq91pz9kkGlonzwTfYkaIEwiRg/dAJF9YlbsduBAgtYLi+8cFg==
@@ -15132,7 +15130,7 @@ schema-utils@^1.0.0:
     ajv-errors "^1.0.0"
     ajv-keywords "^3.1.0"
 
-schema-utils@^2.6.5, schema-utils@^2.6.6, schema-utils@^2.7.0:
+schema-utils@^2.0.1, schema-utils@^2.6.5, schema-utils@^2.6.6, schema-utils@^2.7.0:
   version "2.7.0"
   resolved "https://registry.yarnpkg.com/schema-utils/-/schema-utils-2.7.0.tgz#17151f76d8eae67fbbf77960c33c676ad9f4efc7"
   integrity sha512-0ilKFI6QQF5nxDZLFn2dMjvc4hjg/Wkg7rHd3jK6/A4a1Hl9VFdQWvgB1UMGoU94pad1P/8N7fMcEnLnSiju8A==
@@ -15261,10 +15259,10 @@ sequelize-typescript@^2.0.0-beta.0:
   dependencies:
     glob "7.1.2"
 
-sequelize@6.3.4:
-  version "6.3.4"
-  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-6.3.4.tgz#dd6f4801ba5e4d7a6f845a5ad3e616f24453694f"
-  integrity sha512-W6Y96N5QHTgEz5Q37v2GYbKufSXaw0b3v4rCLTPbcCMfIG0MHI42Ozp7IwiyV9bdNkfFEdY7XP8R6lWrWg4hUw==
+sequelize@6.1.1:
+  version "6.1.1"
+  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-6.1.1.tgz#671c1144cc8b1c8eecc603759670140948e471a5"
+  integrity sha512-3ik4crdYtEwApUMwoGRKAz822tFvNts1T5gFDmmJMRAWESr6Eruhni4XHJwcbccrS0D5ifuFKppN2n37M6g0Rg==
   dependencies:
     debug "^4.1.1"
     dottie "^2.0.0"

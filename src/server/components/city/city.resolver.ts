@@ -22,12 +22,12 @@ export class CityResolver {
   }
 
   @Query(() => City)
-  public async findCityByID(@Args() { id }: FindByID, @MapFields(City) mapped: Mapped) {
+  public async findCityByID(@Args() { id }: FindByID, @MapFields(City) mapped?: Mapped) {
     return this.cityService.findByID(id, mapped);
   }
 
   @Query(() => [City])
-  public async findCitiesByStateID(@Args() { id }: FindByID, @MapFields(City) mapped: Mapped) {
+  public async findCitiesByStateID(@Args() { id }: FindByID, @MapFields(City) mapped?: Mapped) {
     return this.cityService.findByState(id, mapped);
   }
 }

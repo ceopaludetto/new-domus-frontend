@@ -13,17 +13,17 @@ export class UserResolver {
   public constructor(private readonly userService: UserService) {}
 
   @Query(() => [User])
-  public async showUsers(@Args({ nullable: true }) { skip, take }: ShowAll, @MapFields(User) mapped: Mapped) {
+  public async showUsers(@Args({ nullable: true }) { skip, take }: ShowAll, @MapFields(User) mapped?: Mapped) {
     return this.userService.showAll({ skip, take }, mapped);
   }
 
   @Query(() => User)
-  public async findUserByID(@Args() { id }: FindByID, @MapFields(User) mapped: Mapped) {
+  public async findUserByID(@Args() { id }: FindByID, @MapFields(User) mapped?: Mapped) {
     return this.userService.findByID(id, mapped);
   }
 
   @Query(() => User)
-  public async findUserByLogin(@Args() { login }: FindUserByLogin, @MapFields(User) mapped: Mapped) {
+  public async findUserByLogin(@Args() { login }: FindUserByLogin, @MapFields(User) mapped?: Mapped) {
     return this.userService.findByLogin(login, mapped);
   }
 }

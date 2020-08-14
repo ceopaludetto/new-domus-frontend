@@ -52,7 +52,7 @@ module.exports = (api) => {
       [
         "@babel/preset-env",
         {
-          modules: false,
+          modules: isTest ? "cjs" : false,
           useBuiltIns: "usage",
           corejs: 3,
           bugfixes: true,
@@ -78,15 +78,14 @@ module.exports = (api) => {
         {
           corejs: false,
           regenerator: true,
-          helpers: true,
+          helpers: !isTest,
           useESModules: !isServer,
           version: require("@babel/runtime/package.json").version, // eslint-disable-line global-require
         },
       ],
-      ["transform-react-remove-prop-types", { mode: "remove", removeImport: true }],
-      !isServer && !isProd && !isTest && "react-refresh/babel",
-      isTest && ["@babel/plugin-transform-modules-commonjs", { loose: true }],
+      isProd && ["transform-react-remove-prop-types", { mode: "remove", removeImport: true }],
       isTest && "dynamic-import-node",
+      !isServer && !isProd && !isTest && "react-refresh/babel",
     ].filter(Boolean),
     overrides: [
       {

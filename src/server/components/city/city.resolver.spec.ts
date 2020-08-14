@@ -39,13 +39,13 @@ describe("CityResolver", () => {
     const result = new City();
     jest.spyOn(cityService, "findByID").mockImplementation(() => Promise.resolve(result));
 
-    expect(await cityResolver.findCityByID({ id: "" }, { attributes: [], include: [] })).toBe(result);
+    expect(await cityResolver.findCityByID({ id: "" })).toBe(result);
   });
 
   it("findByState", async () => {
     const result = [new City()];
     jest.spyOn(cityService, "findByState").mockImplementation(() => Promise.resolve(result));
 
-    expect(await cityResolver.findCitiesByStateID({ id: "" }, { attributes: [], include: [] })).toBe(result);
+    expect(await cityResolver.findCitiesByStateID({ id: "" })).toBe(result);
   });
 });

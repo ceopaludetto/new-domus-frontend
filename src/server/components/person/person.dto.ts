@@ -23,7 +23,7 @@ export class PersonInsertInput {
 
   @Field()
   @IsString({ message: Messages.STRING })
-  @IsEmail({ message: Messages.EMAIL })
+  @IsEmail(undefined, { message: Messages.EMAIL })
   @Transform(mail)
   public email!: string;
 
