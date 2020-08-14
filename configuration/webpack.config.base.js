@@ -75,6 +75,7 @@ module.exports = (isServer = false, isESM = false) => ({
       { parser: { requireEnsure: false } },
       {
         test: /\.tsx?$/,
+        exclude: /node_modules/,
         use: {
           loader: "eslint-loader",
           options: {
@@ -133,7 +134,12 @@ module.exports = (isServer = false, isESM = false) => ({
         use: [
           !isServer && !isProd && { loader: "style-loader" },
           !isServer && isProd && { loader: MiniCssPlugin.loader, options: { esModule: true, sourceMap: true } },
-          { loader: "css-modules-types-generator-loader", options: { index: true } },
+          {
+            loader: "@teamsupercell/typings-for-css-modules-loader",
+            options: {
+              disableLocalsExport: true,
+            },
+          },
           {
             loader: "css-loader",
             options: {
