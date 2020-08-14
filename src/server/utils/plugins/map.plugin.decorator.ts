@@ -7,11 +7,13 @@ import { GraphQLFieldsToRelations } from "./fields.to.relation";
 
 @Injectable()
 class MapFieldsPipe implements PipeTransform {
+  public constructor(private readonly root?: string) {}
+
   public transform(value: GraphQLResolveInfo) {
-    const fields = GraphQLFieldsToRelations(value, { exclude: ["__typename"] });
+    const fields = GraphQLFieldsToRelations(value, { exclude: ["__typename"], root: this.root });
 
     return fields;
   }
 }
 
-export const MapFields = () => Info(new MapFieldsPipe());
+export const MapFields = (root?: string) => Info(new MapFieldsPipe(root));
