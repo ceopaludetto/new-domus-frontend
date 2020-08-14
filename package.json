@@ -142,7 +142,6 @@
     "css-loader": "^4.2.1",
     "cssnano-preset-advanced": "^4.0.7",
     "date-fns": "^2.15.0",
-    "depcheck": "^1.2.0",
     "eslint": "^7.6.0",
     "eslint-config-airbnb-typescript": "^9.0.0",
     "eslint-config-prettier": "^6.10.0",

@@ -5,7 +5,7 @@ import { Injectable } from "@nestjs/common";
 import { Person } from "@/server/models";
 import type { Mapped, ShowAll } from "@/server/utils/common.dto";
 
-import type { PersonInsertInputWithoutRelation } from "./person.dto";
+import type { PersonInsertInput } from "./person.dto";
 
 @Injectable()
 export class PersonService {
@@ -23,7 +23,7 @@ export class PersonService {
     return this.personModel.findOne({ id }, mapped);
   }
 
-  public async create(data: PersonInsertInputWithoutRelation) {
+  public async create(data: PersonInsertInput) {
     const person = this.personModel.create(data);
 
     await this.personModel.persistAndFlush(person);

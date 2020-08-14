@@ -6,8 +6,6 @@ import { Local } from "@/server/models";
 import { LocalResolver } from "./local.resolver";
 import { LocalService } from "./local.service";
 
-jest.mock("@/server/models");
-
 describe("LocalResolver", () => {
   let localResolver: LocalResolver;
   let localService: LocalService;

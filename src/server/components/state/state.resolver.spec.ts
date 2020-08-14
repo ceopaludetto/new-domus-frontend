@@ -6,8 +6,6 @@ import { State } from "@/server/models";
 import { StateResolver } from "./state.resolver";
 import { StateService } from "./state.service";
 
-jest.mock("@/server/models");
-
 describe("StateResolver", () => {
   let stateResolver: StateResolver;
   let stateService: StateService;

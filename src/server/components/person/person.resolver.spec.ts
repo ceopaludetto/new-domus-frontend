@@ -6,8 +6,6 @@ import { Person } from "@/server/models";
 import { PersonResolver } from "./person.resolver";
 import { PersonService } from "./person.service";
 
-jest.mock("@/server/models");
-
 describe("PersonResolver", () => {
   let personResolver: PersonResolver;
   let personService: PersonService;

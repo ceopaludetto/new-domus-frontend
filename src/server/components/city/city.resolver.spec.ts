@@ -6,8 +6,6 @@ import { City } from "@/server/models";
 import { CityResolver } from "./city.resolver";
 import { CityService } from "./city.service";
 
-jest.mock("@/server/models");
-
 describe("CityResolver", () => {
   let cityResolver: CityResolver;
   let cityService: CityService;
