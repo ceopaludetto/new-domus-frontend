@@ -1,14 +1,7 @@
-import SequelizeStatic from "sequelize";
-import { generate } from "shortid";
+import type Knex from "knex";
 
-export const migrationDefaults = (Sequelize: typeof SequelizeStatic): SequelizeStatic.ModelAttributes => ({
-  id: {
-    primaryKey: true,
-    type: Sequelize.STRING,
-    defaultValue: generate,
-    allowNull: false,
-  },
-  createdAt: { type: Sequelize.DATE, defaultValue: Sequelize.NOW, allowNull: false },
-  updatedAt: { type: Sequelize.DATE, defaultValue: Sequelize.NOW, allowNull: false },
-  deletedAt: Sequelize.DATE,
-});
+export const defaults = (k: ReturnType<typeof Knex>, t: Knex.CreateTableBuilder) => {
+  t.string("id").primary().notNullable();
+  t.timestamp("createdAt").defaultTo(k.fn.now()).notNullable();
+  t.timestamp("updatedAt").defaultTo(k.fn.now()).notNullable();
+};

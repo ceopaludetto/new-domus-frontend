@@ -1,15 +1,13 @@
 import { InjectQueue } from "@nestjs/bull";
 import { Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
-import { InjectConnection } from "@nestjs/sequelize";
 import { UserInputError, AuthenticationError } from "apollo-server-express";
 import type { Queue } from "bull";
 import type { Response } from "express";
 import { InjectPinoLogger, PinoLogger } from "nestjs-pino";
-import { Sequelize } from "sequelize";
 
 import { UserInsertInput, UserService } from "@/server/components/user";
-import { User, Address, Person } from "@/server/models";
+import type { User } from "@/server/models";
 import type { Mapped } from "@/server/utils/common.dto";
 
 import type { AuthenticationInput, ForgotInput } from "./authentication.dto";
@@ -20,7 +18,6 @@ export class AuthenticationService {
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
     @InjectQueue("mail") private readonly mailQueue: Queue,
-    @InjectConnection() private readonly sequelize: Sequelize,
     @InjectPinoLogger(AuthenticationService.name) private readonly logger: PinoLogger
   ) {}
 
@@ -28,7 +25,7 @@ export class AuthenticationService {
     return this.jwtService.sign({ id: user.id }, { expiresIn: "1h" });
   }
 
-  public async login({ login, password }: AuthenticationInput, res: Response, mapped?: Mapped) {
+  public async login({ login, password }: AuthenticationInput, res: Response, mapped?: Mapped<User>) {
     try {
       const user = await this.userService.findByLogin(login, mapped);
       if (!user) {
@@ -54,24 +51,8 @@ export class AuthenticationService {
   }
 
   public async register(data: UserInsertInput, res: Response) {
-    const transaction = await this.sequelize.transaction();
-
     try {
-      const user = await this.userService.create(data, { transaction });
-
-      await Promise.all(
-        user.person.condominiums.map(async (c, i) => {
-          const address = await c.$create<Address>(
-            "address",
-            { ...data.person.condominiums[i].address, condominiumID: c.id },
-            { transaction }
-          );
-
-          user.person.condominiums[i].address = address;
-        })
-      );
-
-      await transaction.commit();
+      const user = await this.userService.create(data);
 
       await this.mailQueue.add("register", user, {
         attempts: 5,
@@ -89,16 +70,13 @@ export class AuthenticationService {
       return user;
     } catch (error) {
       this.logger.error(error);
-      await transaction.rollback();
       throw error;
     }
   }
 
   public async forgot(data: ForgotInput) {
     try {
-      const user = await this.userService.findByLogin(data.login, {
-        include: [{ model: Person }],
-      });
+      const user = await this.userService.findByLogin(data.login);
 
       if (!user) {
         throw new Error("Usuário não encontrado");

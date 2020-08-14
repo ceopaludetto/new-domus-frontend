@@ -1,5 +1,5 @@
+import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { Module, OnModuleInit } from "@nestjs/common";
-import { SequelizeModule } from "@nestjs/sequelize";
 import { InjectPinoLogger, PinoLogger } from "nestjs-pino";
 
 import { Person } from "@/server/models";
@@ -8,7 +8,7 @@ import { PersonResolver } from "./person.resolver";
 import { PersonService } from "./person.service";
 
 @Module({
-  imports: [SequelizeModule.forFeature([Person])],
+  imports: [MikroOrmModule.forFeature({ entities: [Person] })],
   providers: [PersonService, PersonResolver],
   exports: [PersonService],
 })

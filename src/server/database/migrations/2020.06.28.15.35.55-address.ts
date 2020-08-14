@@ -1,45 +1,22 @@
-import SequelizeStatic, { QueryInterface } from "sequelize";
+import type knex from "knex";
 
 import { ADDRESS, CITY, CONDOMINIUM } from "@/server/utils/constants";
 
-import { migrationDefaults } from "../defaults";
+import { defaults } from "../defaults";
 
 export default {
-  async up(queryInterface: QueryInterface, Sequelize: typeof SequelizeStatic) {
-    return queryInterface.createTable(ADDRESS, {
-      ...migrationDefaults(Sequelize),
-      zip: {
-        type: Sequelize.STRING(8),
-        allowNull: false,
-      },
-      address: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      number: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      cityID: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        references: {
-          model: CITY,
-          key: "id",
-        },
-      },
-      condominiumID: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        references: {
-          model: CONDOMINIUM,
-          key: "id",
-        },
-      },
+  async up(k: ReturnType<typeof knex>) {
+    return k.schema.createTable(ADDRESS, (t) => {
+      defaults(k, t);
+      t.string("zip", 8).notNullable();
+      t.string("address").notNullable();
+      t.string("number").notNullable();
+      t.string("city").references("id").inTable(CITY);
+      t.string("condominium").references("id").inTable(CONDOMINIUM);
     });
   },
 
-  async down(queryInterface: QueryInterface) {
-    return queryInterface.dropTable(ADDRESS);
+  async down(k: ReturnType<typeof knex>) {
+    return k.schema.dropTable(ADDRESS);
   },
 };

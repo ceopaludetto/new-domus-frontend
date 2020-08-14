@@ -1,8 +1,10 @@
-import { InputType, ArgsType, Field, PartialType, OmitType } from "@nestjs/graphql";
+import { InputType, ArgsType, Field, PartialType } from "@nestjs/graphql";
 import { Type } from "class-transformer";
 import { IsString, ValidateNested } from "class-validator";
 
 import { PersonInsertInput } from "@/server/components/person";
+import { User } from "@/server/models";
+import { Sortable } from "@/server/utils/plugins";
 import * as Messages from "@/server/utils/validations/messages";
 
 @InputType()
@@ -22,9 +24,6 @@ export class UserInsertInput {
 }
 
 @InputType()
-export class UserInsertInputWithoutRelation extends OmitType(UserInsertInput, ["person"]) {}
-
-@InputType()
 export class UserUpdateInput extends PartialType(UserInsertInput) {}
 
 @ArgsType()
@@ -33,3 +32,6 @@ export class FindUserByLogin {
   @IsString({ message: Messages.STRING })
   public login!: string;
 }
+
+@InputType()
+export class UserSortInput extends Sortable(User, ["login"]) {}

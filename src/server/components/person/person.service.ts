@@ -1,28 +1,33 @@
+import { EntityRepository } from "@mikro-orm/core";
+import { InjectRepository } from "@mikro-orm/nestjs";
 import { Injectable } from "@nestjs/common";
-import { InjectModel } from "@nestjs/sequelize";
 
 import { Person } from "@/server/models";
-import type { Mapped, ShowAll, CreateOptions } from "@/server/utils/common.dto";
+import type { Mapped, ShowAll } from "@/server/utils/common.dto";
 
 import type { PersonInsertInputWithoutRelation } from "./person.dto";
 
 @Injectable()
 export class PersonService {
-  public constructor(@InjectModel(Person) private readonly personModel: typeof Person) {}
+  public constructor(@InjectRepository(Person) private readonly personModel: EntityRepository<Person>) {}
 
-  public async showAll({ skip = 0, take }: ShowAll, mapped?: Mapped) {
+  public async showAll({ skip = 0, take }: ShowAll, mapped?: Mapped<Person>) {
     return this.personModel.findAll({
       offset: skip,
       limit: take,
-      ...mapped,
+      populate: mapped,
     });
   }
 
-  public async findByID(id: string, mapped?: Mapped) {
-    return this.personModel.findByPk(id, mapped);
+  public async findByID(id: string, mapped?: Mapped<Person>) {
+    return this.personModel.findOne({ id }, mapped);
   }
 
-  public async create(data: PersonInsertInputWithoutRelation, { transaction }: CreateOptions = {}) {
-    return this.personModel.create(data, { transaction });
+  public async create(data: PersonInsertInputWithoutRelation) {
+    const person = this.personModel.create(data);
+
+    await this.personModel.persistAndFlush(person);
+
+    return person;
   }
 }

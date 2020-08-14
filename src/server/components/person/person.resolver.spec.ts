@@ -1,4 +1,4 @@
-import { getModelToken } from "@nestjs/sequelize";
+import { getRepositoryToken } from "@mikro-orm/nestjs";
 import { Test } from "@nestjs/testing";
 
 import { Person } from "@/server/models";
@@ -18,7 +18,7 @@ describe("PersonResolver", () => {
         PersonResolver,
         PersonService,
         {
-          provide: getModelToken(Person),
+          provide: getRepositoryToken(Person),
           useClass: Person,
         },
       ],

@@ -25,5 +25,5 @@ export class AddressInsertInput {
   @Field(() => ID)
   @IsString({ message: Messages.STRING })
   @IsShortID()
-  public cityID!: string;
+  public city!: string;
 }

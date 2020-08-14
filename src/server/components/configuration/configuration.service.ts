@@ -1,9 +1,9 @@
+import type { MikroORMOptions } from "@mikro-orm/core";
 import { Injectable } from "@nestjs/common";
 import fs from "fs";
 import type { GraphQLSchema } from "graphql";
 import { InjectPinoLogger, PinoLogger } from "nestjs-pino";
 import path from "path";
-import type { Dialect } from "sequelize";
 import yaml from "yaml";
 import * as Yup from "yup";
 
@@ -11,8 +11,8 @@ import { REQUIRED, DIALECT } from "@/server/utils/constants";
 
 const EnvSchema = Yup.object({
   database: Yup.object({
-    dialect: Yup.mixed<Dialect>()
-      .oneOf(["mysql", "postgres", "sqlite", "mariadb", "mssql", "mariadb"], DIALECT)
+    type: Yup.mixed<MikroORMOptions["type"]>()
+      .oneOf(["mysql", "postgresql", "sqlite", "mariadb", "mongo"], DIALECT)
       .required(REQUIRED),
     host: Yup.string().required(REQUIRED),
     port: Yup.number().required(REQUIRED),
@@ -21,30 +21,30 @@ const EnvSchema = Yup.object({
     password: Yup.string().required(REQUIRED),
     ssl: Yup.boolean(),
     logger: Yup.boolean(),
-  }),
+  }).required(REQUIRED),
   queue: Yup.object({
     host: Yup.string().required(REQUIRED),
     port: Yup.number().required(REQUIRED),
     password: Yup.string(),
-  }),
+  }).required(REQUIRED),
   mailer: Yup.object({
     host: Yup.string().required(REQUIRED),
     port: Yup.number().required(REQUIRED),
     auth: Yup.object({
       user: Yup.string().required(REQUIRED),
       pass: Yup.string().required(REQUIRED),
-    }),
+    }).required(REQUIRED),
     template: Yup.object({
       dir: Yup.string(),
-    }),
-  }),
+    }).required(REQUIRED),
+  }).required(REQUIRED),
   auth: Yup.object({
     secret: Yup.string().required(REQUIRED),
-  }),
+  }).required(REQUIRED),
   graphql: Yup.object({
     schema: Yup.string(),
-  }),
-});
+  }).required(REQUIRED),
+}).required(REQUIRED);
 
 type EnvConfig = Yup.InferType<typeof EnvSchema>;
 
@@ -58,7 +58,7 @@ export class ConfigurationService {
     const deployment = (process.env.DEPLOYMENT as string) || "development";
     const filePath = path.resolve(process.env.BASE_DIR as string, "env", `config.${deployment}.yml`);
 
-    const config = yaml.parse(fs.readFileSync(filePath, "UTF-8"));
+    const config = yaml.parse(fs.readFileSync(filePath, "utf8"));
     const validated = this.validateInput(config);
     if (validated !== false) {
       this.envConfig = validated;

@@ -1,5 +1,5 @@
+import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { Module, OnModuleInit } from "@nestjs/common";
-import { SequelizeModule } from "@nestjs/sequelize";
 import { InjectPinoLogger, PinoLogger } from "nestjs-pino";
 
 import { Condominium } from "@/server/models";
@@ -8,7 +8,7 @@ import { CondominiumResolver } from "./condominium.resolver";
 import { CondominiumService } from "./condominium.service";
 
 @Module({
-  imports: [SequelizeModule.forFeature([Condominium])],
+  imports: [MikroOrmModule.forFeature({ entities: [Condominium] })],
   providers: [CondominiumResolver, CondominiumService],
   exports: [CondominiumService],
 })

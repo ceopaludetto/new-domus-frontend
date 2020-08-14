@@ -1,5 +1,5 @@
-import { ObjectType, Field, ID } from "@nestjs/graphql";
-import { Table, Column, ForeignKey, BelongsTo } from "sequelize-typescript";
+import { Entity, Property, OneToOne } from "@mikro-orm/core";
+import { ObjectType, Field } from "@nestjs/graphql";
 
 import { ADDRESS } from "@/server/utils/constants";
 
@@ -7,40 +7,26 @@ import { BaseModel } from "./base.model";
 import { City } from "./city.model";
 import { Condominium } from "./condominium.model";
 
+@Entity({ tableName: ADDRESS })
 @ObjectType(ADDRESS)
-@Table({ tableName: ADDRESS, modelName: ADDRESS })
-export class Address extends BaseModel<Address> {
+export class Address extends BaseModel {
   @Field()
-  @Column({ allowNull: false })
+  @Property()
   public zip!: string;
 
   @Field()
-  @Column({ allowNull: false })
+  @Property()
   public address!: string;
 
   @Field()
-  @Column({ allowNull: false })
+  @Property()
   public number!: string;
 
-  @Field(() => ID)
-  @ForeignKey(() => City)
-  @Column({ allowNull: false })
-  public cityID!: string;
-
-  @Field(() => ID)
-  @ForeignKey(() => Condominium)
-  @Column({ allowNull: false })
-  public condominiumID!: string;
-
   @Field(() => Condominium)
-  @BelongsTo(() => Condominium, {
-    foreignKey: "condominiumID",
-  })
+  @OneToOne({ entity: () => Condominium, inversedBy: (condominium) => condominium.address, owner: true })
   public condominium!: Condominium;
 
   @Field(() => City)
-  @BelongsTo(() => City, {
-    foreignKey: "cityID",
-  })
+  @OneToOne({ entity: () => Condominium, inversedBy: (city) => city.address, owner: true })
   public city!: City;
 }

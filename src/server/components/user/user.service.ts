@@ -1,49 +1,51 @@
+import { EntityRepository } from "@mikro-orm/core";
+import { InjectRepository } from "@mikro-orm/nestjs";
 import { Injectable } from "@nestjs/common";
-import { InjectModel } from "@nestjs/sequelize";
+import { UserInputError } from "apollo-server-express";
 
-import { Person, User, Condominium, Phone } from "@/server/models";
-import type { ShowAll, Mapped, CreateOptions } from "@/server/utils/common.dto";
+import { User } from "@/server/models";
+import type { Mapped, ShowAllWithSort } from "@/server/utils/common.dto";
 
-import { UserInsertInputWithoutRelation, UserInsertInput } from "./user.dto";
+import type { UserInsertInput } from "./user.dto";
 
 @Injectable()
 export class UserService {
-  public constructor(@InjectModel(User) private readonly userModel: typeof User) {}
+  public constructor(@InjectRepository(User) private readonly userModel: EntityRepository<User>) {}
 
-  public async showAll({ skip = 0, take }: ShowAll, mapped?: Mapped) {
+  public async showAll({ skip = 0, sort, take }: ShowAllWithSort, mapped?: Mapped<User>) {
     return this.userModel.findAll({
       offset: skip,
       limit: take,
-      ...mapped,
+      orderBy: sort,
+      populate: mapped,
     });
   }
 
-  public async findByLogin(login: string, mapped?: Mapped) {
-    return this.userModel.findOne({
-      where: { login },
-      ...mapped,
-    });
+  public async findByLogin(login: string, mapped?: Mapped<User>) {
+    return this.userModel.findOne({ login }, mapped);
   }
 
-  public async findByID(id: string, mapped?: Mapped) {
-    return this.userModel.findByPk(id, {
-      attributes: mapped?.attributes,
-      include: mapped?.include ?? [Person],
-    });
+  public async findByID(id: string, mapped?: Mapped<User>) {
+    return this.userModel.findOne({ id }, mapped);
   }
 
-  public async findByPersonID(id: string, mapped?: Mapped) {
-    return this.userModel.findOne({
-      where: { personID: id },
-      ...mapped,
-    });
+  public async findByPersonID(id: string, mapped?: Mapped<User>) {
+    return this.userModel.findOne({ person: { id } }, mapped);
   }
 
-  public async create(data: UserInsertInputWithoutRelation | UserInsertInput, { transaction }: CreateOptions = {}) {
-    if (data instanceof UserInsertInput) {
-      return this.userModel.create(data, { include: [{ model: Person, include: [Condominium, Phone] }], transaction });
+  public async create(data: UserInsertInput) {
+    const user = this.userModel.create(data);
+
+    await this.userModel.persistAndFlush(user);
+
+    return user;
+  }
+
+  public async populate(user: User, fields: Mapped<User>) {
+    if (!fields) {
+      throw new UserInputError("Provide populate fields");
     }
 
-    return this.userModel.create(data, { transaction });
+    return this.userModel.populate(user, fields);
   }
 }

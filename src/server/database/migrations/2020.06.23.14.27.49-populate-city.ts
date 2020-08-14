@@ -1,22 +1,20 @@
 import axios from "axios";
-import { QueryInterface, QueryTypes } from "sequelize";
+import type knex from "knex";
 import { generate } from "shortid";
 import slugify from "slugify";
 
 import { CITY, STATE } from "@/server/utils/constants";
 
 export default {
-  async up(queryInterface: QueryInterface) {
-    const res: { code: number; id: string }[] = await queryInterface.sequelize.query(`SELECT * FROM "${STATE}"`, {
-      type: QueryTypes.SELECT,
-    });
+  async up(k: ReturnType<typeof knex>) {
+    const res = await k(STATE).select<{ code: number; id: string }[]>();
 
     await Promise.all(
       res.map(async (r) => {
         const url = `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${r.code}/municipios`;
         const inner = await axios.get<{ nome: string; id: number }[]>(url);
 
-        return queryInterface.bulkInsert(
+        return k.batchInsert(
           CITY,
           inner.data
             .sort((a, b) => {
@@ -31,7 +29,7 @@ export default {
             })
             .map((c) => ({
               id: generate(),
-              stateID: r.id,
+              state: r.id,
               name: c.nome,
               code: c.id,
               slug: slugify(c.nome, { lower: true, strict: true }),
@@ -43,7 +41,7 @@ export default {
     );
   },
 
-  async down(queryInterface: QueryInterface) {
-    return queryInterface.bulkDelete(CITY, {});
+  async down(k: ReturnType<typeof knex>) {
+    return k(CITY).delete();
   },
 };

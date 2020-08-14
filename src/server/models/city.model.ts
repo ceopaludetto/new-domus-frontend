@@ -1,35 +1,27 @@
-import { ObjectType, Field, ID } from "@nestjs/graphql";
-import { Table, Column, BelongsTo, ForeignKey } from "sequelize-typescript";
+import { Entity, Property, ManyToOne } from "@mikro-orm/core";
+import { ObjectType, Field } from "@nestjs/graphql";
 
 import { CITY } from "@/server/utils/constants";
-import * as Messages from "@/server/utils/validations/messages";
 
 import { BaseModel } from "./base.model";
 import { State } from "./state.model";
 
 @ObjectType(CITY)
-@Table({ tableName: CITY, modelName: CITY })
-export class City extends BaseModel<City> {
+@Entity({ tableName: CITY })
+export class City extends BaseModel {
   @Field()
-  @Column({ allowNull: false })
+  @Property()
   public name!: string;
 
   @Field()
-  @Column({ allowNull: false, unique: { name: "code", msg: Messages.UNIQUE } })
+  @Property({ unique: true })
   public code!: number;
 
   @Field()
-  @Column({ allowNull: false })
+  @Property()
   public slug!: string;
 
-  @Field(() => ID)
-  @ForeignKey(() => State)
-  @Column({ allowNull: false })
-  public stateID!: string;
-
   @Field(() => State)
-  @BelongsTo(() => State, {
-    foreignKey: "stateID",
-  })
+  @ManyToOne({ entity: () => State })
   public state!: State;
 }

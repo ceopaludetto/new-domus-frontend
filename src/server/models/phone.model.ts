@@ -1,5 +1,5 @@
-import { ObjectType, Field, ID } from "@nestjs/graphql";
-import { Table, Column, ForeignKey, BelongsTo } from "sequelize-typescript";
+import { Entity, Property, ManyToOne } from "@mikro-orm/core";
+import { ObjectType, Field } from "@nestjs/graphql";
 
 import { PHONE } from "@/server/utils/constants";
 
@@ -7,24 +7,17 @@ import { BaseModel } from "./base.model";
 import { Person } from "./person.model";
 
 @ObjectType()
-@Table({ tableName: PHONE, modelName: PHONE })
-export class Phone extends BaseModel<Phone> {
+@Entity({ tableName: PHONE })
+export class Phone extends BaseModel {
   @Field()
-  @Column({ allowNull: false })
+  @Property()
   public ddd!: string;
 
   @Field()
-  @Column({ allowNull: false })
+  @Property()
   public number!: string;
 
-  @Field(() => ID)
-  @ForeignKey(() => Person)
-  @Column({ allowNull: false })
-  public personID!: string;
-
   @Field(() => Person)
-  @BelongsTo(() => Person, {
-    foreignKey: "personID",
-  })
+  @ManyToOne({ entity: () => Person })
   public person!: Person;
 }

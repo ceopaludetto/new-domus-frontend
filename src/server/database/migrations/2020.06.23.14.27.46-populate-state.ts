@@ -1,16 +1,16 @@
 import axios from "axios";
-import { QueryInterface } from "sequelize";
+import type knex from "knex";
 import { generate } from "shortid";
 
 import { STATE } from "@/server/utils/constants";
 
 export default {
-  async up(queryInterface: QueryInterface) {
+  async up(k: ReturnType<typeof knex>) {
     const res = await axios.get<{ sigla: string; nome: string; id: number }[]>(
       "https://servicodados.ibge.gov.br/api/v1/localidades/estados"
     );
 
-    return queryInterface.bulkInsert(
+    return k.batchInsert(
       STATE,
       res.data
         .sort((a, b) => {
@@ -34,7 +34,7 @@ export default {
     );
   },
 
-  async down(queryInterface: QueryInterface) {
-    return queryInterface.bulkDelete(STATE, {});
+  async down(k: ReturnType<typeof knex>) {
+    return k(STATE).delete();
   },
 };

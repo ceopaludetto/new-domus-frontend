@@ -1,8 +1,9 @@
 version: 1
 
 database:
+  client:
+  type:
   database:
-  dialect:
   host:
   port:
   username:

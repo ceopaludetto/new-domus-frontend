@@ -1,5 +1,5 @@
-import { ObjectType, Field, ID } from "@nestjs/graphql";
-import { Table, Column, ForeignKey, BelongsTo } from "sequelize-typescript";
+import { Entity, Property, ManyToOne } from "@mikro-orm/core";
+import { ObjectType, Field } from "@nestjs/graphql";
 
 import { LOCAL } from "@/server/utils/constants";
 
@@ -8,39 +8,29 @@ import { Block } from "./block.model";
 import { Condominium } from "./condominium.model";
 
 @ObjectType(LOCAL)
-@Table({ tableName: LOCAL, modelName: LOCAL })
-export class Local extends BaseModel<Local> {
+@Entity({ tableName: LOCAL })
+export class Local extends BaseModel {
   @Field()
-  @Column({ allowNull: false })
+  @Property()
   public name!: string;
 
   @Field({ nullable: true })
-  @Column({ allowNull: true })
+  @Property({ nullable: true })
   public description?: string;
 
   @Field()
-  @Column({ allowNull: false })
+  @Property()
   public capacity!: number;
 
   @Field({ nullable: true })
-  @Column({ allowNull: true })
+  @Property({ nullable: true })
   public image?: string;
 
-  @Field(() => ID, { nullable: true })
-  @ForeignKey(() => Block)
-  @Column({ allowNull: true })
-  public blockID?: string;
-
-  @Field(() => ID)
-  @ForeignKey(() => Condominium)
-  @Column({ allowNull: false })
-  public condominiumID!: string;
-
   @Field(() => Block, { nullable: true })
-  @BelongsTo(() => Block, { foreignKey: "blockID" })
+  @ManyToOne({ entity: () => Block, nullable: true })
   public block?: Block;
 
   @Field(() => Condominium)
-  @BelongsTo(() => Condominium, { foreignKey: "condominiumID" })
+  @ManyToOne({ entity: () => Condominium })
   public condominium!: Condominium;
 }
