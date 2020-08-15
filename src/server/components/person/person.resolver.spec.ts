@@ -1,12 +1,10 @@
-import { getModelToken } from "@nestjs/sequelize";
+import { getRepositoryToken } from "@mikro-orm/nestjs";
 import { Test } from "@nestjs/testing";
 
 import { Person } from "@/server/models";
 
 import { PersonResolver } from "./person.resolver";
 import { PersonService } from "./person.service";
-
-jest.mock("@/server/models");
 
 describe("PersonResolver", () => {
   let personResolver: PersonResolver;
@@ -18,7 +16,7 @@ describe("PersonResolver", () => {
         PersonResolver,
         PersonService,
         {
-          provide: getModelToken(Person),
+          provide: getRepositoryToken(Person),
           useClass: Person,
         },
       ],

@@ -1,5 +1,5 @@
-import { ObjectType, Field, ID } from "@nestjs/graphql";
-import { Table, Column, AutoIncrement, ForeignKey, BelongsTo, HasMany } from "sequelize-typescript";
+import { Entity, Property, ManyToOne, OneToMany, Collection, LoadStrategy } from "@mikro-orm/core";
+import { ObjectType, Field } from "@nestjs/graphql";
 
 import { BLOCK } from "@/server/utils/constants";
 
@@ -8,29 +8,21 @@ import { Condominium } from "./condominium.model";
 import { Local } from "./local.model";
 
 @ObjectType()
-@Table({ tableName: BLOCK, modelName: BLOCK })
-export class Block extends BaseModel<Block> {
+@Entity({ tableName: BLOCK })
+export class Block extends BaseModel {
   @Field({ nullable: true })
-  @Column
+  @Property({ nullable: true })
   public name?: string;
 
   @Field()
-  @AutoIncrement
-  @Column({ allowNull: false })
+  @Property()
   public number!: number;
 
-  @Field(() => ID)
-  @ForeignKey(() => Condominium)
-  @Column({ allowNull: false })
-  public condominiumID!: string;
-
   @Field(() => Condominium)
-  @BelongsTo(() => Condominium, {
-    foreignKey: "condominiumID",
-  })
+  @ManyToOne({ entity: () => Condominium })
   public condominium!: Condominium;
 
   @Field(() => [Local], { nullable: true })
-  @HasMany(() => Local)
-  public locals?: Local[];
+  @OneToMany({ entity: () => Local, mappedBy: (local) => local.block, strategy: LoadStrategy.JOINED })
+  public locals: Collection<Local> = new Collection<Local>(this);
 }

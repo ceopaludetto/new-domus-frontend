@@ -1,5 +1,5 @@
+import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { Module, OnModuleInit } from "@nestjs/common";
-import { SequelizeModule } from "@nestjs/sequelize";
 import { InjectPinoLogger, PinoLogger } from "nestjs-pino";
 
 import { State } from "@/server/models";
@@ -8,7 +8,7 @@ import { StateResolver } from "./state.resolver";
 import { StateService } from "./state.service";
 
 @Module({
-  imports: [SequelizeModule.forFeature([State])],
+  imports: [MikroOrmModule.forFeature({ entities: [State] })],
   providers: [StateService, StateResolver],
   exports: [StateService],
 })

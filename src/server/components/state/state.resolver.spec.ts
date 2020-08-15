@@ -1,12 +1,10 @@
-import { getModelToken } from "@nestjs/sequelize";
+import { getRepositoryToken } from "@mikro-orm/nestjs";
 import { Test } from "@nestjs/testing";
 
 import { State } from "@/server/models";
 
 import { StateResolver } from "./state.resolver";
 import { StateService } from "./state.service";
-
-jest.mock("@/server/models");
 
 describe("StateResolver", () => {
   let stateResolver: StateResolver;
@@ -18,7 +16,7 @@ describe("StateResolver", () => {
         StateResolver,
         StateService,
         {
-          provide: getModelToken(State),
+          provide: getRepositoryToken(State),
           useClass: State,
         },
       ],

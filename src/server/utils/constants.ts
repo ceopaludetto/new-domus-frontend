@@ -4,7 +4,7 @@ export const APP_NAME = "NestNewGraphQL";
 export const REQUIRED = "Configuração ${path} Obrigatória";
 export const DIALECT = "Dialeto do banco de dados não suportado";
 
-// Sequelize
+// Database
 export const USER = "User";
 export const PERSON = "Person";
 export const STATE = "State";

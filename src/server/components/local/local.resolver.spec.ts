@@ -1,12 +1,10 @@
-import { getModelToken } from "@nestjs/sequelize";
+import { getRepositoryToken } from "@mikro-orm/nestjs";
 import { Test } from "@nestjs/testing";
 
 import { Local } from "@/server/models";
 
 import { LocalResolver } from "./local.resolver";
 import { LocalService } from "./local.service";
-
-jest.mock("@/server/models");
 
 describe("LocalResolver", () => {
   let localResolver: LocalResolver;
@@ -18,7 +16,7 @@ describe("LocalResolver", () => {
         LocalResolver,
         LocalService,
         {
-          provide: getModelToken(Local),
+          provide: getRepositoryToken(Local),
           useClass: Local,
         },
       ],

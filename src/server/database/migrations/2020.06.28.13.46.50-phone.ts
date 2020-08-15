@@ -1,33 +1,20 @@
-import SequelizeStatic, { QueryInterface } from "sequelize";
+import type knex from "knex";
 
 import { PHONE, PERSON } from "@/server/utils/constants";
 
-import { migrationDefaults } from "../defaults";
+import { defaults } from "../defaults";
 
 export default {
-  async up(queryInterface: QueryInterface, Sequelize: typeof SequelizeStatic) {
-    return queryInterface.createTable(PHONE, {
-      ...migrationDefaults(Sequelize),
-      ddd: {
-        type: Sequelize.STRING(2),
-        allowNull: false,
-      },
-      number: {
-        type: Sequelize.STRING(9),
-        allowNull: false,
-      },
-      personID: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        references: {
-          model: PERSON,
-          key: "id",
-        },
-      },
+  async up(k: ReturnType<typeof knex>) {
+    return k.schema.createTable(PHONE, (t) => {
+      defaults(k, t);
+      t.string("ddd", 2).notNullable();
+      t.string("number", 9).notNullable();
+      t.string("person").references("id").inTable(PERSON);
     });
   },
 
-  async down(queryInterface: QueryInterface) {
-    return queryInterface.dropTable(PHONE);
+  async down(k: ReturnType<typeof knex>) {
+    return k.schema.dropTable(PHONE);
   },
 };
