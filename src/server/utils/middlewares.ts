@@ -8,7 +8,6 @@ import helmet from "helmet";
 import { PinoLogger } from "nestjs-pino";
 
 import { LoggingInterceptor } from "./plugins/logging.interceptor";
-import { SequelizeExceptionFilter } from "./plugins/sequelize.exception.filter";
 import { formatErrors } from "./validations/format";
 
 export async function installMiddlewares(app: INestApplication) {
@@ -19,7 +18,6 @@ export async function installMiddlewares(app: INestApplication) {
       exceptionFactory: (errors) => new UserInputError("Erro de validação", formatErrors(errors)),
     })
   );
-  app.useGlobalFilters(new SequelizeExceptionFilter());
   app.useGlobalInterceptors(new LoggingInterceptor(await app.resolve(PinoLogger)));
 
   app.use(

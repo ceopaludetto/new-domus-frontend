@@ -1,36 +1,19 @@
+import { Entity, Property, PrimaryKey } from "@mikro-orm/core";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
-import { PrimaryKey, CreatedAt, UpdatedAt, DeletedAt, Column, Model, Default } from "sequelize-typescript";
 import { generate } from "shortid";
 
-import type { ExcludeSequelize } from "@/server/utils/common.dto";
-
-interface BaseModelAttributes {
-  id: string;
-  createdAt: Date;
-  updatedAt: Date;
-  deletedAt?: Date;
-}
-
+@Entity()
 @ObjectType()
-export abstract class BaseModel<T, U = ExcludeSequelize<{ [P in keyof T]: T[P] }>> extends Model<
-  T,
-  U & BaseModelAttributes
-> {
-  @Default(generate)
-  @PrimaryKey
-  @Column
+export abstract class BaseModel {
   @Field(() => ID)
-  public id!: string;
+  @PrimaryKey()
+  public id: string = generate();
 
   @Field()
-  @CreatedAt
-  public createdAt!: Date;
+  @Property()
+  public createdAt: Date = new Date();
 
   @Field()
-  @UpdatedAt
-  public updatedAt!: Date;
-
-  @Field({ nullable: true })
-  @DeletedAt
-  public deletedAt?: Date;
+  @Property({ onUpdate: () => new Date() })
+  public updatedAt: Date = new Date();
 }

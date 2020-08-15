@@ -1,33 +1,16 @@
-import SequelizeStatic, { QueryInterface } from "sequelize";
+import type knex from "knex";
 
 import { PERSON_CONDOMINIUM, CONDOMINIUM, PERSON } from "@/server/utils/constants";
 
-import { migrationDefaults } from "../defaults";
-
 export default {
-  async up(queryInterface: QueryInterface, Sequelize: typeof SequelizeStatic) {
-    return queryInterface.createTable(PERSON_CONDOMINIUM, {
-      ...migrationDefaults(Sequelize),
-      personID: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        references: {
-          model: PERSON,
-          key: "id",
-        },
-      },
-      condominiumID: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        references: {
-          model: CONDOMINIUM,
-          key: "id",
-        },
-      },
+  async up(k: ReturnType<typeof knex>) {
+    return k.schema.createTable(PERSON_CONDOMINIUM, (t) => {
+      t.string("person").references("id").inTable(PERSON).notNullable();
+      t.string("condominium").references("id").inTable(CONDOMINIUM).notNullable();
     });
   },
 
-  async down(queryInterface: QueryInterface) {
-    return queryInterface.dropTable(PERSON_CONDOMINIUM);
+  async down(k: ReturnType<typeof knex>) {
+    return k.schema.dropTable(PERSON_CONDOMINIUM);
   },
 };

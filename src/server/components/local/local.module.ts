@@ -1,10 +1,14 @@
+import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { Module, OnModuleInit } from "@nestjs/common";
 import { InjectPinoLogger, PinoLogger } from "nestjs-pino";
+
+import { Local } from "@/server/models";
 
 import { LocalResolver } from "./local.resolver";
 import { LocalService } from "./local.service";
 
 @Module({
+  imports: [MikroOrmModule.forFeature({ entities: [Local] })],
   providers: [LocalResolver, LocalService],
   exports: [LocalService],
 })

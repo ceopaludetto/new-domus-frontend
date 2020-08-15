@@ -1,12 +1,10 @@
+import { Entity, Property, Enum, OneToOne, OneToMany, Collection, ManyToMany, LoadStrategy } from "@mikro-orm/core";
 import { ObjectType, Field, registerEnumType } from "@nestjs/graphql";
-import { Table, Column, DataType, HasOne, BelongsToMany, HasMany } from "sequelize-typescript";
 
-import { PERSON } from "@/server/utils/constants";
-import * as Messages from "@/server/utils/validations/messages";
+import { PERSON, PERSON_CONDOMINIUM } from "@/server/utils/constants";
 
 import { BaseModel } from "./base.model";
 import { Condominium } from "./condominium.model";
-import { PersonCondominium } from "./person.condominium.model";
 import { Phone } from "./phone.model";
 import { User } from "./user.model";
 
@@ -21,41 +19,41 @@ registerEnumType(Gender, {
 });
 
 @ObjectType(PERSON)
-@Table({ tableName: PERSON, modelName: PERSON })
-export class Person extends BaseModel<Person> {
+@Entity({ tableName: PERSON })
+export class Person extends BaseModel {
   @Field()
-  @Column({ allowNull: false })
+  @Property()
   public name!: string;
 
   @Field()
-  @Column({ allowNull: false })
+  @Property()
   public lastName!: string;
 
   @Field()
-  @Column({ unique: { name: "email", msg: Messages.UNIQUE }, allowNull: false })
+  @Property({ unique: true })
   public email!: string;
 
   @Field(() => Gender)
-  @Column({ type: DataType.ENUM(Gender.N, Gender.M, Gender.F), allowNull: false })
+  @Enum(() => Gender)
   public gender!: Gender;
 
   @Field()
-  @Column({ allowNull: false })
+  @Property()
   public cpf!: string;
 
   @Field()
-  @Column({ allowNull: false })
+  @Property()
   public birthdate!: Date;
 
   @Field(() => [Phone])
-  @HasMany(() => Phone)
-  public phones!: Phone[];
+  @OneToMany({ entity: () => Phone, mappedBy: (phone) => phone.person, strategy: LoadStrategy.JOINED })
+  public phones: Collection<Phone> = new Collection<Phone>(this);
 
   @Field(() => User)
-  @HasOne(() => User)
+  @OneToOne({ entity: () => User, mappedBy: (user) => user.person, strategy: LoadStrategy.JOINED })
   public user!: User;
 
   @Field(() => [Condominium])
-  @BelongsToMany(() => Condominium, () => PersonCondominium)
-  public condominiums!: Condominium[];
+  @ManyToMany({ entity: () => Condominium, pivotTable: PERSON_CONDOMINIUM, strategy: LoadStrategy.JOINED })
+  public condominiums: Collection<Condominium> = new Collection<Condominium>(this);
 }

@@ -1,4 +1,4 @@
-import { InputType, Field, PartialType, OmitType } from "@nestjs/graphql";
+import { InputType, Field, PartialType } from "@nestjs/graphql";
 import { Transform, Type } from "class-transformer";
 import { IsString, IsEmail, IsEnum, IsDate, ValidateNested } from "class-validator";
 
@@ -23,7 +23,7 @@ export class PersonInsertInput {
 
   @Field()
   @IsString({ message: Messages.STRING })
-  @IsEmail({ message: Messages.EMAIL })
+  @IsEmail(undefined, { message: Messages.EMAIL })
   @Transform(mail)
   public email!: string;
 
@@ -52,8 +52,6 @@ export class PersonInsertInput {
   @Type(() => CondominiumInsertInput)
   public condominiums!: CondominiumInsertInput[];
 }
-
-export class PersonInsertInputWithoutRelation extends OmitType(PersonInsertInput, ["phones", "condominiums"]) {}
 
 @InputType()
 export class PersonUpdateInput extends PartialType(PersonInsertInput) {}

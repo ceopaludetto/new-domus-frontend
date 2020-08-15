@@ -1,7 +1,7 @@
 import { UseGuards } from "@nestjs/common";
 import { Resolver, Mutation, Query, Args, Context } from "@nestjs/graphql";
 
-import { UserInsertInput } from "@/server/components/user";
+import { UserInsertInput, UserService } from "@/server/components/user";
 import { User } from "@/server/models";
 import type { ContextType, Mapped } from "@/server/utils/common.dto";
 import { MapFields } from "@/server/utils/plugins";
@@ -12,13 +12,13 @@ import { AuthenticationService } from "./authentication.service";
 
 @Resolver(() => User)
 export class AuthenticationResolver {
-  public constructor(private readonly authService: AuthenticationService) {}
+  public constructor(private readonly authService: AuthenticationService, private readonly userService: UserService) {}
 
   @Mutation(() => User)
   public login(
     @Args("input") data: AuthenticationInput,
     @Context() ctx: ContextType,
-    @MapFields(User, { password: true }) mapped: Mapped
+    @MapFields() mapped?: Mapped<User>
   ) {
     return this.authService.login(data, ctx.res, mapped);
   }
@@ -35,7 +35,7 @@ export class AuthenticationResolver {
 
   @UseGuards(GqlAuthGuard)
   @Query(() => User)
-  public profile(@Context() ctx: ContextType) {
-    return ctx.req.user;
+  public profile(@Context() ctx: ContextType, @MapFields() mapped?: Mapped<User>) {
+    return this.userService.populate(ctx.req.user, mapped);
   }
 }

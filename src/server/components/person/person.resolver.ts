@@ -12,12 +12,12 @@ export class PersonResolver {
   public constructor(private readonly personService: PersonService) {}
 
   @Query(() => [Person])
-  public async showPeople(@Args({ nullable: true }) { skip, take }: ShowAll, @MapFields(Person) mapped: Mapped) {
+  public async showPeople(@Args({ nullable: true }) { skip, take }: ShowAll, @MapFields() mapped?: Mapped<Person>) {
     return this.personService.showAll({ skip, take }, mapped);
   }
 
   @Query(() => Person)
-  public async findPersonByID(@Args() { id }: FindByID, @MapFields(Person) mapped: Mapped) {
+  public async findPersonByID(@Args() { id }: FindByID, @MapFields() mapped?: Mapped<Person>) {
     return this.personService.findByID(id, mapped);
   }
 }

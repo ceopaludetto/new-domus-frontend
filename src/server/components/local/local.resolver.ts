@@ -12,12 +12,12 @@ export class LocalResolver {
   public constructor(private readonly localService: LocalService) {}
 
   @Query(() => [Local])
-  public showLocals(@Args({ nullable: true }) { take, skip }: ShowAll, @MapFields(Local) mapped: Mapped) {
+  public showLocals(@Args({ nullable: true }) { take, skip }: ShowAll, @MapFields() mapped?: Mapped<Local>) {
     return this.localService.showAll({ take, skip }, mapped);
   }
 
   @Query(() => Local)
-  public findLocalByID(@Args() { id }: FindByID, @MapFields(Local) mapped: Mapped) {
+  public findLocalByID(@Args() { id }: FindByID, @MapFields() mapped?: Mapped<Local>) {
     return this.localService.findByID(id, mapped);
   }
 }

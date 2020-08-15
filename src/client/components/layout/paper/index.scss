@@ -1,7 +1,9 @@
 @import "~@/client/styles/variables";
 
 .paper {
-  border-radius: get-theme-prop(layout, shape);
+  &:not(.square) {
+    border-radius: get-theme-prop(layout, shape);
+  }
   &:not(.outline) {
     background-color: get-color(paper);
     box-shadow: 0 3.6px 3.3px rgba(0, 0, 0, 0.05), 0 10px 9px rgba(0, 0, 0, 0.033), 0 24.1px 21.7px rgba(0, 0, 0, 0.025),

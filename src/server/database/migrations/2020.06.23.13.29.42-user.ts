@@ -1,34 +1,20 @@
-import SequelizeStatic, { QueryInterface } from "sequelize";
+import type knex from "knex";
 
 import { USER, PERSON } from "@/server/utils/constants";
 
-import { migrationDefaults } from "../defaults";
+import { defaults } from "../defaults";
 
 export default {
-  async up(queryInterface: QueryInterface, Sequelize: typeof SequelizeStatic) {
-    return queryInterface.createTable(USER, {
-      ...migrationDefaults(Sequelize),
-      login: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        unique: true,
-      },
-      password: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      personID: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        references: {
-          model: PERSON,
-          key: "id",
-        },
-      },
+  async up(k: ReturnType<typeof knex>) {
+    return k.schema.createTable(USER, (t) => {
+      defaults(k, t);
+      t.string("login").notNullable().unique();
+      t.string("password").notNullable();
+      t.string("person").references("id").inTable(PERSON).notNullable();
     });
   },
 
-  async down(queryInterface: QueryInterface) {
-    return queryInterface.dropTable(USER);
+  async down(k: ReturnType<typeof knex>) {
+    return k.schema.dropTable(USER);
   },
 };

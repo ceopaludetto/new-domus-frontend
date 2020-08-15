@@ -2,7 +2,6 @@ export { Block } from "./block.model";
 export { City } from "./city.model";
 export { Condominium } from "./condominium.model";
 export { Local } from "./local.model";
-export { PersonCondominium } from "./person.condominium.model";
 export { Person } from "./person.model";
 export { Phone } from "./phone.model";
 export { State } from "./state.model";

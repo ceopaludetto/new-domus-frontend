@@ -6,6 +6,7 @@ import s from "./index.scss";
 
 type PaperProps = {
   size?: "large" | "normal";
+  square?: boolean;
   outline?: boolean;
   noGutter?: boolean;
   noHorizontalBorders?: boolean;
@@ -16,6 +17,7 @@ export const Paper = React.forwardRef(
     {
       children,
       className,
+      square = false,
       size = "normal",
       outline = false,
       noGutter = false,
@@ -28,6 +30,7 @@ export const Paper = React.forwardRef(
       s.paper,
       s[size],
       {
+        [s.square]: square,
         [s.outline]: outline,
         [s["no-gutter"]]: noGutter,
         [s["no-horizontal-borders"]]: noHorizontalBorders,

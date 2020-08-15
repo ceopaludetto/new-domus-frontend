@@ -11,8 +11,8 @@ const common = {
   transformIgnorePatterns: ["/node_modules/"],
   transform: tsjPreset.transform,
   moduleNameMapper: {
+    "\\.(css|less|scss)$": "identity-obj-proxy",
     ...pathsToModuleNameMapper(compilerOptions.paths),
-    "\\.scss$": "identity-obj-proxy",
   },
   testURL: "http://localhost/",
   collectCoverage: false,

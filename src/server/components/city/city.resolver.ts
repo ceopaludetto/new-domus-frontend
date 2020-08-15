@@ -16,18 +16,18 @@ export class CityResolver {
   public async showCities(
     @Args({ nullable: true }) { take, skip }: ShowAll,
     @SortFields(City) sort?: CitySortInput,
-    @MapFields(City) mapped?: Mapped
+    @MapFields() mapped?: Mapped<City>
   ) {
     return this.cityService.showAll({ skip, take, sort: sort?.get() }, mapped);
   }
 
   @Query(() => City)
-  public async findCityByID(@Args() { id }: FindByID, @MapFields(City) mapped: Mapped) {
+  public async findCityByID(@Args() { id }: FindByID, @MapFields() mapped?: Mapped<City>) {
     return this.cityService.findByID(id, mapped);
   }
 
   @Query(() => [City])
-  public async findCitiesByStateID(@Args() { id }: FindByID, @MapFields(City) mapped: Mapped) {
+  public async findCitiesByStateID(@Args() { id }: FindByID, @MapFields() mapped?: Mapped<City>) {
     return this.cityService.findByState(id, mapped);
   }
 }

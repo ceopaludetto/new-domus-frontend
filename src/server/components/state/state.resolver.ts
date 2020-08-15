@@ -15,14 +15,14 @@ export class StateResolver {
   @Query(() => [State])
   public async showStates(
     @Args({ nullable: true }) { skip, take }: ShowAll,
-    @MapFields(State) mapped: Mapped,
+    @MapFields() mapped?: Mapped<State>,
     @SortFields(State) sort?: StateSortInput
   ) {
     return this.stateService.showAll({ skip, take, sort: sort?.get() }, mapped);
   }
 
   @Query(() => State)
-  public async findStateByID(@Args() { id }: FindByID, @MapFields(State) mapped: Mapped) {
+  public async findStateByID(@Args() { id }: FindByID, @MapFields() mapped?: Mapped<State>) {
     return this.stateService.findByID(id, mapped);
   }
 }
