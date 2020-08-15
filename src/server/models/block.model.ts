@@ -1,4 +1,4 @@
-import { Entity, Property, ManyToOne, OneToMany, Collection } from "@mikro-orm/core";
+import { Entity, Property, ManyToOne, OneToMany, Collection, LoadStrategy } from "@mikro-orm/core";
 import { ObjectType, Field } from "@nestjs/graphql";
 
 import { BLOCK } from "@/server/utils/constants";
@@ -23,6 +23,6 @@ export class Block extends BaseModel {
   public condominium!: Condominium;
 
   @Field(() => [Local], { nullable: true })
-  @OneToMany({ entity: () => Local, mappedBy: (local) => local.block })
+  @OneToMany({ entity: () => Local, mappedBy: (local) => local.block, strategy: LoadStrategy.JOINED })
   public locals: Collection<Local> = new Collection<Local>(this);
 }

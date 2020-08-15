@@ -1,4 +1,4 @@
-import { Entity, Property, OneToOne } from "@mikro-orm/core";
+import { Entity, Property, OneToOne, LoadStrategy } from "@mikro-orm/core";
 import { ObjectType, Field } from "@nestjs/graphql";
 
 import { ADDRESS } from "@/server/utils/constants";
@@ -23,10 +23,20 @@ export class Address extends BaseModel {
   public number!: string;
 
   @Field(() => Condominium)
-  @OneToOne({ entity: () => Condominium, inversedBy: (condominium) => condominium.address, owner: true })
+  @OneToOne({
+    entity: () => Condominium,
+    inversedBy: (condominium) => condominium.address,
+    owner: true,
+    strategy: LoadStrategy.JOINED,
+  })
   public condominium!: Condominium;
 
   @Field(() => City)
-  @OneToOne({ entity: () => Condominium, inversedBy: (city) => city.address, owner: true })
+  @OneToOne({
+    entity: () => Condominium,
+    inversedBy: (city) => city.address,
+    owner: true,
+    strategy: LoadStrategy.JOINED,
+  })
   public city!: City;
 }

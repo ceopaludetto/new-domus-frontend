@@ -1,4 +1,4 @@
-import { Entity, Property, OneToMany, Collection } from "@mikro-orm/core";
+import { Entity, Property, OneToMany, Collection, LoadStrategy } from "@mikro-orm/core";
 import { ObjectType, Field } from "@nestjs/graphql";
 
 import { STATE } from "@/server/utils/constants";
@@ -22,6 +22,6 @@ export class State extends BaseModel {
   public code!: number;
 
   @Field(() => [City])
-  @OneToMany({ entity: () => City, mappedBy: (city) => city.state })
+  @OneToMany({ entity: () => City, mappedBy: (city) => city.state, strategy: LoadStrategy.JOINED })
   public cities: Collection<City> = new Collection<City>(this);
 }

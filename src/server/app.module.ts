@@ -52,9 +52,9 @@ import { APP_NAME } from "@/server/utils/constants";
         user: database.username,
         password: database.password,
         namingStrategy: EntityCaseNamingStrategy,
-        debug: ["query"],
+        debug: database.logger && ["query"],
         entities: Object.values(entities).filter((x) => typeof x === "function") as any,
-        discovery: { disableDynamicFileAccess: true },
+        discovery: { disableDynamicFileAccess: true }, // due to webpack usage
         tsNode: false,
         logger: (msg: string) => logger.debug(msg),
       }),

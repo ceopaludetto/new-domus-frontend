@@ -1,4 +1,4 @@
-import { Entity, Property, ManyToMany, Collection, OneToMany, OneToOne } from "@mikro-orm/core";
+import { Entity, Property, ManyToMany, Collection, OneToMany, OneToOne, LoadStrategy } from "@mikro-orm/core";
 import { ObjectType, Field } from "@nestjs/graphql";
 
 import { CONDOMINIUM, PERSON_CONDOMINIUM } from "@/server/utils/constants";
@@ -24,19 +24,19 @@ export class Condominium extends BaseModel {
   @Property({ default: "#" })
   public character!: string;
 
-  @Field(() => [Person])
-  @ManyToMany({ entity: () => Person, pivotTable: PERSON_CONDOMINIUM })
-  public people: Collection<Person> = new Collection<Person>(this);
-
   @Field(() => [Block])
-  @OneToMany({ entity: () => Block, mappedBy: (block) => block.condominium })
+  @OneToMany({ entity: () => Block, mappedBy: (block) => block.condominium, strategy: LoadStrategy.JOINED })
   public blocks: Collection<Block> = new Collection<Block>(this);
 
   @Field(() => [Local])
-  @OneToMany({ entity: () => Local, mappedBy: (local) => local.condominium })
+  @OneToMany({ entity: () => Local, mappedBy: (local) => local.condominium, strategy: LoadStrategy.JOINED })
   public locals: Collection<Local> = new Collection<Local>(this);
 
   @Field(() => Address)
-  @OneToOne({ entity: () => Address, mappedBy: (address) => address.condominium })
+  @OneToOne({ entity: () => Address, mappedBy: (address) => address.condominium, strategy: LoadStrategy.JOINED })
   public address!: Address;
+
+  @Field(() => [Person])
+  @ManyToMany({ entity: () => Person, pivotTable: PERSON_CONDOMINIUM, strategy: LoadStrategy.JOINED })
+  public people: Collection<Person> = new Collection<Person>(this);
 }

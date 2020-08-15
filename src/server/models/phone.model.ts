@@ -1,4 +1,4 @@
-import { Entity, Property, ManyToOne } from "@mikro-orm/core";
+import { Entity, Property, ManyToOne, LoadStrategy } from "@mikro-orm/core";
 import { ObjectType, Field } from "@nestjs/graphql";
 
 import { PHONE } from "@/server/utils/constants";
@@ -18,6 +18,6 @@ export class Phone extends BaseModel {
   public number!: string;
 
   @Field(() => Person)
-  @ManyToOne({ entity: () => Person })
+  @ManyToOne({ entity: () => Person, strategy: LoadStrategy.JOINED })
   public person!: Person;
 }

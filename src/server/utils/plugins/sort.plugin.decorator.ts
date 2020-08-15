@@ -1,6 +1,7 @@
 import { QueryOrder, FindOptions } from "@mikro-orm/core";
 import { Type, Injectable, PipeTransform } from "@nestjs/common";
 import { InputType, Field, Args } from "@nestjs/graphql";
+import { classToPlain } from "class-transformer";
 import { IsString, IsEnum, IsOptional } from "class-validator";
 
 import type { Sort } from "../common.dto";
@@ -29,7 +30,7 @@ class OrderPipe<T> implements PipeTransform {
   public constructor(private readonly model: Type<T>) {}
 
   public transform(value: Sort<T, keyof T>) {
-    return { get: () => Object.fromEntries(Object.entries(value)) };
+    return { get: () => classToPlain(value) };
   }
 }
 
