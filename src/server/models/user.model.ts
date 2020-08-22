@@ -17,6 +17,9 @@ export class User extends BaseModel {
   @Property({ hidden: true })
   public password!: string;
 
+  @Property({ hidden: true })
+  public recoverToken!: string;
+
   @Field(() => Person)
   @OneToOne({ entity: () => Person, inversedBy: (person) => person.user, strategy: LoadStrategy.JOINED })
   public person!: Person;

@@ -48,4 +48,10 @@ export class UserService {
 
     return this.userModel.populate(user, fields);
   }
+
+  public async setRecoverToken(user: User, token: string) {
+    user.recoverToken = token;
+
+    return this.userModel.persistAndFlush(user);
+  }
 }

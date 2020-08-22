@@ -38,9 +38,11 @@ export default function Forgot() {
 
   const submit = methods.handleSubmit(async (values) => {
     try {
+      const callback = `${window.location.origin}/auth/recover`;
+
       await forgot({
         variables: {
-          input: values,
+          input: { ...values, callback },
         },
       });
 

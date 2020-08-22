@@ -38,15 +38,16 @@ export class MailQueueConsumer {
   }
 
   @Process("forgot")
-  public async sendForgotMail(job: Job<User>) {
+  public async sendForgotMail(job: Job<{ user: User; callback: string }>) {
     try {
       const info = await this.mailer.sendMail({
-        to: job.data.person.email,
+        to: job.data.user.person.email,
         from: '"Carlos Eduardo" <ceo.paludetto@gmail.com>',
         subject: "[NestNewGraphql] Forgot",
         template: "forgot",
         context: {
-          name: job.data.person.name,
+          name: job.data.user.person.name,
+          callback: job.data.callback,
         },
       });
 

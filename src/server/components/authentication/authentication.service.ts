@@ -5,6 +5,7 @@ import { UserInputError, AuthenticationError } from "apollo-server-express";
 import type { Queue } from "bull";
 import type { Response } from "express";
 import { InjectPinoLogger, PinoLogger } from "nestjs-pino";
+import { URL } from "url";
 
 import { UserInsertInput, UserService } from "@/server/components/user";
 import type { User } from "@/server/models";
@@ -76,19 +77,30 @@ export class AuthenticationService {
 
   public async forgot(data: ForgotInput) {
     try {
-      const user = await this.userService.findByLogin(data.login);
+      const user = await this.userService.findByLogin(data.login, ["person"]);
+      const callback = new URL(data.callback);
 
       if (!user) {
         throw new Error("Usuário não encontrado");
       }
 
-      await this.mailQueue.add("forgot", user, {
-        attempts: 5,
-        backoff: {
-          type: "fixed",
-          delay: 2000,
-        },
-      });
+      const token = this.generate(user);
+      callback.search = `?t=${token}`;
+
+      // set recover token in database
+      await this.userService.setRecoverToken(user, token);
+
+      await this.mailQueue.add(
+        "forgot",
+        { user, callback: callback.toString() },
+        {
+          attempts: 5,
+          backoff: {
+            type: "fixed",
+            delay: 2000,
+          },
+        }
+      );
 
       return user.person.email;
     } catch (error) {
@@ -96,4 +108,6 @@ export class AuthenticationService {
       throw error;
     }
   }
+
+  // implement recover
 }
