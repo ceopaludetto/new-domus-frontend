@@ -9,8 +9,7 @@ import { yupResolver } from "@hookform/resolvers";
 import clsx from "clsx";
 
 import { FormControl, Button, PreloadLink, Text } from "@/client/components";
-import { AuthForgot } from "@/client/graphql";
-import type { AuthForgotMutation, AuthForgotMutationVariables } from "@/client/graphql/operations";
+import { AuthForgot, AuthForgotMutation, AuthForgotMutationVariables } from "@/client/graphql";
 import { ForgotSchema, ForgotValues } from "@/client/helpers/validations/forgot.schema";
 import { usePreload } from "@/client/hooks";
 import u from "@/client/styles/utils.scss";

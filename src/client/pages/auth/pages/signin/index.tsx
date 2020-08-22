@@ -8,8 +8,7 @@ import type { UserInputError } from "apollo-server-express";
 import clsx from "clsx";
 
 import { Button, FormControl, PreloadLink, Text } from "@/client/components";
-import { Login } from "@/client/graphql/auth.graphql";
-import type { LoginMutation, LoginMutationVariables } from "@/client/graphql/operations";
+import { Login, LoginMutation, LoginMutationVariables } from "@/client/graphql";
 import { SignInSchema, SignInValues } from "@/client/helpers/validations/signin.schema";
 import { useVisibility } from "@/client/hooks";
 import u from "@/client/styles/utils.scss";

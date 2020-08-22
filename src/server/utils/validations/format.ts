@@ -21,7 +21,9 @@ export function formatErrors(errors: ValidationError[]) {
     } else {
       if (e.constraints) {
         Object.keys(e.constraints).forEach((ck) => {
-          messages.push(e.constraints[ck]);
+          if (e.constraints?.[ck]) {
+            messages.push(e.constraints[ck]);
+          }
         });
       }
 
