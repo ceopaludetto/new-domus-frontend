@@ -1,6 +1,6 @@
 import * as Yup from "yup";
 
-import { Gender } from "@/client/graphql/operations";
+import { Gender } from "@/client/graphql";
 
 import * as Messages from "../constants";
 
@@ -17,8 +17,8 @@ export const SignUpStep1Schema = Yup.object({
     email: Yup.string().email(Messages.EMAIL).required(Messages.REQUIRED),
     birthdate: Yup.date().typeError(Messages.DATE).required(Messages.REQUIRED),
     phone: Yup.string().matches(/\([\d]{2}\) \d?[\d]{4}-[\d]{4}/, Messages.TEL),
-  }),
-});
+  }).required(),
+}).required();
 
 export const SignUpStep2Schema = Yup.object({
   password: Yup.string()
@@ -27,9 +27,9 @@ export const SignUpStep2Schema = Yup.object({
     .matches(/[A-Z]/, Messages.ONE_UPPER)
     .required(Messages.REQUIRED),
   repeatPassword: Yup.string()
-    .oneOf([Yup.ref("password"), null], Messages.REPEAT_PASSWORD)
+    .oneOf([Yup.ref("password"), undefined], Messages.REPEAT_PASSWORD)
     .required(Messages.REQUIRED),
-});
+}).required();
 
 export const SignUpStep3Schema = Yup.object({
   type: Yup.mixed<"enter" | "create" | null>()
@@ -46,14 +46,14 @@ export const SignUpStep3Schema = Yup.object({
         .required(Messages.REQUIRED),
       address: Yup.string().required(Messages.REQUIRED),
       number: Yup.string().required(Messages.REQUIRED),
-      stateID: Yup.string().nullable().required(Messages.REQUIRED),
-      cityID: Yup.string().nullable().required(Messages.REQUIRED),
-    }),
+      state: Yup.string().nullable().required(Messages.REQUIRED),
+      city: Yup.string().nullable().required(Messages.REQUIRED),
+    }).required(),
   }).when("type", {
     is: "create",
     then: (schema: Yup.ObjectSchema<any>) => schema.required(Messages.REQUIRED),
   }),
-});
+}).required();
 
 export type SignUpStep1Values = Yup.InferType<typeof SignUpStep1Schema>;
 export type SignUpStep2Values = Yup.InferType<typeof SignUpStep2Schema>;
