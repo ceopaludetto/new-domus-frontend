@@ -9,15 +9,7 @@ interface StepperContextProps {
   prev: () => void;
 }
 
-type UseStepperReturn = [
-  number,
-  {
-    toggle: (page: number) => void;
-    next: () => void;
-    prev: () => void;
-    previousPage?: number;
-  }
-];
+type UseStepperReturn = [StepperContextProps["currentPage"], Omit<StepperContextProps, "currentPage">];
 
 export const StepperContext = React.createContext<StepperContextProps>(undefined as any);
 

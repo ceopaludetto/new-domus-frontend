@@ -14,3 +14,4 @@ export const CNPJ = "CNPJ inválido";
 export const CPF = "CPF inválido";
 export const DATE = "Campo deve ser do tipo data";
 export const UNIQUE = "Campo já cadastrado";
+export const SHORTID = "ID ($value) isn't an valid shortid!";

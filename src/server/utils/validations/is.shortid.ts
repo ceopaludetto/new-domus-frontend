@@ -7,6 +7,8 @@ import {
 } from "class-validator";
 import { isValid } from "shortid";
 
+import * as Messages from "./messages";
+
 @ValidatorConstraint({ async: true })
 @Injectable()
 export class IsShortidConstraint implements ValidatorConstraintInterface {
@@ -24,7 +26,7 @@ export class IsShortidConstraint implements ValidatorConstraintInterface {
   };
 
   public defaultMessage = () => {
-    return 'ID ($value) isn\'t an valid shortid!';
+    return Messages.SHORTID;
   };
 }
 
