@@ -2,6 +2,7 @@ import { InjectQueue } from "@nestjs/bull";
 import { Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { UserInputError, AuthenticationError } from "apollo-server-express";
+import { hash } from "bcryptjs";
 import type { Queue } from "bull";
 import type { Response } from "express";
 import { InjectPinoLogger, PinoLogger } from "nestjs-pino";
@@ -53,7 +54,10 @@ export class AuthenticationService {
 
   public async register(data: UserInsertInput, res: Response) {
     try {
-      const user = await this.userService.create(data);
+      data.password = await hash(data.password, 10);
+      let user = await this.userService.create(data);
+
+      user = await this.userService.populate(user, ["person"]);
 
       await this.mailQueue.add("register", user, {
         attempts: 5,

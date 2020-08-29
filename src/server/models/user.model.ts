@@ -1,4 +1,4 @@
-import { Entity, Property, OneToOne, LoadStrategy } from "@mikro-orm/core";
+import { Entity, Property, OneToOne } from "@mikro-orm/core";
 import { ObjectType, Field } from "@nestjs/graphql";
 import { compare } from "bcryptjs";
 
@@ -21,7 +21,7 @@ export class User extends BaseModel {
   public recoverToken!: string;
 
   @Field(() => Person)
-  @OneToOne({ entity: () => Person, inversedBy: (person) => person.user, strategy: LoadStrategy.JOINED })
+  @OneToOne({ entity: () => Person, inversedBy: (person) => person.user })
   public person!: Person;
 
   public async comparePasswords(password: string) {

@@ -1,4 +1,4 @@
-import { Entity, Property, OneToOne, LoadStrategy } from "@mikro-orm/core";
+import { Entity, Property, OneToOne } from "@mikro-orm/core";
 import { ObjectType, Field } from "@nestjs/graphql";
 
 import { ADDRESS } from "@/server/utils/constants";
@@ -27,7 +27,6 @@ export class Address extends BaseModel {
     entity: () => Condominium,
     inversedBy: (condominium) => condominium.address,
     owner: true,
-    strategy: LoadStrategy.JOINED,
   })
   public condominium!: Condominium;
 
@@ -36,7 +35,6 @@ export class Address extends BaseModel {
     entity: () => Condominium,
     inversedBy: (city) => city.address,
     owner: true,
-    strategy: LoadStrategy.JOINED,
   })
   public city!: City;
 }

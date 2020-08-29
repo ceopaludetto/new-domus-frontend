@@ -1,6 +1,4 @@
-function parseDigits(val: string) {
-  return (val.match(/\d/g) || []).join("");
-}
+import { removeMask } from "@/client/utils/string";
 
 function createNumberMask(pattern: (string | RegExp)[] | ((parsed: string) => (string | RegExp)[])) {
   let normalized: (string | RegExp)[] | ((val: string) => (string | RegExp)[]);
@@ -23,7 +21,7 @@ function createNumberMask(pattern: (string | RegExp)[] | ((parsed: string) => (s
   }
 
   return (val = "") => {
-    const numbers = parseDigits(val);
+    const numbers = removeMask(val);
     const chars = numbers.split("");
 
     const current = typeof normalized === "function" ? normalized(numbers) : normalized;

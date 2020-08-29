@@ -1,5 +1,6 @@
 import * as React from "react";
 import { FiCalendar } from "react-icons/fi";
+import { useLockBodyScroll } from "react-use";
 
 import loadable from "@loadable/component";
 import dayjs, { PluginFunc } from "dayjs";
@@ -35,6 +36,7 @@ export const CalendarControl = React.forwardRef(
     const plugin = React.useRef<PluginFunc<any> & { default: PluginFunc<any> }>(null);
     const [open, setOpen] = React.useState(false);
     const [controlValue, setControlValue] = React.useState(() => dayjs(calendarValue).format("DD/MM/YYYY"));
+    useLockBodyScroll(open);
 
     function handleOpen() {
       setOpen(true);

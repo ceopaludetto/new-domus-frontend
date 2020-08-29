@@ -45,7 +45,7 @@ export function useStepper(pages: number): UseStepperReturn {
 
   const toggle = React.useCallback(
     (page: number) => {
-      if (page <= pages || page >= 0) {
+      if (page <= pages && page >= 0) {
         setCurrentPage(page);
       }
     },

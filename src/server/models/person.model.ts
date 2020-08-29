@@ -1,4 +1,4 @@
-import { Entity, Property, Enum, OneToOne, OneToMany, Collection, ManyToMany, LoadStrategy } from "@mikro-orm/core";
+import { Entity, Property, Enum, OneToOne, OneToMany, Collection, ManyToMany } from "@mikro-orm/core";
 import { ObjectType, Field, registerEnumType } from "@nestjs/graphql";
 
 import { PERSON, PERSON_CONDOMINIUM } from "@/server/utils/constants";
@@ -46,14 +46,14 @@ export class Person extends BaseModel {
   public birthdate!: Date;
 
   @Field(() => [Phone])
-  @OneToMany({ entity: () => Phone, mappedBy: (phone) => phone.person, strategy: LoadStrategy.JOINED })
+  @OneToMany({ entity: () => Phone, mappedBy: (phone) => phone.person })
   public phones: Collection<Phone> = new Collection<Phone>(this);
 
   @Field(() => User)
-  @OneToOne({ entity: () => User, mappedBy: (user) => user.person, strategy: LoadStrategy.JOINED })
+  @OneToOne({ entity: () => User, mappedBy: (user) => user.person })
   public user!: User;
 
   @Field(() => [Condominium])
-  @ManyToMany({ entity: () => Condominium, pivotTable: PERSON_CONDOMINIUM, strategy: LoadStrategy.JOINED })
+  @ManyToMany({ entity: () => Condominium, pivotTable: PERSON_CONDOMINIUM })
   public condominiums: Collection<Condominium> = new Collection<Condominium>(this);
 }

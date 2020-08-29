@@ -1,4 +1,4 @@
-import { Entity, Property, ManyToOne, LoadStrategy } from "@mikro-orm/core";
+import { Entity, Property, ManyToOne } from "@mikro-orm/core";
 import { ObjectType, Field } from "@nestjs/graphql";
 
 import { LOCAL } from "@/server/utils/constants";
@@ -27,7 +27,7 @@ export class Local extends BaseModel {
   public image?: string;
 
   @Field(() => Block, { nullable: true })
-  @ManyToOne({ entity: () => Block, nullable: true, strategy: LoadStrategy.JOINED })
+  @ManyToOne({ entity: () => Block, nullable: true })
   public block?: Block;
 
   @Field(() => Condominium)
