@@ -19,13 +19,7 @@ type UseStepperReturn = [
   }
 ];
 
-export const StepperContext = React.createContext<StepperContextProps>({
-  currentPage: 0,
-  previousPage: 0,
-  toggle: () => {},
-  next: () => {},
-  prev: () => {},
-});
+export const StepperContext = React.createContext<StepperContextProps>(undefined as any);
 
 export function useStepper(pages: number): UseStepperReturn {
   const [currentPage, setCurrentPage] = React.useState(0);
