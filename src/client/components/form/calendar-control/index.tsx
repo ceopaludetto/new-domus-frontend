@@ -18,11 +18,12 @@ const Calendar = loadable(() => import("../calendar"));
 const DayJSCustomParseFormatPlugin = loadable.lib(() => import("dayjs/plugin/customParseFormat"));
 
 type CalendarControlProps = Omit<React.ComponentPropsWithRef<typeof Control>, "value" | "onChange"> &
-  React.ComponentProps<typeof Calendar>;
+  Omit<React.ComponentProps<typeof Calendar>, "isOpen">;
 
 export const CalendarControl = React.forwardRef(
   (
     {
+      id,
       name,
       disablePast,
       disableFuture,
@@ -33,6 +34,7 @@ export const CalendarControl = React.forwardRef(
     ref: React.Ref<HTMLInputElement>
   ) => {
     const locale = useLocale();
+    const iconButton = React.useRef<HTMLButtonElement>(null);
     const plugin = React.useRef<PluginFunc<any> & { default: PluginFunc<any> }>(null);
     const [open, setOpen] = React.useState(false);
     const [controlValue, setControlValue] = React.useState(() => dayjs(calendarValue).format("DD/MM/YYYY"));
@@ -63,6 +65,8 @@ export const CalendarControl = React.forwardRef(
         <DayJSCustomParseFormatPlugin ref={plugin} />
         <Modal open={open} onClose={() => setOpen(false)}>
           <Calendar
+            id={id}
+            isOpen={open}
             value={calendarValue}
             disablePast={disablePast}
             disableFuture={disableFuture}
@@ -70,19 +74,25 @@ export const CalendarControl = React.forwardRef(
               onCalendarChange(date);
               setControlValue(dayjs(date).locale(locale).format("DD/MM/YYYY"));
             }}
-            onClose={() => setOpen(false)}
+            onClose={() => {
+              setOpen(false);
+              iconButton?.current?.focus();
+            }}
           />
         </Modal>
         <Rifm format={Masks.date} value={controlValue} onChange={handleChange}>
           {({ onChange, value }) => (
             <Control
+              id={id}
               ref={ref}
               name={name}
               value={value}
               onChange={onChange}
               onFocus={() => DayJSCustomParseFormatPlugin.load()}
+              placeholder="DD/MM/YYYY"
               append={
                 <IconButton
+                  ref={iconButton}
                   aria-label="Acessar Calendário"
                   onFocus={() => Calendar.load()}
                   onMouseOver={() => Calendar.load()}

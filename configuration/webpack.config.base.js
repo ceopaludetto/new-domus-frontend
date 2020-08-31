@@ -134,12 +134,13 @@ module.exports = (isServer = false, isESM = false) => ({
         use: [
           !isServer && !isProd && { loader: "style-loader" },
           !isServer && isProd && { loader: MiniCssPlugin.loader, options: { esModule: true, sourceMap: true } },
-          {
-            loader: "@teamsupercell/typings-for-css-modules-loader",
-            options: {
-              disableLocalsExport: true,
+          !isServer &&
+            !isProd && {
+              loader: "@teamsupercell/typings-for-css-modules-loader",
+              options: {
+                disableLocalsExport: true,
+              },
             },
-          },
           {
             loader: "css-loader",
             options: {

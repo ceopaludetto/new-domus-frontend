@@ -14,6 +14,7 @@ import { IconButton } from "../icon-button";
 import s from "./index.scss";
 
 interface CalendarProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "onChange"> {
+  isOpen: boolean;
   disablePast?: boolean;
   disableFuture?: boolean;
   value: Date;
@@ -25,7 +26,9 @@ interface CalendarProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "onCh
 }
 
 export default function Calendar({
+  id,
   value,
+  isOpen = false,
   disableFuture,
   disablePast,
   maxDate,
@@ -36,19 +39,28 @@ export default function Calendar({
 }: CalendarProps) {
   const locale = useLocale();
   const today = React.useMemo(() => new Date(), []);
+  const selectedRef = React.useRef<HTMLButtonElement>(null);
   const [currentDate, setCurrentDate] = React.useState(dayjs(value).locale(locale));
-  const [daysOfWeek, setDaysOfWeek] = React.useState<string[]>([]);
+  const [daysOfWeek, setDaysOfWeek] = React.useState<dayjs.Dayjs[]>([]);
   const [yearMode, setYearMode] = React.useState(false);
   const selectedYear = React.useMemo(() => dayjs(value).locale(locale).get("year"), [value, locale]);
   const currentYearRef = React.useRef<HTMLButtonElement>(null);
 
   React.useEffect(() => {
+    if (isOpen && selectedRef.current !== document.activeElement) {
+      setImmediate(() => {
+        selectedRef?.current?.focus();
+      });
+    }
+  }, [isOpen]);
+
+  React.useEffect(() => {
     const now = dayjs().locale(locale);
     const day = now.startOf("week");
-    const days: string[] = [];
+    const days: dayjs.Dayjs[] = [];
 
     for (let i = 0; i <= 6; i += 1) {
-      days.push(day.add(i, "day").format("ddd"));
+      days.push(day.add(i, "day"));
     }
 
     setDaysOfWeek(days);
@@ -62,13 +74,6 @@ export default function Calendar({
       });
     }
   }, [currentYearRef, yearMode, animate]);
-
-  const changeDate = React.useCallback(
-    (date: dayjs.Dayjs) => {
-      onChange(date.toDate());
-    },
-    [onChange]
-  );
 
   const resolveDisabled = React.useCallback(
     (date: dayjs.Dayjs) => {
@@ -97,6 +102,43 @@ export default function Calendar({
     [currentDate, disableFuture, disablePast, maxDate, minDate, today]
   );
 
+  const handleKeyDown = React.useCallback(
+    (date: dayjs.Dayjs) => {
+      return (e: React.KeyboardEvent) => {
+        if (e.key === "ArrowLeft") {
+          const v = date.subtract(1, "day");
+          onChange(v.toDate());
+          setCurrentDate(v);
+        }
+
+        if (e.key === "ArrowRight") {
+          const v = date.add(1, "day");
+          onChange(v.toDate());
+          setCurrentDate(v);
+        }
+
+        if (e.key === "ArrowUp") {
+          const v = date.subtract(7, "day");
+          onChange(v.toDate());
+          setCurrentDate(v);
+        }
+
+        if (e.key === "ArrowDown") {
+          const v = date.add(7, "day");
+          onChange(v.toDate());
+          setCurrentDate(v);
+        }
+      };
+    },
+    [onChange]
+  );
+
+  React.useEffect(() => {
+    if (selectedRef.current && document.activeElement !== selectedRef.current) {
+      selectedRef.current.focus();
+    }
+  }, [selectedRef, value]);
+
   const daysOfMonth = React.useCallback(() => {
     const monthStart = currentDate.startOf("month");
     const monthWeekStart = monthStart.startOf("week");
@@ -109,13 +151,18 @@ export default function Calendar({
       if (!actual.isSame(currentDate, "month")) {
         days.push(<div key={i} className={clsx(u["xs-1"], u["my-xs-1"], s.min)} />);
       } else {
+        const selected = actual.isSame(value, "day");
+
         days.push(
           <div key={i} className={clsx(u["xs-1"], u["text-align-xs-center"], u["my-xs-1"], s.min)}>
             <Button
-              className={s.button}
+              ref={selected ? selectedRef : undefined}
               disabled={resolveDisabled(actual)}
-              onClick={() => changeDate(actual)}
-              color={actual.isSame(value, "day") ? "primary" : "text"}
+              onClick={() => onChange(actual.toDate())}
+              onKeyDown={handleKeyDown(actual)}
+              tabIndex={selected ? 0 : -1}
+              color={selected ? "primary" : "text"}
+              className={s.button}
               variant="flat"
               size="small"
             >
@@ -129,7 +176,7 @@ export default function Calendar({
     }
 
     return days;
-  }, [currentDate, value, resolveDisabled, changeDate]);
+  }, [currentDate, value, resolveDisabled, onChange, handleKeyDown]);
 
   const getNextMonthFirstDay = React.useCallback((date: dayjs.Dayjs) => {
     return date.add(1, "month").startOf("month");
@@ -155,10 +202,10 @@ export default function Calendar({
             onClick={() => {
               if (actual.isSame(today, "year") && resolveDisabled(actual)) {
                 const max = dayjs(today).locale(locale).set("year", i);
-                changeDate(max);
+                onChange(max.toDate());
                 setCurrentDate(max);
               } else {
-                changeDate(actual);
+                onChange(actual.toDate());
                 setCurrentDate(actual);
               }
               setYearMode(false);
@@ -173,7 +220,7 @@ export default function Calendar({
     }
 
     return y;
-  }, [value, changeDate, resolveDisabled, selectedYear, today, locale]);
+  }, [value, onChange, resolveDisabled, selectedYear, today, locale]);
 
   return (
     <Paper>
@@ -196,11 +243,12 @@ export default function Calendar({
                 disabled={resolveDisabled(getPrevMonthLastDay(currentDate))}
                 onClick={() => setCurrentDate(currentDate.subtract(1, "month"))}
                 size="small"
+                aria-label="Mês Anterior"
               >
                 <FiArrowLeft />
               </IconButton>
             </div>
-            <div className={u.col}>
+            <div className={u.col} id={`${id}-label`} aria-live="polite">
               {currentDate.format("MMMM")} - {currentDate.get("year")}
             </div>
             <div className={u.col}>
@@ -208,6 +256,7 @@ export default function Calendar({
                 disabled={resolveDisabled(getNextMonthFirstDay(currentDate))}
                 onClick={() => setCurrentDate(currentDate.add(1, "month"))}
                 size="small"
+                aria-label="Próximo Mês"
               >
                 <FiArrowRight />
               </IconButton>
@@ -215,14 +264,16 @@ export default function Calendar({
           </div>
           <div className={clsx(u.grid, s.calendar)}>
             {daysOfWeek.map((d) => (
-              <div key={d} className={clsx(u["xs-1"], u["text-align-xs-center"], u["mb-xs-3"])}>
-                <Text as="span" variant="body-2" color="muted">
-                  {d}
+              <div key={d.toString()} className={clsx(u["xs-1"], u["text-align-xs-center"], u["mb-xs-3"])}>
+                <Text as="span" abbr={d.format("dddd")} variant="body-2" color="muted">
+                  {d.format("ddd")}
                 </Text>
               </div>
             ))}
           </div>
-          <div className={clsx(u.grid, s.calendar)}>{daysOfMonth()}</div>
+          <div role="grid" aria-labelledby={`${id}-label`} className={clsx(u.grid, s.calendar)}>
+            {daysOfMonth()}
+          </div>
         </>
       )}
       {yearMode && <div className={clsx(s.years, u.grid, s.width)}>{years()}</div>}
