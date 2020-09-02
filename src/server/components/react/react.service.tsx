@@ -66,11 +66,11 @@ export class ReactService {
         </React.StrictMode>
       );
 
-      if (context.statusCode) {
-        res.status(context.statusCode);
-      }
-
       if (context.url) {
+        if (context.statusCode) {
+          res.status(context.statusCode);
+        }
+
         return res.redirect(context.url);
       }
 

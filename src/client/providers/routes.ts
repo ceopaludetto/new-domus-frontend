@@ -1,3 +1,5 @@
+import { RiHomeLine } from "react-icons/ri";
+
 import loadable from "@loadable/component";
 
 import type { Route } from "@/client/utils/common.dto";
@@ -36,6 +38,10 @@ export const routes: Route[] = [
     path: ["/auth/signin", "/auth/signup/step-1", "/auth/signup/step-2", "/auth/signup/step-3", "/auth/forgot"],
     exact: true,
     component: loadable(() => import("@/client/pages/auth")),
+    meta: {
+      logged: false,
+      redirectTo: "/app",
+    },
     children: [
       {
         name: "@AUTH:SIGNIN",
@@ -72,6 +78,57 @@ export const routes: Route[] = [
             path: "/auth/signup/step-3",
             exact: true,
             component: loadable(() => import("@/client/pages/auth/pages/signup/pages/step-3")),
+          },
+        ],
+      },
+    ],
+  },
+  {
+    name: "@APP",
+    path: ["/app", "/app/settings", "/app/settings/condominium"],
+    exact: true,
+    component: loadable(() => import("@/client/pages/app")),
+    meta: {
+      logged: true,
+      redirectTo: "/auth/signin",
+    },
+    children: [
+      {
+        name: "@APP:HOME",
+        path: "/app",
+        exact: true,
+        component: loadable(() => import("@/client/pages/app/pages/home")),
+        meta: {
+          displayName: "Início",
+          icon: RiHomeLine,
+        },
+      },
+      {
+        name: "@APP:SETTINGS",
+        path: ["/app/settings", "/app/settings/condominium"],
+        exact: true,
+        component: loadable(() => import("@/client/pages/app/pages/settings")),
+        meta: {
+          hidden: true,
+        },
+        children: [
+          {
+            name: "@APP:SETTINGS:PERSONAL",
+            path: "/app/settings",
+            exact: true,
+            component: loadable(() => import("@/client/pages/app/pages/settings/pages/personal")),
+            meta: {
+              displayName: "Informações Pessoais",
+            },
+          },
+          {
+            name: "@APP:SETTINGS:CONDOMINIUM",
+            path: "/app/settings/condominium",
+            exact: true,
+            component: loadable(() => import("@/client/pages/app/pages/settings/pages/condominium")),
+            meta: {
+              displayName: "Condomínio",
+            },
           },
         ],
       },

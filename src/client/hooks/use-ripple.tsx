@@ -51,7 +51,7 @@ export function useRipple(
       let transform = 0;
 
       function tween() {
-        opacity = Math.min(opacity + 0.02, 0.2);
+        opacity = Math.min(opacity + 0.008, 0.2);
         transform = Math.min(transform + 0.03, 1);
 
         ripple.style.opacity = String(opacity);

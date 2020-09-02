@@ -31,6 +31,7 @@ export const Button = React.forwardRef(
       disableRipple = false,
       noTouchRipple = false,
       centerRipple = false,
+      disabled,
       className,
       ...rest
     }: ButtonProps,
@@ -48,13 +49,13 @@ export const Button = React.forwardRef(
       className
     );
     useRipple(innerRef, {
-      disabled: disableRipple,
+      disabled: disableRipple ?? disabled,
       noTouch: noTouchRipple,
       center: centerRipple,
     });
 
     return (
-      <button ref={merge([innerRef, ref])} type={type} className={classes} {...rest}>
+      <button ref={merge([innerRef, ref])} disabled={disabled} type={type} className={classes} {...rest}>
         <Text variant="button" as="span">
           {children}
         </Text>

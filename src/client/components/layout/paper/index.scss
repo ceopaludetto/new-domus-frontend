@@ -10,12 +10,14 @@
       0 80px 72px rgba(0, 0, 0, 0.017);
   }
   &.outline {
-    &:not(.no-horizontal-borders) {
-      border: 1px solid get-shadow-color(text, 0.12);
-    }
+    border: 1px solid get-shadow-color(text, 0.12);
     &.no-horizontal-borders {
-      border-bottom: 1px solid get-shadow-color(text, 0.12);
-      border-top: 1px solid get-shadow-color(text, 0.12);
+      border-left: 0;
+      border-right: 0;
+    }
+    &.no-vertical-borders {
+      border-bottom: 0;
+      border-top: 0;
     }
   }
   &:not(.no-gutter) {

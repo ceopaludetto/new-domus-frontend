@@ -13,6 +13,7 @@ type TextProps<T extends React.ElementType<any> = "p"> = {
   color?: keyof Colors;
   link?: boolean;
   gutter?: boolean;
+  noMargin?: boolean;
 } & React.ComponentProps<T>;
 
 export function Text<T extends React.ComponentType<any>>({
@@ -22,6 +23,7 @@ export function Text<T extends React.ComponentType<any>>({
   color,
   link = false,
   gutter = false,
+  noMargin = false,
   variant = "body-1",
   ...rest
 }: TextProps<T>) {
@@ -30,6 +32,7 @@ export function Text<T extends React.ComponentType<any>>({
     color && s[color as keyof Colors],
     link && s.link,
     gutter && [u["mt-xs-2"], u["mb-xs-7"]],
+    noMargin && s["no-margin"],
     className
   );
 

@@ -27,7 +27,7 @@ export const SignUpStep2Schema = Yup.object({
     .matches(/[A-Z]/, Messages.ONE_UPPER)
     .required(Messages.REQUIRED),
   repeatPassword: Yup.string()
-    .oneOf([Yup.ref("password"), undefined], Messages.REPEAT_PASSWORD)
+    .oneOf([Yup.ref("password"), ""], Messages.REPEAT_PASSWORD)
     .required(Messages.REQUIRED),
 }).required();
 

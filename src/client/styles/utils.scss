@@ -21,6 +21,9 @@ $align: flex-start flex-end center baseline stretch;
       }
     }
   }
+  &.no-gap {
+    column-gap: 0;
+  }
 }
 
 .col {
@@ -140,6 +143,14 @@ $displays: flex, inline-flex, block, inline-block, grid;
 @for $i from 1 through length($displays) {
   .#{nth($displays, $i)} {
     display: #{nth($displays, $i)};
+  }
+}
+
+$positions: relative, fixed, absolute;
+
+@for $i from 1 through length($positions) {
+  .#{nth($positions, $i)} {
+    position: #{nth($positions, $i)};
   }
 }
 

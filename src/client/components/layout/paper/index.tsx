@@ -10,6 +10,7 @@ type PaperProps = {
   outline?: boolean;
   noGutter?: boolean;
   noHorizontalBorders?: boolean;
+  noVerticalBorders?: boolean;
 } & React.HTMLAttributes<HTMLDivElement>;
 
 export const Paper = React.forwardRef(
@@ -22,6 +23,7 @@ export const Paper = React.forwardRef(
       outline = false,
       noGutter = false,
       noHorizontalBorders = false,
+      noVerticalBorders = false,
       ...rest
     }: PaperProps,
     ref: React.Ref<HTMLDivElement>
@@ -34,6 +36,7 @@ export const Paper = React.forwardRef(
         [s.outline]: outline,
         [s["no-gutter"]]: noGutter,
         [s["no-horizontal-borders"]]: noHorizontalBorders,
+        [s["no-vertical-borders"]]: noVerticalBorders,
       },
       className
     );

@@ -1,0 +1,17 @@
+@import "~@/client/styles/variables";
+
+.item {
+  color: get-color(text);
+  column-gap: get-theme-prop(layout, gap);
+  overflow: hidden;
+  transition: transition((background-color));
+  &:hover {
+    background-color: get-shadow-color(primary, 0.1);
+  }
+  &.active {
+    color: get-color(primary);
+  }
+  + .item {
+    margin-top: get-theme-prop(layout, sizes, 4);
+  }
+}

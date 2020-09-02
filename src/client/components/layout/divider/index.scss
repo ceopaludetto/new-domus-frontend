@@ -2,12 +2,6 @@
 
 .divider {
   border: 0;
-  border-top: 1px solid;
+  border-top: 1px solid get-shadow-color(text, 0.12);
   display: block;
-  @include theme(dark) {
-    border-color: get-color(paper, lighten-2);
-  }
-  @include theme(light) {
-    border-color: get-color(background, darken-2);
-  }
 }

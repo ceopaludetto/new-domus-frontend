@@ -2,6 +2,8 @@ import * as React from "react";
 
 import clsx from "clsx";
 
+import u from "@/client/styles/utils.scss";
+
 import s from "./index.scss";
 
 interface ContainerProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -14,6 +16,7 @@ export function Container({ children, fluid = false, className, ...rest }: Conta
     {
       [s.fluid]: fluid,
     },
+    u["px-xs-4"],
     className
   );
 

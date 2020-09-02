@@ -1,5 +1,6 @@
 fragment PersonValues on Person {
   id
   name
+  lastName
   email
 }
