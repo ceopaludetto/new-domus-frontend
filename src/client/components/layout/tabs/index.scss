@@ -2,7 +2,7 @@
 
 .tabs {
   border-bottom: 1px solid get-shadow-color(text, 0.12);
-  margin-bottom: get-theme-prop(layout, gap) * 2;
+  margin-bottom: get-theme-prop(layout, gap) * 2.5;
   .item {
     border-bottom: 2px solid transparent;
     color: get-color(text);

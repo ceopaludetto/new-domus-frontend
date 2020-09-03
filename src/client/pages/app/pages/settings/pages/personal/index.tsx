@@ -5,8 +5,18 @@ import { useQuery } from "@apollo/client";
 import { yupResolver } from "@hookform/resolvers";
 import clsx from "clsx";
 
-import { FormControl, Button, Divider, PasswordHelper, Text, Switch } from "@/client/components";
+import {
+  FormControl,
+  FormCalendar,
+  MaskedFormControl,
+  Button,
+  Divider,
+  PasswordHelper,
+  Text,
+  Switch,
+} from "@/client/components";
 import { Me, MeQuery } from "@/client/graphql";
+import * as Masks from "@/client/helpers/masks";
 import { SettingsPasswordSchema, SettingsPasswordValues } from "@/client/helpers/validations/settings.schema";
 import { useMultipleVisibility } from "@/client/hooks";
 import u from "@/client/styles/utils.scss";
@@ -59,8 +69,16 @@ export default function Personal() {
             <div className={clsx(u["xs-12"], u["md-6"])}>
               <FormControl name="lastName" label="Sobrenome" id="lastName" />
             </div>
+            <div className={u["xs-12"]}>
+              <FormControl name="email" label="E-mail" id="email" />
+            </div>
+            <div className={clsx(u["xs-12"], u["md-6"])}>
+              <MaskedFormControl rifm={{ format: Masks.tel }} name="tel" label="Telefone" id="tel" />
+            </div>
+            <div className={clsx(u["xs-12"], u["md-6"])}>
+              <FormCalendar name="birthdate" label="Data de Nascimento" id="birthdate" />
+            </div>
           </div>
-          <Divider />
           <Switch
             color="primary"
             label="Conta pública"
@@ -113,6 +131,10 @@ export default function Personal() {
           </div>
         </form>
       </FormProvider>
+      <Divider content="Área de Risco" />
+      <Button variant="flat" color="error">
+        Excluir Conta
+      </Button>
     </>
   );
 }

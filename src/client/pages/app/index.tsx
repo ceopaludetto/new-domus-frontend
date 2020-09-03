@@ -10,7 +10,7 @@ import type { RouteComponentProps } from "@/client/utils/common.dto";
 export default function App({ routes }: RouteComponentProps) {
   return (
     <main className={clsx(u.row, u["no-gap"])}>
-      <aside className={clsx(u.col, u.xs, u["mw-250"])}>
+      <aside className={clsx(u.col, u.xs, u["mw-300"], u.relative)}>
         <Sidebar routes={routes} />
       </aside>
       <div className={clsx(u.col, u.xs)}>

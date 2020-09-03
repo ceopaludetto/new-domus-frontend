@@ -11,7 +11,4 @@
   &.active {
     color: get-color(primary);
   }
-  + .item {
-    margin-top: get-theme-prop(layout, sizes, 4);
-  }
 }

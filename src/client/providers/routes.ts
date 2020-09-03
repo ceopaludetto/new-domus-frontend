@@ -1,4 +1,4 @@
-import { RiHomeLine } from "react-icons/ri";
+import { FiHome, FiCalendar, FiMapPin } from "react-icons/fi";
 
 import loadable from "@loadable/component";
 
@@ -85,7 +85,7 @@ export const routes: Route[] = [
   },
   {
     name: "@APP",
-    path: ["/app", "/app/settings", "/app/settings/condominium"],
+    path: ["/app", "/app/events", "/app/locals", "/app/settings", "/app/settings/condominium"],
     exact: true,
     component: loadable(() => import("@/client/pages/app")),
     meta: {
@@ -100,7 +100,27 @@ export const routes: Route[] = [
         component: loadable(() => import("@/client/pages/app/pages/home")),
         meta: {
           displayName: "Início",
-          icon: RiHomeLine,
+          icon: FiHome,
+        },
+      },
+      {
+        name: "@APP:HOME:EVENTS",
+        path: "/app/events",
+        exact: true,
+        component: loadable(() => import("@/client/pages/app/pages/events")),
+        meta: {
+          displayName: "Eventos",
+          icon: FiCalendar,
+        },
+      },
+      {
+        name: "@APP:HOME:LOCALS",
+        path: "/app/locals",
+        exact: true,
+        component: loadable(() => import("@/client/pages/app/pages/locals")),
+        meta: {
+          displayName: "Locais",
+          icon: FiMapPin,
         },
       },
       {
@@ -109,6 +129,7 @@ export const routes: Route[] = [
         exact: true,
         component: loadable(() => import("@/client/pages/app/pages/settings")),
         meta: {
+          displayName: "Configurações",
           hidden: true,
         },
         children: [

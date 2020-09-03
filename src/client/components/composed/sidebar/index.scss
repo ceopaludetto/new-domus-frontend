@@ -1,3 +1,22 @@
+@import "~@/client/styles/variables";
+
+.container {
+  @media (min-width: get-theme-prop(layout, breakpoints, md)) {
+    left: 0;
+    position: fixed;
+    top: 0;
+  }
+}
+
 .sidebar {
+  flex-direction: column;
   height: 100vh;
+  .pages {
+    flex: 1;
+    width: 100%;
+  }
+  .condominium {
+    border-top: 1px solid get-shadow-color(text, 0.12);
+    padding: get-theme-prop(layout, gap) * 2;
+  }
 }

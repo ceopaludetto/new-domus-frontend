@@ -4,18 +4,36 @@ import { FiSettings } from "react-icons/fi";
 import clsx from "clsx";
 
 import { IconButton } from "@/client/components/form";
+import { Container, Breadcrumbs } from "@/client/components/layout";
 import { PreloadLink } from "@/client/components/typography";
+import { useBreadcrumbs } from "@/client/hooks";
 import u from "@/client/styles/utils.scss";
 
 export function AppHeader() {
+  const breadcrumbs = useBreadcrumbs();
+
   return (
-    <div className={clsx(u.row, u["align-items-xs-center"], u["p-xs-4"])}>
-      <div className={clsx(u.col, u.xs)}>breadcrumb</div>
-      <div className={u.col}>
-        <PreloadLink as={IconButton} to="/app/settings" size="small" color="text">
-          <FiSettings />
-        </PreloadLink>
+    <Container fluid>
+      <div className={clsx(u.row, u["align-items-xs-center"], u["py-xs-4"])}>
+        <div className={clsx(u.col, u.xs)}>
+          <Breadcrumbs>
+            {breadcrumbs.map((b, i) => (
+              <Breadcrumbs.Item
+                key={b.name}
+                last={breadcrumbs.length - 1 === i}
+                to={Array.isArray(b.path) ? b.path[0] : b.path}
+              >
+                {b.meta?.displayName}
+              </Breadcrumbs.Item>
+            ))}
+          </Breadcrumbs>
+        </div>
+        <div className={u.col}>
+          <PreloadLink as={IconButton} to="/app/settings" size="small" color="text">
+            <FiSettings />
+          </PreloadLink>
+        </div>
       </div>
-    </div>
+    </Container>
   );
 }

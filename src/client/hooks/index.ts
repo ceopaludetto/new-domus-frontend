@@ -4,3 +4,4 @@ export * from "./use-stepper";
 export * from "./use-redirect";
 export * from "./use-ripple";
 export * from "./use-locale";
+export * from "./use-breadcrumbs";

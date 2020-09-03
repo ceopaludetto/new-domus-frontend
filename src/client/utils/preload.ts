@@ -5,7 +5,7 @@ import type { Route, Client } from "@/client/utils/common.dto";
 
 import { getModule, hasFetchBefore } from "./lazy";
 
-function findRoute(path: string, proutes: Route[], matching: Route[]): Route[] {
+export function findRoute(path: string, proutes: Route[], matching: Route[]): Route[] {
   const matchingRoute = proutes.find((r) =>
     matchPath(path, {
       path: r.path,
