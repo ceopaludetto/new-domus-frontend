@@ -6,7 +6,15 @@ import { yupResolver } from "@hookform/resolvers";
 import clsx from "clsx";
 
 import { MaskedFormControl, FormControl, FormSelect, FormRadioCard, Button, Switch, Text } from "@/client/components";
-import { Register, ShowStates, ShowStatesQuery, RegisterMutation, RegisterMutationVariables } from "@/client/graphql";
+import {
+  Register,
+  ShowStates,
+  ShowStatesQuery,
+  RegisterMutation,
+  RegisterMutationVariables,
+  Logged,
+  LoggedQuery,
+} from "@/client/graphql";
 import * as Masks from "@/client/helpers/masks";
 import { SignUpStep3Schema, SignUpStep3Values } from "@/client/helpers/validations/signup.schema";
 import { StepperContext } from "@/client/hooks";
@@ -26,7 +34,7 @@ export default function Step3() {
   });
   const type = methods.watch("type");
   const state = methods.watch("condominium.address.state");
-  const [register] = useMutation<RegisterMutation, RegisterMutationVariables>(Register);
+  const [register, { client }] = useMutation<RegisterMutation, RegisterMutationVariables>(Register);
   const { data } = useQuery<ShowStatesQuery>(ShowStates);
 
   const submit = methods.handleSubmit(async (datas) => {
@@ -58,6 +66,14 @@ export default function Step3() {
                   condominiums: [{ ...condominium, address }],
                 },
               },
+            },
+          });
+
+          client.writeQuery<LoggedQuery>({
+            query: Logged,
+            data: {
+              __typename: "Query",
+              logged: true,
             },
           });
 

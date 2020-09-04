@@ -8,8 +8,8 @@ export function getModule<T>(lib: IsomorphicLib<T>) {
   return lib;
 }
 
-export function hasFetchBefore<T>(c: T): c is T & { fetchBefore: (client: Client) => Promise<void> } {
-  if (typeof c !== "object") {
+export function hasFetchBefore<T>(c?: T): c is T & { fetchBefore: (client: Client) => Promise<void> } {
+  if (!c) {
     return false;
   }
 

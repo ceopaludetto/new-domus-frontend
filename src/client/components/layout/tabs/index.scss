@@ -8,6 +8,7 @@
     color: get-color(text);
     margin-bottom: -1px;
     overflow: hidden;
+    text-decoration: none !important;
     transition: transition((background-color));
     &:hover {
       background-color: get-shadow-color(primary, 0.1);

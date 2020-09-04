@@ -1,7 +1,9 @@
 import * as React from "react";
 
+import { useQuery } from "@apollo/client";
 import clsx from "clsx";
 
+import { Logged, LoggedQuery } from "@/client/graphql";
 import u from "@/client/styles/utils.scss";
 
 import { Button } from "../../form";
@@ -10,6 +12,8 @@ import { PreloadLink } from "../../typography/preload-link";
 import s from "./index.scss";
 
 export function Header() {
+  const { data } = useQuery<LoggedQuery>(Logged);
+
   return (
     <header className={s.header}>
       <Blurred className={u["px-xs-10"]} border>
@@ -21,12 +25,20 @@ export function Header() {
               </svg>
             </div>
             <div>
-              <PreloadLink as={Button} variant="flat" size="small" to="/auth/signin">
-                Entrar
-              </PreloadLink>{" "}
-              <PreloadLink as={Button} variant="contained" size="small" to="/auth/signup/step-1">
-                Cadastre-se
-              </PreloadLink>
+              {data?.logged ? (
+                <PreloadLink as={Button} variant="flat" size="small" to="/app">
+                  Abrir
+                </PreloadLink>
+              ) : (
+                <>
+                  <PreloadLink as={Button} variant="flat" size="small" to="/auth/signin">
+                    Entrar
+                  </PreloadLink>{" "}
+                  <PreloadLink as={Button} variant="contained" size="small" to="/auth/signup/step-1">
+                    Cadastre-se
+                  </PreloadLink>
+                </>
+              )}
             </div>
           </div>
         </Container>

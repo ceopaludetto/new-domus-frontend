@@ -3,4 +3,10 @@ fragment PersonValues on Person {
   name
   lastName
   email
+  birthdate
+  phones {
+    id
+    ddd
+    number
+  }
 }

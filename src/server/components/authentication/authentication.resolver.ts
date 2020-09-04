@@ -16,7 +16,7 @@ export class AuthenticationResolver {
   public constructor(private readonly authService: AuthenticationService, private readonly userService: UserService) {}
 
   @Mutation(() => User)
-  public login(
+  public async login(
     @Args("input") data: AuthenticationInput,
     @Context() ctx: ContextType,
     @MapFields() mapped?: Mapped<User>
@@ -25,18 +25,18 @@ export class AuthenticationResolver {
   }
 
   @Mutation(() => User)
-  public register(@Args("input") data: UserInsertInput, @Context() ctx: ContextType) {
+  public async register(@Args("input") data: UserInsertInput, @Context() ctx: ContextType) {
     return this.authService.register(data, ctx.res);
   }
 
   @Mutation(() => String)
-  public forgot(@Args("input") data: ForgotInput) {
+  public async forgot(@Args("input") data: ForgotInput) {
     return this.authService.forgot(data);
   }
 
   @UseGuards(GqlAuthGuard)
   @Query(() => User)
-  public profile(@Context() ctx: ContextType, @MapFields() mapped?: Mapped<User>) {
+  public async profile(@Context() ctx: ContextType, @MapFields() mapped?: Mapped<User>) {
     return this.userService.populate(ctx.req.user, mapped);
   }
 }

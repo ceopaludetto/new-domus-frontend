@@ -1,5 +1,5 @@
 export function shouldRenderByAuth(needAuth?: boolean, isAuthenticated = false) {
-  if (typeof needAuth === "undefined") {
+  if (needAuth === undefined) {
     return true;
   }
 

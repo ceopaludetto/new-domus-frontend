@@ -8,14 +8,14 @@ import type { UserInputError } from "apollo-server-express";
 import clsx from "clsx";
 
 import { Button, FormControl, PreloadLink, Text } from "@/client/components";
-import { Login, LoginMutation, LoginMutationVariables } from "@/client/graphql";
+import { Login, LoginMutation, LoginMutationVariables, Logged, LoggedQuery } from "@/client/graphql";
 import { SignInSchema, SignInValues } from "@/client/helpers/validations/signin.schema";
 import { useVisibility } from "@/client/hooks";
 import u from "@/client/styles/utils.scss";
 
 export default function SignIn() {
   const [genericError, setGenericError] = React.useState(false);
-  const [login] = useMutation<LoginMutation, LoginMutationVariables>(Login);
+  const [login, { client }] = useMutation<LoginMutation, LoginMutationVariables>(Login);
   const methods = useForm<SignInValues>({ resolver: yupResolver(SignInSchema) });
   const [getFieldProps] = useVisibility();
 
@@ -24,6 +24,14 @@ export default function SignIn() {
       await login({
         variables: {
           input: data,
+        },
+      });
+
+      client.writeQuery<LoggedQuery>({
+        query: Logged,
+        data: {
+          __typename: "Query",
+          logged: true,
         },
       });
     } catch (error) {

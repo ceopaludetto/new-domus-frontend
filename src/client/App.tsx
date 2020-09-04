@@ -12,12 +12,15 @@ import { LoggedQuery, Logged } from "@/client/graphql";
 import { LocaleProvider } from "@/client/providers/locale";
 import { ProgressContext } from "@/client/providers/progress";
 import { routes } from "@/client/providers/routes";
-import type { ReactStaticContext } from "@/client/utils/common.dto";
 import { shouldRenderByAuth } from "@/client/utils/guards";
 
 import "@/client/styles/normalize.scss";
 
-export function App() {
+interface AppProps {
+  logged: boolean;
+}
+
+export function App({ logged }: AppProps) {
   const [isAnimating, toggle] = useToggle(false);
   const { data } = useQuery<LoggedQuery>(Logged);
 
@@ -37,13 +40,8 @@ export function App() {
             <Route
               key={name}
               render={(props) => {
-                // mock true to create /app
-                if (shouldRenderByAuth(meta?.logged, data?.logged ?? true)) {
+                if (shouldRenderByAuth(meta?.logged, data?.logged ?? logged)) {
                   return <Component {...props} routes={children} />;
-                }
-
-                if (typeof window === "undefined") {
-                  props.staticContext = { url: meta?.redirectTo, statusCode: 302 } as ReactStaticContext;
                 }
 
                 return <Redirect from={props.location.pathname} to={meta?.redirectTo} />;

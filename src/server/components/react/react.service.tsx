@@ -15,18 +15,36 @@ import { PinoLogger, InjectPinoLogger } from "nestjs-pino";
 import { generate } from "shortid";
 
 import { App } from "@/client/App";
+import { Logged, LoggedQuery } from "@/client/graphql";
 import { createClient } from "@/client/providers/apollo";
 import type { ReactStaticContext } from "@/client/utils/common.dto";
+import { AuthenticationService } from "@/server/components/authentication";
 import { ConfigurationService } from "@/server/components/configuration";
-import { STATS } from "@/server/utils/constants";
+import { STATS, REFRESH_TOKEN } from "@/server/utils/constants";
 
 @Injectable()
 export class ReactService {
   public constructor(
     private readonly configService: ConfigurationService,
+    private readonly authenticationService: AuthenticationService,
     @InjectPinoLogger(ReactService.name) private readonly logger: PinoLogger,
     @Inject(STATS) private readonly stats: Record<string, any>
   ) {}
+
+  public async getCurrentUser(request: Request) {
+    const refreshCookie = request.cookies[REFRESH_TOKEN];
+
+    if (refreshCookie) {
+      const [, token] = refreshCookie.split(" ");
+
+      const decoded = await this.authenticationService.verifyToken(token);
+      const user = await this.authenticationService.getByRefreshToken(decoded);
+
+      return user;
+    }
+
+    return undefined;
+  }
 
   public async render(req: Request, res: Response) {
     try {
@@ -43,7 +61,17 @@ export class ReactService {
       });
       const context: ReactStaticContext = {};
       const helmetContext: FilledContext | Record<string, any> = {};
-      const client = createClient(true, new SchemaLink({ schema: this.configService.schema }));
+      const client = createClient(true, new SchemaLink({ schema: this.configService.schema, context: { req, res } }));
+
+      const user = await this.getCurrentUser(req);
+
+      client.writeQuery<LoggedQuery>({
+        query: Logged,
+        data: {
+          __typename: "Query",
+          logged: !!user,
+        },
+      });
 
       if (process.env.NODE_ENV === "production") {
         res.set(
@@ -58,7 +86,7 @@ export class ReactService {
             <HelmetProvider context={helmetContext}>
               <ApolloProvider client={client}>
                 <StaticRouter context={context} location={req.url}>
-                  <App />
+                  <App logged={!!user} />
                 </StaticRouter>
               </ApolloProvider>
             </HelmetProvider>
@@ -66,21 +94,13 @@ export class ReactService {
         </React.StrictMode>
       );
 
-      if (context.url) {
-        if (context.statusCode) {
-          res.status(context.statusCode);
-        }
-
-        return res.redirect(context.url);
-      }
-
       const initialState = client.extract();
 
-      const fullHTML = this.markup(markup, initialState, extractor, (helmetContext as FilledContext).helmet, nonce);
-
-      if (process.env.NODE_ENV === "production") {
-        res.cookie("X-XSRF-TOKEN", req.csrfToken(), { httpOnly: true, sameSite: "lax" });
+      if (context.url) {
+        return res.status(context?.statusCode ?? 307).redirect(context.url);
       }
+
+      const fullHTML = this.markup(markup, initialState, extractor, (helmetContext as FilledContext).helmet, nonce);
 
       return res.send(`<!DOCTYPE html>${fullHTML}`);
     } catch (error) {

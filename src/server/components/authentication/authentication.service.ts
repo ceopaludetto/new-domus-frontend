@@ -11,6 +11,7 @@ import { URL } from "url";
 import { UserInsertInput, UserService } from "@/server/components/user";
 import type { User } from "@/server/models";
 import type { Mapped } from "@/server/utils/common.dto";
+import { ACCESS_TOKEN, REFRESH_TOKEN } from "@/server/utils/constants";
 
 import type { AuthenticationInput, ForgotInput } from "./authentication.dto";
 
@@ -23,8 +24,36 @@ export class AuthenticationService {
     @InjectPinoLogger(AuthenticationService.name) private readonly logger: PinoLogger
   ) {}
 
-  private generate(user: User) {
-    return this.jwtService.sign({ id: user.id }, { expiresIn: "1h" });
+  public async generateTokens(user: User) {
+    return {
+      accessToken: await this.jwtService.signAsync({ id: user.id }, { expiresIn: "15m" }),
+      refreshToken: await this.jwtService.signAsync({ id: user.id, password: user.password }, { expiresIn: "7d" }),
+    };
+  }
+
+  public sendTokensPerResponse(tokens: { accessToken: string; refreshToken: string }, res: Response) {
+    res.cookie(REFRESH_TOKEN, `Bearer ${tokens.refreshToken}`, {
+      sameSite: true,
+      path: "/",
+      httpOnly: true,
+      maxAge: 1000 * 60 * 60 * 24 * 7,
+    });
+
+    res.setHeader(ACCESS_TOKEN, `Bearer ${tokens.accessToken}`);
+  }
+
+  public async verifyToken(token: string) {
+    return this.jwtService.verifyAsync(token);
+  }
+
+  public async getByRefreshToken(decoded: { id: string; password: string }) {
+    const user = await this.userService.findByID(decoded?.id);
+
+    if (user?.password !== decoded.password) {
+      throw new AuthenticationError("Refresh token are not valid");
+    }
+
+    return user;
   }
 
   public async login({ login, password }: AuthenticationInput, res: Response, mapped?: Mapped<User>) {
@@ -38,10 +67,7 @@ export class AuthenticationService {
         throw new UserInputError("Senha incorreta", { fields: ["password"] });
       }
 
-      res.cookie("auth", `Bearer ${this.generate(user)}`, {
-        sameSite: true,
-        httpOnly: true,
-      });
+      this.sendTokensPerResponse(await this.generateTokens(user), res);
 
       return user;
     } catch (error) {
@@ -67,10 +93,7 @@ export class AuthenticationService {
         },
       });
 
-      res.cookie("auth", `Bearer ${this.generate(user)}`, {
-        sameSite: true,
-        httpOnly: true,
-      });
+      this.sendTokensPerResponse(await this.generateTokens(user), res);
 
       return user;
     } catch (error) {
@@ -88,7 +111,7 @@ export class AuthenticationService {
         throw new Error("Usuário não encontrado");
       }
 
-      const token = this.generate(user);
+      const token = await this.jwtService.signAsync({ id: user.id, newPassword: true }, { expiresIn: "30m" });
       callback.search = `?t=${token}`;
 
       // set recover token in database

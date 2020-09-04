@@ -17,18 +17,23 @@ import {
 } from "@/client/components";
 import { Me, MeQuery } from "@/client/graphql";
 import * as Masks from "@/client/helpers/masks";
+import { tel } from "@/client/helpers/masks";
 import { SettingsPasswordSchema, SettingsPasswordValues } from "@/client/helpers/validations/settings.schema";
 import { useMultipleVisibility } from "@/client/hooks";
 import u from "@/client/styles/utils.scss";
+import type { Client } from "@/client/utils/common.dto";
 
 export default function Personal() {
   const [mapPropsToField] = useMultipleVisibility(["currentPassword", "newPassword", "repeatNewPassword"]);
-  // const { data } = useQuery<MeQuery>(Me);
+  const { data } = useQuery<MeQuery>(Me);
+
   const personal = useForm({
     defaultValues: {
-      // name: data?.profile.person.name,
-      // lastName: data?.profile.person.lastName,
-      // email: data?.profile.person.email,
+      name: data?.profile.person.name,
+      lastName: data?.profile.person.lastName,
+      email: data?.profile.person.email,
+      tel: tel(`${data?.profile.person.phones[0].ddd}${data?.profile.person.phones[0].number}`),
+      birthdate: data?.profile.person.birthdate,
     },
   });
 
@@ -138,3 +143,7 @@ export default function Personal() {
     </>
   );
 }
+
+Personal.fetchBefore = async (client: Client) => {
+  await client.query<MeQuery>({ query: Me });
+};

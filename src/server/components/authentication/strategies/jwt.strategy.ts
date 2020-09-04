@@ -20,15 +20,11 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   public async validate(payload: FindByID) {
-    try {
-      const user = await this.userService.findByID(payload.id);
-      if (!user) {
-        throw new AuthenticationError("Falha ao encontrar usuário");
-      }
-
-      return user;
-    } catch (error) {
+    const user = await this.userService.findByID(payload.id);
+    if (!user) {
       throw new AuthenticationError("Falha ao encontrar usuário");
     }
+
+    return user;
   }
 }

@@ -29,7 +29,7 @@ const Tab = ({ children, ...rest }: TabProps) => {
       as={NavLink}
       {...rest}
     >
-      <Text variant="button" noMargin>
+      <Text variant="button" as="span" noMargin>
         {children}
       </Text>
     </PreloadLink>
