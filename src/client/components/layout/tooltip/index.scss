@@ -1,0 +1,21 @@
+@import "~@/client/styles/variables";
+
+.reference > * {
+  &:hover + .tooltip {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+.tooltip {
+  border-radius: get-theme-prop(layout, shape);
+  opacity: 0;
+  transition: transition((opacity));
+  visibility: hidden;
+  @each $k, $v in map-get($colors, light) {
+    &.#{$k} {
+      background-color: get-color($k);
+      color: get-color($k, contrast);
+    }
+  }
+}

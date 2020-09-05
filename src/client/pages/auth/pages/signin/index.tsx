@@ -20,6 +20,7 @@ export default function SignIn() {
   const [getFieldProps] = useVisibility();
 
   const submit = methods.handleSubmit(async (data) => {
+    setGenericError(false);
     try {
       await login({
         variables: {
@@ -65,8 +66,9 @@ export default function SignIn() {
             Falha ao realizar login
           </Text>
         )}
-        <FormControl autoFocus label="Login" name="login" id="login" />
+        <FormControl autoComplete="on" autoFocus label="Login" name="login" id="login" />
         <FormControl
+          autoComplete="password"
           label="Senha"
           name="password"
           id="password"

@@ -10,3 +10,5 @@ export { FocusTrap } from "./focus-trap";
 export { MenuItem } from "./menu-item";
 export { Tabs } from "./tabs";
 export { Breadcrumbs } from "./breadcrumbs";
+export { Tooltip } from "./tooltip";
+export { ConditionalWrap } from "./conditional-wrap";

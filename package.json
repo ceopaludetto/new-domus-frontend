@@ -120,7 +120,6 @@
     "@types/pg": "^7.14.3",
     "@types/react": "^16.9.23",
     "@types/react-dom": "^16.9.5",
-    "@types/react-helmet": "^6.1.0",
     "@types/react-router-dom": "^5.1.5",
     "@types/react-transition-group": "^4.4.0",
     "@types/shortid": "^0.0.29",

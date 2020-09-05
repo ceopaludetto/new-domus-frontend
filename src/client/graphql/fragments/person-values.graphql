@@ -1,12 +1,16 @@
+#import "./phone-values.graphql"
+#import "./condominium-values.graphql"
+
 fragment PersonValues on Person {
   id
   name
   lastName
   email
   birthdate
+  condominiums {
+    ...CondominiumValues
+  }
   phones {
-    id
-    ddd
-    number
+    ...PhoneValues
   }
 }

@@ -12,12 +12,14 @@ interface MenuItemProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 export const MenuItem = React.forwardRef(
-  ({ active, children, ...props }: MenuItemProps, ref: React.Ref<HTMLDivElement>) => {
+  ({ active, children, className, ...props }: MenuItemProps, ref: React.Ref<HTMLDivElement>) => {
     const innerRef = React.useRef<HTMLDivElement>(null);
     useRipple(innerRef, { noTouch: true });
 
+    const classes = clsx(s.item, active && s.active, className);
+
     return (
-      <div ref={merge([innerRef, ref])} className={clsx(s.item, active && s.active)} {...props}>
+      <div ref={merge([innerRef, ref])} className={classes} {...props}>
         {children}
       </div>
     );

@@ -5,7 +5,7 @@ import { Gender } from "@/client/graphql";
 import * as Messages from "../constants";
 
 export const SignUpStep1Schema = Yup.object({
-  login: Yup.string().required(Messages.REQUIRED),
+  login: Yup.string().login().required(Messages.REQUIRED),
   person: Yup.object({
     name: Yup.string().required(Messages.REQUIRED),
     lastName: Yup.string().required(Messages.REQUIRED),

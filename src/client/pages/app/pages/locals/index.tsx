@@ -1,5 +1,5 @@
 import * as React from "react";
-import { MdFilterList } from "react-icons/md";
+import { FiFilter } from "react-icons/fi";
 
 import clsx from "clsx";
 
@@ -17,12 +17,13 @@ export default function Locals() {
             <Button>Novo Local</Button>
           </div>
           <div className={u.col}>
-            <IconButton color="text" size="small">
-              <MdFilterList />
+            <IconButton tooltip={{ content: "Filtro" }} color="text" size="small">
+              <FiFilter />
             </IconButton>
           </div>
         </div>
       }
+      helmet={{ title: "Locais" }}
       fluid
     >
       teste

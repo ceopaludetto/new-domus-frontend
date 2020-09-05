@@ -29,7 +29,13 @@ export function AppHeader() {
           </Breadcrumbs>
         </div>
         <div className={u.col}>
-          <PreloadLink as={IconButton} to="/app/settings" size="small" color="text">
+          <PreloadLink
+            as={IconButton}
+            tooltip={{ content: "Configurações" }}
+            to="/app/settings"
+            size="small"
+            color="text"
+          >
             <FiSettings />
           </PreloadLink>
         </div>

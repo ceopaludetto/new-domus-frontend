@@ -7,7 +7,7 @@ import { ContextType } from "@/server/utils/common.dto";
 import type { Mapped } from "@/server/utils/common.dto";
 import { MapFields } from "@/server/utils/plugins";
 
-import { AuthenticationInput, ForgotInput } from "./authentication.dto";
+import { AuthenticationInput, ForgotInput, ChangePasswordInput } from "./authentication.dto";
 import { GqlAuthGuard } from "./authentication.guard";
 import { AuthenticationService } from "./authentication.service";
 
@@ -32,6 +32,16 @@ export class AuthenticationResolver {
   @Mutation(() => String)
   public async forgot(@Args("input") data: ForgotInput) {
     return this.authService.forgot(data);
+  }
+
+  @UseGuards(GqlAuthGuard)
+  @Mutation(() => User)
+  public async changePassword(
+    @Args("input") data: ChangePasswordInput,
+    @Context() ctx: ContextType,
+    @MapFields() mapped?: Mapped<User>
+  ) {
+    return this.authService.changePassword(ctx.req.user, data, ctx.res, mapped);
   }
 
   @UseGuards(GqlAuthGuard)

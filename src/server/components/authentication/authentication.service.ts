@@ -13,7 +13,7 @@ import type { User } from "@/server/models";
 import type { Mapped } from "@/server/utils/common.dto";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "@/server/utils/constants";
 
-import type { AuthenticationInput, ForgotInput } from "./authentication.dto";
+import type { AuthenticationInput, ForgotInput, ChangePasswordInput } from "./authentication.dto";
 
 @Injectable()
 export class AuthenticationService {
@@ -96,6 +96,25 @@ export class AuthenticationService {
       this.sendTokensPerResponse(await this.generateTokens(user), res);
 
       return user;
+    } catch (error) {
+      this.logger.error(error);
+      throw error;
+    }
+  }
+
+  public async changePassword(user: User, data: ChangePasswordInput, res: Response, mapped: Mapped<User>) {
+    try {
+      if (!(await user.comparePasswords(data.currentPassword))) {
+        throw new UserInputError("Senha atual incorreta", { fields: ["currentPassword"] });
+      }
+
+      user.password = await hash(data.newPassword, 10);
+
+      await this.userService.flush(user);
+
+      this.sendTokensPerResponse(await this.generateTokens(user), res);
+
+      return this.userService.populate(user, mapped);
     } catch (error) {
       this.logger.error(error);
       throw error;

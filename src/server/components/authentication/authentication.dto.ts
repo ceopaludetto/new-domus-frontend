@@ -15,6 +15,17 @@ export class AuthenticationInput {
 }
 
 @InputType()
+export class ChangePasswordInput {
+  @Field()
+  @IsString({ message: Messages.STRING })
+  public currentPassword!: string;
+
+  @Field()
+  @IsString({ message: Messages.STRING })
+  public newPassword!: string;
+}
+
+@InputType()
 export class ForgotInput extends OmitType(AuthenticationInput, ["password"]) {
   @Field()
   @IsOptional()

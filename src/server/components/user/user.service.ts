@@ -36,7 +36,7 @@ export class UserService {
   public async create(data: UserInsertInput) {
     const user = this.userModel.create(data);
 
-    await this.userModel.persistAndFlush(user);
+    await this.flush(user);
 
     return user;
   }
@@ -52,6 +52,12 @@ export class UserService {
   public async setRecoverToken(user: User, token: string) {
     user.recoverToken = token;
 
-    return this.userModel.persistAndFlush(user);
+    await this.flush(user);
+
+    return user;
+  }
+
+  public async flush(user: User) {
+    await this.userModel.persistAndFlush(user);
   }
 }
