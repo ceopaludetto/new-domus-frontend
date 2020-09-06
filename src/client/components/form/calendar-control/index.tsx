@@ -93,7 +93,8 @@ export const CalendarControl = React.forwardRef(
               append={
                 <IconButton
                   ref={iconButton}
-                  aria-label="Acessar Calendário"
+                  aria-label="Abrir Calendário"
+                  tooltip={{ content: "Abrir Calendário" }}
                   onFocus={() => Calendar.load()}
                   onMouseOver={() => Calendar.load()}
                   type="button"

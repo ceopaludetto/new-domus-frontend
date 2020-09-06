@@ -45,7 +45,11 @@ export function Sidebar({ routes }: Pick<RouteComponentProps, "routes">) {
               <div className={u.col}>
                 <IconButton
                   onClick={() => setListOpen((v) => !v)}
-                  tooltip={{ content: tooltip ? "Fechar" : "Alterar Condomínio", forceUpdate: tooltip }}
+                  tooltip={{
+                    content: tooltip ? "Fechar" : "Alterar Condomínio",
+                    forceUpdate: tooltip,
+                    updateOnContentChange: false,
+                  }}
                   size="small"
                 >
                   {listOpen ? <FiX /> : <VscArrowBoth />}

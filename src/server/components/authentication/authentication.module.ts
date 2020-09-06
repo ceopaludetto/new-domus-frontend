@@ -1,4 +1,4 @@
-import { Module } from "@nestjs/common";
+import { Module, Global } from "@nestjs/common";
 import { JwtModule } from "@nestjs/jwt";
 import { PassportModule } from "@nestjs/passport";
 import { PinoLogger, InjectPinoLogger } from "nestjs-pino";
@@ -10,6 +10,7 @@ import { AuthenticationResolver } from "./authentication.resolver";
 import { AuthenticationService } from "./authentication.service";
 import { JwtStrategy } from "./strategies/jwt.strategy";
 
+@Global()
 @Module({
   imports: [
     UserModule,

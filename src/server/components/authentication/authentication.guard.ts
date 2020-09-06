@@ -46,7 +46,7 @@ export class GqlAuthGuard extends AuthGuard("jwt") {
 
       const newTokens = await this.authenticationService.generateTokens(user);
 
-      this.authenticationService.sendTokensPerResponse(newTokens, response);
+      this.authenticationService.setTokensInResponse(newTokens, response);
       request.cookies[REFRESH_TOKEN] = `Bearer ${newTokens.refreshToken}`;
       request.headers[ACCESS_TOKEN.toLowerCase()] = `Bearer ${newTokens.accessToken}`;
 

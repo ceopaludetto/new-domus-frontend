@@ -14,7 +14,7 @@
     position: fixed;
     top: 0;
     width: 100%;
-    z-index: 1031;
+    z-index: get-theme-prop(layout, zindex, progress);
   }
   .peg {
     display: block;

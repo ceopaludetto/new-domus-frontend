@@ -1,10 +1,11 @@
 import { InjectQueue } from "@nestjs/bull";
-import { Injectable } from "@nestjs/common";
+import { Injectable, forwardRef, Inject } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
-import { UserInputError, AuthenticationError } from "apollo-server-express";
+import { UserInputError, AuthenticationError, ApolloError } from "apollo-server-express";
 import { hash } from "bcryptjs";
 import type { Queue } from "bull";
 import type { Response } from "express";
+import ms from "ms";
 import { InjectPinoLogger, PinoLogger } from "nestjs-pino";
 import { URL } from "url";
 
@@ -18,7 +19,7 @@ import type { AuthenticationInput, ForgotInput, ChangePasswordInput } from "./au
 @Injectable()
 export class AuthenticationService {
   public constructor(
-    private readonly userService: UserService,
+    @Inject(forwardRef(() => UserService)) private readonly userService: UserService,
     private readonly jwtService: JwtService,
     @InjectQueue("mail") private readonly mailQueue: Queue,
     @InjectPinoLogger(AuthenticationService.name) private readonly logger: PinoLogger
@@ -31,12 +32,12 @@ export class AuthenticationService {
     };
   }
 
-  public sendTokensPerResponse(tokens: { accessToken: string; refreshToken: string }, res: Response) {
+  public setTokensInResponse(tokens: { accessToken: string; refreshToken: string }, res: Response) {
     res.cookie(REFRESH_TOKEN, `Bearer ${tokens.refreshToken}`, {
       sameSite: true,
       path: "/",
       httpOnly: true,
-      maxAge: 1000 * 60 * 60 * 24 * 7,
+      maxAge: ms("7d"),
     });
 
     res.setHeader(ACCESS_TOKEN, `Bearer ${tokens.accessToken}`);
@@ -67,10 +68,11 @@ export class AuthenticationService {
         throw new UserInputError("Senha incorreta", { fields: ["password"] });
       }
 
-      this.sendTokensPerResponse(await this.generateTokens(user), res);
+      this.setTokensInResponse(await this.generateTokens(user), res);
 
       return user;
     } catch (error) {
+      this.logger.error(error);
       if (error instanceof UserInputError) {
         throw error;
       }
@@ -93,12 +95,12 @@ export class AuthenticationService {
         },
       });
 
-      this.sendTokensPerResponse(await this.generateTokens(user), res);
+      this.setTokensInResponse(await this.generateTokens(user), res);
 
       return user;
     } catch (error) {
       this.logger.error(error);
-      throw error;
+      throw new ApolloError("Falha ao fazer cadastro");
     }
   }
 
@@ -112,12 +114,15 @@ export class AuthenticationService {
 
       await this.userService.flush(user);
 
-      this.sendTokensPerResponse(await this.generateTokens(user), res);
+      this.setTokensInResponse(await this.generateTokens(user), res);
 
       return this.userService.populate(user, mapped);
     } catch (error) {
       this.logger.error(error);
-      throw error;
+      if (error instanceof UserInputError) {
+        throw error;
+      }
+      throw new ApolloError("Falha ao alterar senha");
     }
   }
 
@@ -127,7 +132,7 @@ export class AuthenticationService {
       const callback = new URL(data.callback);
 
       if (!user) {
-        throw new Error("Usuário não encontrado");
+        throw new UserInputError("Usuário não encontrado", { fields: ["login"] });
       }
 
       const token = await this.jwtService.signAsync({ id: user.id, newPassword: true }, { expiresIn: "30m" });
@@ -151,7 +156,10 @@ export class AuthenticationService {
       return user.person.email;
     } catch (error) {
       this.logger.error(error);
-      throw error;
+      if (error instanceof UserInputError) {
+        throw error;
+      }
+      throw new ApolloError("Falha ao solicitar recuperação de senha");
     }
   }
 

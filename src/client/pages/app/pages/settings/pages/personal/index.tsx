@@ -17,7 +17,16 @@ import {
   Text,
   Switch,
 } from "@/client/components";
-import { Me, MeQuery, ChangePassword, ChangePasswordMutation, ChangePasswordMutationVariables } from "@/client/graphql";
+import {
+  Me,
+  MeQuery,
+  UpdateUser,
+  UpdateUserMutation,
+  UpdateUserMutationVariables,
+  ChangePassword,
+  ChangePasswordMutation,
+  ChangePasswordMutationVariables,
+} from "@/client/graphql";
 import * as Masks from "@/client/helpers/masks";
 import { tel } from "@/client/helpers/masks";
 import {
@@ -29,12 +38,15 @@ import {
 import { useMultipleVisibility } from "@/client/hooks";
 import u from "@/client/styles/utils.scss";
 import type { Client } from "@/client/utils/common.dto";
+import { splitPhone } from "@/client/utils/string";
 
 export default function Personal() {
   const [passwordGenericError, setPasswordGenericError] = React.useState(false);
+  const [personalGenericError, setPersonalGenericError] = React.useState(false);
   const [mapPropsToField] = useMultipleVisibility(["currentPassword", "newPassword", "repeatNewPassword"]);
   const { data } = useQuery<MeQuery>(Me);
   const [changePassword] = useMutation<ChangePasswordMutation, ChangePasswordMutationVariables>(ChangePassword);
+  const [changeUserData] = useMutation<UpdateUserMutation, UpdateUserMutationVariables>(UpdateUser);
 
   const personal = useForm<SettingsPersonalValues>({
     resolver: yupResolver(SettingsPersonalSchema),
@@ -58,8 +70,33 @@ export default function Personal() {
   });
   const newPasswordValue = password.watch("newPassword");
 
-  const handlePersonalSubmit = personal.handleSubmit((values) => {
-    console.log(values);
+  const handlePersonalSubmit = personal.handleSubmit(async ({ login, birthdate, phone, ...rest }) => {
+    setPersonalGenericError(false);
+    try {
+      await changeUserData({
+        variables: {
+          input: {
+            login,
+            person: {
+              birthdate: birthdate as Date,
+              phones: phone ? [splitPhone(phone)] : undefined,
+              ...rest,
+            },
+          },
+        },
+      });
+    } catch (error) {
+      const graphQLError = (error.graphQLErrors as UserInputError[])[0];
+      if (graphQLError.extensions.fields) {
+        const field: "currentPassword" = graphQLError.extensions.fields[0];
+        personal.setError(field, {
+          type: "graphql",
+          message: graphQLError.message,
+        });
+      } else {
+        setPersonalGenericError(true);
+      }
+    }
   });
 
   const handlePasswordSubmit = password.handleSubmit(async ({ currentPassword, newPassword }) => {
@@ -100,6 +137,11 @@ export default function Personal() {
       <Helmet title="Configurações - Informações Pessoais" />
       <FormProvider {...personal}>
         <form onSubmit={handlePersonalSubmit}>
+          {personalGenericError && (
+            <Text variant="body-2" color="error">
+              Falha ao alterar dados de usuário
+            </Text>
+          )}
           <div className={clsx(u.grid, u["grid-template"])}>
             <div className={clsx(u["xs-12"], u["md-6"])}>
               <FormControl autoFocus name="name" label="Nome" id="name" />
