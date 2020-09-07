@@ -15,7 +15,7 @@ import { PinoLogger, InjectPinoLogger } from "nestjs-pino";
 import { generate } from "shortid";
 
 import { App } from "@/client/App";
-import { Logged, LoggedQuery } from "@/client/graphql";
+import { Logged, LoggedQuery, SelectedCondominium, SelectedCondominiumQuery } from "@/client/graphql";
 import { createClient } from "@/client/providers/apollo";
 import type { ReactStaticContext } from "@/client/utils/common.dto";
 import { AuthenticationService } from "@/server/components/authentication";
@@ -38,7 +38,7 @@ export class ReactService {
       const [, token] = refreshCookie.split(" ");
 
       const decoded = await this.authenticationService.verifyToken(token);
-      const user = await this.authenticationService.getByRefreshToken(decoded);
+      const user = await this.authenticationService.getByRefreshToken(decoded, ["person.condominiums"]);
 
       return user;
     }
@@ -72,6 +72,16 @@ export class ReactService {
           logged: !!user,
         },
       });
+
+      if (user?.person.condominiums) {
+        client.writeQuery<SelectedCondominiumQuery>({
+          query: SelectedCondominium,
+          data: {
+            __typename: "Query",
+            selectedCondominium: user.person.condominiums[0].id,
+          },
+        });
+      }
 
       if (process.env.NODE_ENV === "production") {
         res.set(

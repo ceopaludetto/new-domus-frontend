@@ -14,6 +14,8 @@ import {
   RegisterMutationVariables,
   Logged,
   LoggedQuery,
+  SelectedCondominium,
+  SelectedCondominiumQuery,
 } from "@/client/graphql";
 import * as Masks from "@/client/helpers/masks";
 import { SignUpStep3Schema, SignUpStep3Values } from "@/client/helpers/validations/signup.schema";
@@ -76,6 +78,16 @@ export default function Step3() {
               logged: true,
             },
           });
+
+          if (res.data?.register.person.condominiums[0].id) {
+            client.writeQuery<SelectedCondominiumQuery>({
+              query: SelectedCondominium,
+              data: {
+                __typename: "Query",
+                selectedCondominium: res.data?.register.person.condominiums[0].id,
+              },
+            });
+          }
 
           if (res && res.data) {
             setValues(initialValues);

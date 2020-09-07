@@ -5,3 +5,5 @@ export * from "./use-redirect";
 export * from "./use-ripple";
 export * from "./use-locale";
 export * from "./use-breadcrumbs";
+export * from "./use-current-condominium";
+export * from "./use-path-with-condominium";

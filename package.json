@@ -67,6 +67,7 @@
     "pg-native": "^3.0.0",
     "pino-pretty": "^4.0.0",
     "pug": "^3.0.0",
+    "query-string": "^6.13.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-helmet-async": "^1.0.4",

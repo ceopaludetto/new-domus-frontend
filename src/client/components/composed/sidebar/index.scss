@@ -21,14 +21,19 @@
   }
   .list-condominiums {
     background-color: get-color(paper);
-    max-height: 0;
     transition: transition((max-height));
-    .item {
-      padding-left: get-theme-prop(layout, gap) * 2;
-      padding-right: get-theme-prop(layout, gap) * 2;
-    }
-    &.open {
-      max-height: 300px;
+    .measure {
+      .item {
+        padding-left: get-theme-prop(layout, gap) * 2;
+        padding-right: get-theme-prop(layout, gap) * 2;
+        transition: transition((background-color));
+        &:hover {
+          background-color: get-shadow-color(text, 0.09);
+        }
+        &.selected {
+          color: get-color(primary);
+        }
+      }
     }
   }
 }

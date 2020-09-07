@@ -8,7 +8,15 @@ import type { UserInputError } from "apollo-server-express";
 import clsx from "clsx";
 
 import { Button, FormControl, PreloadLink, Text } from "@/client/components";
-import { Login, LoginMutation, LoginMutationVariables, Logged, LoggedQuery } from "@/client/graphql";
+import {
+  Login,
+  LoginMutation,
+  LoginMutationVariables,
+  Logged,
+  LoggedQuery,
+  SelectedCondominium,
+  SelectedCondominiumQuery,
+} from "@/client/graphql";
 import { SignInSchema, SignInValues } from "@/client/helpers/validations/signin.schema";
 import { useVisibility } from "@/client/hooks";
 import u from "@/client/styles/utils.scss";
@@ -22,7 +30,7 @@ export default function SignIn() {
   const submit = methods.handleSubmit(async (data) => {
     setGenericError(false);
     try {
-      await login({
+      const res = await login({
         variables: {
           input: data,
         },
@@ -35,6 +43,16 @@ export default function SignIn() {
           logged: true,
         },
       });
+
+      if (res.data?.login.person.condominiums[0].id) {
+        client.writeQuery<SelectedCondominiumQuery>({
+          query: SelectedCondominium,
+          data: {
+            __typename: "Query",
+            selectedCondominium: res.data?.login.person.condominiums[0].id,
+          },
+        });
+      }
     } catch (error) {
       const graphQLError = (error.graphQLErrors as UserInputError[])[0];
       if (graphQLError.extensions.fields) {

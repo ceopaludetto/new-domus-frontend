@@ -32,7 +32,7 @@ export function AppHeader() {
           <PreloadLink
             as={IconButton}
             tooltip={{ content: "Configurações" }}
-            to="/app/settings"
+            to="/app/:condominium/settings"
             size="small"
             color="text"
           >

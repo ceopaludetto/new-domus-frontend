@@ -38,8 +38,10 @@ Breadcrumbs.Item = ({ children, to, last, ...rest }: BreadcrumbsItemProps) => {
           {children}
         </Text>
       ) : (
-        <PreloadLink as={Text} variant="body-1" to={to} className={s.item} link {...rest}>
-          {children}
+        <PreloadLink to={to} className={s.item} {...rest}>
+          <Text as="span" noMargin variant="body-1">
+            {children}
+          </Text>
         </PreloadLink>
       )}
     </>

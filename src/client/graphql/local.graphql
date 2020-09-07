@@ -1,3 +1,7 @@
 query Logged {
   logged @client
 }
+
+query SelectedCondominium {
+  selectedCondominium @client
+}

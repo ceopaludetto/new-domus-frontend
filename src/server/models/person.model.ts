@@ -46,7 +46,7 @@ export class Person extends BaseModel {
   public birthdate!: Date;
 
   @Field(() => [Phone])
-  @OneToMany({ entity: () => Phone, mappedBy: (phone) => phone.person })
+  @OneToMany({ entity: () => Phone, mappedBy: (phone) => phone.person, orphanRemoval: true })
   public phones: Collection<Phone> = new Collection<Phone>(this);
 
   @Field(() => User)

@@ -23,10 +23,10 @@ const Tab = ({ children, ...rest }: TabProps) => {
 
   return (
     <PreloadLink
+      as={NavLink}
       className={clsx(u["py-xs-4"], u["px-xs-6"], u.relative, s.item)}
       activeClassName={s.active}
       ref={ref}
-      as={NavLink}
       {...rest}
     >
       <Text variant="button" as="span" noMargin>

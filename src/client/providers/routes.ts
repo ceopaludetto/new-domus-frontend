@@ -40,7 +40,7 @@ export const routes: Route[] = [
     component: loadable(() => import("@/client/pages/auth")),
     meta: {
       logged: false,
-      redirectTo: "/app",
+      redirectTo: "/app/:condominium",
     },
     children: [
       {
@@ -85,7 +85,13 @@ export const routes: Route[] = [
   },
   {
     name: "@APP",
-    path: ["/app", "/app/events", "/app/locals", "/app/settings", "/app/settings/condominium"],
+    path: [
+      "/app/:condominium",
+      "/app/:condominium/events",
+      "/app/:condominium/locals",
+      "/app/:condominium/settings",
+      "/app/:condominium/settings/condominium",
+    ],
     exact: true,
     component: loadable(() => import("@/client/pages/app")),
     meta: {
@@ -95,7 +101,7 @@ export const routes: Route[] = [
     children: [
       {
         name: "@APP:HOME",
-        path: "/app",
+        path: "/app/:condominium",
         exact: true,
         component: loadable(() => import("@/client/pages/app/pages/home")),
         meta: {
@@ -105,7 +111,7 @@ export const routes: Route[] = [
       },
       {
         name: "@APP:HOME:EVENTS",
-        path: "/app/events",
+        path: "/app/:condominium/events",
         exact: true,
         component: loadable(() => import("@/client/pages/app/pages/events")),
         meta: {
@@ -115,7 +121,7 @@ export const routes: Route[] = [
       },
       {
         name: "@APP:HOME:LOCALS",
-        path: "/app/locals",
+        path: "/app/:condominium/locals",
         exact: true,
         component: loadable(() => import("@/client/pages/app/pages/locals")),
         meta: {
@@ -125,7 +131,7 @@ export const routes: Route[] = [
       },
       {
         name: "@APP:SETTINGS",
-        path: ["/app/settings", "/app/settings/condominium"],
+        path: ["/app/:condominium/settings", "/app/:condominium/settings/condominium"],
         exact: true,
         component: loadable(() => import("@/client/pages/app/pages/settings")),
         meta: {
@@ -135,7 +141,7 @@ export const routes: Route[] = [
         children: [
           {
             name: "@APP:SETTINGS:PERSONAL",
-            path: "/app/settings",
+            path: "/app/:condominium/settings",
             exact: true,
             component: loadable(() => import("@/client/pages/app/pages/settings/pages/personal")),
             meta: {
@@ -144,7 +150,7 @@ export const routes: Route[] = [
           },
           {
             name: "@APP:SETTINGS:CONDOMINIUM",
-            path: "/app/settings/condominium",
+            path: "/app/:condominium/settings/condominium",
             exact: true,
             component: loadable(() => import("@/client/pages/app/pages/settings/pages/condominium")),
             meta: {

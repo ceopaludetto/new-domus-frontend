@@ -6,9 +6,9 @@
 
 .item {
   color: get-shadow-color(text, 0.7);
-  margin: 0 !important;
   &:hover {
     color: get-color(text);
+    text-decoration: underline;
   }
 }
 

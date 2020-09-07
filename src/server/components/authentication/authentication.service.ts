@@ -47,8 +47,8 @@ export class AuthenticationService {
     return this.jwtService.verifyAsync(token);
   }
 
-  public async getByRefreshToken(decoded: { id: string; password: string }) {
-    const user = await this.userService.findByID(decoded?.id);
+  public async getByRefreshToken(decoded: { id: string; password: string }, mapped?: Mapped<User>) {
+    const user = await this.userService.findByID(decoded?.id, mapped);
 
     if (user?.password !== decoded.password) {
       throw new AuthenticationError("Refresh token are not valid");
