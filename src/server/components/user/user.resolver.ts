@@ -3,8 +3,7 @@ import { Resolver, Query, Args, Mutation, Context } from "@nestjs/graphql";
 
 import { GqlAuthGuard } from "@/server/components/authentication/authentication.guard";
 import { User } from "@/server/models";
-import { FindByID, ShowAll } from "@/server/utils/common.dto";
-import type { Mapped, ContextType } from "@/server/utils/common.dto";
+import { FindByID, ShowAll, Mapped, ContextType } from "@/server/utils/common.dto";
 import { MapFields, SortFields } from "@/server/utils/plugins";
 
 import { FindUserByLogin, UserSortInput, UserUpdateInput } from "./user.dto";

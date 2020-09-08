@@ -15,7 +15,7 @@
     "start:production": "NODE_ENV=production node build/server.js",
     "build": "razzle build",
     "graphql": "graphql-codegen --config codegen.yml",
-    "test": "razzle test",
+    "test": "jest",
     "analyze": "source-map-explorer build/public/static/js/*.js",
     "lint": "eslint \"src/**\""
   },
@@ -96,6 +96,7 @@
     "@teamsupercell/typings-for-css-modules-loader": "^2.3.0",
     "@testing-library/jest-dom": "^5.10.0",
     "@testing-library/react": "^10.4.9",
+    "@testing-library/react-hooks": "^3.4.1",
     "@types/bcryptjs": "^2.4.2",
     "@types/bull": "^3.14.1",
     "@types/compression": "^1.7.0",
@@ -138,7 +139,9 @@
     "eslint-plugin-react": "^7.19.0",
     "eslint-plugin-react-hooks": "^4.1.0",
     "graphql-tag": "^2.10.3",
+    "identity-obj-proxy": "^3.0.0",
     "jest": "^26.4.1",
+    "jest-transform-graphql": "^2.1.0",
     "lodash-webpack-plugin": "^0.11.5",
     "postcss-flexbugs-fixes": "^4.2.0",
     "postcss-normalize": "^9.0.0",
@@ -147,6 +150,7 @@
     "razzle": "^3.1.7",
     "razzle-plugin-scss": "^3.1.7",
     "razzle-plugin-typescript": "^3.1.7",
+    "react-test-renderer": "^16.13.1",
     "sass": "^1.26.9",
     "source-map-explorer": "^2.5.0",
     "stylelint": "^13.6.1",
@@ -155,6 +159,7 @@
     "stylelint-config-standard": "^20.0.0",
     "stylelint-prettier": "^1.1.2",
     "terser-webpack-plugin": "^4.1.0",
+    "ts-jest": "^26.3.0",
     "typescript": "^3.8.3",
     "typescript-database": "^1.1.1"
   }

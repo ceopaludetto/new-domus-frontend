@@ -28,7 +28,8 @@
     "scripts/**/*",
     "database.config.js",
     "razzle.config.js",
-    ".eslintrc.js"
+    ".eslintrc.js",
+    "jest.config.js"
   ],
   "exclude": ["node_modules", "dist", "build", "coverage", "certs", "env"]
 }
