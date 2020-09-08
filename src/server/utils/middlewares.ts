@@ -2,7 +2,6 @@ import { INestApplication, ValidationPipe } from "@nestjs/common";
 import { UserInputError } from "apollo-server-express";
 import compression from "compression";
 import cookie from "cookie-parser";
-import csurf from "csurf";
 import { static as serve } from "express";
 import helmet from "helmet";
 import { PinoLogger } from "nestjs-pino";
@@ -32,15 +31,11 @@ export async function installMiddlewares(app: INestApplication) {
     }
 
     app.use(
-      `${process.env.PUBLIC_URL as string}/`,
-      serve(process.env.STATIC_FOLDER as string, {
+      serve(process.env.RAZZLE_PUBLIC_DIR as string, {
         maxAge: process.env.NODE_ENV === "production" ? "1y" : undefined,
       })
     );
   }
 
   app.use(cookie());
-  if (process.env.NODE_ENV === "production") {
-    app.use(csurf({ cookie: { sameSite: "lax", httpOnly: true }, value: (req) => req.cookies["X-XSRF-TOKEN"] }));
-  }
 }

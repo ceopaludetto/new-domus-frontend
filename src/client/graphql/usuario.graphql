@@ -5,3 +5,9 @@ query ShowAllUsers {
     ...UserValues
   }
 }
+
+mutation UpdateUser($input: UserUpdateInput!) {
+  updateUser(input: $input) {
+    ...UserValues
+  }
+}

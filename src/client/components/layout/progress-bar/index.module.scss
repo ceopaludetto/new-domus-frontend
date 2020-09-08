@@ -1,0 +1,33 @@
+@import "~@/client/styles/variables";
+
+.progress {
+  pointer-events: none;
+  .bar {
+    @each $k, $v in map-get($colors, light) {
+      &.#{$k} {
+        background: get-color($k);
+      }
+    }
+
+    height: 2px;
+    left: 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: get-theme-prop(layout, zindex, progress);
+  }
+  .peg {
+    display: block;
+    height: 100%;
+    opacity: 1;
+    position: absolute;
+    right: 0;
+    transform: rotate(3deg) translate(0, -4px);
+    width: 100px;
+    @each $k, $v in map-get($colors, light) {
+      &.#{$k} {
+        box-shadow: 0 0 10px get-color($k), 0 0 5px get-color($k);
+      }
+    }
+  }
+}

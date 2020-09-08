@@ -4,10 +4,10 @@ import { Switch, Route, useLocation } from "react-router-dom";
 import clsx from "clsx";
 
 import { Container, Paper, Footer } from "@/client/components";
-import u from "@/client/styles/utils.scss";
+import u from "@/client/styles/utils.module.scss";
 import type { RouteComponentProps } from "@/client/utils/common.dto";
 
-import s from "./index.scss";
+import s from "./index.module.scss";
 
 export default function Auth({ routes }: RouteComponentProps) {
   const location = useLocation();

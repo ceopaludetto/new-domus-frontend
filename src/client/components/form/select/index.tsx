@@ -9,7 +9,7 @@ import { Paper, MenuItem } from "@/client/components/layout";
 
 import { Control } from "../control";
 import { IconButton } from "../icon-button";
-import s from "./index.scss";
+import s from "./index.module.scss";
 
 type Item = { label: string; value: string };
 

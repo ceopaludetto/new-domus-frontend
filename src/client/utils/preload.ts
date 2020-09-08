@@ -1,15 +1,11 @@
-import type { ComponentType } from "react";
 import { matchPath } from "react-router-dom";
 
 import { routes } from "@/client/providers/routes";
 import type { Route, Client } from "@/client/utils/common.dto";
 
-const isDefaultExported = (component: any): component is { default: ComponentType<any> } => "default" in component;
+import { getModule, hasFetchBefore } from "./lazy";
 
-const hasFetchBefore = (component: any): component is { fetchBefore: (client: Client) => Promise<void> } =>
-  "fetchBefore" in component;
-
-function findRoute(path: string, proutes: Route[], matching: Route[]): Route[] {
+export function findRoute(path: string, proutes: Route[], matching: Route[]): Route[] {
   const matchingRoute = proutes.find((r) =>
     matchPath(path, {
       path: r.path,
@@ -43,10 +39,10 @@ export async function preload(path: string, { client }: PreloadOptions) {
     matchingRoute.map(async (m) => {
       const component = await m.component.load();
 
-      const c = isDefaultExported(component) ? component.default : component;
+      const c = getModule(component);
 
       if (hasFetchBefore(c)) {
-        await c?.fetchBefore?.(client);
+        await c.fetchBefore(client);
       }
     })
   );

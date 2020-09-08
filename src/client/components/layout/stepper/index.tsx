@@ -4,9 +4,9 @@ import clsx from "clsx";
 
 import { Text } from "@/client/components/typography";
 import { StepperContext } from "@/client/hooks";
-import u from "@/client/styles/utils.scss";
+import u from "@/client/styles/utils.module.scss";
 
-import s from "./index.scss";
+import s from "./index.module.scss";
 
 interface StepperProps {
   items: {

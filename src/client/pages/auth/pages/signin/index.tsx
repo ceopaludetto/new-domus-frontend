@@ -8,23 +8,49 @@ import type { UserInputError } from "apollo-server-express";
 import clsx from "clsx";
 
 import { Button, FormControl, PreloadLink, Text } from "@/client/components";
-import { Login } from "@/client/graphql/auth.graphql";
-import type { LoginMutation, LoginMutationVariables } from "@/client/graphql/operations";
+import {
+  Login,
+  LoginMutation,
+  LoginMutationVariables,
+  Logged,
+  LoggedQuery,
+  SelectedCondominium,
+  SelectedCondominiumQuery,
+} from "@/client/graphql";
 import { SignInSchema, SignInValues } from "@/client/helpers/validations/signin.schema";
 import { useVisibility } from "@/client/hooks";
-import u from "@/client/styles/utils.scss";
+import u from "@/client/styles/utils.module.scss";
 
 export default function SignIn() {
   const [genericError, setGenericError] = React.useState(false);
-  const [login] = useMutation<LoginMutation, LoginMutationVariables>(Login);
+  const [login, { client }] = useMutation<LoginMutation, LoginMutationVariables>(Login);
   const methods = useForm<SignInValues>({ resolver: yupResolver(SignInSchema) });
   const [getFieldProps] = useVisibility();
 
   const submit = methods.handleSubmit(async (data) => {
+    setGenericError(false);
     try {
-      await login({
+      const res = await login({
         variables: {
           input: data,
+        },
+      });
+
+      if (res.data?.login.person.condominiums) {
+        client.writeQuery<SelectedCondominiumQuery>({
+          query: SelectedCondominium,
+          data: {
+            __typename: "Query",
+            selectedCondominium: res.data?.login.person.condominiums[0].id,
+          },
+        });
+      }
+
+      client.writeQuery<LoggedQuery>({
+        query: Logged,
+        data: {
+          __typename: "Query",
+          logged: true,
         },
       });
     } catch (error) {
@@ -58,8 +84,9 @@ export default function SignIn() {
             Falha ao realizar login
           </Text>
         )}
-        <FormControl autoFocus label="Login" name="login" id="login" />
+        <FormControl autoComplete="on" autoFocus label="Login" name="login" id="login" />
         <FormControl
+          autoComplete="password"
           label="Senha"
           name="password"
           id="password"

@@ -6,12 +6,21 @@ import { yupResolver } from "@hookform/resolvers";
 import clsx from "clsx";
 
 import { MaskedFormControl, FormControl, FormSelect, FormRadioCard, Button, Switch, Text } from "@/client/components";
-import { Register, ShowStates } from "@/client/graphql";
-import { ShowStatesQuery, RegisterMutation, RegisterMutationVariables, Gender } from "@/client/graphql/operations";
+import {
+  Register,
+  ShowStates,
+  ShowStatesQuery,
+  RegisterMutation,
+  RegisterMutationVariables,
+  Logged,
+  LoggedQuery,
+  SelectedCondominium,
+  SelectedCondominiumQuery,
+} from "@/client/graphql";
 import * as Masks from "@/client/helpers/masks";
 import { SignUpStep3Schema, SignUpStep3Values } from "@/client/helpers/validations/signup.schema";
 import { StepperContext } from "@/client/hooks";
-import u from "@/client/styles/utils.scss";
+import u from "@/client/styles/utils.module.scss";
 import { clean } from "@/client/utils/clean";
 import type { Client } from "@/client/utils/common.dto";
 import { splitPhone } from "@/client/utils/string";
@@ -26,8 +35,8 @@ export default function Step3() {
     defaultValues: values,
   });
   const type = methods.watch("type");
-  const state = methods.watch("condominium.address.stateID");
-  const [register] = useMutation<RegisterMutation, RegisterMutationVariables>(Register);
+  const state = methods.watch("condominium.address.state");
+  const [register, { client }] = useMutation<RegisterMutation, RegisterMutationVariables>(Register);
   const { data } = useQuery<ShowStatesQuery>(ShowStates);
 
   const submit = methods.handleSubmit(async (datas) => {
@@ -37,14 +46,16 @@ export default function Step3() {
         const {
           login,
           password,
-          person: { phone, gender, ...person },
-          condominium: {
-            address: { cityID, stateID, ...address },
-            ...condominium
-          },
+          person: { phone, birthdate, ...person },
+          condominium,
         } = values;
 
-        if (cityID) {
+        if (condominium) {
+          const {
+            // state not needed
+            address: { state: stateID, ...address },
+          } = condominium;
+
           const res = await register({
             variables: {
               input: {
@@ -52,11 +63,29 @@ export default function Step3() {
                 password,
                 person: {
                   ...person,
-                  gender: gender ?? Gender.M,
+                  birthdate: birthdate as Date,
                   phones: phone ? [splitPhone(phone)] : [],
-                  condominiums: [{ ...condominium, address: { cityID, ...address } }],
+                  condominiums: [{ ...condominium, address }],
                 },
               },
+            },
+          });
+
+          if (res.data?.register.person.condominiums[0].id) {
+            client.writeQuery<SelectedCondominiumQuery>({
+              query: SelectedCondominium,
+              data: {
+                __typename: "Query",
+                selectedCondominium: res.data?.register.person.condominiums[0].id,
+              },
+            });
+          }
+
+          client.writeQuery<LoggedQuery>({
+            query: Logged,
+            data: {
+              __typename: "Query",
+              logged: true,
             },
           });
 
@@ -124,7 +153,7 @@ export default function Step3() {
                       label: st.name,
                     })) ?? []
                   }
-                  name="condominium.address.stateID"
+                  name="condominium.address.state"
                   id="state"
                   label="Estado"
                   required
@@ -141,7 +170,8 @@ export default function Step3() {
                           label: c.name,
                         })) ?? []
                     }
-                    name="condominium.address.cityID"
+                    defaultValue={data?.showStates[0].cities[0].id}
+                    name="condominium.address.city"
                     id="city"
                     label="Cidade"
                     required

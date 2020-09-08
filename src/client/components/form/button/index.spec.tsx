@@ -5,7 +5,7 @@ import { render, fireEvent } from "@/client/utils/setup-test";
 import { Button } from "./index";
 
 describe("Button", () => {
-  it("should render", () => {
+  it("should render correctly", () => {
     const { getByText } = render(<Button>Test</Button>);
 
     const span = getByText("Test");

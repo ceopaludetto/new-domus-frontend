@@ -1,4 +1,4 @@
-import type { IsomorphicLib } from "./common.dto";
+import type { IsomorphicLib, Client } from "./common.dto";
 
 export function getModule<T>(lib: IsomorphicLib<T>) {
   if ("default" in lib) {
@@ -6,4 +6,16 @@ export function getModule<T>(lib: IsomorphicLib<T>) {
   }
 
   return lib;
+}
+
+export function hasFetchBefore<T>(c?: T): c is T & { fetchBefore: (client: Client) => Promise<void> } {
+  if (typeof c !== "object") {
+    return false;
+  }
+
+  if ("fetchBefore" in c) {
+    return true;
+  }
+
+  return false;
 }

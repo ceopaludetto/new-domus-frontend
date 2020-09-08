@@ -1,0 +1,14 @@
+@import "~@/client/styles/variables";
+
+.container {
+  padding-left: get-theme-prop(layout, gap) * 2;
+  padding-right: get-theme-prop(layout, gap) * 2;
+  &:not(.fluid) {
+    margin: 0 auto;
+    @each $k, $v in get-theme-prop(layout, breakpoints) {
+      @media (min-width: $v) {
+        max-width: #{get-theme-prop(layout, containers, $k)};
+      }
+    }
+  }
+}

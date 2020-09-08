@@ -27,7 +27,6 @@ export class CondominiumResolver {
 
   @Mutation(() => Int)
   public async createCondominium(@Args("input") data: CondominiumInsertInput) {
-    console.log(data);
-    return 10;
+    return data;
   }
 }

@@ -78,7 +78,7 @@ import { APP_NAME } from "@/server/utils/constants";
     }),
     GraphQLModule.forRootAsync({
       inject: [ConfigurationService],
-      useFactory: async ({ graphql, schema }: ConfigurationService) => ({
+      useFactory: async ({ graphql, setSchema }: ConfigurationService) => ({
         autoSchemaFile: graphql.schema ?? true,
         installSubscriptionHandlers: true,
         debug: process.env.NODE_ENV === "development",
@@ -87,8 +87,8 @@ import { APP_NAME } from "@/server/utils/constants";
         cors: false,
         context: ({ req, res }: ContextType) => ({ req, res }),
         transformSchema: (s: GraphQLSchema) => {
-          schema = s;
-          return schema;
+          setSchema(s);
+          return s;
         },
       }),
     }),

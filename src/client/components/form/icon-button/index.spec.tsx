@@ -1,7 +1,7 @@
 import * as React from "react";
 import { FiEye } from "react-icons/fi";
 
-import { render, fireEvent } from "@/client/utils/setup-test";
+import { render, fireEvent, act } from "@/client/utils/setup-test";
 
 import { IconButton } from "./index";
 
@@ -31,7 +31,9 @@ describe("IconButton", () => {
     const button = getByTestId("1");
 
     expect(handleClick).toBeCalledTimes(0);
-    fireEvent.click(button);
+    act(() => {
+      fireEvent.click(button);
+    });
     expect(handleClick).toBeCalledTimes(1);
   });
 

@@ -1,0 +1,21 @@
+@import "~@/client/styles/variables";
+
+.tabs {
+  border-bottom: 1px solid get-shadow-color(text, 0.12);
+  margin-bottom: get-theme-prop(layout, gap) * 2.5;
+  .item {
+    border-bottom: 2px solid transparent;
+    color: get-color(text);
+    margin-bottom: -1px;
+    overflow: hidden;
+    text-decoration: none !important;
+    transition: transition((background-color));
+    &:hover {
+      background-color: get-shadow-color(primary, 0.1);
+    }
+    &.active {
+      border-bottom-color: get-color(primary);
+      color: get-color(primary);
+    }
+  }
+}

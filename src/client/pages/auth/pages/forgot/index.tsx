@@ -9,11 +9,10 @@ import { yupResolver } from "@hookform/resolvers";
 import clsx from "clsx";
 
 import { FormControl, Button, PreloadLink, Text } from "@/client/components";
-import { AuthForgot } from "@/client/graphql";
-import type { AuthForgotMutation, AuthForgotMutationVariables } from "@/client/graphql/operations";
+import { AuthForgot, AuthForgotMutation, AuthForgotMutationVariables } from "@/client/graphql";
 import { ForgotSchema, ForgotValues } from "@/client/helpers/validations/forgot.schema";
 import { usePreload } from "@/client/hooks";
-import u from "@/client/styles/utils.scss";
+import u from "@/client/styles/utils.module.scss";
 
 export default function Forgot() {
   const [forgot, { data }] = useMutation<AuthForgotMutation, AuthForgotMutationVariables>(AuthForgot);
@@ -39,9 +38,11 @@ export default function Forgot() {
 
   const submit = methods.handleSubmit(async (values) => {
     try {
+      const callback = `${window.location.origin}/auth/recover`;
+
       await forgot({
         variables: {
-          input: values,
+          input: { ...values, callback },
         },
       });
 

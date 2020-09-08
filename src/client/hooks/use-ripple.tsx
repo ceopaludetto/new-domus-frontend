@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import s from "./use-ripple.scss";
+import s from "./use-ripple.module.scss";
 
 function isTouch(e: any): e is TouchEvent {
   return "touches" in e;
@@ -28,7 +28,7 @@ export function useRipple(
       const x = center ? width / 2 : clientX - left;
       const y = center ? height / 2 : clientY - top;
 
-      let size = Math.max(width, height) * 2;
+      let size = Math.max(width, height) * 2.1;
 
       if (size < 100) {
         size *= 1.5; // increase speed if element is too much small
@@ -51,7 +51,7 @@ export function useRipple(
       let transform = 0;
 
       function tween() {
-        opacity = Math.min(opacity + 0.02, 0.2);
+        opacity = Math.min(opacity + 0.008, 0.2);
         transform = Math.min(transform + 0.03, 1);
 
         ripple.style.opacity = String(opacity);

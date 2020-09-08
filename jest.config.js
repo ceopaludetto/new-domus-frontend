@@ -1,6 +1,5 @@
 const path = require("path");
 const { defaults: tsjPreset } = require("ts-jest/presets");
-const { pathsToModuleNameMapper } = require("ts-jest/utils");
 
 const { compilerOptions } = require("./tsconfig");
 
@@ -11,8 +10,9 @@ const common = {
   transformIgnorePatterns: ["/node_modules/"],
   transform: tsjPreset.transform,
   moduleNameMapper: {
+    "\\.(gql|graphql)$": "jest-transform-graphql",
     "\\.(css|less|scss)$": "identity-obj-proxy",
-    ...pathsToModuleNameMapper(compilerOptions.paths),
+    "^@/(.*)$": "<rootDir>/src/$1",
   },
   testURL: "http://localhost/",
   collectCoverage: false,
@@ -20,7 +20,7 @@ const common = {
   coverageDirectory: "<rootDir>/coverage",
   globals: {
     "ts-jest": {
-      babelConfig: path.resolve("babel.config.js"),
+      babelConfig: path.resolve(".babelrc"),
       tsconfig: compilerOptions,
     },
   },

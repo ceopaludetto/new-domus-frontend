@@ -7,7 +7,7 @@ import { useRipple } from "@/client/hooks";
 import type { Colors } from "@/client/utils/common.dto";
 import { merge } from "@/client/utils/merge.refs";
 
-import s from "./index.scss";
+import s from "./index.module.scss";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   block?: boolean;
@@ -31,6 +31,7 @@ export const Button = React.forwardRef(
       disableRipple = false,
       noTouchRipple = false,
       centerRipple = false,
+      disabled,
       className,
       ...rest
     }: ButtonProps,
@@ -48,13 +49,13 @@ export const Button = React.forwardRef(
       className
     );
     useRipple(innerRef, {
-      disabled: disableRipple,
+      disabled: disableRipple ?? disabled,
       noTouch: noTouchRipple,
       center: centerRipple,
     });
 
     return (
-      <button ref={merge([innerRef, ref])} type={type} className={classes} {...rest}>
+      <button ref={merge([innerRef, ref])} disabled={disabled} type={type} className={classes} {...rest}>
         <Text variant="button" as="span">
           {children}
         </Text>

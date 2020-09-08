@@ -1,28 +1,55 @@
-import { InMemoryCache, ApolloClient, HttpLink } from "@apollo/client";
+import { InMemoryCache, ApolloClient, HttpLink, ApolloLink } from "@apollo/client";
 import type { SchemaLink } from "@apollo/client/link/schema";
 
-export function createClient(isSsr = false, link: HttpLink | SchemaLink) {
-  const cache = new InMemoryCache();
+import { AccessToken } from "./token";
 
-  const client = new ApolloClient({
-    cache,
-    link,
-    ssrMode: isSsr,
-    connectToDevTools: process.env.NODE_ENV === "development",
-    assumeImmutableResults: true,
-    resolvers: {},
+const tokenStore = new AccessToken();
+
+const setTokenLink = new ApolloLink((operation, forward) => {
+  return forward(operation).map((response) => {
+    const context = operation.getContext();
+
+    const token = context.response.headers.get("X-Access-Token");
+    if (token) {
+      tokenStore.token = token;
+    }
+
+    return response;
   });
+});
+
+const getTokenLink = new ApolloLink((operation, forward) => {
+  operation.setContext(({ headers }: any) => ({
+    headers: {
+      "X-Access-Token": tokenStore.token,
+      ...headers,
+    },
+  }));
+
+  return forward(operation);
+});
+
+export function createClient(isSsr = false, link: HttpLink | SchemaLink) {
+  let cache = new InMemoryCache();
 
   if (!isSsr) {
     const apolloState = document.querySelector("#__APOLLO_STATE__");
-    if (apolloState && apolloState.innerHTML) {
-      cache.restore(JSON.parse(apolloState.innerHTML));
-      if (!module.hot) {
-        const cacheRoot = apolloState?.parentElement?.removeChild?.(apolloState);
-        if (!cacheRoot) throw Error("Fail to remove cache");
+    if (apolloState) {
+      cache = cache.restore(JSON.parse(apolloState.innerHTML));
+
+      if (process.env.NODE_ENV === "production") {
+        apolloState.parentElement?.removeChild(apolloState);
       }
     }
   }
+
+  const client = new ApolloClient({
+    cache,
+    link: isSsr ? link : setTokenLink.concat(getTokenLink.concat(link)),
+    ssrMode: isSsr,
+    connectToDevTools: process.env.NODE_ENV === "development",
+    assumeImmutableResults: true,
+  });
 
   return client;
 }

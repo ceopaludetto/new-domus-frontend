@@ -11,8 +11,10 @@ $layout: (
   sizes: rem(0 4px 8px 12px 16px 20px 24px 28px 32px 40px 48px 56px 64px),
   shape: rem(5px),
   zindex: (
-    modal: 1030,
-    select: 1031,
+    modal: 1020,
+    select: 1030,
+    progress: 1040,
+    tooltip: 1050,
   ),
   breakpoints:
     rem(

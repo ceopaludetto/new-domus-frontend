@@ -3,10 +3,10 @@
     "target": "ESNext",
     "module": "ESNext",
     "lib": ["ESNext", "DOM"],
-    "baseUrl": ".",
+    "baseUrl": "src",
     "jsx": "preserve",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["*"]
     },
     "moduleResolution": "Node",
     "esModuleInterop": true,
@@ -14,10 +14,12 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "strict": true,
+    "strictNullChecks": true,
     "noEmit": true,
     "noEmitHelpers": true,
     "sourceMap": true,
-    "allowJs": true,
+    "allowJs": false,
+    "skipLibCheck": true,
     "importsNotUsedAsValues": "error"
   },
   "include": [
@@ -25,8 +27,9 @@
     "configuration/**/*",
     "scripts/**/*",
     "database.config.js",
-    "jest.config.js",
-    "babel.config.js"
+    "razzle.config.js",
+    ".eslintrc.js",
+    "jest.config.js"
   ],
-  "exclude": ["node_modules", "dist", "coverage", "certs", "env"]
+  "exclude": ["node_modules", "dist", "build", "coverage", "certs", "env"]
 }

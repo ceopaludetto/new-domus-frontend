@@ -15,3 +15,15 @@ mutation Register($input: UserInsertInput!) {
 mutation AuthForgot($input: ForgotInput!) {
   forgot(input: $input)
 }
+
+mutation ChangePassword($input: ChangePasswordInput!) {
+  changePassword(input: $input) {
+    ...UserValues
+  }
+}
+
+query Me {
+  profile {
+    ...UserValues
+  }
+}

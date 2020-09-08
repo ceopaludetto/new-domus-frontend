@@ -1,0 +1,4 @@
+fragment CondominiumValues on Condominium {
+  id
+  companyName
+}

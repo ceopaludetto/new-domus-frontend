@@ -33,7 +33,6 @@ export class IsCPFConstraint implements ValidatorConstraintInterface {
     let soma;
     let rest;
     soma = 0;
-    if (strCPF === "00000000000") return false;
 
     for (let i = 1; i <= 9; i += 1) soma += parseInt(strCPF.substring(i - 1, i), 10) * (11 - i);
     rest = (soma * 10) % 11;

@@ -36,6 +36,7 @@ body {
   background-color: get-color(background);
   color: get-color(background, contrast);
   margin: 0;
+  overflow-x: hidden;
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -2,7 +2,7 @@ import * as React from "react";
 
 import clsx from "clsx";
 
-import s from "./index.scss";
+import s from "./index.module.scss";
 
 interface BlurredProps extends React.HTMLAttributes<HTMLDivElement> {
   deactivate?: boolean;

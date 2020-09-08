@@ -1,0 +1,31 @@
+@import "~@/client/styles/variables";
+
+.paper {
+  &:not(.square) {
+    border-radius: get-theme-prop(layout, shape);
+  }
+  &:not(.outline) {
+    background-color: get-color(paper);
+    box-shadow: 0 3.6px 3.3px rgba(0, 0, 0, 0.05), 0 10px 9px rgba(0, 0, 0, 0.033), 0 24.1px 21.7px rgba(0, 0, 0, 0.025),
+      0 80px 72px rgba(0, 0, 0, 0.017);
+  }
+  &.outline {
+    border: 1px solid get-shadow-color(text, 0.12);
+    &.no-horizontal-borders {
+      border-left: 0;
+      border-right: 0;
+    }
+    &.no-vertical-borders {
+      border-bottom: 0;
+      border-top: 0;
+    }
+  }
+  &:not(.no-gutter) {
+    &.normal {
+      padding: get-theme-prop(layout, sizes, 7);
+    }
+    &.large {
+      padding: get-theme-prop(layout, sizes, 10);
+    }
+  }
+}

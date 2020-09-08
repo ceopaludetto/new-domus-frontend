@@ -5,7 +5,7 @@ import clsx from "clsx";
 import { Text } from "@/client/components/typography";
 import type { Colors } from "@/client/utils/common.dto";
 
-import s from "./index.scss";
+import s from "./index.module.scss";
 
 export interface ControlProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;

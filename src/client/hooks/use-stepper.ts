@@ -9,23 +9,9 @@ interface StepperContextProps {
   prev: () => void;
 }
 
-type UseStepperReturn = [
-  number,
-  {
-    toggle: (page: number) => void;
-    next: () => void;
-    prev: () => void;
-    previousPage?: number;
-  }
-];
+type UseStepperReturn = [StepperContextProps["currentPage"], Omit<StepperContextProps, "currentPage">];
 
-export const StepperContext = React.createContext<StepperContextProps>({
-  currentPage: 0,
-  previousPage: 0,
-  toggle: () => {},
-  next: () => {},
-  prev: () => {},
-});
+export const StepperContext = React.createContext<StepperContextProps>(undefined as any);
 
 export function useStepper(pages: number): UseStepperReturn {
   const [currentPage, setCurrentPage] = React.useState(0);
@@ -45,7 +31,7 @@ export function useStepper(pages: number): UseStepperReturn {
 
   const toggle = React.useCallback(
     (page: number) => {
-      if (page <= pages || page >= 0) {
+      if (page <= pages && page >= 0) {
         setCurrentPage(page);
       }
     },

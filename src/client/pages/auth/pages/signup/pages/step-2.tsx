@@ -7,7 +7,7 @@ import clsx from "clsx";
 import { FormControl, Button, PasswordHelper, Text } from "@/client/components";
 import { SignUpStep2Schema, SignUpStep2Values } from "@/client/helpers/validations/signup.schema";
 import { StepperContext, useMultipleVisibility } from "@/client/hooks";
-import u from "@/client/styles/utils.scss";
+import u from "@/client/styles/utils.module.scss";
 import { clean } from "@/client/utils/clean";
 
 import { WizardContext } from "../providers";

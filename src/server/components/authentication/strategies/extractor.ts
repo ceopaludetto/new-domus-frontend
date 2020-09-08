@@ -1,15 +1,16 @@
 import { AuthenticationError } from "apollo-server-express";
 import type { Request } from "express";
-import type { JwtFromRequestFunction } from "passport-jwt";
 
-export function extractor(req: Request): JwtFromRequestFunction {
-  const { auth } = req.cookies;
+import { ACCESS_TOKEN } from "@/server/utils/constants";
 
-  if (!auth) {
+export function extractor(req: Request): string {
+  const accessToken = req.header(ACCESS_TOKEN);
+
+  if (!accessToken) {
     throw new AuthenticationError("Token não encontrado");
   }
 
-  const [bearer, token] = auth.split(" ");
+  const [bearer, token] = accessToken.split(" ");
 
   if (!/Bearer/.test(bearer)) {
     throw new AuthenticationError("Token mal-formatado");

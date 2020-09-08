@@ -22,3 +22,7 @@ export const STATS = "@STATS";
 // Mailer
 export const MAILER = "@MAILER";
 export const ADAPTER = "@ADAPTER";
+
+// Authentication
+export const ACCESS_TOKEN = "X-Access-Token";
+export const REFRESH_TOKEN = "X-Refresh-Token";
