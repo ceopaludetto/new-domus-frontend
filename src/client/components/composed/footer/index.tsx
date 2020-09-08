@@ -7,15 +7,16 @@ import { IconButton } from "@/client/components/form";
 import { Paper, Container } from "@/client/components/layout";
 import { Text, PreloadLink } from "@/client/components/typography";
 import { routes } from "@/client/providers/routes";
-import u from "@/client/styles/utils.scss";
+import u from "@/client/styles/utils.module.scss";
+import type { Route } from "@/client/utils/common.dto";
 
-import s from "./index.scss";
+import s from "./index.module.scss";
 
 export function Footer() {
-  const main = React.useMemo(() => routes.find((r) => r.name === "@MAIN"), []);
-  const company = React.useMemo(() => main?.children?.filter((r) => r.meta?.type === "company"), [main]);
-  const resource = React.useMemo(() => main?.children?.filter((r) => r.meta?.type === "resource"), [main]);
-  const legal = React.useMemo(() => main?.children?.filter((r) => r.meta?.type === "legal"), [main]);
+  const main = React.useMemo(() => routes.find((r: Route) => r.name === "@MAIN"), []);
+  const company = React.useMemo(() => main?.children?.filter((r: Route) => r.meta?.type === "company"), [main]);
+  const resource = React.useMemo(() => main?.children?.filter((r: Route) => r.meta?.type === "resource"), [main]);
+  const legal = React.useMemo(() => main?.children?.filter((r: Route) => r.meta?.type === "legal"), [main]);
 
   return (
     <footer className={s.footer}>

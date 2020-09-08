@@ -4,9 +4,9 @@ import { FiChevronRight } from "react-icons/fi";
 import clsx from "clsx";
 
 import { PreloadLink, Text } from "@/client/components/typography";
-import u from "@/client/styles/utils.scss";
+import u from "@/client/styles/utils.module.scss";
 
-import s from "./index.scss";
+import s from "./index.module.scss";
 
 interface BreadcrumbsProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNodeArray;

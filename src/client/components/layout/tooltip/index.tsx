@@ -7,11 +7,11 @@ import { useIsomorphicLayoutEffect } from "react-use";
 import clsx from "clsx";
 
 import { Text } from "@/client/components/typography";
-import u from "@/client/styles/utils.scss";
+import u from "@/client/styles/utils.module.scss";
 import type { Colors } from "@/client/utils/common.dto";
 
 import { NoSsr } from "../no-ssr";
-import s from "./index.scss";
+import s from "./index.module.scss";
 
 interface TooltipProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactElement<{ ref: React.Dispatch<React.SetStateAction<HTMLElement | null>>; className: string }>;

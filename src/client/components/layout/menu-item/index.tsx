@@ -5,7 +5,7 @@ import clsx from "clsx";
 import { useRipple } from "@/client/hooks";
 import { merge } from "@/client/utils/merge.refs";
 
-import s from "./index.scss";
+import s from "./index.module.scss";
 
 interface MenuItemProps extends React.HTMLAttributes<HTMLDivElement> {
   active: boolean;

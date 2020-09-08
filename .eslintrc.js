@@ -45,7 +45,7 @@ module.exports = {
     // Allow any in some logic
     "@typescript-eslint/no-explicit-any": "off",
     // In server-side cycles are common
-    'import/no-cycle': ['error', { maxDepth: 1 }],
+    "import/no-cycle": ["error", { maxDepth: 1 }],
     // Import ordering and allow no default
     "import/prefer-default-export": "off",
     "import-helpers/order-imports": [
@@ -70,17 +70,24 @@ module.exports = {
   },
   overrides: [
     {
-      files: ['src/server/models/*.ts'],
+      files: ["src/server/models/*.ts"],
       rules: {
-        "import/no-cycle": 'off',
-      }
+        "import/no-cycle": "off",
+      },
     },
     {
-      files: ['configuration/**/*.js', 'scripts/**/*.js', 'src/client/utils/setup-test.tsx', 'babel.config.js', 'jest.config.js', 'database.config.js'],
+      files: [
+        "./configuration/**/*.js",
+        "./scripts/**/*.js",
+        "./src/client/utils/setup-test.tsx",
+        "./database.config.js",
+        "./razzle.config.js",
+        "./.eslintrc.js",
+      ],
       rules: {
-        '@typescript-eslint/no-var-requires': 'off',
+        "@typescript-eslint/no-var-requires": "off",
         "import/no-extraneous-dependencies": ["error", { devDependencies: true }],
-      }
-    }
-  ]
+      },
+    },
+  ],
 };

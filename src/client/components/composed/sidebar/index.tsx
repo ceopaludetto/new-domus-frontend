@@ -11,12 +11,12 @@ import { IconButton } from "@/client/components/form";
 import { Blurred, Paper, MenuItem } from "@/client/components/layout";
 import { Me, MeQuery, SelectedCondominium, SelectedCondominiumQuery } from "@/client/graphql";
 import { usePathWithCondominium } from "@/client/hooks";
-import u from "@/client/styles/utils.scss";
+import u from "@/client/styles/utils.module.scss";
 import type { RouteComponentProps } from "@/client/utils/common.dto";
 import { isMultiCondominium } from "@/client/utils/condominium";
 
 import { SidebarItem } from "../sidebar-item";
-import s from "./index.scss";
+import s from "./index.module.scss";
 
 export function Sidebar({ routes }: Pick<RouteComponentProps, "routes">) {
   const [listOpen, setListOpen] = React.useState(false);

@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import s from "./use-ripple.scss";
+import s from "./use-ripple.module.scss";
 
 function isTouch(e: any): e is TouchEvent {
   return "touches" in e;

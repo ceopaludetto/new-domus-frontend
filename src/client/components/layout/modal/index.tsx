@@ -7,7 +7,7 @@ import clsx from "clsx";
 
 import { FocusTrap } from "../focus-trap";
 import { NoSsr } from "../no-ssr";
-import s from "./index.scss";
+import s from "./index.module.scss";
 
 interface ModalProps extends React.HTMLAttributes<HTMLDivElement> {
   open: boolean;

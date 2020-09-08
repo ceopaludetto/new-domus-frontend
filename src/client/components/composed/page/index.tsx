@@ -5,7 +5,7 @@ import clsx from "clsx";
 
 import { Container } from "@/client/components/layout";
 import { Text } from "@/client/components/typography";
-import u from "@/client/styles/utils.scss";
+import u from "@/client/styles/utils.module.scss";
 
 interface PageProps extends React.ComponentProps<typeof Container> {
   title: string;

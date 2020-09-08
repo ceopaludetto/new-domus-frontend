@@ -35,7 +35,7 @@ import {
   SettingsPersonalValues,
 } from "@/client/helpers/validations/settings.schema";
 import { useMultipleVisibility } from "@/client/hooks";
-import u from "@/client/styles/utils.scss";
+import u from "@/client/styles/utils.module.scss";
 import type { Client } from "@/client/utils/common.dto";
 import { splitPhone } from "@/client/utils/string";
 

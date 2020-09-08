@@ -7,11 +7,11 @@ import dayjs from "dayjs";
 import { Paper, Divider } from "@/client/components/layout";
 import { Text } from "@/client/components/typography";
 import { useLocale } from "@/client/hooks";
-import u from "@/client/styles/utils.scss";
+import u from "@/client/styles/utils.module.scss";
 
 import { Button } from "../button";
 import { IconButton } from "../icon-button";
-import s from "./index.scss";
+import s from "./index.module.scss";
 
 interface CalendarProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "onChange"> {
   isOpen: boolean;

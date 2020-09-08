@@ -6,7 +6,7 @@ import { useRipple } from "@/client/hooks";
 import type { Colors } from "@/client/utils/common.dto";
 
 import { Text } from "../../typography";
-import s from "./index.scss";
+import s from "./index.module.scss";
 
 interface RadioCardProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "type"> {
   label?: string;

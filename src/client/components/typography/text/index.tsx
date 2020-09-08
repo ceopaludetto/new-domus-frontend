@@ -2,10 +2,10 @@ import * as React from "react";
 
 import clsx from "clsx";
 
-import u from "@/client/styles/utils.scss";
+import u from "@/client/styles/utils.module.scss";
 import type { Typography, Colors } from "@/client/utils/common.dto";
 
-import s from "./index.scss";
+import s from "./index.module.scss";
 
 type TextProps<T extends React.ElementType<any> = "p"> = {
   as?: T;

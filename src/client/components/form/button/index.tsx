@@ -7,7 +7,7 @@ import { useRipple } from "@/client/hooks";
 import type { Colors } from "@/client/utils/common.dto";
 import { merge } from "@/client/utils/merge.refs";
 
-import s from "./index.scss";
+import s from "./index.module.scss";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   block?: boolean;

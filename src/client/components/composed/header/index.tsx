@@ -4,12 +4,12 @@ import { useQuery } from "@apollo/client";
 import clsx from "clsx";
 
 import { Logged, LoggedQuery } from "@/client/graphql";
-import u from "@/client/styles/utils.scss";
+import u from "@/client/styles/utils.module.scss";
 
 import { Button } from "../../form";
 import { Blurred, Container } from "../../layout";
 import { PreloadLink } from "../../typography/preload-link";
-import s from "./index.scss";
+import s from "./index.module.scss";
 
 export function Header() {
   const { data } = useQuery<LoggedQuery>(Logged);

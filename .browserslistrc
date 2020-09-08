@@ -1,6 +1,0 @@
-[production]
-defaults
-not ie 11
-
-[development]
-defaults

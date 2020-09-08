@@ -4,7 +4,7 @@ import { FiFilter } from "react-icons/fi";
 import clsx from "clsx";
 
 import { Page, Button, IconButton } from "@/client/components";
-import u from "@/client/styles/utils.scss";
+import u from "@/client/styles/utils.module.scss";
 
 export default function Locals() {
   return (

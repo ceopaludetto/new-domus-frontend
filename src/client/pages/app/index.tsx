@@ -4,7 +4,7 @@ import { Route } from "react-router-dom";
 import clsx from "clsx";
 
 import { Sidebar, AppHeader } from "@/client/components";
-import u from "@/client/styles/utils.scss";
+import u from "@/client/styles/utils.module.scss";
 import type { RouteComponentProps } from "@/client/utils/common.dto";
 
 export default function App({ routes }: RouteComponentProps) {

@@ -56,7 +56,7 @@ export class ConfigurationService {
 
   public constructor(@InjectPinoLogger(ConfigurationService.name) private readonly logger: PinoLogger) {
     const deployment = (process.env.DEPLOYMENT as string) || "development";
-    const filePath = path.resolve(process.env.BASE_DIR as string, "env", `config.${deployment}.yml`);
+    const filePath = path.resolve("env", `config.${deployment}.yml`);
 
     const config = yaml.parse(fs.readFileSync(filePath, "utf8"));
     const validated = this.validateInput(config);

@@ -19,7 +19,7 @@ import {
 } from "@/client/graphql";
 import { SignInSchema, SignInValues } from "@/client/helpers/validations/signin.schema";
 import { useVisibility } from "@/client/hooks";
-import u from "@/client/styles/utils.scss";
+import u from "@/client/styles/utils.module.scss";
 
 export default function SignIn() {
   const [genericError, setGenericError] = React.useState(false);

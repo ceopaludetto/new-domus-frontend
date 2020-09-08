@@ -7,7 +7,7 @@ import { IconButton } from "@/client/components/form";
 import { Container, Breadcrumbs } from "@/client/components/layout";
 import { PreloadLink } from "@/client/components/typography";
 import { useBreadcrumbs } from "@/client/hooks";
-import u from "@/client/styles/utils.scss";
+import u from "@/client/styles/utils.module.scss";
 
 export function AppHeader() {
   const breadcrumbs = useBreadcrumbs();

@@ -10,7 +10,7 @@ import { ProgressContext } from "@/client/providers/progress";
 import type { Colors } from "@/client/utils/common.dto";
 
 import { NoSsr } from "../no-ssr";
-import s from "./index.scss";
+import s from "./index.module.scss";
 
 interface ProgressBarProps extends React.HTMLAttributes<HTMLDivElement> {
   duration?: number;

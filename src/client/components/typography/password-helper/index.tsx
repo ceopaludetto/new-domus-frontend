@@ -3,7 +3,7 @@ import { FiCheckCircle } from "react-icons/fi";
 
 import clsx from "clsx";
 
-import u from "@/client/styles/utils.scss";
+import u from "@/client/styles/utils.module.scss";
 
 import { Text } from "../text";
 

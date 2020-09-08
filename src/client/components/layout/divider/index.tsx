@@ -3,9 +3,9 @@ import * as React from "react";
 import clsx from "clsx";
 
 import { Text } from "@/client/components/typography";
-import u from "@/client/styles/utils.scss";
+import u from "@/client/styles/utils.module.scss";
 
-import s from "./index.scss";
+import s from "./index.module.scss";
 
 function isFieldset(props: any): props is React.HTMLAttributes<HTMLFieldSetElement> & { content: string } {
   return "content" in props;

@@ -1,0 +1,10 @@
+{
+  "presets": ["razzle/babel"],
+  "plugins": ["lodash", "optimize-clsx", "@loadable/babel-plugin"],
+  "overrides": [
+    {
+      "test": "./src/server/models/*.ts",
+      "plugins": ["@babel/plugin-transform-modules-commonjs"]
+    }
+  ]
+}

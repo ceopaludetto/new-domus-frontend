@@ -5,9 +5,9 @@ import clsx from "clsx";
 
 import { PreloadLink, Text } from "@/client/components/typography";
 import { useRipple } from "@/client/hooks";
-import u from "@/client/styles/utils.scss";
+import u from "@/client/styles/utils.module.scss";
 
-import s from "./index.scss";
+import s from "./index.module.scss";
 
 type TabsProps = React.HTMLAttributes<HTMLDivElement>;
 
