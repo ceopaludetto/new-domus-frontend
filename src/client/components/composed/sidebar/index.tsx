@@ -1,7 +1,7 @@
 import * as React from "react";
 import { FiX } from "react-icons/fi";
 import { VscArrowBoth } from "react-icons/vsc";
-import { useHistory, useRouteMatch } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import { useMeasure } from "react-use";
 
 import { useQuery } from "@apollo/client";
@@ -10,7 +10,7 @@ import clsx from "clsx";
 import { IconButton } from "@/client/components/form";
 import { Blurred, Paper, MenuItem } from "@/client/components/layout";
 import { Me, MeQuery, SelectedCondominium, SelectedCondominiumQuery } from "@/client/graphql";
-import { useCurrentCondominium, usePathWithCondominium } from "@/client/hooks";
+import { usePathWithCondominium } from "@/client/hooks";
 import u from "@/client/styles/utils.scss";
 import type { RouteComponentProps } from "@/client/utils/common.dto";
 import { isMultiCondominium } from "@/client/utils/condominium";
@@ -23,10 +23,9 @@ export function Sidebar({ routes }: Pick<RouteComponentProps, "routes">) {
   const [tooltip, setTooltip] = React.useState(false);
   const { data, client } = useQuery<MeQuery>(Me);
   const history = useHistory();
-  const route = useRouteMatch();
+  const params = useParams();
   const multiCondominiums = React.useMemo(() => isMultiCondominium(data?.profile.person.condominiums), [data]);
-  const condominium = useCurrentCondominium();
-  const generatePath = usePathWithCondominium();
+  const [generatePath, condominium] = usePathWithCondominium();
   const [ref, { height }] = useMeasure<HTMLDivElement>();
 
   const changeSelectedCondominium = React.useCallback(
@@ -53,11 +52,11 @@ export function Sidebar({ routes }: Pick<RouteComponentProps, "routes">) {
   );
 
   React.useEffect(() => {
-    if (condominium && (route.params as any).condominium !== condominium.id) {
+    if (condominium && (params as any).condominium !== condominium.id) {
       const path = generatePath("/app/:condominium");
       history.replace(path);
     }
-  }, [condominium, generatePath, route.params, history]);
+  }, [condominium, generatePath, params, history]);
 
   return (
     <Paper className={clsx(s.container, u["w-100"], u["mw-300"])} outline noVerticalBorders noGutter square>

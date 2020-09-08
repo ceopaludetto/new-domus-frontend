@@ -6,7 +6,7 @@ import { usePathWithCondominium } from "@/client/hooks";
 import type { RouteComponentProps } from "@/client/utils/common.dto";
 
 export default function Settings({ routes }: RouteComponentProps) {
-  const generatePath = usePathWithCondominium();
+  const [generatePath] = usePathWithCondominium();
 
   return (
     <Page title="Configurações" subtitle="Ajustes">

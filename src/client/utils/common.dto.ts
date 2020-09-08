@@ -31,11 +31,12 @@ export type Typography =
 
 export type Client = ApolloClient<Record<string, any>>;
 
-export type Route = Omit<RouteProps, "component"> & {
+export type Route = Omit<RouteProps, "component" | "render"> & {
   name: string;
   children?: Route[];
   component: LoadableComponent<any> & { fetchBefore?: (client: Client) => Promise<void> };
   meta?: Record<string, any>;
+  render?: (custom: any) => RouteProps["render"];
 };
 
 export interface ReactStaticContext {
@@ -90,3 +91,7 @@ export interface Locale {
     yy: string;
   }>;
 }
+
+export type PropsOf<
+  E extends keyof JSX.IntrinsicElements | React.JSXElementConstructor<any>
+> = JSX.LibraryManagedAttributes<E, React.ComponentPropsWithRef<E>>;

@@ -71,14 +71,6 @@ export default function Step3() {
             },
           });
 
-          client.writeQuery<LoggedQuery>({
-            query: Logged,
-            data: {
-              __typename: "Query",
-              logged: true,
-            },
-          });
-
           if (res.data?.register.person.condominiums[0].id) {
             client.writeQuery<SelectedCondominiumQuery>({
               query: SelectedCondominium,
@@ -88,6 +80,14 @@ export default function Step3() {
               },
             });
           }
+
+          client.writeQuery<LoggedQuery>({
+            query: Logged,
+            data: {
+              __typename: "Query",
+              logged: true,
+            },
+          });
 
           if (res && res.data) {
             setValues(initialValues);
@@ -170,6 +170,7 @@ export default function Step3() {
                           label: c.name,
                         })) ?? []
                     }
+                    defaultValue={data?.showStates[0].cities[0].id}
                     name="condominium.address.city"
                     id="city"
                     label="Cidade"

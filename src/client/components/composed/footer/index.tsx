@@ -24,7 +24,7 @@ export function Footer() {
           <div className={u.row}>
             <div className={clsx(u.col, u["xs-12"], u.md)}>
               <Text gutter variant="subtitle-2">
-                Resources
+                Recursos
               </Text>
               {resource?.map((r) => (
                 <div key={r.name} className={u["mb-xs-3"]}>
@@ -36,7 +36,7 @@ export function Footer() {
             </div>
             <div className={clsx(u.col, u["xs-12"], u.md)}>
               <Text gutter variant="subtitle-2">
-                Company
+                Companhia
               </Text>
               {company?.map((r) => (
                 <div key={r.name} className={u["mb-xs-3"]}>
@@ -78,7 +78,7 @@ export function Footer() {
           >
             <div className={clsx(u.col, u["xs-12"], u["text-align-xs-center"], u.md, u["text-align-md-left"])}>
               <Text color="muted" variant="body-2">
-                Copyright © 2020 Domus Inc. All rights reserved.
+                Copyright © 2020 Domus Inc. Todos direitos reservados.
               </Text>
             </div>
             <div className={u.col}>

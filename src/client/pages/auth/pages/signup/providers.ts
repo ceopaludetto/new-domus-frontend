@@ -1,6 +1,11 @@
 import * as React from "react";
 
-import { SignUpStep1Values, SignUpStep2Values, SignUpStep3Values } from "@/client/helpers/validations/signup.schema";
+import { Gender } from "@/client/graphql";
+import type {
+  SignUpStep1Values,
+  SignUpStep2Values,
+  SignUpStep3Values,
+} from "@/client/helpers/validations/signup.schema";
 
 export interface WizardContextProps {
   values?: SignUpStep1Values & SignUpStep2Values & SignUpStep3Values;
@@ -13,7 +18,7 @@ export const WizardContext = React.createContext<WizardContextProps>({
 });
 
 export const initialValues: WizardContextProps["values"] = {
-  type: null,
+  type: "enter",
   login: "",
   password: "",
   repeatPassword: "",
@@ -22,7 +27,7 @@ export const initialValues: WizardContextProps["values"] = {
     lastName: "",
     email: "",
     cpf: "",
-    gender: null,
+    gender: Gender.M,
     birthdate: new Date(),
     phone: "",
   },
@@ -31,8 +36,8 @@ export const initialValues: WizardContextProps["values"] = {
     cnpj: "",
     address: {
       zip: "",
-      cityID: "",
-      stateID: "",
+      city: "",
+      state: "",
       address: "",
       number: "",
     },

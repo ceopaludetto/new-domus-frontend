@@ -5,7 +5,7 @@ import { Select } from "@/client/components/form";
 
 type FormSelect = Omit<React.ComponentProps<typeof Select>, "name" | "onChange" | "value"> & { name: string };
 
-export function FormSelect({ name, items, helperText, ...rest }: FormSelect) {
+export function FormSelect({ name, items, helperText, defaultValue = "", ...rest }: FormSelect) {
   const { control, errors } = useFormContext();
   const error = get(errors, name);
 
@@ -13,6 +13,7 @@ export function FormSelect({ name, items, helperText, ...rest }: FormSelect) {
     <Controller
       control={control}
       name={name}
+      defaultValue={defaultValue}
       render={({ value, onChange }) => (
         <Select
           items={items}

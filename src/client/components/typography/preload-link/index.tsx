@@ -16,7 +16,7 @@ export const PreloadLink = React.forwardRef(
     { to, params, children, onClick, as: Component = Link, ...rest }: PreloadLinkProps<T>,
     ref: React.Ref<any>
   ) => {
-    const generatePath = usePathWithCondominium();
+    const [generatePath] = usePathWithCondominium();
     const routePath = hasPathname(to) ? to.pathname : to;
     const path = params || routePath.includes(":condominium") ? generatePath(routePath, params) : routePath;
     const [handleClick] = usePreload<T>(onClick);

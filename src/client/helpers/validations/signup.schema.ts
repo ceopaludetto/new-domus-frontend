@@ -4,12 +4,14 @@ import { Gender } from "@/client/graphql";
 
 import * as Messages from "../constants";
 
+import "../customs";
+
 export const SignUpStep1Schema = Yup.object({
   login: Yup.string().login().required(Messages.REQUIRED),
   person: Yup.object({
     name: Yup.string().required(Messages.REQUIRED),
     lastName: Yup.string().required(Messages.REQUIRED),
-    cpf: Yup.string().required(Messages.REQUIRED),
+    cpf: Yup.string().cpf().required(Messages.REQUIRED),
     gender: Yup.mixed<Gender>()
       .nullable()
       .oneOf([null, Gender.M, Gender.F, Gender.N], Messages.GENDER)
@@ -38,6 +40,7 @@ export const SignUpStep3Schema = Yup.object({
   condominium: Yup.object({
     companyName: Yup.string().required(Messages.REQUIRED),
     cnpj: Yup.string()
+      .cnpj()
       .matches(/\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}/, Messages.CNPJ)
       .required(Messages.REQUIRED),
     address: Yup.object({

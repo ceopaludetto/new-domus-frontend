@@ -36,15 +36,7 @@ export default function SignIn() {
         },
       });
 
-      client.writeQuery<LoggedQuery>({
-        query: Logged,
-        data: {
-          __typename: "Query",
-          logged: true,
-        },
-      });
-
-      if (res.data?.login.person.condominiums[0].id) {
+      if (res.data?.login.person.condominiums) {
         client.writeQuery<SelectedCondominiumQuery>({
           query: SelectedCondominium,
           data: {
@@ -53,6 +45,14 @@ export default function SignIn() {
           },
         });
       }
+
+      client.writeQuery<LoggedQuery>({
+        query: Logged,
+        data: {
+          __typename: "Query",
+          logged: true,
+        },
+      });
     } catch (error) {
       const graphQLError = (error.graphQLErrors as UserInputError[])[0];
       if (graphQLError.extensions.fields) {

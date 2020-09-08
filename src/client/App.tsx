@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Helmet } from "react-helmet-async";
-import { Switch, Route, Redirect, generatePath } from "react-router-dom";
+import { Switch, Route, Redirect } from "react-router-dom";
 import { useToggle } from "react-use";
 
 import { useQuery } from "@apollo/client";
@@ -9,7 +9,7 @@ import Roboto400 from "@/client/assets/fonts/roboto-400.woff2";
 import Roboto500 from "@/client/assets/fonts/roboto-500.woff2";
 import { ProgressBar } from "@/client/components";
 import { LoggedQuery, Logged } from "@/client/graphql";
-import { useCurrentCondominium } from "@/client/hooks";
+import { usePathWithCondominium } from "@/client/hooks";
 import { LocaleProvider } from "@/client/providers/locale";
 import { ProgressContext } from "@/client/providers/progress";
 import { routes } from "@/client/providers/routes";
@@ -24,7 +24,7 @@ interface AppProps {
 export function App({ logged }: AppProps) {
   const [isAnimating, toggle] = useToggle(false);
   const { data } = useQuery<LoggedQuery>(Logged);
-  const condominium = useCurrentCondominium();
+  const [generatePath] = usePathWithCondominium();
 
   return (
     <LocaleProvider>
@@ -46,9 +46,7 @@ export function App({ logged }: AppProps) {
                   return <Component {...props} routes={children} />;
                 }
 
-                const redirect = condominium
-                  ? generatePath(meta?.redirectTo, { condominium: condominium.id })
-                  : meta?.redirectTo;
+                const redirect = generatePath(meta?.redirectTo);
 
                 return <Redirect from={props.location.pathname} to={redirect} />;
               }}

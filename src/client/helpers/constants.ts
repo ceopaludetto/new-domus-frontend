@@ -13,3 +13,4 @@ export const ONE_NUMBER = "O campo deve conter pelo menos 1 número";
 export const ONE_UPPER = "O campo deve conter pelo menos 1 caractere maiúsculo";
 export const ZIP = "CEP inválido";
 export const CNPJ = "CNPJ inválido";
+export const CPF = "CPF inválido";

@@ -26,7 +26,7 @@ export function Header() {
             </div>
             <div>
               {data?.logged ? (
-                <PreloadLink as={Button} variant="flat" size="small" to="/app">
+                <PreloadLink as={Button} variant="flat" size="small" to="/app/:condominium">
                   Abrir
                 </PreloadLink>
               ) : (

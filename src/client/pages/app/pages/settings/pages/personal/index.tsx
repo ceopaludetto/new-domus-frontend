@@ -28,7 +28,6 @@ import {
   ChangePasswordMutationVariables,
 } from "@/client/graphql";
 import * as Masks from "@/client/helpers/masks";
-import { tel } from "@/client/helpers/masks";
 import {
   SettingsPasswordSchema,
   SettingsPasswordValues,
@@ -53,9 +52,10 @@ export default function Personal() {
     defaultValues: {
       name: data?.profile.person.name,
       lastName: data?.profile.person.lastName,
+      cpf: data?.profile.person.cpf,
       login: data?.profile.login,
       email: data?.profile.person.email,
-      phone: tel(`${data?.profile.person.phones[0].ddd}${data?.profile.person.phones[0].number}`),
+      phone: `${data?.profile.person.phones[0].ddd}${data?.profile.person.phones[0].number}`,
       birthdate: data?.profile.person.birthdate,
     },
   });
@@ -149,16 +149,19 @@ export default function Personal() {
             <div className={clsx(u["xs-12"], u["md-6"])}>
               <FormControl name="lastName" label="Sobrenome" id="lastName" />
             </div>
-            <div className={clsx(u["xs-12"], u["md-6"])}>
+            <div className={clsx(u["xs-12"], u["md-4"])}>
               <FormControl name="login" label="Login" id="login" />
             </div>
-            <div className={clsx(u["xs-12"], u["md-6"])}>
+            <div className={clsx(u["xs-12"], u["md-8"])}>
               <FormControl name="email" label="E-mail" id="email" />
             </div>
-            <div className={clsx(u["xs-12"], u["md-6"])}>
+            <div className={clsx(u["xs-12"], u["md-4"])}>
+              <MaskedFormControl rifm={{ format: Masks.cpf }} name="cpf" label="CPF" id="cpf" />
+            </div>
+            <div className={clsx(u["xs-12"], u["md-4"])}>
               <MaskedFormControl rifm={{ format: Masks.tel }} name="phone" label="Telefone" id="phone" />
             </div>
-            <div className={clsx(u["xs-12"], u["md-6"])}>
+            <div className={clsx(u["xs-12"], u["md-4"])}>
               <FormCalendar name="birthdate" label="Data de Nascimento" id="birthdate" />
             </div>
           </div>
