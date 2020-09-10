@@ -2,7 +2,6 @@ import * as React from "react";
 import { AiOutlineSwap } from "react-icons/ai";
 import { FiX } from "react-icons/fi";
 import { useHistory, useParams } from "react-router-dom";
-import { useMeasure } from "react-use";
 
 import { useQuery } from "@apollo/client";
 import {
@@ -15,6 +14,8 @@ import {
   Theme,
   IconButton,
   Typography,
+  NoSsr,
+  Collapse,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 
@@ -35,6 +36,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     width: "100%",
     maxWidth: "300px",
+    borderTop: 0,
+    borderLeft: 0,
+    borderBottom: 0,
   },
   sidebar: {
     flexDirection: "column",
@@ -67,7 +71,6 @@ export function Sidebar({ routes }: Pick<RouteComponentProps, "routes">) {
   const params = useParams();
   const multiCondominiums = React.useMemo(() => isMultiCondominium(data?.profile.person.condominiums), [data]);
   const [generatePath, condominium] = usePathWithCondominium();
-  const [ref, { height }] = useMeasure<HTMLDivElement>();
   const classes = useStyles();
 
   const changeSelectedCondominium = React.useCallback(
@@ -101,72 +104,75 @@ export function Sidebar({ routes }: Pick<RouteComponentProps, "routes">) {
   }, [condominium, generatePath, params, history]);
 
   return (
-    <Box clone borderTop="0" borderLeft="0" borderBottom="0">
-      <Paper className={classes.container} square variant="outlined">
-        <Blurred className={classes.sidebar}>
-          <Box flex="1">
-            <List component="nav">
-              {routes
-                ?.filter((r) => !r.meta?.hidden ?? true)
-                ?.map((r) => {
-                  const Icon = r.meta?.icon;
-                  const path = retrieveTo(r.path);
+    <Paper className={classes.container} square variant="outlined">
+      <Blurred className={classes.sidebar}>
+        <Box flex="1">
+          <List component="nav">
+            {routes
+              ?.filter((r) => !r.meta?.hidden ?? true)
+              ?.map((r) => {
+                const Icon = r.meta?.icon;
+                const path = retrieveTo(r.path);
 
-                  return (
-                    <ListItem
-                      key={r.name}
-                      button
-                      component={PreloadNavLink}
-                      activeClassName={classes.active}
-                      exact
-                      to={path}
-                    >
-                      <ListItemIcon>
-                        <Icon size={18} />
-                      </ListItemIcon>
-                      <ListItemText primary={r.meta?.displayName} />
-                    </ListItem>
-                  );
-                })}
-            </List>
-          </Box>
-          <Box display="flex" alignItems="center" className={classes.condominiums}>
-            {multiCondominiums ? (
-              <>
-                <Box flex="1">
-                  <Typography component="span" variant="body1">
-                    {listOpen ? "Selecione um condomínio" : condominium?.companyName}
-                  </Typography>
-                </Box>
-                <Box>
-                  <Tooltip title={listOpen ? "Fechar" : "Alterar condomínio"}>
-                    <IconButton color="primary" onClick={() => setListOpen((v) => !v)}>
-                      {listOpen ? <FiX /> : <AiOutlineSwap />}
-                    </IconButton>
-                  </Tooltip>
-                </Box>
-              </>
-            ) : (
-              <Typography component="span" variant="body1">
-                {condominium?.companyName}
-              </Typography>
-            )}
-          </Box>
-          {multiCondominiums && (
-            <div style={{ maxHeight: listOpen ? height : 0 }} className={classes.list}>
-              <div ref={ref}>
+                return (
+                  <ListItem
+                    key={r.name}
+                    button
+                    component={PreloadNavLink}
+                    activeClassName={classes.active}
+                    exact
+                    to={path}
+                  >
+                    <ListItemIcon>
+                      <Icon size={18} />
+                    </ListItemIcon>
+                    <ListItemText primary={r.meta?.displayName} />
+                  </ListItem>
+                );
+              })}
+          </List>
+        </Box>
+        <Box display="flex" alignItems="center" className={classes.condominiums}>
+          {multiCondominiums ? (
+            <>
+              <Box flex="1">
+                <Typography component="span" variant="body1">
+                  {listOpen ? "Selecione um condomínio" : condominium?.companyName}
+                </Typography>
+              </Box>
+              <Box>
+                <Tooltip title={listOpen ? "Fechar" : "Alterar condomínio"}>
+                  <IconButton color="primary" onClick={() => setListOpen((v) => !v)}>
+                    {listOpen ? <FiX /> : <AiOutlineSwap />}
+                  </IconButton>
+                </Tooltip>
+              </Box>
+            </>
+          ) : (
+            <Typography component="span" variant="body1">
+              {condominium?.companyName}
+            </Typography>
+          )}
+        </Box>
+        {multiCondominiums && (
+          <NoSsr>
+            <Collapse in={listOpen}>
+              <div className={classes.list}>
                 <List>
                   {data?.profile.person.condominiums.map((c) => (
                     <ListItem button onClick={() => handleCondominiumChange(c.id)} key={c.id}>
-                      <ListItemText primary={c.companyName} />
+                      <ListItemText
+                        primaryTypographyProps={{ color: condominium?.id === c.id ? "primary" : "textPrimary" }}
+                        primary={c.companyName}
+                      />
                     </ListItem>
                   ))}
                 </List>
               </div>
-            </div>
-          )}
-        </Blurred>
-      </Paper>
-    </Box>
+            </Collapse>
+          </NoSsr>
+        )}
+      </Blurred>
+    </Paper>
   );
 }
