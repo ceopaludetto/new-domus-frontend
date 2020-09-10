@@ -8,6 +8,7 @@ import { ApolloProvider, NormalizedCacheObject } from "@apollo/client";
 import { SchemaLink } from "@apollo/client/link/schema";
 import { renderToStringWithData } from "@apollo/client/react/ssr";
 import { ChunkExtractor, ChunkExtractorManager } from "@loadable/server";
+import { ServerStyleSheets, ThemeProvider } from "@material-ui/styles";
 import { Injectable, Inject } from "@nestjs/common";
 import type { Request, Response } from "express";
 import { PinoLogger, InjectPinoLogger } from "nestjs-pino";
@@ -16,6 +17,7 @@ import { generate } from "shortid";
 import { App } from "@/client/App";
 import { Logged, LoggedQuery, SelectedCondominium, SelectedCondominiumQuery } from "@/client/graphql";
 import { createClient } from "@/client/providers/apollo";
+import { theme } from "@/client/providers/theme";
 import type { ReactStaticContext } from "@/client/utils/common.dto";
 import { AuthenticationService } from "@/server/components/authentication";
 import { ConfigurationService } from "@/server/components/configuration";
@@ -47,6 +49,7 @@ export class ReactService {
 
   public async render(req: Request, res: Response) {
     try {
+      const sheets = new ServerStyleSheets();
       const nonce = Buffer.from(generate()).toString("base64");
       const extractor = new ChunkExtractor({
         stats: this.stats,
@@ -84,7 +87,7 @@ export class ReactService {
       }
 
       const markup = await renderToStringWithData(
-        <React.StrictMode>
+        sheets.collect(
           <ChunkExtractorManager extractor={extractor}>
             <HelmetProvider context={helmetContext}>
               <ApolloProvider client={client}>
@@ -94,7 +97,7 @@ export class ReactService {
               </ApolloProvider>
             </HelmetProvider>
           </ChunkExtractorManager>
-        </React.StrictMode>
+        )
       );
 
       const initialState = client.extract();
@@ -103,7 +106,14 @@ export class ReactService {
         return res.status(context?.statusCode ?? 307).redirect(context.url);
       }
 
-      const fullHTML = this.markup(markup, initialState, extractor, (helmetContext as FilledContext).helmet, nonce);
+      const fullHTML = this.markup(
+        markup,
+        initialState,
+        extractor,
+        (helmetContext as FilledContext).helmet,
+        nonce,
+        sheets
+      );
 
       return res.send(`<!DOCTYPE html>${fullHTML}`);
     } catch (error) {
@@ -117,7 +127,8 @@ export class ReactService {
     initialState: NormalizedCacheObject,
     extractor: ChunkExtractor,
     helmet: FilledContext["helmet"],
-    nonce: string
+    nonce: string,
+    sheet: ServerStyleSheets
   ) => {
     const { htmlAttributes, bodyAttributes } = helmet;
 
@@ -130,9 +141,11 @@ export class ReactService {
         <head>
           {helmet.title.toComponent()}
           {helmet.meta.toComponent()}
+          <meta property="csp-nonce" content={nonce} />
           {linkEls}
           {helmet.link.toComponent()}
           {styleEls}
+          {sheet.getStyleElement({ nonce })}
         </head>
         <body {...bodyAttributes.toComponent()}>
           <div id="app" dangerouslySetInnerHTML={{ __html: markup }} />

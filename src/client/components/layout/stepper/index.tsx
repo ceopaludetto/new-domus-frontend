@@ -1,68 +1,50 @@
 import * as React from "react";
 
+import { StepIconProps as MuiStepIconProps, StepConnector as MuiStepConnector, Theme } from "@material-ui/core";
+import { makeStyles, withStyles } from "@material-ui/styles";
 import clsx from "clsx";
 
-import { Text } from "@/client/components/typography";
-import { StepperContext } from "@/client/hooks";
-import u from "@/client/styles/utils.module.scss";
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    display: "flex",
+    alignItems: "center",
+    color: theme.palette.text.disabled,
+  },
+  active: {
+    color: theme.palette.primary.main,
+  },
+}));
 
-import s from "./index.module.scss";
+type StepIconProps = Omit<MuiStepIconProps, "icon"> & { icon: React.FC<{ size?: number; className?: string }> };
 
-interface StepperProps {
-  items: {
-    content: string;
-    icon: React.ComponentType<any>;
-  }[];
-  clickable?: boolean;
-  onStepChange?: (current: number) => void;
-}
-
-export function Stepper({ items, clickable = true, onStepChange }: StepperProps) {
-  const { currentPage, previousPage, toggle } = React.useContext(StepperContext);
-
-  React.useEffect(() => {
-    if (onStepChange && currentPage !== previousPage && previousPage !== undefined) {
-      onStepChange(currentPage);
-    }
-  }, [currentPage, previousPage, onStepChange]);
-
-  function handleClick(index: number) {
-    return () => {
-      toggle(index);
-    };
-  }
-
-  function handleKeyDown(index: number) {
-    return (e: React.KeyboardEvent<HTMLDivElement>) => {
-      if (e.key === "Enter") {
-        toggle(index);
-      }
-    };
-  }
+export function StepIcon({ active, completed, icon: Icon }: StepIconProps) {
+  const classes = useStyles();
 
   return (
-    <div className={clsx(u.row, u["align-items-xs-center"], s.stepper)}>
-      {items.map(({ content, icon: Icon }, index) => (
-        <React.Fragment key={content}>
-          {index !== 0 && <div className={clsx(u.col, u.xs, s.line, currentPage >= index && s.active)} />}
-          <div className={u.col}>
-            <div
-              role="button"
-              tabIndex={clickable ? 0 : undefined}
-              className={clsx(s.item, currentPage >= index && s.active, clickable && s.clickable)}
-              onClick={clickable ? handleClick(index) : undefined}
-              onKeyDown={clickable ? handleKeyDown(index) : undefined}
-            >
-              <div className={s.icon}>
-                <Icon size={20} />
-              </div>
-              <Text as="span" className={s.content}>
-                {content}
-              </Text>
-            </div>
-          </div>
-        </React.Fragment>
-      ))}
+    <div
+      className={clsx(classes.root, {
+        [classes.active]: active || completed,
+      })}
+    >
+      <Icon size={20} />
     </div>
   );
 }
+
+export const StepConnector = withStyles((theme: Theme) => ({
+  completed: {
+    "& $line": {
+      borderColor: theme.palette.primary.main,
+    },
+  },
+  active: {
+    "& $line": {
+      borderColor: theme.palette.primary.main,
+    },
+  },
+  line: {
+    borderColor: theme.palette.text.disabled,
+    borderTopWidth: 2,
+    borderRadius: 1,
+  },
+}))(MuiStepConnector);

@@ -1,9 +1,9 @@
 import * as React from "react";
 import { RiEyeLine, RiEyeOffLine } from "react-icons/ri";
 
-import { IconButton, Control } from "@/client/components";
+import { IconButton, TextFieldProps, InputAdornment } from "@material-ui/core";
 
-type FieldProps = Pick<React.ComponentProps<typeof Control>, "type" | "append">;
+type FieldProps = Pick<TextFieldProps, "type" | "InputProps">;
 
 export function useVisibility(initialValue?: boolean) {
   const [isVisible, setIsVisible] = React.useState(initialValue ?? false);
@@ -12,21 +12,29 @@ export function useVisibility(initialValue?: boolean) {
     setIsVisible((state) => !state);
   }, [setIsVisible]);
 
-  const getFieldProps = React.useCallback((): FieldProps => {
-    return {
-      type: isVisible ? "text" : "password",
-      append: (
-        <IconButton
-          tabIndex={-1}
-          tooltip={{ content: isVisible ? "Esconder senha" : "Mostrar senha" }}
-          aria-label={isVisible ? "Esconder senha" : "Mostrar senha"}
-          onClick={toggleVisible}
-        >
-          {isVisible ? <RiEyeOffLine /> : <RiEyeLine />}
-        </IconButton>
-      ),
-    };
-  }, [isVisible, toggleVisible]);
+  const getFieldProps = React.useCallback(
+    (props?: TextFieldProps["InputProps"]): FieldProps => {
+      return {
+        type: isVisible ? "text" : "password",
+        InputProps: {
+          ...props,
+          endAdornment: (
+            <InputAdornment position="end">
+              <IconButton
+                tabIndex={-1}
+                color="primary"
+                aria-label={isVisible ? "Esconder senha" : "Mostrar senha"}
+                onClick={toggleVisible}
+              >
+                {isVisible ? <RiEyeOffLine /> : <RiEyeLine />}
+              </IconButton>
+            </InputAdornment>
+          ),
+        },
+      };
+    },
+    [isVisible, toggleVisible]
+  );
 
   return [getFieldProps];
 }
@@ -50,19 +58,24 @@ export function useMultipleVisibility<T extends string | symbol>(names: T[], ini
   );
 
   const getFieldProps = React.useCallback(
-    (name: T): FieldProps => {
+    (name: T, props?: TextFieldProps["InputProps"]): FieldProps => {
       return {
         type: isVisible[name] ? "text" : "password",
-        append: (
-          <IconButton
-            tabIndex={-1}
-            tooltip={{ content: isVisible[name] ? "Esconder senha" : "Mostrar senha" }}
-            aria-label={isVisible[name] ? "Esconder senha" : "Mostrar senha como texto sem formatação"}
-            onClick={toggleVisible(name)}
-          >
-            {isVisible[name] ? <RiEyeOffLine /> : <RiEyeLine />}
-          </IconButton>
-        ),
+        InputProps: {
+          ...props,
+          endAdornment: (
+            <InputAdornment position="end">
+              <IconButton
+                tabIndex={-1}
+                color="primary"
+                aria-label={isVisible[name] ? "Esconder senha" : "Mostrar senha como texto sem formatação"}
+                onClick={toggleVisible(name)}
+              >
+                {isVisible[name] ? <RiEyeOffLine /> : <RiEyeLine />}
+              </IconButton>
+            </InputAdornment>
+          ),
+        },
       };
     },
     [isVisible, toggleVisible]

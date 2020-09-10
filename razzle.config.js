@@ -6,8 +6,6 @@ const TerserPlugin = require("terser-webpack-plugin");
 
 process.env.RAZZLE_LOADABLE_MANIFEST = path.resolve("build", "public", "loadable-stats.json");
 
-const options = require("./configuration/scss.options");
-
 module.exports = {
   experimental: {
     newBabel: true,
@@ -25,10 +23,6 @@ module.exports = {
           tslint: false,
         },
       },
-    },
-    {
-      name: "scss",
-      options,
     },
   ],
   modify: (config, { target, dev }) => {
@@ -81,23 +75,6 @@ module.exports = {
     config.plugins.unshift(new LodashPlugin());
 
     if (target === "web") {
-      if (dev) {
-        const scss = config.module.rules[config.module.rules.length - 1];
-
-        const index = scss.use.findIndex((x) => x.loader === require.resolve("css-loader"));
-
-        config.module.rules[config.module.rules.length - 1].use = [
-          ...scss.use.slice(0, index),
-          {
-            loader: require.resolve("@teamsupercell/typings-for-css-modules-loader"),
-            options: {
-              disableLocalsExport: true,
-            },
-          },
-          ...scss.use.slice(index),
-        ];
-      }
-
       config.plugins.unshift(new LoadablePlugin({ writeToDisk: true }));
     }
 

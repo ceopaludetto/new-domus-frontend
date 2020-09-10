@@ -2,12 +2,11 @@ import * as React from "react";
 import { useForm, FormProvider } from "react-hook-form";
 
 import { yupResolver } from "@hookform/resolvers";
-import clsx from "clsx";
+import { Button, Typography, Box, Grid } from "@material-ui/core";
 
-import { FormControl, Button, PasswordHelper, Text } from "@/client/components";
+import { FormControl, PasswordHelper } from "@/client/components";
 import { SignUpStep2Schema, SignUpStep2Values } from "@/client/helpers/validations/signup.schema";
 import { StepperContext, useMultipleVisibility } from "@/client/hooks";
-import u from "@/client/styles/utils.module.scss";
 import { clean } from "@/client/utils/clean";
 
 import { WizardContext } from "../providers";
@@ -40,32 +39,36 @@ export default function Step2() {
   return (
     <FormProvider {...methods}>
       <form noValidate onSubmit={submit}>
-        <div className={clsx(u.grid, u["grid-template"])}>
-          <div className={clsx(u["xs-12"], u["md-6"], u["order-xs-2"], u["order-md-1"], u["mt-xs-4"], u["mt-md-0"])}>
-            <FormControl
-              autoFocus
-              name="password"
-              id="password"
-              label="Senha"
-              required
-              autoComplete="off"
-              aria-describedby="password-constraint-1 password-constraint-2 password-constraint-3"
-              {...getVisibilityProps("password")}
-            />
-            <FormControl
-              name="repeatPassword"
-              id="repeatPassword"
-              label="Repetir Senha"
-              required
-              autoComplete="off"
-              {...getVisibilityProps("repeatPassword")}
-            />
-          </div>
-          <div className={clsx(u["xs-12"], u["md-6"], u["order-xs-1"], u["order-md-2"], u["mb-xs-3"], u["mb-md-0"])}>
-            <Text as="label" variant="body-1" htmlFor="password">
+        <Grid container spacing={3}>
+          <Grid container item xs={12} md={6} spacing={3}>
+            <Grid item xs={12}>
+              <FormControl
+                autoFocus
+                name="password"
+                id="password"
+                label="Senha"
+                required
+                autoComplete="off"
+                aria-describedby="password-constraint-1 password-constraint-2 password-constraint-3"
+                {...getVisibilityProps("password")}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <FormControl
+                name="repeatPassword"
+                id="repeatPassword"
+                label="Repetir Senha"
+                required
+                autoComplete="off"
+                {...getVisibilityProps("repeatPassword")}
+              />
+            </Grid>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Typography component="label" color="textPrimary" htmlFor="password">
               Dicas de Senha
-            </Text>
-            <div className={u["mt-xs-3"]}>
+            </Typography>
+            <Box mt={2}>
               <PasswordHelper id="password-constraint-1" active={passwordHelp.oneNumber}>
                 Pelo menos 1 número.
               </PasswordHelper>
@@ -75,19 +78,17 @@ export default function Step2() {
               <PasswordHelper id="password-constraint-3" active={passwordHelp.min}>
                 No mínimo 6 caracteres.
               </PasswordHelper>
-            </div>
-          </div>
-        </div>
-        <div className={clsx(u.row, u["justify-content-xs-flex-end"], u["mt-xs-3"])}>
-          <div className={u.col}>
-            <Button variant="flat" onClick={() => prev()}>
-              Voltar
-            </Button>{" "}
-            <Button variant="contained" type="submit">
-              Próximo
-            </Button>
-          </div>
-        </div>
+            </Box>
+          </Grid>
+        </Grid>
+        <Box textAlign="right" mt={2}>
+          <Button variant="text" color="primary" onClick={prev}>
+            Voltar
+          </Button>{" "}
+          <Button variant="contained" color="primary" type="submit">
+            Próximo
+          </Button>
+        </Box>
       </form>
     </FormProvider>
   );

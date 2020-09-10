@@ -13,29 +13,39 @@ type UseStepperReturn = [StepperContextProps["currentPage"], Omit<StepperContext
 
 export const StepperContext = React.createContext<StepperContextProps>(undefined as any);
 
-export function useStepper(pages: number): UseStepperReturn {
+export function useStepper(pages: number, onStepChange?: (index: number) => any): UseStepperReturn {
   const [currentPage, setCurrentPage] = React.useState(0);
   const previousPage = usePrevious(currentPage);
 
+  const changePage = React.useCallback(
+    async (index: number) => {
+      setCurrentPage(index);
+      if (onStepChange) {
+        await onStepChange(index);
+      }
+    },
+    [onStepChange, setCurrentPage]
+  );
+
   const next = React.useCallback(() => {
     if (currentPage + 1 <= pages) {
-      setCurrentPage(currentPage + 1);
+      changePage(currentPage + 1);
     }
-  }, [setCurrentPage, pages, currentPage]);
+  }, [changePage, pages, currentPage]);
 
   const prev = React.useCallback(() => {
     if (currentPage - 1 >= 0) {
-      setCurrentPage(currentPage - 1);
+      changePage(currentPage - 1);
     }
-  }, [setCurrentPage, currentPage]);
+  }, [changePage, currentPage]);
 
   const toggle = React.useCallback(
     (page: number) => {
       if (page <= pages && page >= 0) {
-        setCurrentPage(page);
+        changePage(page);
       }
     },
-    [setCurrentPage, pages]
+    [changePage, pages]
   );
 
   return [currentPage, { next, prev, toggle, previousPage }];

@@ -1,11 +1,11 @@
 import * as React from "react";
-import { useForm, FormProvider, get } from "react-hook-form";
+import { useForm, FormProvider } from "react-hook-form";
 
 import { useQuery, useMutation } from "@apollo/client";
 import { yupResolver } from "@hookform/resolvers";
-import clsx from "clsx";
+import { Button, Box, MenuItem, Grid } from "@material-ui/core";
 
-import { MaskedFormControl, FormControl, FormSelect, FormRadioCard, Button, Switch, Text } from "@/client/components";
+import { MaskedFormControl, FormControl, FormSwitch, FormSelect, FormRadioCard, RadioCard } from "@/client/components";
 import {
   Register,
   ShowStates,
@@ -20,7 +20,6 @@ import {
 import * as Masks from "@/client/helpers/masks";
 import { SignUpStep3Schema, SignUpStep3Values } from "@/client/helpers/validations/signup.schema";
 import { StepperContext } from "@/client/hooks";
-import u from "@/client/styles/utils.module.scss";
 import { clean } from "@/client/utils/clean";
 import type { Client } from "@/client/utils/common.dto";
 import { splitPhone } from "@/client/utils/string";
@@ -102,26 +101,27 @@ export default function Step3() {
   return (
     <FormProvider {...methods}>
       <form noValidate onSubmit={submit}>
-        <div className={clsx(u.grid, u["grid-template"])}>
-          <div className={clsx(u["xs-12"], u["md-6"])}>
-            <FormRadioCard autoFocus name="type" value="enter" label="Ingressar condomínio" />
-          </div>
-          <div className={clsx(u["xs-12"], u["md-6"])}>
-            <FormRadioCard name="type" value="create" label="Criar novo condomínio" />
-          </div>
-        </div>
-        {methods.errors.type && (
-          <Text variant="body-2" className={clsx(u["ml-xs-4"], u["-mt-xs-3"], u["mb-xs-4"], u.block)} color="error">
-            {get(methods.errors, "type.message")}
-          </Text>
-        )}
+        <Grid container spacing={3}>
+          <Grid item xs={12}>
+            <FormRadioCard name="type">
+              <Grid container spacing={3}>
+                <Grid item xs={12} md={6}>
+                  <RadioCard autoFocus name="type" value="enter" label="Ingressar condomínio" />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <RadioCard name="type" value="create" label="Criar novo condomínio" />
+                </Grid>
+              </Grid>
+            </FormRadioCard>
+          </Grid>
+        </Grid>
         {type === "create" && (
-          <>
-            <div className={clsx(u.grid, u["grid-template"])}>
-              <div className={clsx(u["xs-12"], u["md-6"])}>
+          <Box mt={1}>
+            <Grid container spacing={3}>
+              <Grid item xs={12} md={6}>
                 <FormControl name="condominium.companyName" array id="companyName" label="Razão Social" required />
-              </div>
-              <div className={clsx(u["xs-12"], u["md-6"])}>
+              </Grid>
+              <Grid item xs={12} md={6}>
                 <MaskedFormControl
                   rifm={{ format: Masks.cnpj, mask: true }}
                   name="condominium.cnpj"
@@ -129,8 +129,8 @@ export default function Step3() {
                   label="CNPJ"
                   required
                 />
-              </div>
-              <div className={clsx(u["xs-12"], u["md-3"])}>
+              </Grid>
+              <Grid item xs={12} md={3}>
                 <MaskedFormControl
                   rifm={{ format: Masks.cep, mask: true }}
                   name="condominium.address.zip"
@@ -138,60 +138,56 @@ export default function Step3() {
                   label="CEP"
                   required
                 />
-              </div>
-              <div className={clsx(u["xs-12"], u["md-6"])}>
+              </Grid>
+              <Grid item xs={12} md={6}>
                 <FormControl name="condominium.address.address" id="address" label="Endereço" required />
-              </div>
-              <div className={clsx(u["xs-12"], u["md-3"])}>
+              </Grid>
+              <Grid item xs={12} md={3}>
                 <FormControl name="condominium.address.number" id="number" label="Número" required />
-              </div>
-              <div className={clsx(u["xs-12"], u["md-4"])}>
-                <FormSelect
-                  items={
-                    data?.showStates.map((st) => ({
-                      value: st.id,
-                      label: st.name,
-                    })) ?? []
-                  }
-                  name="condominium.address.state"
-                  id="state"
-                  label="Estado"
-                  required
-                />
-              </div>
+              </Grid>
+              <Grid item xs={12} md={4}>
+                <FormSelect name="condominium.address.state" id="state" label="Estado" required>
+                  {data?.showStates.map((st) => (
+                    <MenuItem value={st.id}>{st.name}</MenuItem>
+                  ))}
+                </FormSelect>
+              </Grid>
               {!!state && (
-                <div className={clsx(u["xs-12"], u["md-8"])}>
+                <Grid item xs={12} md={8}>
                   <FormSelect
-                    items={
-                      data?.showStates
-                        ?.find((st) => st.id === state)
-                        ?.cities.map((c) => ({
-                          value: c.id,
-                          label: c.name,
-                        })) ?? []
-                    }
                     defaultValue={data?.showStates[0].cities[0].id}
                     name="condominium.address.city"
                     id="city"
                     label="Cidade"
                     required
-                  />
-                </div>
+                  >
+                    {data?.showStates
+                      ?.find((st) => st.id === state)
+                      ?.cities.map((c) => (
+                        <MenuItem value={c.id}>{c.name}</MenuItem>
+                      ))}
+                  </FormSelect>
+                </Grid>
               )}
-            </div>
-          </>
+            </Grid>
+          </Box>
         )}
-        <Switch label="Termos de uso" info="Ao assinar essa opção você concorda com nossos termos de uso." id="terms" />
-        <div className={clsx(u.row, u["justify-content-xs-flex-end"], u["mt-xs-3"])}>
-          <div className={u.col}>
-            <Button variant="flat" onClick={() => prev()}>
-              Voltar
-            </Button>{" "}
-            <Button variant="contained" type="submit">
-              Cadastrar
-            </Button>
-          </div>
-        </div>
+        <Box mt={2}>
+          <FormSwitch
+            label="Termos de uso"
+            info="Ao assinar essa opção você concorda com nossos termos de uso."
+            id="terms"
+            name="terms"
+          />
+        </Box>
+        <Box mt={2} textAlign="right">
+          <Button variant="text" color="primary" onClick={prev}>
+            Voltar
+          </Button>{" "}
+          <Button variant="contained" color="primary" type="submit">
+            Cadastrar
+          </Button>
+        </Box>
       </form>
     </FormProvider>
   );

@@ -1,29 +1,32 @@
 import * as React from "react";
 import { FiCheckCircle } from "react-icons/fi";
 
-import clsx from "clsx";
-
-import u from "@/client/styles/utils.module.scss";
-
-import { Text } from "../text";
+import { Typography, Box, Theme } from "@material-ui/core";
+import { makeStyles } from "@material-ui/styles";
 
 interface PasswordHelperProps extends Omit<React.HTMLAttributes<HTMLSpanElement>, "color"> {
   active: boolean;
 }
 
+const useStyles = makeStyles((theme: Theme) => ({
+  root: (props: { active: boolean }) => ({
+    color: props.active ? theme.palette.success.main : theme.palette.text.disabled,
+  }),
+}));
+
 export function PasswordHelper({ children, active, ...rest }: PasswordHelperProps) {
+  const classes = useStyles({ active });
+
   return (
-    <Text
-      as="span"
-      variant="body-2"
-      className={clsx(u.row, u["align-items-xs-center"], u["mb-xs-3"])}
-      color={active ? "success" : "muted"}
-      {...rest}
-    >
-      <div className={clsx(u.col, u["inline-flex"])}>
-        <FiCheckCircle size={20} />
-      </div>
-      <div className={clsx(u.col, u.xs)}>{children}</div>
-    </Text>
+    <Box display="flex">
+      <Box mr={2}>
+        <FiCheckCircle className={classes.root} size={20} />
+      </Box>
+      <Box>
+        <Typography className={classes.root} component="span" variant="body2" {...rest}>
+          {children}
+        </Typography>
+      </Box>
+    </Box>
   );
 }

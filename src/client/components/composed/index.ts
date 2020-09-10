@@ -6,6 +6,6 @@ export { FormSelect } from "./form-select";
 export { MaskedFormControl } from "./masked-form-control";
 export { Footer } from "./footer";
 export { Sidebar } from "./sidebar";
-export { SidebarItem } from "./sidebar-item";
 export { AppHeader } from "./app-header";
 export { Page } from "./page";
+export { FormSwitch } from "./form-switch";

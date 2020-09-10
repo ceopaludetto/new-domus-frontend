@@ -29,7 +29,8 @@
     "database.config.js",
     "razzle.config.js",
     ".eslintrc.js",
-    "jest.config.js"
+    "jest.config.js",
+    "babel.config.js"
   ],
   "exclude": ["node_modules", "dist", "build", "coverage", "certs", "env"]
 }

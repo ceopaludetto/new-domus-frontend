@@ -1,26 +1,28 @@
 import * as React from "react";
 
+import type { Theme } from "@material-ui/core";
+import { makeStyles } from "@material-ui/styles";
 import clsx from "clsx";
-
-import s from "./index.module.scss";
 
 interface BlurredProps extends React.HTMLAttributes<HTMLDivElement> {
   deactivate?: boolean;
   border?: boolean;
 }
 
-export function Blurred({ deactivate = false, className, children, border = false, ...rest }: BlurredProps) {
-  const classes = clsx(
-    s.blurred,
-    {
-      [s.deactivate]: deactivate,
-      [s.border]: border,
-    },
-    className
-  );
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    backdropFilter: "saturate(100%) blur(5px)",
+  },
+  border: {
+    borderBottom: `1px solid ${theme.palette.divider}`,
+  },
+}));
+
+export function Blurred({ className, children, border = false, ...rest }: BlurredProps) {
+  const classes = useStyles();
 
   return (
-    <div className={classes} {...rest}>
+    <div className={clsx(classes.root, border && classes.border, className)} {...rest}>
       {children}
     </div>
   );

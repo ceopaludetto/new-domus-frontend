@@ -1,11 +1,7 @@
 import * as React from "react";
 import { HelmetProps, Helmet } from "react-helmet-async";
 
-import clsx from "clsx";
-
-import { Container } from "@/client/components/layout";
-import { Text } from "@/client/components/typography";
-import u from "@/client/styles/utils.module.scss";
+import { Typography, Container, Box } from "@material-ui/core";
 
 interface PageProps extends React.ComponentProps<typeof Container> {
   title: string;
@@ -14,21 +10,21 @@ interface PageProps extends React.ComponentProps<typeof Container> {
   helmet?: HelmetProps;
 }
 
-export function Page({ title, subtitle, fluid = false, children, actions, helmet, ...rest }: PageProps) {
+export function Page({ title, subtitle, children, actions, helmet, ...rest }: PageProps) {
   return (
-    <Container className={u["py-xs-8"]} fluid={fluid} {...rest}>
+    <Container {...rest}>
       {helmet && <Helmet {...helmet} />}
-      <div className={clsx(u.row, u["mb-xs-8"], u["align-items-xs-center"])}>
-        <div className={clsx(u.col, u.xs)}>
-          <Text variant="subtitle-1" noMargin color="primary">
+      <Box display="flex" mb={4} mt={3} alignItems="center">
+        <Box flex={{ xs: "1" }}>
+          <Typography variant="subtitle1" component="span" color="primary">
             {subtitle}
-          </Text>
-          <Text variant="headline-4" as="h1" noMargin color="text">
+          </Typography>
+          <Typography variant="h4" component="h1" color="textPrimary">
             {title}
-          </Text>
-        </div>
-        {actions && <div className={u.col}>{actions}</div>}
-      </div>
+          </Typography>
+        </Box>
+        {actions && <Box>{actions}</Box>}
+      </Box>
       {children}
     </Container>
   );

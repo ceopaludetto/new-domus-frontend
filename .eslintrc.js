@@ -84,6 +84,7 @@ module.exports = {
         "./razzle.config.js",
         "./.eslintrc.js",
         "./jest.config.js",
+        "./babel.config.js",
       ],
       rules: {
         "@typescript-eslint/no-var-requires": "off",

@@ -6,13 +6,12 @@ import { useInterval } from "react-use";
 
 import { useMutation } from "@apollo/client";
 import { yupResolver } from "@hookform/resolvers";
-import clsx from "clsx";
+import { Button, Typography, Box } from "@material-ui/core";
 
-import { FormControl, Button, PreloadLink, Text } from "@/client/components";
+import { FormControl, PreloadLink } from "@/client/components";
 import { AuthForgot, AuthForgotMutation, AuthForgotMutationVariables } from "@/client/graphql";
 import { ForgotSchema, ForgotValues } from "@/client/helpers/validations/forgot.schema";
 import { usePreload } from "@/client/hooks";
-import u from "@/client/styles/utils.module.scss";
 
 export default function Forgot() {
   const [forgot, { data }] = useMutation<AuthForgotMutation, AuthForgotMutationVariables>(AuthForgot);
@@ -59,41 +58,50 @@ export default function Forgot() {
 
   return (
     <FormProvider {...methods}>
-      <form noValidate autoComplete="on" onSubmit={submit}>
+      <form autoComplete="on" onSubmit={submit}>
         <Helmet>
           <title>Esqueceu a senha</title>
         </Helmet>
-        <Text as="span" color="primary" variant="subtitle-1">
+        <Typography component="span" color="primary" variant="subtitle1">
           Esqueceu a senha
-        </Text>
-        <Text gutter as="h1" variant="headline-5">
+        </Typography>
+        <Typography component="h1" gutterBottom variant="h5">
           Recuperar Senha
-        </Text>
+        </Typography>
         {submitted ? (
           <>
-            <Text>Um e-mail com instruções de recuperação de senha foi enviado para {data?.forgot}!</Text>
-            <Text variant="caption">
+            <Typography gutterBottom>
+              Um e-mail com instruções de recuperação de senha foi enviado para {data?.forgot}!
+            </Typography>
+            <Typography variant="caption">
               Você será redirecionado em {time} segundo{time !== 1 && "s"}.
-            </Text>
-            <div className={clsx(u["text-align-xs-right"], u["mt-xs-5"])}>
-              <PreloadLink as={Button} variant="flat" to="/auth/signin">
+            </Typography>
+            <Box textAlign="right" mt={3}>
+              <Button component={PreloadLink} variant="text" color="primary" to="/auth/signin">
                 Ir agora
-              </PreloadLink>
-            </div>
+              </Button>
+            </Box>
           </>
         ) : (
           <>
             <FormControl label="Login" name="login" id="login" autoFocus />
-            <div className={u["pt-xs-2"]}>
-              <Button disabled={methods.formState.isSubmitting} block variant="contained" type="submit">
+            <Box mt={2}>
+              <Button
+                disabled={methods.formState.isSubmitting}
+                fullWidth
+                color="primary"
+                variant="contained"
+                type="submit"
+                size="large"
+              >
                 Recuperar Senha
               </Button>
-            </div>
-            <div className={clsx(u["text-align-xs-center"], u["mt-xs-4"])}>
-              <PreloadLink as={Button} variant="flat" block color="primary" to="/auth/signin">
+            </Box>
+            <Box mt={2}>
+              <Button component={PreloadLink} variant="text" fullWidth size="large" color="primary" to="/auth/signin">
                 Voltar para Login
-              </PreloadLink>
-            </div>
+              </Button>
+            </Box>
           </>
         )}
       </form>

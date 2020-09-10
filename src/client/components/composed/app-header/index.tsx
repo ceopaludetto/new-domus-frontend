@@ -1,45 +1,41 @@
 import * as React from "react";
-import { FiSettings } from "react-icons/fi";
+import { FiSettings, FiChevronRight } from "react-icons/fi";
 
-import clsx from "clsx";
+import { IconButton, Breadcrumbs, Link, Typography, Grid, Container, Box } from "@material-ui/core";
 
-import { IconButton } from "@/client/components/form";
-import { Container, Breadcrumbs } from "@/client/components/layout";
 import { PreloadLink } from "@/client/components/typography";
 import { useBreadcrumbs } from "@/client/hooks";
-import u from "@/client/styles/utils.module.scss";
+import { retrieveTo } from "@/client/utils/string";
 
 export function AppHeader() {
   const breadcrumbs = useBreadcrumbs();
 
   return (
-    <Container fluid>
-      <div className={clsx(u.row, u["align-items-xs-center"], u["py-xs-4"])}>
-        <div className={clsx(u.col, u.xs)}>
-          <Breadcrumbs>
-            {breadcrumbs.map((b, i) => (
-              <Breadcrumbs.Item
-                key={b.name}
-                last={breadcrumbs.length - 1 === i}
-                to={Array.isArray(b.path) ? b.path[0] : b.path}
-              >
-                {b.meta?.displayName}
-              </Breadcrumbs.Item>
-            ))}
-          </Breadcrumbs>
-        </div>
-        <div className={u.col}>
-          <PreloadLink
-            as={IconButton}
-            tooltip={{ content: "Configurações" }}
-            to="/app/:condominium/settings"
-            size="small"
-            color="text"
-          >
-            <FiSettings />
-          </PreloadLink>
-        </div>
-      </div>
+    <Container maxWidth="xl">
+      <Box py={1}>
+        <Grid container alignItems="center">
+          <Grid item xs>
+            <Breadcrumbs separator={<FiChevronRight size={18} />}>
+              {breadcrumbs.map((b, i) =>
+                breadcrumbs.length - 1 === i ? (
+                  <Typography key={b.name} color="textPrimary">
+                    {b.meta?.displayName}
+                  </Typography>
+                ) : (
+                  <Link component={PreloadLink} key={b.name} color="inherit" to={retrieveTo(b.path)}>
+                    {b.meta?.displayName}
+                  </Link>
+                )
+              )}
+            </Breadcrumbs>
+          </Grid>
+          <Grid item>
+            <IconButton component={PreloadLink} to="/app/:condominium/settings">
+              <FiSettings />
+            </IconButton>
+          </Grid>
+        </Grid>
+      </Box>
     </Container>
   );
 }

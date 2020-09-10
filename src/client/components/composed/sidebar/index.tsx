@@ -5,28 +5,64 @@ import { useHistory, useParams } from "react-router-dom";
 import { useMeasure } from "react-use";
 
 import { useQuery } from "@apollo/client";
-import clsx from "clsx";
+import {
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Paper,
+  Box,
+  Theme,
+  IconButton,
+  Typography,
+} from "@material-ui/core";
+import { makeStyles } from "@material-ui/styles";
 
-import { IconButton } from "@/client/components/form";
-import { Blurred, Paper, MenuItem } from "@/client/components/layout";
+import { Blurred } from "@/client/components/layout";
+import { PreloadLink } from "@/client/components/typography";
 import { Me, MeQuery, SelectedCondominium, SelectedCondominiumQuery } from "@/client/graphql";
 import { usePathWithCondominium } from "@/client/hooks";
-import u from "@/client/styles/utils.module.scss";
 import type { RouteComponentProps } from "@/client/utils/common.dto";
 import { isMultiCondominium } from "@/client/utils/condominium";
+import { retrieveTo } from "@/client/utils/string";
 
-import { SidebarItem } from "../sidebar-item";
-import s from "./index.module.scss";
+const useStyles = makeStyles((theme: Theme) => ({
+  container: {
+    [theme.breakpoints.up("md")]: {
+      position: "fixed",
+      left: 0,
+      top: 0,
+    },
+    width: "100%",
+    maxWidth: "300px",
+  },
+  sidebar: {
+    flexDirection: "column",
+    height: "100vh",
+    display: "flex",
+  },
+  condominiums: {
+    borderTop: `1px solid ${theme.palette.divider}`,
+    padding: theme.spacing(2),
+  },
+  list: {
+    backgroundColor: theme.palette.background.paper,
+    transition: theme.transitions.create(["max-height"], {
+      easing: theme.transitions.easing.easeInOut,
+      duration: theme.transitions.duration.short,
+    }),
+  },
+}));
 
 export function Sidebar({ routes }: Pick<RouteComponentProps, "routes">) {
   const [listOpen, setListOpen] = React.useState(false);
-  const [tooltip, setTooltip] = React.useState(false);
   const { data, client } = useQuery<MeQuery>(Me);
   const history = useHistory();
   const params = useParams();
   const multiCondominiums = React.useMemo(() => isMultiCondominium(data?.profile.person.condominiums), [data]);
   const [generatePath, condominium] = usePathWithCondominium();
   const [ref, { height }] = useMeasure<HTMLDivElement>();
+  const classes = useStyles();
 
   const changeSelectedCondominium = React.useCallback(
     (id: string) => {
@@ -59,65 +95,63 @@ export function Sidebar({ routes }: Pick<RouteComponentProps, "routes">) {
   }, [condominium, generatePath, params, history]);
 
   return (
-    <Paper className={clsx(s.container, u["w-100"], u["mw-300"])} outline noVerticalBorders noGutter square>
-      <Blurred className={clsx(s.sidebar, u.flex)}>
-        <div className={s.pages}>
-          {routes
-            ?.filter((r) => !r.meta?.hidden ?? true)
-            ?.map((r) => {
-              const Icon = r.meta?.icon;
-              const path = Array.isArray(r.path) ? r.path[0] : r.path;
+    <Box clone borderTop="0" borderLeft="0" borderBottom="0">
+      <Paper className={classes.container} square variant="outlined">
+        <Blurred className={classes.sidebar}>
+          <Box flex="1">
+            <List component="nav">
+              {routes
+                ?.filter((r) => !r.meta?.hidden ?? true)
+                ?.map((r) => {
+                  const Icon = r.meta?.icon;
+                  const path = retrieveTo(r.path);
 
-              return (
-                <SidebarItem key={r.name} to={path} icon={<Icon size={18} />}>
-                  {r.meta?.displayName}
-                </SidebarItem>
-              );
-            })}
-        </div>
-        <div className={clsx(s.condominium, u.row, u["align-items-xs-center"])}>
-          {multiCondominiums ? (
-            <>
-              <div className={clsx(u.col, u.xs)}>{listOpen ? "Selecione um condomínio" : condominium?.companyName}</div>
-              <div className={u.col}>
-                <IconButton
-                  onClick={() => setListOpen((v) => !v)}
-                  tooltip={{
-                    content: tooltip ? "Fechar" : "Alterar Condomínio",
-                    forceUpdate: tooltip,
-                    updateOnContentChange: false,
-                  }}
-                  size="small"
-                >
-                  {listOpen ? <FiX /> : <VscArrowBoth />}
-                </IconButton>
+                  return (
+                    <ListItem button key={r.name} component={(props) => <PreloadLink to={path} {...props} />}>
+                      <ListItemIcon>
+                        <Icon size={18} />
+                      </ListItemIcon>
+                      <ListItemText primary={r.meta?.displayName} />
+                    </ListItem>
+                  );
+                })}
+            </List>
+          </Box>
+          <Box display="flex" alignItems="center" className={classes.condominiums}>
+            {multiCondominiums ? (
+              <>
+                <Box flex="1">
+                  <Typography component="span" variant="body1">
+                    {listOpen ? "Selecione um condomínio" : condominium?.companyName}
+                  </Typography>
+                </Box>
+                <Box>
+                  <IconButton color="primary" onClick={() => setListOpen((v) => !v)}>
+                    {listOpen ? <FiX /> : <VscArrowBoth />}
+                  </IconButton>
+                </Box>
+              </>
+            ) : (
+              <Typography component="span" variant="body1">
+                {condominium?.companyName}
+              </Typography>
+            )}
+          </Box>
+          {multiCondominiums && (
+            <div style={{ maxHeight: listOpen ? height : 0 }} className={classes.list}>
+              <div ref={ref}>
+                <List>
+                  {data?.profile.person.condominiums.map((c) => (
+                    <ListItem button onClick={() => handleCondominiumChange(c.id)} key={c.id}>
+                      <ListItemText primary={c.companyName} />
+                    </ListItem>
+                  ))}
+                </List>
               </div>
-            </>
-          ) : (
-            <div className={clsx(u.col, u.xs)}>{condominium?.companyName}</div>
-          )}
-        </div>
-        {multiCondominiums && (
-          <div
-            style={{ maxHeight: listOpen ? height : 0 }}
-            onTransitionEnd={() => setTooltip((v) => !v)}
-            className={s["list-condominiums"]}
-          >
-            <div className={s.measure} ref={ref}>
-              {data?.profile.person.condominiums.map((c) => (
-                <MenuItem
-                  onClick={() => handleCondominiumChange(c.id)}
-                  className={clsx(s.item, c.id === condominium?.id && s.selected)}
-                  key={c.id}
-                  active={false}
-                >
-                  {c.companyName}
-                </MenuItem>
-              ))}
             </div>
-          </div>
-        )}
-      </Blurred>
-    </Paper>
+          )}
+        </Blurred>
+      </Paper>
+    </Box>
   );
 }

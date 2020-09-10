@@ -1,48 +1,51 @@
 import * as React from "react";
 
 import { useQuery } from "@apollo/client";
-import clsx from "clsx";
+import { Button, Box, Container } from "@material-ui/core";
 
 import { Logged, LoggedQuery } from "@/client/graphql";
-import u from "@/client/styles/utils.module.scss";
 
-import { Button } from "../../form";
-import { Blurred, Container } from "../../layout";
+import { Blurred } from "../../layout";
 import { PreloadLink } from "../../typography/preload-link";
-import s from "./index.module.scss";
 
 export function Header() {
   const { data } = useQuery<LoggedQuery>(Logged);
 
   return (
-    <header className={s.header}>
-      <Blurred className={u["px-xs-10"]} border>
+    <Box position="fixed" width="100%">
+      <Blurred border>
         <Container>
-          <div className={clsx(s.content, u.row, u["align-items-xs-center"])}>
-            <div className={clsx(u.col, u.xs)}>
+          <Box display="flex" alignItems="center" py={2}>
+            <Box flex="1">
               <svg width="40" viewBox="0 0 116 100" fill="#fff" xmlns="http://www.w3.org/2000/svg">
                 <path fillRule="evenodd" clipRule="evenodd" d="M57.5 0L115 100H0L57.5 0z" />
               </svg>
-            </div>
-            <div>
+            </Box>
+            <Box>
               {data?.logged ? (
-                <PreloadLink as={Button} variant="flat" size="small" to="/app/:condominium">
+                <Button component={PreloadLink} color="primary" variant="text" size="small" to="/app/:condominium">
                   Abrir
-                </PreloadLink>
+                </Button>
               ) : (
                 <>
-                  <PreloadLink as={Button} variant="flat" size="small" to="/auth/signin">
+                  <Button component={PreloadLink} color="primary" variant="text" size="small" to="/auth/signin">
                     Entrar
-                  </PreloadLink>{" "}
-                  <PreloadLink as={Button} variant="contained" size="small" to="/auth/signup/step-1">
+                  </Button>{" "}
+                  <Button
+                    component={PreloadLink}
+                    color="primary"
+                    variant="contained"
+                    size="small"
+                    to="/auth/signup/step-1"
+                  >
                     Cadastre-se
-                  </PreloadLink>
+                  </Button>
                 </>
               )}
-            </div>
-          </div>
+            </Box>
+          </Box>
         </Container>
       </Blurred>
-    </header>
+    </Box>
   );
 }

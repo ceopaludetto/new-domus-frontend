@@ -2,14 +2,13 @@ import * as React from "react";
 import { useForm, FormProvider } from "react-hook-form";
 
 import { yupResolver } from "@hookform/resolvers";
-import clsx from "clsx";
+import { MenuItem, Button, Box, Grid } from "@material-ui/core";
 
-import { FormControl, MaskedFormControl, Button, FormCalendar, FormSelect, PreloadLink } from "@/client/components";
+import { FormControl, MaskedFormControl, FormCalendar, FormSelect, PreloadLink } from "@/client/components";
 import { Gender } from "@/client/graphql/operations";
 import * as Masks from "@/client/helpers/masks";
 import { SignUpStep1Schema, SignUpStep1Values } from "@/client/helpers/validations/signup.schema";
 import { StepperContext } from "@/client/hooks";
-import u from "@/client/styles/utils.module.scss";
 import { clean } from "@/client/utils/clean";
 
 import { WizardContext } from "../providers";
@@ -32,20 +31,20 @@ export default function Step1() {
   return (
     <FormProvider {...methods}>
       <form noValidate onSubmit={submit}>
-        <div className={clsx(u.grid, u["grid-template"])}>
-          <div className={clsx(u["xs-12"], u["md-6"])}>
+        <Grid container spacing={3}>
+          <Grid item xs={12} md={6}>
             <FormControl autoFocus name="person.name" id="name" label="Nome" required />
-          </div>
-          <div className={clsx(u["xs-12"], u["md-6"])}>
+          </Grid>
+          <Grid item xs={12} md={6}>
             <FormControl name="person.lastName" id="lastName" label="Sobrenome" required />
-          </div>
-          <div className={clsx(u["xs-12"], u["md-3"])}>
+          </Grid>
+          <Grid item xs={12} md={3}>
             <FormControl name="login" id="login" label="Login" required />
-          </div>
-          <div className={clsx(u["xs-12"], u["md-6"])}>
+          </Grid>
+          <Grid item xs={12} md={6}>
             <FormControl type="person.email" name="person.email" id="email" label="E-mail" required />
-          </div>
-          <div className={clsx(u["xs-12"], u["md-3"])}>
+          </Grid>
+          <Grid item xs={12} md={3}>
             <MaskedFormControl
               rifm={{ format: Masks.cpf, accept: /\d+/g, mask: true }}
               name="person.cpf"
@@ -53,24 +52,18 @@ export default function Step1() {
               label="CPF"
               required
             />
-          </div>
-          <div className={clsx(u["xs-12"], u["md-4"])}>
-            <FormSelect
-              name="person.gender"
-              id="gender"
-              label="Gênero"
-              items={[
-                { value: Gender.M, label: "Masculino" },
-                { value: Gender.F, label: "Feminino" },
-                { value: Gender.N, label: "Outro" },
-              ]}
-              required
-            />
-          </div>
-          <div className={clsx(u["xs-12"], u["md-4"])}>
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <FormSelect name="person.gender" id="gender" label="Gênero" required>
+              <MenuItem value={Gender.M}>Masculino</MenuItem>
+              <MenuItem value={Gender.F}>Feminino</MenuItem>
+              <MenuItem value={Gender.N}>Outro</MenuItem>
+            </FormSelect>
+          </Grid>
+          <Grid item xs={12} md={4}>
             <FormCalendar disableFuture name="person.birthdate" id="birthdate" label="Data de Nascimento" required />
-          </div>
-          <div className={clsx(u["xs-12"], u["md-4"])}>
+          </Grid>
+          <Grid item xs={12} md={4}>
             <MaskedFormControl
               rifm={{ format: Masks.tel, accept: /\d+/g, mask: true }}
               name="person.phone"
@@ -78,18 +71,16 @@ export default function Step1() {
               type="tel"
               label="Telefone"
             />
-          </div>
-        </div>
-        <div className={clsx(u.row, u["justify-content-xs-flex-end"], u["mt-xs-3"])}>
-          <div className={u.col}>
-            <PreloadLink as={Button} variant="flat" to="/auth/signin">
-              Faça login em vez disso
-            </PreloadLink>{" "}
-            <Button variant="contained" type="submit">
-              Próximo
-            </Button>
-          </div>
-        </div>
+          </Grid>
+        </Grid>
+        <Box mt={2} textAlign="right">
+          <Button component={PreloadLink} variant="text" color="primary" to="/auth/signin">
+            Faça login em vez disso
+          </Button>{" "}
+          <Button variant="contained" color="primary" type="submit">
+            Próximo
+          </Button>
+        </Box>
       </form>
     </FormProvider>
   );

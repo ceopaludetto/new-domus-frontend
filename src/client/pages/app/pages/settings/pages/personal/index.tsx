@@ -4,19 +4,10 @@ import { useForm, FormProvider } from "react-hook-form";
 
 import { useQuery, useMutation } from "@apollo/client";
 import { yupResolver } from "@hookform/resolvers";
+import { Grid, Button, Divider, Box, Typography } from "@material-ui/core";
 import type { UserInputError } from "apollo-server-express";
-import clsx from "clsx";
 
-import {
-  FormControl,
-  FormCalendar,
-  MaskedFormControl,
-  Button,
-  Divider,
-  PasswordHelper,
-  Text,
-  Switch,
-} from "@/client/components";
+import { FormControl, FormSwitch, FormCalendar, MaskedFormControl, PasswordHelper } from "@/client/components";
 import {
   Me,
   MeQuery,
@@ -35,7 +26,6 @@ import {
   SettingsPersonalValues,
 } from "@/client/helpers/validations/settings.schema";
 import { useMultipleVisibility } from "@/client/hooks";
-import u from "@/client/styles/utils.module.scss";
 import type { Client } from "@/client/utils/common.dto";
 import { splitPhone } from "@/client/utils/string";
 
@@ -138,86 +128,100 @@ export default function Personal() {
       <FormProvider {...personal}>
         <form onSubmit={handlePersonalSubmit}>
           {personalGenericError && (
-            <Text variant="body-2" color="error">
+            <Typography variant="body2" color="error">
               Falha ao alterar dados de usuário
-            </Text>
+            </Typography>
           )}
-          <div className={clsx(u.grid, u["grid-template"])}>
-            <div className={clsx(u["xs-12"], u["md-6"])}>
+          <Grid container spacing={3}>
+            <Grid item xs={12} md={6}>
               <FormControl autoFocus name="name" label="Nome" id="name" />
-            </div>
-            <div className={clsx(u["xs-12"], u["md-6"])}>
+            </Grid>
+            <Grid item xs={12} md={6}>
               <FormControl name="lastName" label="Sobrenome" id="lastName" />
-            </div>
-            <div className={clsx(u["xs-12"], u["md-4"])}>
+            </Grid>
+            <Grid item xs={12} md={4}>
               <FormControl name="login" label="Login" id="login" />
-            </div>
-            <div className={clsx(u["xs-12"], u["md-8"])}>
+            </Grid>
+            <Grid item xs={12} md={8}>
               <FormControl name="email" label="E-mail" id="email" />
-            </div>
-            <div className={clsx(u["xs-12"], u["md-4"])}>
+            </Grid>
+            <Grid item xs={12} md={4}>
               <MaskedFormControl rifm={{ format: Masks.cpf }} name="cpf" label="CPF" id="cpf" />
-            </div>
-            <div className={clsx(u["xs-12"], u["md-4"])}>
+            </Grid>
+            <Grid item xs={12} md={4}>
               <MaskedFormControl rifm={{ format: Masks.tel }} name="phone" label="Telefone" id="phone" />
-            </div>
-            <div className={clsx(u["xs-12"], u["md-4"])}>
+            </Grid>
+            <Grid item xs={12} md={4}>
               <FormCalendar name="birthdate" label="Data de Nascimento" id="birthdate" />
-            </div>
-          </div>
-          <Switch
-            color="primary"
-            label="Conta pública"
-            info="Ser visível a todos usuários do condomínio atual."
-            id="terms"
-          />
-          <div className={u["text-align-xs-right"]}>
-            <Button type="submit">Alterar Informações</Button>
-          </div>
+            </Grid>
+          </Grid>
+          <Box mt={2}>
+            <FormSwitch
+              label="Conta pública"
+              info="Ser visível a todos usuários do condomínio atual."
+              id="public-account"
+              name="public-account"
+            />
+          </Box>
+          <Box textAlign="right">
+            <Button color="primary" variant="contained" type="submit">
+              Alterar Informações
+            </Button>
+          </Box>
         </form>
       </FormProvider>
-      <Divider content="Senha" />
+      <Box my={2}>
+        <Divider />
+      </Box>
       <FormProvider {...password}>
         <form onSubmit={handlePasswordSubmit}>
           {passwordGenericError && (
-            <Text variant="body-2" color="error">
+            <Typography variant="body2" color="error">
               Falha ao alterar senha
-            </Text>
+            </Typography>
           )}
-          <div className={clsx(u.grid, u["grid-template"])}>
-            <div className={clsx(u["xs-12"], u["md-6"], u["order-xs-2"], u["order-md-1"], u["mt-xs-4"], u["mt-md-0"])}>
-              <FormControl
-                autoComplete="password"
-                name="currentPassword"
-                label="Senha Atual"
-                id="currentPassword"
-                {...mapPropsToField("currentPassword")}
-              />
-              <FormControl
-                autoComplete="off"
-                name="newPassword"
-                label="Nova Senha"
-                id="newPassword"
-                {...mapPropsToField("newPassword")}
-              />
-              <FormControl
-                autoComplete="off"
-                name="repeatNewPassword"
-                label="Repetir Nova Senha"
-                id="repeatNewPassword"
-                {...mapPropsToField("repeatNewPassword")}
-              />
-              <div className={u["text-align-xs-right"]}>
-                <Button disabled={password.formState.isSubmitting} type="submit">
+          <Grid container spacing={3}>
+            <Grid item xs={12} md={6}>
+              <Grid container spacing={3}>
+                <Grid item xs={12}>
+                  <FormControl
+                    autoComplete="password"
+                    name="currentPassword"
+                    label="Senha Atual"
+                    id="currentPassword"
+                    {...mapPropsToField("currentPassword")}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <FormControl
+                    autoComplete="off"
+                    name="newPassword"
+                    label="Nova Senha"
+                    id="newPassword"
+                    {...mapPropsToField("newPassword")}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <FormControl
+                    autoComplete="off"
+                    name="repeatNewPassword"
+                    label="Repetir Nova Senha"
+                    id="repeatNewPassword"
+                    {...mapPropsToField("repeatNewPassword")}
+                  />
+                </Grid>
+              </Grid>
+              <Box textAlign="right" mt={2}>
+                <Button color="primary" variant="contained" disabled={password.formState.isSubmitting} type="submit">
                   Alterar Senha
                 </Button>
-              </div>
-            </div>
-            <div className={clsx(u["xs-12"], u["md-6"], u["order-xs-1"], u["order-md-2"])}>
-              <Text as="label" variant="body-1" htmlFor="password">
+              </Box>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Typography component="label" color="textPrimary" htmlFor="newPassword">
                 Dicas de Senha
-              </Text>
-              <div className={u["mt-xs-3"]}>
+              </Typography>
+              <Box mt={2}>
                 <PasswordHelper id="password-constraint-1" active={passwordHelp.oneNumber}>
                   Pelo menos 1 número.
                 </PasswordHelper>
@@ -227,13 +231,15 @@ export default function Personal() {
                 <PasswordHelper id="password-constraint-3" active={passwordHelp.min}>
                   No mínimo 6 caracteres.
                 </PasswordHelper>
-              </div>
-            </div>
-          </div>
+              </Box>
+            </Grid>
+          </Grid>
         </form>
       </FormProvider>
-      <Divider content="Área de Risco" />
-      <Button variant="flat" color="error">
+      <Box my={2}>
+        <Divider />
+      </Box>
+      <Button variant="text" color="secondary">
         Excluir Conta
       </Button>
     </>

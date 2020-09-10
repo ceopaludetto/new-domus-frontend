@@ -13,8 +13,8 @@ describe("useVisibility", async () => {
     expect(props).toHaveProperty("type");
     expect(props.type).toBe("password");
 
-    if (props.append) {
-      const { container } = render(props.append);
+    if (props.InputProps?.endAdornment) {
+      const { container } = render(props.InputProps.endAdornment as any);
 
       const button = container.querySelector("button") as HTMLButtonElement;
 
@@ -40,8 +40,8 @@ describe("useMultipleVisibility", () => {
     expect(bProps).toHaveProperty("type");
     expect(bProps.type).toBe("password");
 
-    if (aProps.append) {
-      const { container } = render(aProps.append);
+    if (aProps.InputProps?.endAdornment) {
+      const { container } = render(aProps.InputProps?.endAdornment as any);
 
       const button = container.querySelector("button") as HTMLButtonElement;
 
@@ -52,8 +52,8 @@ describe("useMultipleVisibility", () => {
       expect(aProps.type).toBe("text");
     }
 
-    if (bProps.append) {
-      const { container } = render(bProps.append);
+    if (bProps.InputProps?.endAdornment) {
+      const { container } = render(bProps.InputProps?.endAdornment as any);
 
       const button = container.querySelector("button") as HTMLButtonElement;
 

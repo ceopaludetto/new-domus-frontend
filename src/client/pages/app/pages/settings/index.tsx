@@ -1,26 +1,35 @@
 import * as React from "react";
 import { Route } from "react-router-dom";
 
-import { Page, Tabs } from "@/client/components";
-import { usePathWithCondominium } from "@/client/hooks";
-import type { RouteComponentProps } from "@/client/utils/common.dto";
+import { Tabs, Tab, Box } from "@material-ui/core";
 
-export default function Settings({ routes }: RouteComponentProps) {
+import { Page } from "@/client/components";
+import { usePathWithCondominium, usePreload } from "@/client/hooks";
+import type { RouteComponentProps } from "@/client/utils/common.dto";
+import { retrieveTo } from "@/client/utils/string";
+
+export default function Settings({ routes, location, history }: RouteComponentProps) {
+  const [value, setValue] = React.useState(location.pathname);
   const [generatePath] = usePathWithCondominium();
+  const [, run] = usePreload();
+
+  async function handleTabClick(e: React.ChangeEvent<Record<string, any>>, v: any) {
+    setValue(v);
+    await run(v);
+    history.push(v);
+  }
 
   return (
     <Page title="Configurações" subtitle="Ajustes">
-      <Tabs>
-        {routes?.map((r) => {
-          const path = Array.isArray(r.path) ? r.path[0] : r.path;
+      <Box mb={3}>
+        <Tabs indicatorColor="primary" value={value} onChange={handleTabClick}>
+          {routes?.map((r) => {
+            const path = retrieveTo(r.path);
 
-          return (
-            <Tabs.Tab key={r.name} to={generatePath(path as string)} exact>
-              {r.meta?.displayName}
-            </Tabs.Tab>
-          );
-        })}
-      </Tabs>
+            return <Tab value={generatePath(path)} label={r.meta?.displayName} key={r.name} />;
+          })}
+        </Tabs>
+      </Box>
       {routes?.map(({ name, component: Component, children, ...rest }) => (
         <Route key={name} render={(props) => <Component routes={children} {...props} />} {...rest} />
       ))}

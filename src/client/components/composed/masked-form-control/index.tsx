@@ -1,16 +1,15 @@
 import * as React from "react";
 import { useFormContext, Controller, get } from "react-hook-form";
 
+import { TextField, TextFieldProps } from "@material-ui/core";
 import { Rifm } from "rifm";
 
-import { Control } from "../../form";
-
-interface MaskedFormControlProps extends Omit<React.ComponentProps<typeof Control>, "ref" | "name" | "error"> {
+interface MaskedFormControlProps extends Omit<TextFieldProps, "name" | "error"> {
   name: string;
   rifm: Omit<React.ComponentProps<typeof Rifm>, "value" | "onChange" | "children">;
 }
 
-export function MaskedFormControl({ name, helperText, rifm, defaultValue, ...rest }: MaskedFormControlProps) {
+export function MaskedFormControl({ name, helperText, rifm, defaultValue = "", ...rest }: MaskedFormControlProps) {
   const { control, errors } = useFormContext();
   const error = get(errors, name);
 
@@ -20,7 +19,7 @@ export function MaskedFormControl({ name, helperText, rifm, defaultValue, ...res
       render={({ onBlur, ...props }) => (
         <Rifm {...props} {...rifm}>
           {({ onChange, value }) => (
-            <Control
+            <TextField
               onChange={onChange}
               value={value}
               onBlur={onBlur}

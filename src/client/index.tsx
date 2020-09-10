@@ -23,15 +23,13 @@ loadableReady(() => {
   const method: "render" | "hydrate" = root?.hasChildNodes() ? "hydrate" : "render";
 
   ReactDOM[method](
-    <React.StrictMode>
-      <HelmetProvider>
-        <ApolloProvider client={client}>
-          <BrowserRouter>
-            <App logged={false} />
-          </BrowserRouter>
-        </ApolloProvider>
-      </HelmetProvider>
-    </React.StrictMode>,
+    <HelmetProvider>
+      <ApolloProvider client={client}>
+        <BrowserRouter>
+          <App logged={false} />
+        </BrowserRouter>
+      </ApolloProvider>
+    </HelmetProvider>,
     root
   );
 });

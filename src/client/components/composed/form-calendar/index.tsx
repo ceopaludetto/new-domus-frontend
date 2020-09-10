@@ -1,12 +1,10 @@
 import * as React from "react";
 import { Controller, useFormContext, get } from "react-hook-form";
+import { FiCalendar } from "react-icons/fi";
 
-import { CalendarControl } from "@/client/components/form";
+import { KeyboardDatePicker, KeyboardDatePickerProps } from "@material-ui/pickers";
 
-type FormCalendarProps = Omit<
-  React.ComponentProps<typeof CalendarControl>,
-  "name" | "value" | "onChange" | "onBlur"
-> & { name: string };
+type FormCalendarProps = Omit<KeyboardDatePickerProps, "name" | "value" | "onChange" | "onBlur"> & { name: string };
 
 export function FormCalendar({ name, helperText, ...rest }: FormCalendarProps) {
   const { control, errors } = useFormContext();
@@ -18,10 +16,13 @@ export function FormCalendar({ name, helperText, ...rest }: FormCalendarProps) {
       control={control}
       render={({ value = new Date(), ...props }) => {
         return (
-          <CalendarControl
+          <KeyboardDatePicker
             value={value}
             error={!!error}
+            format="DD/MM/YYYY"
             helperText={error?.message ?? helperText}
+            keyboardIcon={<FiCalendar />}
+            KeyboardButtonProps={{ color: "primary" }}
             {...props}
             {...rest}
           />
