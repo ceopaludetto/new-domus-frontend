@@ -2,7 +2,6 @@ import * as React from "react";
 import { Helmet } from "react-helmet-async";
 import { RiBuilding4Line, RiUserLine, RiLockPasswordLine } from "react-icons/ri";
 import { Switch, Route } from "react-router-dom";
-import { useLocalStorage } from "react-use";
 
 import { Typography, Stepper, Step, StepLabel } from "@material-ui/core";
 
@@ -34,7 +33,7 @@ export default function SignUp({ routes, history, staticContext }: RouteComponen
 
     history.push(`/auth/signup/step-${index + 1}`);
   });
-  const [values, setValues] = useLocalStorage<WizardContextProps["values"]>("@DOMUS:AUTH:SIGNUP", initialValues);
+  const [values, setValues] = React.useState<WizardContextProps["values"]>(initialValues);
 
   useRedirect("/auth/signup/step-1", { status: 301, staticContext });
 

@@ -27,6 +27,7 @@ export const SettingsPersonalSchema = Yup.object({
   email: Yup.string().email(Messages.EMAIL).required(Messages.REQUIRED),
   birthdate: Yup.date().typeError(Messages.DATE).required(Messages.REQUIRED),
   phone: Yup.string().matches(/\([\d]{2}\) \d?[\d]{4}-[\d]{4}/, Messages.TEL),
+  publicAccount: Yup.bool(),
 }).required();
 
 export type SettingsPersonalValues = Yup.InferType<typeof SettingsPersonalSchema>;

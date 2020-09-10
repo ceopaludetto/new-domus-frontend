@@ -71,7 +71,7 @@ export default function Step3() {
           });
 
           if (res.data?.register.person.condominiums[0].id) {
-            client.writeQuery<SelectedCondominiumQuery>({
+            client.cache.writeQuery<SelectedCondominiumQuery>({
               query: SelectedCondominium,
               data: {
                 __typename: "Query",
@@ -80,7 +80,7 @@ export default function Step3() {
             });
           }
 
-          client.writeQuery<LoggedQuery>({
+          client.cache.writeQuery<LoggedQuery>({
             query: Logged,
             data: {
               __typename: "Query",

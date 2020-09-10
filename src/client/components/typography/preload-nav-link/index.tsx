@@ -1,15 +1,15 @@
 import * as React from "react";
-import { Link, LinkProps } from "react-router-dom";
+import { NavLink, NavLinkProps } from "react-router-dom";
 
 import { usePreload, usePathWithCondominium } from "@/client/hooks";
 import { hasPathname } from "@/client/utils/string";
 
-interface PreloadLinkProps extends LinkProps {
+interface PreloadLinkProps extends NavLinkProps {
   to: { pathname: string } | string;
   params?: Record<string, any>;
 }
 
-export const PreloadLink = React.forwardRef<HTMLAnchorElement, PreloadLinkProps>(
+export const PreloadNavLink = React.forwardRef<HTMLAnchorElement, PreloadLinkProps>(
   ({ to, params, children, onClick, ...rest }, ref) => {
     const [generatePath] = usePathWithCondominium();
     const routePath = hasPathname(to) ? to.pathname : to;
@@ -17,9 +17,9 @@ export const PreloadLink = React.forwardRef<HTMLAnchorElement, PreloadLinkProps>
     const [handleClick] = usePreload(onClick);
 
     return (
-      <Link ref={ref} to={path} onClick={handleClick(path)} {...rest}>
+      <NavLink ref={ref} to={path} onClick={handleClick(path)} {...rest}>
         {children}
-      </Link>
+      </NavLink>
     );
   }
 );

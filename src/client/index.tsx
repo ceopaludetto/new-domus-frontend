@@ -18,11 +18,12 @@ const client = createClient(
   })
 );
 
-loadableReady(() => {
+// eslint-disable-next-line promise/catch-or-return
+loadableReady().then(() => {
   const root = document.querySelector("#app");
   const method: "render" | "hydrate" = root?.hasChildNodes() ? "hydrate" : "render";
 
-  ReactDOM[method](
+  return ReactDOM[method](
     <HelmetProvider>
       <ApolloProvider client={client}>
         <BrowserRouter>
@@ -30,7 +31,11 @@ loadableReady(() => {
         </BrowserRouter>
       </ApolloProvider>
     </HelmetProvider>,
-    root
+    root,
+    () => {
+      const jssStyles = document.querySelector("#jss-server-side");
+      jssStyles?.parentElement?.removeChild(jssStyles);
+    }
   );
 });
 

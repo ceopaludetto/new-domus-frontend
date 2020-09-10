@@ -1,10 +1,10 @@
-import { renderHook } from "@testing-library/react-hooks";
+import { renderHook, act } from "@testing-library/react-hooks";
 
 import { render, fireEvent } from "@/client/utils/setup-test";
 
 import { useVisibility, useMultipleVisibility } from "./use-visibility";
 
-describe("useVisibility", async () => {
+describe("useVisibility", () => {
   it("should render icon button and change input type on click", async () => {
     const { result } = renderHook(() => useVisibility());
 
@@ -18,7 +18,9 @@ describe("useVisibility", async () => {
 
       const button = container.querySelector("button") as HTMLButtonElement;
 
-      fireEvent.click(button);
+      act(() => {
+        fireEvent.click(button);
+      });
 
       props = result.current[0]();
 
@@ -45,7 +47,9 @@ describe("useMultipleVisibility", () => {
 
       const button = container.querySelector("button") as HTMLButtonElement;
 
-      fireEvent.click(button);
+      act(() => {
+        fireEvent.click(button);
+      });
 
       aProps = result.current[0]("a");
 
@@ -57,7 +61,9 @@ describe("useMultipleVisibility", () => {
 
       const button = container.querySelector("button") as HTMLButtonElement;
 
-      fireEvent.click(button);
+      act(() => {
+        fireEvent.click(button);
+      });
 
       bProps = result.current[0]("b");
 

@@ -1,15 +1,15 @@
 /* eslint-disable react/no-danger */
 import * as React from "react";
-import { renderToStaticMarkup } from "react-dom/server";
+import { renderToStaticMarkup, renderToString } from "react-dom/server";
 import { FilledContext, HelmetProvider } from "react-helmet-async";
 import { StaticRouter } from "react-router-dom";
 
 import { ApolloProvider, NormalizedCacheObject } from "@apollo/client";
 import { SchemaLink } from "@apollo/client/link/schema";
-import { renderToStringWithData } from "@apollo/client/react/ssr";
+import { getMarkupFromTree } from "@apollo/client/react/ssr";
 import { ChunkExtractor, ChunkExtractorManager } from "@loadable/server";
-import { ServerStyleSheets, ThemeProvider } from "@material-ui/styles";
-import { Injectable, Inject } from "@nestjs/common";
+import { ServerStyleSheets } from "@material-ui/styles";
+import { Injectable } from "@nestjs/common";
 import type { Request, Response } from "express";
 import { PinoLogger, InjectPinoLogger } from "nestjs-pino";
 import { generate } from "shortid";
@@ -17,19 +17,17 @@ import { generate } from "shortid";
 import { App } from "@/client/App";
 import { Logged, LoggedQuery, SelectedCondominium, SelectedCondominiumQuery } from "@/client/graphql";
 import { createClient } from "@/client/providers/apollo";
-import { theme } from "@/client/providers/theme";
 import type { ReactStaticContext } from "@/client/utils/common.dto";
 import { AuthenticationService } from "@/server/components/authentication";
 import { ConfigurationService } from "@/server/components/configuration";
-import { STATS, REFRESH_TOKEN } from "@/server/utils/constants";
+import { REFRESH_TOKEN } from "@/server/utils/constants";
 
 @Injectable()
 export class ReactService {
   public constructor(
     private readonly configService: ConfigurationService,
     private readonly authenticationService: AuthenticationService,
-    @InjectPinoLogger(ReactService.name) private readonly logger: PinoLogger,
-    @Inject(STATS) private readonly stats: Record<string, any>
+    @InjectPinoLogger(ReactService.name) private readonly logger: PinoLogger
   ) {}
 
   public async getCurrentUser(request: Request) {
@@ -52,7 +50,7 @@ export class ReactService {
       const sheets = new ServerStyleSheets();
       const nonce = Buffer.from(generate()).toString("base64");
       const extractor = new ChunkExtractor({
-        stats: this.stats,
+        statsFile: process.env.RAZZLE_LOADABLE_MANIFEST as string,
         entrypoints: ["client"],
       });
       const context: ReactStaticContext = {};
@@ -61,7 +59,7 @@ export class ReactService {
 
       const user = await this.getCurrentUser(req);
 
-      client.writeQuery<LoggedQuery>({
+      client.cache.writeQuery<LoggedQuery>({
         query: Logged,
         data: {
           __typename: "Query",
@@ -70,7 +68,7 @@ export class ReactService {
       });
 
       if (user?.person.condominiums) {
-        client.writeQuery<SelectedCondominiumQuery>({
+        client.cache.writeQuery<SelectedCondominiumQuery>({
           query: SelectedCondominium,
           data: {
             __typename: "Query",
@@ -86,8 +84,8 @@ export class ReactService {
         );
       }
 
-      const markup = await renderToStringWithData(
-        sheets.collect(
+      const markup = await getMarkupFromTree({
+        tree: (
           <ChunkExtractorManager extractor={extractor}>
             <HelmetProvider context={helmetContext}>
               <ApolloProvider client={client}>
@@ -97,8 +95,9 @@ export class ReactService {
               </ApolloProvider>
             </HelmetProvider>
           </ChunkExtractorManager>
-        )
-      );
+        ),
+        renderFunction: (el) => renderToString(sheets.collect(el)),
+      });
 
       const initialState = client.extract();
 

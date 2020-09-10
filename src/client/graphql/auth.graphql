@@ -22,6 +22,10 @@ mutation ChangePassword($input: ChangePasswordInput!) {
   }
 }
 
+mutation EvictRefreshCookie {
+  evictRefreshCookie
+}
+
 query Me {
   profile {
     ...UserValues

@@ -1,6 +1,6 @@
 import * as React from "react";
+import { AiOutlineSwap } from "react-icons/ai";
 import { FiX } from "react-icons/fi";
-import { VscArrowBoth } from "react-icons/vsc";
 import { useHistory, useParams } from "react-router-dom";
 import { useMeasure } from "react-use";
 
@@ -19,7 +19,7 @@ import {
 import { makeStyles } from "@material-ui/styles";
 
 import { Blurred } from "@/client/components/layout";
-import { PreloadLink } from "@/client/components/typography";
+import { PreloadNavLink, Tooltip } from "@/client/components/typography";
 import { Me, MeQuery, SelectedCondominium, SelectedCondominiumQuery } from "@/client/graphql";
 import { usePathWithCondominium } from "@/client/hooks";
 import type { RouteComponentProps } from "@/client/utils/common.dto";
@@ -40,6 +40,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: "column",
     height: "100vh",
     display: "flex",
+  },
+  active: {
+    color: theme.palette.primary.main,
+    "& svg": {
+      color: theme.palette.primary.main,
+    },
   },
   condominiums: {
     borderTop: `1px solid ${theme.palette.divider}`,
@@ -66,7 +72,7 @@ export function Sidebar({ routes }: Pick<RouteComponentProps, "routes">) {
 
   const changeSelectedCondominium = React.useCallback(
     (id: string) => {
-      client.writeQuery<SelectedCondominiumQuery>({
+      client.cache.writeQuery<SelectedCondominiumQuery>({
         query: SelectedCondominium,
         data: {
           __typename: "Query",
@@ -107,7 +113,14 @@ export function Sidebar({ routes }: Pick<RouteComponentProps, "routes">) {
                   const path = retrieveTo(r.path);
 
                   return (
-                    <ListItem button key={r.name} component={(props) => <PreloadLink to={path} {...props} />}>
+                    <ListItem
+                      key={r.name}
+                      button
+                      component={PreloadNavLink}
+                      activeClassName={classes.active}
+                      exact
+                      to={path}
+                    >
                       <ListItemIcon>
                         <Icon size={18} />
                       </ListItemIcon>
@@ -126,9 +139,11 @@ export function Sidebar({ routes }: Pick<RouteComponentProps, "routes">) {
                   </Typography>
                 </Box>
                 <Box>
-                  <IconButton color="primary" onClick={() => setListOpen((v) => !v)}>
-                    {listOpen ? <FiX /> : <VscArrowBoth />}
-                  </IconButton>
+                  <Tooltip title={listOpen ? "Fechar" : "Alterar condomínio"}>
+                    <IconButton color="primary" onClick={() => setListOpen((v) => !v)}>
+                      {listOpen ? <FiX /> : <AiOutlineSwap />}
+                    </IconButton>
+                  </Tooltip>
                 </Box>
               </>
             ) : (

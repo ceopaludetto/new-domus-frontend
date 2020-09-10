@@ -36,7 +36,7 @@ export default function SignIn() {
       });
 
       if (res.data?.login.person.condominiums) {
-        client.writeQuery<SelectedCondominiumQuery>({
+        client.cache.writeQuery<SelectedCondominiumQuery>({
           query: SelectedCondominium,
           data: {
             __typename: "Query",
@@ -45,7 +45,7 @@ export default function SignIn() {
         });
       }
 
-      client.writeQuery<LoggedQuery>({
+      client.cache.writeQuery<LoggedQuery>({
         query: Logged,
         data: {
           __typename: "Query",
@@ -83,48 +83,50 @@ export default function SignIn() {
             Falha ao realizar login
           </Typography>
         )}
-        <Grid container spacing={3}>
-          <Grid item xs={12}>
-            <FormControl autoComplete="on" autoFocus label="Login" name="login" id="login" />
+        <Box pt={2}>
+          <Grid container spacing={3}>
+            <Grid item xs={12}>
+              <FormControl autoComplete="on" autoFocus label="Login" name="login" id="login" />
+            </Grid>
+            <Grid item xs={12}>
+              <FormControl
+                autoComplete="password"
+                label="Senha"
+                name="password"
+                id="password"
+                helperText={
+                  <Link component={PreloadLink} color="primary" to="/auth/forgot">
+                    Esqueceu a senha?
+                  </Link>
+                }
+                {...getFieldProps()}
+              />
+            </Grid>
           </Grid>
-          <Grid item xs={12}>
-            <FormControl
-              autoComplete="password"
-              label="Senha"
-              name="password"
-              id="password"
-              helperText={
-                <Link component={PreloadLink} color="primary" to="/auth/forgot">
-                  Esqueceu a senha?
-                </Link>
-              }
-              {...getFieldProps()}
-            />
-          </Grid>
-        </Grid>
-        <Box mt={2}>
-          <Button
-            disabled={methods.formState.isSubmitting}
-            size="large"
-            color="primary"
-            fullWidth
-            variant="contained"
-            type="submit"
-          >
-            Entrar
-          </Button>
-        </Box>
-        <Box mt={2}>
-          <Button
-            component={PreloadLink}
-            variant="text"
-            fullWidth
-            size="large"
-            color="primary"
-            to="/auth/signup/step-1"
-          >
-            Cadastre-se
-          </Button>
+          <Box mt={2}>
+            <Button
+              disabled={methods.formState.isSubmitting}
+              size="large"
+              color="primary"
+              fullWidth
+              variant="contained"
+              type="submit"
+            >
+              Entrar
+            </Button>
+          </Box>
+          <Box mt={2}>
+            <Button
+              component={PreloadLink}
+              variant="text"
+              fullWidth
+              size="large"
+              color="primary"
+              to="/auth/signup/step-1"
+            >
+              Cadastre-se
+            </Button>
+          </Box>
         </Box>
       </form>
     </FormProvider>

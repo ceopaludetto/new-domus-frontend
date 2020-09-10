@@ -3,7 +3,7 @@ import type { SchemaLink } from "@apollo/client/link/schema";
 
 import { AccessToken } from "./token";
 
-const tokenStore = new AccessToken();
+export const tokenStore = new AccessToken();
 
 const setTokenLink = new ApolloLink((operation, forward) => {
   return forward(operation).map((response) => {

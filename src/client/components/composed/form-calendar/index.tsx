@@ -23,6 +23,8 @@ export function FormCalendar({ name, helperText, ...rest }: FormCalendarProps) {
             helperText={error?.message ?? helperText}
             keyboardIcon={<FiCalendar />}
             KeyboardButtonProps={{ color: "primary" }}
+            okLabel="Selecionar"
+            cancelLabel="Cancelar"
             {...props}
             {...rest}
           />

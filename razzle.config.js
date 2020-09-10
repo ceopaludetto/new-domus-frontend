@@ -76,6 +76,12 @@ module.exports = {
 
     if (target === "web") {
       config.plugins.unshift(new LoadablePlugin({ writeToDisk: true }));
+
+      if (!dev) {
+        config.optimization.runtimeChunk = {
+          name: "runtime",
+        };
+      }
     }
 
     // add graphql tag loader

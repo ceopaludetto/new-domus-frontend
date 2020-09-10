@@ -95,6 +95,11 @@ const common: Partial<Theme> = {
         paddingRight: "0",
       },
     },
+    MuiListItemIcon: {
+      root: {
+        minWidth: "36px",
+      },
+    },
   },
 };
 

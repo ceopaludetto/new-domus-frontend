@@ -11,7 +11,6 @@ const common = {
   transform: tsjPreset.transform,
   moduleNameMapper: {
     "\\.(gql|graphql)$": "jest-transform-graphql",
-    "\\.(css|less|scss)$": "identity-obj-proxy",
     "^@/(.*)$": "<rootDir>/src/$1",
   },
   testURL: "http://localhost/",
@@ -20,7 +19,7 @@ const common = {
   coverageDirectory: "<rootDir>/coverage",
   globals: {
     "ts-jest": {
-      babelConfig: path.resolve(".babelrc"),
+      babelConfig: path.resolve("babel.config.js"),
       tsconfig: compilerOptions,
     },
   },

@@ -16,9 +16,6 @@ export const BLOCK = "Block";
 export const PHONE = "Phone";
 export const ADDRESS = "Address";
 
-// React
-export const STATS = "@STATS";
-
 // Mailer
 export const MAILER = "@MAILER";
 export const ADAPTER = "@ADAPTER";

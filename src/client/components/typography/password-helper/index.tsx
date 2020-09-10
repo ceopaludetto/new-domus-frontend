@@ -18,12 +18,12 @@ export function PasswordHelper({ children, active, ...rest }: PasswordHelperProp
   const classes = useStyles({ active });
 
   return (
-    <Box display="flex">
-      <Box mr={2}>
+    <Box display="flex" alignItems="center" mb={0.75}>
+      <Box mr={2} display="inline-flex">
         <FiCheckCircle className={classes.root} size={20} />
       </Box>
       <Box>
-        <Typography className={classes.root} component="span" variant="body2" {...rest}>
+        <Typography className={classes.root} component="span" variant="body1" {...rest}>
           {children}
         </Typography>
       </Box>

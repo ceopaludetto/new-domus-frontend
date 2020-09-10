@@ -68,42 +68,44 @@ export default function Forgot() {
         <Typography component="h1" gutterBottom variant="h5">
           Recuperar Senha
         </Typography>
-        {submitted ? (
-          <>
-            <Typography gutterBottom>
-              Um e-mail com instruções de recuperação de senha foi enviado para {data?.forgot}!
-            </Typography>
-            <Typography variant="caption">
-              Você será redirecionado em {time} segundo{time !== 1 && "s"}.
-            </Typography>
-            <Box textAlign="right" mt={3}>
-              <Button component={PreloadLink} variant="text" color="primary" to="/auth/signin">
-                Ir agora
-              </Button>
-            </Box>
-          </>
-        ) : (
-          <>
-            <FormControl label="Login" name="login" id="login" autoFocus />
-            <Box mt={2}>
-              <Button
-                disabled={methods.formState.isSubmitting}
-                fullWidth
-                color="primary"
-                variant="contained"
-                type="submit"
-                size="large"
-              >
-                Recuperar Senha
-              </Button>
-            </Box>
-            <Box mt={2}>
-              <Button component={PreloadLink} variant="text" fullWidth size="large" color="primary" to="/auth/signin">
-                Voltar para Login
-              </Button>
-            </Box>
-          </>
-        )}
+        <Box pt={2}>
+          {submitted ? (
+            <>
+              <Typography gutterBottom>
+                Um e-mail com instruções de recuperação de senha foi enviado para {data?.forgot}!
+              </Typography>
+              <Typography variant="caption">
+                Você será redirecionado em {time} segundo{time !== 1 && "s"}.
+              </Typography>
+              <Box textAlign="right" mt={3}>
+                <Button component={PreloadLink} variant="text" color="primary" to="/auth/signin">
+                  Ir agora
+                </Button>
+              </Box>
+            </>
+          ) : (
+            <>
+              <FormControl label="Login" name="login" id="login" autoFocus />
+              <Box mt={2}>
+                <Button
+                  disabled={methods.formState.isSubmitting}
+                  fullWidth
+                  color="primary"
+                  variant="contained"
+                  type="submit"
+                  size="large"
+                >
+                  Recuperar Senha
+                </Button>
+              </Box>
+              <Box mt={2}>
+                <Button component={PreloadLink} variant="text" fullWidth size="large" color="primary" to="/auth/signin">
+                  Voltar para Login
+                </Button>
+              </Box>
+            </>
+          )}
+        </Box>
       </form>
     </FormProvider>
   );

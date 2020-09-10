@@ -1,10 +1,11 @@
 import * as React from "react";
 import { Helmet } from "react-helmet-async";
 import { useForm, FormProvider } from "react-hook-form";
+import { FiX } from "react-icons/fi";
 
 import { useQuery, useMutation } from "@apollo/client";
 import { yupResolver } from "@hookform/resolvers";
-import { Grid, Button, Divider, Box, Typography } from "@material-ui/core";
+import { Grid, Button, Divider, Box, Typography, Snackbar, IconButton } from "@material-ui/core";
 import type { UserInputError } from "apollo-server-express";
 
 import { FormControl, FormSwitch, FormCalendar, MaskedFormControl, PasswordHelper } from "@/client/components";
@@ -32,6 +33,8 @@ import { splitPhone } from "@/client/utils/string";
 export default function Personal() {
   const [passwordGenericError, setPasswordGenericError] = React.useState(false);
   const [personalGenericError, setPersonalGenericError] = React.useState(false);
+  const [snackbarContent, setSnackbarContent] = React.useState("");
+  const [snackbarOpen, setSnackbarOpen] = React.useState(false);
   const [mapPropsToField] = useMultipleVisibility(["currentPassword", "newPassword", "repeatNewPassword"]);
   const { data } = useQuery<MeQuery>(Me);
   const [changePassword] = useMutation<ChangePasswordMutation, ChangePasswordMutationVariables>(ChangePassword);
@@ -42,11 +45,12 @@ export default function Personal() {
     defaultValues: {
       name: data?.profile.person.name,
       lastName: data?.profile.person.lastName,
-      cpf: data?.profile.person.cpf,
+      cpf: Masks.cpf(data?.profile.person.cpf),
       login: data?.profile.login,
       email: data?.profile.person.email,
-      phone: `${data?.profile.person.phones[0].ddd}${data?.profile.person.phones[0].number}`,
+      phone: Masks.tel(`${data?.profile.person.phones[0].ddd}${data?.profile.person.phones[0].number}`),
       birthdate: data?.profile.person.birthdate,
+      publicAccount: false,
     },
   });
 
@@ -60,7 +64,7 @@ export default function Personal() {
   });
   const newPasswordValue = password.watch("newPassword");
 
-  const handlePersonalSubmit = personal.handleSubmit(async ({ login, birthdate, phone, ...rest }) => {
+  const handlePersonalSubmit = personal.handleSubmit(async ({ login, birthdate, phone, publicAccount, ...rest }) => {
     setPersonalGenericError(false);
     try {
       await changeUserData({
@@ -75,9 +79,14 @@ export default function Personal() {
           },
         },
       });
+
+      setSnackbarContent("Informações pessoais alteradas com sucesso!");
+      setSnackbarOpen(true);
+
+      personal.reset(personal.getValues());
     } catch (error) {
-      const graphQLError = (error.graphQLErrors as UserInputError[])[0];
-      if (graphQLError.extensions.fields) {
+      const graphQLError = (error?.graphQLErrors as UserInputError[])[0];
+      if (graphQLError?.extensions?.fields) {
         const field: "currentPassword" = graphQLError.extensions.fields[0];
         personal.setError(field, {
           type: "graphql",
@@ -100,6 +109,11 @@ export default function Personal() {
           },
         },
       });
+
+      setSnackbarContent("Senha alterada com sucesso!");
+      setSnackbarOpen(true);
+
+      password.reset();
     } catch (error) {
       const graphQLError = (error.graphQLErrors as UserInputError[])[0];
       if (graphQLError.extensions.fields) {
@@ -122,8 +136,27 @@ export default function Personal() {
     };
   }, [newPasswordValue]);
 
+  function handleClose() {
+    setSnackbarOpen(false);
+  }
+
   return (
     <>
+      <Snackbar
+        message={snackbarContent}
+        open={snackbarOpen}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "right",
+        }}
+        autoHideDuration={5000}
+        action={
+          <IconButton size="small" onClick={handleClose} color="inherit">
+            <FiX />
+          </IconButton>
+        }
+      />
       <Helmet title="Configurações - Informações Pessoais" />
       <FormProvider {...personal}>
         <form onSubmit={handlePersonalSubmit}>
@@ -152,19 +185,24 @@ export default function Personal() {
               <MaskedFormControl rifm={{ format: Masks.tel }} name="phone" label="Telefone" id="phone" />
             </Grid>
             <Grid item xs={12} md={4}>
-              <FormCalendar name="birthdate" label="Data de Nascimento" id="birthdate" />
+              <FormCalendar disableFuture name="birthdate" label="Data de Nascimento" id="birthdate" />
             </Grid>
           </Grid>
           <Box mt={2}>
             <FormSwitch
               label="Conta pública"
               info="Ser visível a todos usuários do condomínio atual."
-              id="public-account"
-              name="public-account"
+              id="publicAccount"
+              name="publicAccount"
             />
           </Box>
           <Box textAlign="right">
-            <Button color="primary" variant="contained" type="submit">
+            <Button
+              disabled={personal.formState.isSubmitting || !personal.formState.isDirty}
+              color="primary"
+              variant="contained"
+              type="submit"
+            >
               Alterar Informações
             </Button>
           </Box>
@@ -212,7 +250,12 @@ export default function Personal() {
                 </Grid>
               </Grid>
               <Box textAlign="right" mt={2}>
-                <Button color="primary" variant="contained" disabled={password.formState.isSubmitting} type="submit">
+                <Button
+                  color="primary"
+                  variant="contained"
+                  disabled={password.formState.isSubmitting || !password.formState.isDirty}
+                  type="submit"
+                >
                   Alterar Senha
                 </Button>
               </Box>
@@ -239,13 +282,15 @@ export default function Personal() {
       <Box my={2}>
         <Divider />
       </Box>
-      <Button variant="text" color="secondary">
-        Excluir Conta
-      </Button>
+      <Box textAlign="center" pt={1} pb={3}>
+        <Button variant="text" color="secondary">
+          Excluir Conta
+        </Button>
+      </Box>
     </>
   );
 }
 
 Personal.fetchBefore = async (client: Client) => {
-  await client.query<MeQuery>({ query: Me });
+  await client.query<MeQuery>(Me);
 };

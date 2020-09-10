@@ -18,3 +18,5 @@ export function retrieveTo(val: string | string[] | undefined) {
 
   return Array.isArray(val) ? val[0] : val;
 }
+
+export const hasPathname = (to: { pathname: string } | string): to is { pathname: string } => typeof to !== "string";

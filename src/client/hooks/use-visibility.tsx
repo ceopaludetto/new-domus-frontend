@@ -3,6 +3,8 @@ import { RiEyeLine, RiEyeOffLine } from "react-icons/ri";
 
 import { IconButton, TextFieldProps, InputAdornment } from "@material-ui/core";
 
+import { Tooltip } from "@/client/components";
+
 type FieldProps = Pick<TextFieldProps, "type" | "InputProps">;
 
 export function useVisibility(initialValue?: boolean) {
@@ -20,14 +22,16 @@ export function useVisibility(initialValue?: boolean) {
           ...props,
           endAdornment: (
             <InputAdornment position="end">
-              <IconButton
-                tabIndex={-1}
-                color="primary"
-                aria-label={isVisible ? "Esconder senha" : "Mostrar senha"}
-                onClick={toggleVisible}
-              >
-                {isVisible ? <RiEyeOffLine /> : <RiEyeLine />}
-              </IconButton>
+              <Tooltip title={isVisible ? "Esconder senha" : "Mostrar senha"}>
+                <IconButton
+                  tabIndex={-1}
+                  color="primary"
+                  aria-label={isVisible ? "Esconder senha" : "Mostrar senha"}
+                  onClick={toggleVisible}
+                >
+                  {isVisible ? <RiEyeOffLine /> : <RiEyeLine />}
+                </IconButton>
+              </Tooltip>
             </InputAdornment>
           ),
         },
@@ -65,14 +69,16 @@ export function useMultipleVisibility<T extends string | symbol>(names: T[], ini
           ...props,
           endAdornment: (
             <InputAdornment position="end">
-              <IconButton
-                tabIndex={-1}
-                color="primary"
-                aria-label={isVisible[name] ? "Esconder senha" : "Mostrar senha como texto sem formatação"}
-                onClick={toggleVisible(name)}
-              >
-                {isVisible[name] ? <RiEyeOffLine /> : <RiEyeLine />}
-              </IconButton>
+              <Tooltip title={isVisible[name] ? "Esconder senha" : "Mostrar senha"}>
+                <IconButton
+                  tabIndex={-1}
+                  color="primary"
+                  aria-label={isVisible[name] ? "Esconder senha" : "Mostrar senha como texto sem formatação"}
+                  onClick={toggleVisible(name)}
+                >
+                  {isVisible[name] ? <RiEyeOffLine /> : <RiEyeLine />}
+                </IconButton>
+              </Tooltip>
             </InputAdornment>
           ),
         },
