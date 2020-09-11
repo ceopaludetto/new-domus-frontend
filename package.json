@@ -7,8 +7,7 @@
   "license": "MIT",
   "private": false,
   "sideEffects": [
-    "src/client/helpers/customs.ts",
-    "*.scss"
+    "src/client/helpers/customs.ts"
   ],
   "scripts": {
     "start": "razzle start",
