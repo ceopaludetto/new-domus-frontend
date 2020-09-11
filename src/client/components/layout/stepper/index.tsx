@@ -1,6 +1,11 @@
 import * as React from "react";
 
-import { StepIconProps as MuiStepIconProps, StepConnector as MuiStepConnector, Theme } from "@material-ui/core";
+import {
+  StepIconProps as MuiStepIconProps,
+  StepConnector as MuiStepConnector,
+  StepLabel as MuiStepLabel,
+  Theme,
+} from "@material-ui/core";
 import { makeStyles, withStyles } from "@material-ui/styles";
 import clsx from "clsx";
 
@@ -48,3 +53,12 @@ export const StepConnector = withStyles((theme: Theme) => ({
     borderRadius: 1,
   },
 }))(MuiStepConnector);
+
+export const StepLabel = withStyles((theme: Theme) => ({
+  completed: {
+    color: `${theme.palette.primary.main}!important`,
+  },
+  active: {
+    color: `${theme.palette.primary.main}!important`,
+  },
+}))(MuiStepLabel);

@@ -3,9 +3,9 @@ import { Helmet } from "react-helmet-async";
 import { RiBuilding4Line, RiUserLine, RiLockPasswordLine } from "react-icons/ri";
 import { Switch, Route } from "react-router-dom";
 
-import { Typography, Stepper, Step, StepLabel } from "@material-ui/core";
+import { Typography, Stepper, Step } from "@material-ui/core";
 
-import { StepIcon, StepConnector } from "@/client/components";
+import { StepIcon, StepConnector, StepLabel } from "@/client/components";
 import { useStepper, StepperContext, usePreload, useRedirect } from "@/client/hooks";
 import type { RouteComponentProps } from "@/client/utils/common.dto";
 

@@ -1,4 +1,4 @@
 export { ProgressBar } from "./progress-bar";
 export { Blurred } from "./blurred";
-export { StepIcon, StepConnector } from "./stepper";
+export { StepIcon, StepConnector, StepLabel } from "./stepper";
 export { Global } from "./global";
