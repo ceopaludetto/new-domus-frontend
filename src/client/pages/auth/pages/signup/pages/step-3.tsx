@@ -5,7 +5,14 @@ import { useQuery, useMutation } from "@apollo/client";
 import { yupResolver } from "@hookform/resolvers";
 import { Button, Box, MenuItem, Grid } from "@material-ui/core";
 
-import { MaskedFormControl, FormControl, FormSwitch, FormSelect, FormRadioCard, RadioCard } from "@/client/components";
+import {
+  MaskedFormControl,
+  FormControl,
+  FormSelect,
+  FormCheckbox,
+  FormRadioCard,
+  RadioCard,
+} from "@/client/components";
 import {
   Register,
   ShowStates,
@@ -173,11 +180,12 @@ export default function Step3() {
           </Box>
         )}
         <Box mt={2}>
-          <FormSwitch
+          <FormCheckbox
             label="Termos de uso"
             info="Ao assinar essa opção você concorda com nossos termos de uso."
             id="terms"
             name="terms"
+            color="secondary"
           />
         </Box>
         <Box mt={2} textAlign="right">

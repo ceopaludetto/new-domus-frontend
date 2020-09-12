@@ -19,7 +19,7 @@ import { theme } from "@/client/providers/theme";
 import { shouldRenderByAuth } from "@/client/utils/guards";
 
 interface AppProps {
-  logged: boolean;
+  logged?: boolean;
 }
 
 export function App({ logged }: AppProps) {

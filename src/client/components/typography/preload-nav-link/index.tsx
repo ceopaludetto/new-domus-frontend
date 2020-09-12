@@ -12,8 +12,8 @@ interface PreloadLinkProps extends NavLinkProps {
 export const PreloadNavLink = React.forwardRef<HTMLAnchorElement, PreloadLinkProps>(
   ({ to, params, children, onClick, ...rest }, ref) => {
     const [generatePath] = usePathWithCondominium();
-    const routePath = hasPathname(to) ? to.pathname : to;
-    const path = params || routePath.includes(":condominium") ? generatePath(routePath, params) : routePath;
+    const resolvedTo = hasPathname(to) ? to.pathname : to;
+    const path = generatePath(resolvedTo);
     const [handleClick] = usePreload(onClick);
 
     return (

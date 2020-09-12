@@ -1,5 +1,4 @@
-import type { Theme } from "@material-ui/core";
-import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
+import { Theme, createMuiTheme } from "@material-ui/core";
 
 export const darkVariant: Partial<Theme["palette"]> = {
   type: "dark",
@@ -7,6 +6,12 @@ export const darkVariant: Partial<Theme["palette"]> = {
     light: "#c3fdff",
     main: "#90caf9",
     dark: "#5d99c6",
+    contrastText: "#000000",
+  },
+  secondary: {
+    light: "#ffffff",
+    main: "#fafafa",
+    dark: "#c7c7c7",
     contrastText: "#000000",
   },
   error: {
@@ -30,30 +35,36 @@ export const darkVariant: Partial<Theme["palette"]> = {
 export const lightVariant: Partial<Theme["palette"]> = {
   type: "light",
   primary: {
-    light: "#c3fdff",
-    main: "#90caf9",
+    light: "#63a4ff",
+    main: "#1976d2",
     dark: "#5d99c6",
     contrastText: "#000000",
   },
+  secondary: {
+    light: "#404040",
+    main: "#1a1a1a",
+    dark: "#000000",
+    contrastText: "#FFFFFF",
+  },
   error: {
-    light: "#ff8e98",
-    main: "#ff5a6a",
-    dark: "#c61f40",
+    light: "#ff838c",
+    main: "#e1515f",
+    dark: "#aa1835",
     contrastText: "#000000",
   },
   success: {
-    light: "#f5ffec",
-    main: "#c2eaba",
-    dark: "#91b88a",
+    light: "#8cdb78",
+    main: "#5aa94a",
+    dark: "#26791c",
     contrastText: "#000000",
   },
   background: {
-    default: "#1b1b1b",
-    paper: "#252525",
+    default: "#fff",
+    paper: "#f2f2f2",
   },
 };
 
-const common: Partial<Theme> = {
+export const common: Partial<Theme> = {
   shape: {
     borderRadius: 6,
   },

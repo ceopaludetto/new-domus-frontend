@@ -14,8 +14,8 @@ import {
   Theme,
   IconButton,
   Typography,
-  NoSsr,
   Collapse,
+  Hidden,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 
@@ -29,21 +29,26 @@ import { retrieveTo } from "@/client/utils/string";
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
+    width: "100%",
+    borderLeft: 0,
+    borderBottom: 0,
     [theme.breakpoints.up("md")]: {
       position: "fixed",
       left: 0,
       top: 0,
+      maxWidth: "300px",
+      borderTop: 0,
     },
-    width: "100%",
-    maxWidth: "300px",
-    borderTop: 0,
-    borderLeft: 0,
-    borderBottom: 0,
+    [theme.breakpoints.down("sm")]: {
+      borderRight: 0,
+    },
   },
   sidebar: {
     flexDirection: "column",
-    height: "100vh",
     display: "flex",
+    [theme.breakpoints.up("md")]: {
+      height: "100vh",
+    },
   },
   active: {
     color: theme.palette.primary.main,
@@ -53,7 +58,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   condominiums: {
     borderTop: `1px solid ${theme.palette.divider}`,
-    padding: theme.spacing(2),
   },
   list: {
     backgroundColor: theme.palette.background.paper,
@@ -64,7 +68,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export function Sidebar({ routes }: Pick<RouteComponentProps, "routes">) {
+export function Sidebar({
+  routes,
+  onListItemClick,
+}: Pick<RouteComponentProps, "routes"> & { onListItemClick?: () => void }) {
   const [listOpen, setListOpen] = React.useState(false);
   const { data, client } = useQuery<MeQuery>(Me);
   const history = useHistory();
@@ -108,16 +115,15 @@ export function Sidebar({ routes }: Pick<RouteComponentProps, "routes">) {
       <Blurred className={classes.sidebar}>
         <Box flex="1">
           <List component="nav">
-            {routes
-              ?.filter((r) => !r.meta?.hidden ?? true)
-              ?.map((r) => {
-                const Icon = r.meta?.icon;
-                const path = retrieveTo(r.path);
+            {routes?.map((r) => {
+              const Icon = r.meta?.icon;
+              const path = retrieveTo(r.path);
 
-                return (
+              return r.meta?.hidden ? (
+                <Hidden key={r.name} implementation="css" mdUp>
                   <ListItem
-                    key={r.name}
                     button
+                    onClick={onListItemClick}
                     component={PreloadNavLink}
                     activeClassName={classes.active}
                     exact
@@ -128,11 +134,34 @@ export function Sidebar({ routes }: Pick<RouteComponentProps, "routes">) {
                     </ListItemIcon>
                     <ListItemText primary={r.meta?.displayName} />
                   </ListItem>
-                );
-              })}
+                </Hidden>
+              ) : (
+                <ListItem
+                  key={r.name}
+                  button
+                  onClick={onListItemClick}
+                  component={PreloadNavLink}
+                  activeClassName={classes.active}
+                  exact
+                  to={path}
+                >
+                  <ListItemIcon>
+                    <Icon size={18} />
+                  </ListItemIcon>
+                  <ListItemText primary={r.meta?.displayName} />
+                </ListItem>
+              );
+            })}
           </List>
         </Box>
-        <Box display="flex" alignItems="center" className={classes.condominiums}>
+        <Box
+          display="flex"
+          alignItems="center"
+          p={{ md: 2 }}
+          px={{ xs: 2 }}
+          py={{ xs: 1 }}
+          className={classes.condominiums}
+        >
           {multiCondominiums ? (
             <>
               <Box flex="1">
@@ -155,22 +184,27 @@ export function Sidebar({ routes }: Pick<RouteComponentProps, "routes">) {
           )}
         </Box>
         {multiCondominiums && (
-          <NoSsr>
-            <Collapse in={listOpen}>
-              <div className={classes.list}>
-                <List>
-                  {data?.profile.person.condominiums.map((c) => (
-                    <ListItem button onClick={() => handleCondominiumChange(c.id)} key={c.id}>
-                      <ListItemText
-                        primaryTypographyProps={{ color: condominium?.id === c.id ? "primary" : "textPrimary" }}
-                        primary={c.companyName}
-                      />
-                    </ListItem>
-                  ))}
-                </List>
-              </div>
-            </Collapse>
-          </NoSsr>
+          <Collapse in={listOpen}>
+            <div className={classes.list}>
+              <List>
+                {data?.profile.person.condominiums.map((c) => (
+                  <ListItem
+                    button
+                    onClick={() => {
+                      handleCondominiumChange(c.id);
+                      if (onListItemClick) onListItemClick();
+                    }}
+                    key={c.id}
+                  >
+                    <ListItemText
+                      primaryTypographyProps={{ color: condominium?.id === c.id ? "primary" : "textPrimary" }}
+                      primary={c.companyName}
+                    />
+                  </ListItem>
+                ))}
+              </List>
+            </div>
+          </Collapse>
         )}
       </Blurred>
     </Paper>

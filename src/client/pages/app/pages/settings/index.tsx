@@ -6,7 +6,7 @@ import { Tabs, Tab, Box, Theme } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 
 import { Page } from "@/client/components";
-import { usePathWithCondominium, usePreload } from "@/client/hooks";
+import { usePreload, usePathWithCondominium } from "@/client/hooks";
 import type { RouteComponentProps } from "@/client/utils/common.dto";
 import { retrieveTo } from "@/client/utils/string";
 

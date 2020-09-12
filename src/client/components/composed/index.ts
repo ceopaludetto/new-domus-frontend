@@ -9,3 +9,4 @@ export { Sidebar } from "./sidebar";
 export { AppHeader } from "./app-header";
 export { Page } from "./page";
 export { FormSwitch } from "./form-switch";
+export { FormCheckbox } from "./form-checkbox";

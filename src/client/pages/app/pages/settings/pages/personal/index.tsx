@@ -219,47 +219,49 @@ export default function Personal() {
             </Typography>
           )}
           <Grid container spacing={3}>
-            <Grid item xs={12} md={6}>
-              <Grid container spacing={3}>
-                <Grid item xs={12}>
-                  <FormControl
-                    autoComplete="password"
-                    name="currentPassword"
-                    label="Senha Atual"
-                    id="currentPassword"
-                    {...mapPropsToField("currentPassword")}
-                  />
+            <Box clone order={{ xs: 13, md: -1 }}>
+              <Grid item xs={12} md={6}>
+                <Grid container spacing={3}>
+                  <Grid item xs={12}>
+                    <FormControl
+                      autoComplete="password"
+                      name="currentPassword"
+                      label="Senha Atual"
+                      id="currentPassword"
+                      {...mapPropsToField("currentPassword")}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <FormControl
+                      autoComplete="off"
+                      name="newPassword"
+                      label="Nova Senha"
+                      id="newPassword"
+                      {...mapPropsToField("newPassword")}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <FormControl
+                      autoComplete="off"
+                      name="repeatNewPassword"
+                      label="Repetir Nova Senha"
+                      id="repeatNewPassword"
+                      {...mapPropsToField("repeatNewPassword")}
+                    />
+                  </Grid>
                 </Grid>
-                <Grid item xs={12}>
-                  <FormControl
-                    autoComplete="off"
-                    name="newPassword"
-                    label="Nova Senha"
-                    id="newPassword"
-                    {...mapPropsToField("newPassword")}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <FormControl
-                    autoComplete="off"
-                    name="repeatNewPassword"
-                    label="Repetir Nova Senha"
-                    id="repeatNewPassword"
-                    {...mapPropsToField("repeatNewPassword")}
-                  />
-                </Grid>
+                <Box textAlign="right" mt={2}>
+                  <Button
+                    color="primary"
+                    variant="contained"
+                    disabled={password.formState.isSubmitting || !password.formState.isDirty}
+                    type="submit"
+                  >
+                    Alterar Senha
+                  </Button>
+                </Box>
               </Grid>
-              <Box textAlign="right" mt={2}>
-                <Button
-                  color="primary"
-                  variant="contained"
-                  disabled={password.formState.isSubmitting || !password.formState.isDirty}
-                  type="submit"
-                >
-                  Alterar Senha
-                </Button>
-              </Box>
-            </Grid>
+            </Box>
             <Grid item xs={12} md={6}>
               <Typography component="label" color="textPrimary" htmlFor="newPassword">
                 Dicas de Senha

@@ -1,9 +1,9 @@
 import * as React from "react";
-import { FiFilter } from "react-icons/fi";
+import { MdFilterList } from "react-icons/md";
 
 import { Button, IconButton, Box } from "@material-ui/core";
 
-import { Page } from "@/client/components";
+import { Page, Tooltip } from "@/client/components";
 
 export default function Locals() {
   return (
@@ -18,9 +18,11 @@ export default function Locals() {
             </Button>
           </Box>
           <Box>
-            <IconButton color="default">
-              <FiFilter />
-            </IconButton>
+            <Tooltip title="Filtro">
+              <IconButton color="default">
+                <MdFilterList />
+              </IconButton>
+            </Tooltip>
           </Box>
         </Box>
       }

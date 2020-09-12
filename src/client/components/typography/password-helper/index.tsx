@@ -10,7 +10,7 @@ interface PasswordHelperProps extends Omit<React.HTMLAttributes<HTMLSpanElement>
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: (props: { active: boolean }) => ({
-    color: props.active ? theme.palette.success.main : theme.palette.text.disabled,
+    color: props.active ? theme.palette.success.main : theme.palette.text.secondary,
   }),
 }));
 

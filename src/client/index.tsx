@@ -27,7 +27,7 @@ loadableReady().then(() => {
     <HelmetProvider>
       <ApolloProvider client={client}>
         <BrowserRouter>
-          <App logged={false} />
+          <App />
         </BrowserRouter>
       </ApolloProvider>
     </HelmetProvider>,

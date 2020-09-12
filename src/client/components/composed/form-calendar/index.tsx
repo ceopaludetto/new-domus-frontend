@@ -14,10 +14,9 @@ export function FormCalendar({ name, helperText, ...rest }: FormCalendarProps) {
     <Controller
       name={name}
       control={control}
-      render={({ value = new Date(), ...props }) => {
+      render={(props) => {
         return (
           <KeyboardDatePicker
-            value={value}
             error={!!error}
             format="DD/MM/YYYY"
             helperText={error?.message ?? helperText}

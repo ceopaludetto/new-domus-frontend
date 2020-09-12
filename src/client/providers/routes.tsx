@@ -1,4 +1,5 @@
 import { FiHome, FiCalendar, FiMapPin } from "react-icons/fi";
+import { RiSettings2Line } from "react-icons/ri";
 
 import loadable from "@loadable/component";
 
@@ -136,6 +137,7 @@ export const routes: Route[] = [
         component: loadable(() => import("@/client/pages/app/pages/settings")),
         meta: {
           displayName: "Configurações",
+          icon: RiSettings2Line,
           hidden: true,
         },
         children: [

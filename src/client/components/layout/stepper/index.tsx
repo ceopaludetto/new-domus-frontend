@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     display: "flex",
     alignItems: "center",
-    color: theme.palette.text.disabled,
+    color: theme.palette.text.secondary,
   },
   active: {
     color: theme.palette.primary.main,
@@ -48,7 +48,7 @@ export const StepConnector = withStyles((theme: Theme) => ({
     },
   },
   line: {
-    borderColor: theme.palette.text.disabled,
+    borderColor: theme.palette.text.secondary,
     borderTopWidth: 2,
     borderRadius: 1,
   },

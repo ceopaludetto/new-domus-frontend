@@ -2,7 +2,7 @@
 import * as React from "react";
 import { renderToStaticMarkup, renderToString } from "react-dom/server";
 import { FilledContext, HelmetProvider } from "react-helmet-async";
-import { StaticRouter } from "react-router-dom";
+import { StaticRouter, matchPath } from "react-router-dom";
 
 import { ApolloProvider, NormalizedCacheObject } from "@apollo/client";
 import { SchemaLink } from "@apollo/client/link/schema";
@@ -68,11 +68,21 @@ export class ReactService {
       });
 
       if (user?.person.condominiums) {
+        const match = matchPath(req.url, {
+          path: "/app/:condominium",
+        });
+
+        let condominium = user.person.condominiums[0].id;
+
+        if (user.person.condominiums.toArray().some((c) => c.id === (match?.params as any)?.condominium)) {
+          condominium = (match?.params as Record<string, any>)?.condominium;
+        }
+
         client.cache.writeQuery<SelectedCondominiumQuery>({
           query: SelectedCondominium,
           data: {
             __typename: "Query",
-            selectedCondominium: user.person.condominiums[0].id,
+            selectedCondominium: condominium,
           },
         });
       }
