@@ -8,7 +8,7 @@ import { LocalResolver } from "./local.resolver";
 import { LocalService } from "./local.service";
 
 @Module({
-  imports: [MikroOrmModule.forFeature({ entities: [Local] })],
+  imports: [MikroOrmModule.forFeature([Local])],
   providers: [LocalResolver, LocalService],
   exports: [LocalService],
 })

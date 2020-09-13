@@ -8,7 +8,7 @@ import { CondominiumResolver } from "./condominium.resolver";
 import { CondominiumService } from "./condominium.service";
 
 @Module({
-  imports: [MikroOrmModule.forFeature({ entities: [Condominium] })],
+  imports: [MikroOrmModule.forFeature([Condominium])],
   providers: [CondominiumResolver, CondominiumService],
   exports: [CondominiumService],
 })

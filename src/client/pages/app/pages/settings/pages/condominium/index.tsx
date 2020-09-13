@@ -31,7 +31,7 @@ export default function Condominium() {
           <MaskedFormControl rifm={{ format: Masks.cnpj, mask: true }} autoFocus name="cnpj" id="cnpj" label="CNPJ" />
         </Grid>
         <Grid item xs={12} md={6}>
-          <FormControl name="character" id="character" label="Caractere Especial" inputProps={{ maxlength: "1" }} />
+          <FormControl name="character" id="character" label="Caractere Especial" inputProps={{ maxLength: "1" }} />
         </Grid>
       </Grid>
     </FormProvider>

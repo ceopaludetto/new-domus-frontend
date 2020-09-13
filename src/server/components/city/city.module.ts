@@ -8,7 +8,7 @@ import { CityResolver } from "./city.resolver";
 import { CityService } from "./city.service";
 
 @Module({
-  imports: [MikroOrmModule.forFeature({ entities: [City] })],
+  imports: [MikroOrmModule.forFeature([City])],
   providers: [CityService, CityResolver],
   exports: [CityService],
 })

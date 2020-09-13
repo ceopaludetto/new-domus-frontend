@@ -8,7 +8,7 @@ import { StateResolver } from "./state.resolver";
 import { StateService } from "./state.service";
 
 @Module({
-  imports: [MikroOrmModule.forFeature({ entities: [State] })],
+  imports: [MikroOrmModule.forFeature([State])],
   providers: [StateService, StateResolver],
   exports: [StateService],
 })

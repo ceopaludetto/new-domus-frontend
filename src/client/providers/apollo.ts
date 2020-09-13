@@ -1,9 +1,30 @@
 import { InMemoryCache, ApolloClient, HttpLink, ApolloLink } from "@apollo/client";
 import type { SchemaLink } from "@apollo/client/link/schema";
 
+import { SelectedCondominium } from "@/client/graphql";
+
 import { AccessToken } from "./token";
 
 export const tokenStore = new AccessToken();
+
+const contextLink = new ApolloLink((operation, forward) => {
+  try {
+    const context = operation.getContext();
+
+    const selected = context.cache.readQuery({
+      query: SelectedCondominium,
+    });
+
+    operation.setContext(({ headers }: any) => ({
+      headers: {
+        "X-Condominium": selected.selectedCondominium,
+        ...headers,
+      },
+    }));
+  } catch (error) {} // eslint-disable-line no-empty
+
+  return forward(operation);
+});
 
 const setTokenLink = new ApolloLink((operation, forward) => {
   return forward(operation).map((response) => {
@@ -45,7 +66,7 @@ export function createClient(isSsr = false, link: HttpLink | SchemaLink) {
 
   const client = new ApolloClient({
     cache,
-    link: isSsr ? link : setTokenLink.concat(getTokenLink.concat(link)),
+    link: isSsr ? link : contextLink.concat(setTokenLink.concat(getTokenLink.concat(link))),
     ssrMode: isSsr,
     connectToDevTools: process.env.NODE_ENV === "development",
     assumeImmutableResults: true,

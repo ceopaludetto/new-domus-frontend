@@ -18,6 +18,7 @@ import {
   StateModule,
   CityModule,
   UserModule,
+  BlockModule,
 } from "@/server/components";
 import * as entities from "@/server/models";
 import type { ContextType } from "@/server/utils/common.dto";
@@ -100,6 +101,7 @@ import { APP_NAME } from "@/server/utils/constants";
     ReactModule,
     StateModule,
     CityModule,
+    BlockModule,
   ],
 })
 export class ApplicationModule {}

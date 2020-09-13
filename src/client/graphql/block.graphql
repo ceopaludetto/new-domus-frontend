@@ -1,0 +1,15 @@
+query ShowBlocks {
+  showBlocks {
+    id
+    name
+    number
+  }
+}
+
+mutation CreateBlock($input: BlockInsertInput!) {
+  createBlock(input: $input) {
+    id
+    name
+    number
+  }
+}

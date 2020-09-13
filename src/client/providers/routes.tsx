@@ -1,3 +1,4 @@
+import { BiBuildings } from "react-icons/bi";
 import { FiHome, FiCalendar, FiMapPin } from "react-icons/fi";
 import { RiSettings2Line } from "react-icons/ri";
 
@@ -90,6 +91,7 @@ export const routes: Route[] = [
       "/app/:condominium",
       "/app/:condominium/events",
       "/app/:condominium/locals",
+      "/app/:condominium/blocks",
       "/app/:condominium/settings",
       "/app/:condominium/settings/condominium",
     ],
@@ -128,6 +130,16 @@ export const routes: Route[] = [
         meta: {
           displayName: "Locais",
           icon: FiMapPin,
+        },
+      },
+      {
+        name: "@APP:HOME:BLOCKS",
+        path: "/app/:condominium/blocks",
+        exact: true,
+        component: loadable(() => import("@/client/pages/app/pages/block")),
+        meta: {
+          displayName: "Blocos e Apartamentos",
+          icon: BiBuildings,
         },
       },
       {

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { MdFilterList } from "react-icons/md";
+import { MdFilterList, MdAdd } from "react-icons/md";
 
 import { Button, IconButton, Box } from "@material-ui/core";
 
@@ -13,7 +13,7 @@ export default function Locals() {
       actions={
         <Box display="flex" alignItems="center">
           <Box pr={2}>
-            <Button variant="contained" color="primary">
+            <Button variant="contained" color="primary" startIcon={<MdAdd />}>
               Novo Local
             </Button>
           </Box>

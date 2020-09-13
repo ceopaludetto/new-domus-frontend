@@ -23,3 +23,4 @@ export const ADAPTER = "@ADAPTER";
 // Authentication
 export const ACCESS_TOKEN = "X-Access-Token";
 export const REFRESH_TOKEN = "X-Refresh-Token";
+export const CONDOMINIUM_TOKEN = "X-Condominium";
