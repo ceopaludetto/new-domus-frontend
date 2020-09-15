@@ -294,5 +294,5 @@ export default function Personal() {
 }
 
 Personal.fetchBefore = async (client: Client) => {
-  await client.query<MeQuery>(Me);
+  await client.query<MeQuery>({ query: Me });
 };

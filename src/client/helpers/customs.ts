@@ -4,7 +4,7 @@ import { removeMask } from "@/client/utils/string";
 
 import * as Messages from "./constants";
 
-Yup.addMethod(Yup.string, "login", function validate(this: Yup.StringSchema, message: string) {
+Yup.addMethod(Yup.string, "login", function validate(this: Yup.StringSchema, message?: string) {
   return this.test("login", message ?? Messages.LOGIN, (v) => {
     if (!v) {
       return true;
@@ -18,7 +18,7 @@ Yup.addMethod(Yup.string, "login", function validate(this: Yup.StringSchema, mes
   });
 });
 
-Yup.addMethod(Yup.string, "cpf", function validate(this: Yup.StringSchema, message: string) {
+Yup.addMethod(Yup.string, "cpf", function validate(this: Yup.StringSchema, message?: string) {
   return this.test("cpf", message ?? Messages.CPF, (v) => {
     if (!v) {
       return true;
@@ -60,7 +60,7 @@ Yup.addMethod(Yup.string, "cpf", function validate(this: Yup.StringSchema, messa
   });
 });
 
-Yup.addMethod(Yup.string, "cnpj", function validate(this: Yup.StringSchema, message: string) {
+Yup.addMethod(Yup.string, "cnpj", function validate(this: Yup.StringSchema, message?: string) {
   return this.test("cnpj", message ?? Messages.CNPJ, (v) => {
     if (!v) {
       return true;
@@ -108,6 +108,15 @@ Yup.addMethod(Yup.string, "cnpj", function validate(this: Yup.StringSchema, mess
     result = soma % 11 < 2 ? 0 : 11 - (soma % 11);
     if (result !== Number(digits.charAt(1))) return false;
 
+    return true;
+  });
+});
+
+Yup.addMethod(Yup.mixed, "file", function validate(this: Yup.MixedSchema<FileList>, message?: string) {
+  return this.test("files", message ?? Messages.FILE, (val) => {
+    if (val && Array.isArray(val)) {
+      return val[0] instanceof File;
+    }
     return true;
   });
 });

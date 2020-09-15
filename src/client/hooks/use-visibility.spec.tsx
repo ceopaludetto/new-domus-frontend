@@ -1,5 +1,9 @@
+import * as React from "react";
+
+import { ThemeProvider } from "@material-ui/styles";
 import { renderHook, act } from "@testing-library/react-hooks";
 
+import { theme } from "@/client/providers/theme";
 import { render, fireEvent } from "@/client/utils/setup-test";
 
 import { useVisibility, useMultipleVisibility } from "./use-visibility";
@@ -14,7 +18,9 @@ describe("useVisibility", () => {
     expect(props.type).toBe("password");
 
     if (props.InputProps?.endAdornment) {
-      const { container } = render(props.InputProps.endAdornment as any);
+      const { container } = render(props.InputProps.endAdornment as any, {
+        wrapper: ({ children }) => <ThemeProvider theme={theme}>{children}</ThemeProvider>,
+      });
 
       const button = container.querySelector("button") as HTMLButtonElement;
 
@@ -43,7 +49,9 @@ describe("useMultipleVisibility", () => {
     expect(bProps.type).toBe("password");
 
     if (aProps.InputProps?.endAdornment) {
-      const { container } = render(aProps.InputProps?.endAdornment as any);
+      const { container } = render(aProps.InputProps?.endAdornment as any, {
+        wrapper: ({ children }) => <ThemeProvider theme={theme}>{children}</ThemeProvider>,
+      });
 
       const button = container.querySelector("button") as HTMLButtonElement;
 
@@ -57,7 +65,9 @@ describe("useMultipleVisibility", () => {
     }
 
     if (bProps.InputProps?.endAdornment) {
-      const { container } = render(bProps.InputProps?.endAdornment as any);
+      const { container } = render(bProps.InputProps?.endAdornment as any, {
+        wrapper: ({ children }) => <ThemeProvider theme={theme}>{children}</ThemeProvider>,
+      });
 
       const button = container.querySelector("button") as HTMLButtonElement;
 

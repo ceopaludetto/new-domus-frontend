@@ -2,9 +2,10 @@ import { EntityRepository } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { Injectable } from "@nestjs/common";
 import { UserInputError } from "apollo-server-express";
+import { createWriteStream } from "fs";
 
 import { Block } from "@/server/models";
-import type { Mapped, ShowAll } from "@/server/utils/common.dto";
+import type { Mapped, ShowAll, FileUpload } from "@/server/utils/common.dto";
 
 import type { BlockInsertInput } from "./block.dto";
 
@@ -29,8 +30,27 @@ export class BlockService {
     return this.blockModel.findOne({ id }, mapped);
   }
 
-  public async create(data: BlockInsertInput, mapped?: Mapped<Block>) {
+  public async upload({ createReadStream, filename }: FileUpload) {
+    return new Promise<string>((resolve, reject) => {
+      const path = `./uploads/${filename}`;
+
+      createReadStream()
+        .pipe(createWriteStream(path))
+        .on("finish", () => {
+          resolve(path);
+        })
+        .on("error", reject);
+    });
+  }
+
+  public async create({ image, ...data }: BlockInsertInput, mapped?: Mapped<Block>) {
     const block = this.blockModel.create(data);
+
+    if (image) {
+      const path = await this.upload(await image);
+
+      block.image = path;
+    }
 
     await this.flush(block);
 

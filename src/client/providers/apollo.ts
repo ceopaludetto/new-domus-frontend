@@ -1,5 +1,4 @@
-import { InMemoryCache, ApolloClient, HttpLink, ApolloLink } from "@apollo/client";
-import type { SchemaLink } from "@apollo/client/link/schema";
+import { InMemoryCache, ApolloClient, ApolloLink } from "@apollo/client";
 
 import { SelectedCondominium } from "@/client/graphql";
 
@@ -50,7 +49,7 @@ const getTokenLink = new ApolloLink((operation, forward) => {
   return forward(operation);
 });
 
-export function createClient(isSsr = false, link: HttpLink | SchemaLink) {
+export function createClient(isSsr = false, link: ApolloLink) {
   let cache = new InMemoryCache();
 
   if (!isSsr) {

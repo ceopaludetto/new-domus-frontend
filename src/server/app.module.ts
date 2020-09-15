@@ -91,6 +91,10 @@ import { APP_NAME } from "@/server/utils/constants";
           setSchema(s);
           return s;
         },
+        uploads: {
+          maxFileSize: 10000000, // 10 MB
+          maxFiles: 5,
+        },
       }),
     }),
     QueueModule,

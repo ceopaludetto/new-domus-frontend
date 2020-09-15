@@ -30,7 +30,8 @@
     "razzle.config.js",
     ".eslintrc.js",
     "jest.config.js",
-    "babel.config.js"
+    "babel.config.js",
+    "__mocks__/**/*"
   ],
   "exclude": ["node_modules", "dist", "build", "coverage", "certs", "env"]
 }

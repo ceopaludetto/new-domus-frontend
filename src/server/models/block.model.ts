@@ -18,6 +18,10 @@ export class Block extends BaseModel {
   @Property()
   public number!: number;
 
+  @Field()
+  @Property()
+  public image?: string;
+
   @Field(() => Condominium)
   @ManyToOne({ entity: () => Condominium })
   public condominium!: Condominium;

@@ -1,6 +1,8 @@
-import { InputType, Field, ID } from "@nestjs/graphql";
-import { IsString, IsNumber, IsOptional } from "class-validator";
+import { InputType, Field, ID, Int } from "@nestjs/graphql";
+import { GraphQLUpload } from "apollo-server-express";
+import { IsString, IsNumber, IsOptional, IsInt } from "class-validator";
 
+import type { FileUpload } from "@/server/utils/common.dto";
 import { IsShortID } from "@/server/utils/validations";
 
 @InputType()
@@ -10,9 +12,14 @@ export class BlockInsertInput {
   @Field({ nullable: true })
   public name?: string;
 
+  @IsInt()
   @IsNumber()
-  @Field()
+  @Field(() => Int)
   public number!: number;
+
+  @IsOptional()
+  @Field(() => GraphQLUpload!, { nullable: true }) // eslint-disable-line @typescript-eslint/no-non-null-assertion
+  public image?: Promise<FileUpload>;
 
   @IsShortID()
   @IsOptional()

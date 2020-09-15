@@ -4,7 +4,8 @@ import { Resolver, Args, Query, Mutation, Context } from "@nestjs/graphql";
 import { GqlAuthGuard } from "@/server/components/authentication/authentication.guard";
 import { GqlCondominiumGuard } from "@/server/components/condominium/condominium.guard";
 import { Block } from "@/server/models";
-import { FindByID, Mapped, ShowAll, ContextType } from "@/server/utils/common.dto";
+import { FindByID, ShowAll, ContextType } from "@/server/utils/common.dto";
+import type { Mapped } from "@/server/utils/common.dto";
 import { MapFields } from "@/server/utils/plugins";
 
 import { BlockInsertInput } from "./block.dto";

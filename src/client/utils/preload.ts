@@ -21,11 +21,9 @@ export function findRoute(path: string, proutes: Route[], matching: Route[]): Ro
     if (matchingRoute.children?.length) {
       return findRoute(path, matchingRoute.children, matching) as Route[];
     }
-
-    return matching as Route[];
   }
 
-  throw new Error("Route not find");
+  return matching as Route[];
 }
 
 interface PreloadOptions {
@@ -35,7 +33,7 @@ interface PreloadOptions {
 export async function preload(path: string, { client }: PreloadOptions) {
   const matchingRoute = findRoute(path, routes, []);
 
-  await Promise.all(
+  return Promise.all(
     matchingRoute.map(async (m) => {
       const component = await m.component.load();
 
@@ -44,6 +42,8 @@ export async function preload(path: string, { client }: PreloadOptions) {
       if (hasFetchBefore(c)) {
         await c.fetchBefore(client);
       }
+
+      return c;
     })
   );
 }

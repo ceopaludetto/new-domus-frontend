@@ -3,9 +3,10 @@ import { useForm, FormProvider } from "react-hook-form";
 import { MdAdd } from "react-icons/md";
 
 import { useMutation, useQuery } from "@apollo/client";
+import { yupResolver } from "@hookform/resolvers";
 import { Button, Grid } from "@material-ui/core";
 
-import { Page, Modal, FormControl } from "@/client/components";
+import { Page, Modal, FormControl, FormUpload } from "@/client/components";
 import {
   CreateBlock,
   CreateBlockMutation,
@@ -13,13 +14,16 @@ import {
   ShowBlocks,
   ShowBlocksQuery,
 } from "@/client/graphql";
+import { BlockSchema, BlockValues } from "@/client/helpers/validations/block.schema";
 
 export default function Block() {
   const [newBlock, setNewBlock] = React.useState(false);
-  const methods = useForm({
+  const methods = useForm<BlockValues>({
+    resolver: yupResolver(BlockSchema),
     defaultValues: {
       name: "",
-      number: "",
+      number: 0,
+      image: undefined,
     },
   });
   const [createBlock] = useMutation<CreateBlockMutation, CreateBlockMutationVariables>(CreateBlock, {
@@ -39,13 +43,14 @@ export default function Block() {
   });
   const { data } = useQuery<ShowBlocksQuery>(ShowBlocks);
 
-  const handleSubmit = methods.handleSubmit(async ({ name, number }) => {
+  const handleSubmit = methods.handleSubmit(async ({ name, number, image }) => {
     try {
       const res = await createBlock({
         variables: {
           input: {
             name,
             number: Number(number),
+            image: image?.[0],
           },
         },
       });
@@ -91,7 +96,10 @@ export default function Block() {
                 <FormControl name="name" id="name" label="Nome" />
               </Grid>
               <Grid item xs={12}>
-                <FormControl name="number" id="number" label="Número" />
+                <FormControl name="number" type="number" required id="number" label="Número" />
+              </Grid>
+              <Grid item xs={12}>
+                <FormUpload multiple={false} id="image" accept="image/*" name="image" label="Imagem de Capa" />
               </Grid>
             </Grid>
           </form>

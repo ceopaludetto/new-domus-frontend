@@ -39,6 +39,6 @@ export default function Condominium() {
 }
 
 Condominium.fetchBefore = async (client: Client) => {
-  await client.query<SelectedCondominiumQuery>(SelectedCondominium);
-  await client.query<MeQuery>(Me);
+  await client.query<SelectedCondominiumQuery>({ query: SelectedCondominium });
+  await client.query<MeQuery>({ query: Me });
 };

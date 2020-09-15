@@ -17,7 +17,9 @@ describe("lazy", () => {
 
   describe("hasFetchBefore", () => {
     it("should return true", () => {
-      const c = { fetchBefore: () => {} };
+      const c = () => {};
+
+      c.fetchBefore = () => {};
 
       expect(hasFetchBefore(c)).toBe(true);
     });

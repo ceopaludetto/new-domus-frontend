@@ -26,12 +26,10 @@ export function Sortable<T, K extends string & keyof T>(
 }
 
 @Injectable()
-class OrderPipe<T> implements PipeTransform {
-  public constructor(private readonly model: Type<T>) {}
-
-  public transform(value: Sort<T, keyof T>) {
-    return { get: () => classToPlain(value) };
+class OrderPipe implements PipeTransform {
+  public transform(value: Sort<any, any>) {
+    return classToPlain(value);
   }
 }
 
-export const SortFields = <T>(model: Type<T>) => Args("sort", { nullable: true }, new OrderPipe(model));
+export const SortFields = (type: () => any) => Args({ name: "sort", type, nullable: true }, new OrderPipe());
