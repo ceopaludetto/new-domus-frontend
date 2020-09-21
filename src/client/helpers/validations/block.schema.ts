@@ -5,8 +5,8 @@ import * as Messages from "../constants";
 import "../customs";
 
 export const BlockSchema = Yup.object({
-  name: Yup.string(),
-  number: Yup.number().required(Messages.REQUIRED),
+  name: Yup.string().required(Messages.REQUIRED),
+  number: Yup.number().typeError(Messages.NUMBER).required(Messages.REQUIRED),
   image: Yup.mixed<FileList>().file(),
 }).required();
 

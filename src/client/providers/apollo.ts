@@ -1,6 +1,6 @@
 import { InMemoryCache, ApolloClient, ApolloLink } from "@apollo/client";
 
-import { SelectedCondominium } from "@/client/graphql";
+import { SelectedCondominiumDocument } from "@/client/graphql";
 
 import { AccessToken } from "./token";
 
@@ -11,7 +11,7 @@ const contextLink = new ApolloLink((operation, forward) => {
     const context = operation.getContext();
 
     const selected = context.cache.readQuery({
-      query: SelectedCondominium,
+      query: SelectedCondominiumDocument,
     });
 
     operation.setContext(({ headers }: any) => ({
@@ -40,10 +40,7 @@ const setTokenLink = new ApolloLink((operation, forward) => {
 
 const getTokenLink = new ApolloLink((operation, forward) => {
   operation.setContext(({ headers }: any) => ({
-    headers: {
-      "X-Access-Token": tokenStore.token,
-      ...headers,
-    },
+    headers: tokenStore.token ? { "X-Access-Token": tokenStore.token, ...headers } : headers,
   }));
 
   return forward(operation);

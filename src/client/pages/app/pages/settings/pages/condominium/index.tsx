@@ -5,7 +5,7 @@ import { useForm, FormProvider } from "react-hook-form";
 import { Grid } from "@material-ui/core";
 
 import { FormControl, MaskedFormControl } from "@/client/components";
-import { SelectedCondominium, SelectedCondominiumQuery, Me, MeQuery } from "@/client/graphql";
+import { SelectedCondominiumDocument, SelectedCondominiumQuery, MeDocument, MeQuery } from "@/client/graphql";
 import * as Masks from "@/client/helpers/masks";
 import { useCurrentCondominium } from "@/client/hooks";
 import type { Client } from "@/client/utils/common.dto";
@@ -39,6 +39,6 @@ export default function Condominium() {
 }
 
 Condominium.fetchBefore = async (client: Client) => {
-  await client.query<SelectedCondominiumQuery>({ query: SelectedCondominium });
-  await client.query<MeQuery>({ query: Me });
+  await client.query<SelectedCondominiumQuery>({ query: SelectedCondominiumDocument });
+  await client.query<MeQuery>({ query: MeDocument });
 };

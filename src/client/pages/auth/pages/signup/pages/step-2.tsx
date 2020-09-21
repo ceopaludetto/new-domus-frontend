@@ -80,15 +80,17 @@ export default function Step2() {
               </PasswordHelper>
             </Box>
           </Grid>
+          <Grid item xs={12}>
+            <Box textAlign="right">
+              <Button variant="text" color="primary" onClick={prev}>
+                Voltar
+              </Button>{" "}
+              <Button variant="contained" color="primary" type="submit">
+                Próximo
+              </Button>
+            </Box>
+          </Grid>
         </Grid>
-        <Box textAlign="right" mt={2}>
-          <Button variant="text" color="primary" onClick={prev}>
-            Voltar
-          </Button>{" "}
-          <Button variant="contained" color="primary" type="submit">
-            Próximo
-          </Button>
-        </Box>
       </form>
     </FormProvider>
   );

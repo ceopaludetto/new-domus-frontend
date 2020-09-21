@@ -10,16 +10,16 @@ import { Local } from "./local.model";
 @ObjectType()
 @Entity({ tableName: BLOCK })
 export class Block extends BaseModel {
-  @Field({ nullable: true })
-  @Property({ nullable: true })
-  public name?: string;
+  @Field()
+  @Property()
+  public name!: string;
 
   @Field()
   @Property()
   public number!: number;
 
-  @Field()
-  @Property()
+  @Field({ nullable: true })
+  @Property({ nullable: true })
   public image?: string;
 
   @Field(() => Condominium)

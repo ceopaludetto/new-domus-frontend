@@ -1,6 +1,8 @@
 projects:
   app:
-    schemaPath: src/server/schema.graphql
+    schemaPath:
+      - src/server/schema.graphql
+      - src/client/graphql/schema.graphql
     includes: ["src/client/graphql/**/*.graphql"]
     extensions:
       endpoints:

@@ -15,3 +15,4 @@ export const ZIP = "CEP inválido";
 export const CNPJ = "CNPJ inválido";
 export const CPF = "CPF inválido";
 export const FILE = "Arquivo inválido";
+export const NUMBER = "Número inválido";

@@ -3,22 +3,12 @@ import { Helmet } from "react-helmet-async";
 import { useForm, FormProvider } from "react-hook-form";
 import { FiX } from "react-icons/fi";
 
-import { useQuery, useMutation } from "@apollo/client";
 import { yupResolver } from "@hookform/resolvers";
 import { Grid, Button, Divider, Box, Typography, Snackbar, IconButton } from "@material-ui/core";
 import type { UserInputError } from "apollo-server-express";
 
 import { FormControl, FormSwitch, FormCalendar, MaskedFormControl, PasswordHelper } from "@/client/components";
-import {
-  Me,
-  MeQuery,
-  UpdateUser,
-  UpdateUserMutation,
-  UpdateUserMutationVariables,
-  ChangePassword,
-  ChangePasswordMutation,
-  ChangePasswordMutationVariables,
-} from "@/client/graphql";
+import { useMeQuery, MeQuery, useUpdateUserMutation, useChangePasswordMutation, MeDocument } from "@/client/graphql";
 import * as Masks from "@/client/helpers/masks";
 import {
   SettingsPasswordSchema,
@@ -36,9 +26,9 @@ export default function Personal() {
   const [snackbarContent, setSnackbarContent] = React.useState("");
   const [snackbarOpen, setSnackbarOpen] = React.useState(false);
   const [mapPropsToField] = useMultipleVisibility(["currentPassword", "newPassword", "repeatNewPassword"]);
-  const { data } = useQuery<MeQuery>(Me);
-  const [changePassword] = useMutation<ChangePasswordMutation, ChangePasswordMutationVariables>(ChangePassword);
-  const [changeUserData] = useMutation<UpdateUserMutation, UpdateUserMutationVariables>(UpdateUser);
+  const { data } = useMeQuery();
+  const [changePassword] = useChangePasswordMutation();
+  const [changeUserData] = useUpdateUserMutation();
 
   const personal = useForm<SettingsPersonalValues>({
     resolver: yupResolver(SettingsPersonalSchema),
@@ -187,25 +177,28 @@ export default function Personal() {
             <Grid item xs={12} md={4}>
               <FormCalendar disableFuture name="birthdate" label="Data de Nascimento" id="birthdate" />
             </Grid>
+            <Grid item xs={12}>
+              <FormSwitch
+                color="primary"
+                label="Conta pública"
+                info="Ser visível a todos usuários do condomínio atual."
+                id="publicAccount"
+                name="publicAccount"
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Box textAlign="right">
+                <Button
+                  disabled={personal.formState.isSubmitting || !personal.formState.isDirty}
+                  color="primary"
+                  variant="contained"
+                  type="submit"
+                >
+                  Alterar Informações
+                </Button>
+              </Box>
+            </Grid>
           </Grid>
-          <Box mt={2}>
-            <FormSwitch
-              label="Conta pública"
-              info="Ser visível a todos usuários do condomínio atual."
-              id="publicAccount"
-              name="publicAccount"
-            />
-          </Box>
-          <Box textAlign="right">
-            <Button
-              disabled={personal.formState.isSubmitting || !personal.formState.isDirty}
-              color="primary"
-              variant="contained"
-              type="submit"
-            >
-              Alterar Informações
-            </Button>
-          </Box>
         </form>
       </FormProvider>
       <Box my={2}>
@@ -249,17 +242,19 @@ export default function Personal() {
                       {...mapPropsToField("repeatNewPassword")}
                     />
                   </Grid>
+                  <Grid item xs={12}>
+                    <Box textAlign="right">
+                      <Button
+                        color="primary"
+                        variant="contained"
+                        disabled={password.formState.isSubmitting || !password.formState.isDirty}
+                        type="submit"
+                      >
+                        Alterar Senha
+                      </Button>
+                    </Box>
+                  </Grid>
                 </Grid>
-                <Box textAlign="right" mt={2}>
-                  <Button
-                    color="primary"
-                    variant="contained"
-                    disabled={password.formState.isSubmitting || !password.formState.isDirty}
-                    type="submit"
-                  >
-                    Alterar Senha
-                  </Button>
-                </Box>
               </Grid>
             </Box>
             <Grid item xs={12} md={6}>
@@ -294,5 +289,5 @@ export default function Personal() {
 }
 
 Personal.fetchBefore = async (client: Client) => {
-  await client.query<MeQuery>({ query: Me });
+  await client.query<MeQuery>({ query: MeDocument });
 };

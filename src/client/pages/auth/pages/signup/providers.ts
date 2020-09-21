@@ -1,11 +1,11 @@
 import * as React from "react";
 
-import { Gender } from "@/client/graphql";
 import type {
   SignUpStep1Values,
   SignUpStep2Values,
   SignUpStep3Values,
 } from "@/client/helpers/validations/signup.schema";
+import { Gender } from "@/client/utils/common.dto";
 
 export interface WizardContextProps {
   values?: SignUpStep1Values & SignUpStep2Values & SignUpStep3Values;

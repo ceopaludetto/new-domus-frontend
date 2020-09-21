@@ -83,14 +83,16 @@ module.exports = {
           name: "runtime",
         };
 
-        config.plugins.unshift(new CompressionPlugin());
+        config.plugins.unshift(new CompressionPlugin({ exclude: [/\.map$/, /\.txt$/] }));
       }
     }
+
+    const ts = config.module.rules.find((x) => (x.test ? x.test.toString() === /\.tsx?$/.toString() : false));
 
     // add graphql tag loader
     config.module.rules.unshift({
       test: /\.(gql|graphql)$/,
-      use: [require.resolve("graphql-tag/loader")],
+      use: [...ts.use, require.resolve("graphql-let/loader")],
     });
 
     return config;

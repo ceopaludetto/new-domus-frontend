@@ -21,7 +21,7 @@ import { makeStyles } from "@material-ui/styles";
 
 import { Blurred } from "@/client/components/layout";
 import { PreloadNavLink, Tooltip } from "@/client/components/typography";
-import { Me, MeQuery, SelectedCondominium, SelectedCondominiumQuery } from "@/client/graphql";
+import { useMeQuery, SelectedCondominiumQuery, SelectedCondominiumDocument } from "@/client/graphql";
 import { usePathWithCondominium } from "@/client/hooks";
 import type { RouteComponentProps } from "@/client/utils/common.dto";
 import { isMultiCondominium } from "@/client/utils/condominium";
@@ -66,6 +66,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       duration: theme.transitions.duration.short,
     }),
   },
+  weight: {
+    fontWeight: theme.typography.fontWeightMedium,
+  },
 }));
 
 export function Sidebar({
@@ -73,17 +76,17 @@ export function Sidebar({
   onListItemClick,
 }: Pick<RouteComponentProps, "routes"> & { onListItemClick?: () => void }) {
   const [listOpen, setListOpen] = React.useState(false);
-  const { data, client } = useQuery<MeQuery>(Me);
+  const { data, client } = useMeQuery();
   const history = useHistory();
   const params = useParams();
-  const multiCondominiums = React.useMemo(() => isMultiCondominium(data?.profile.person.condominiums), [data]);
+  const multiCondominiums = React.useMemo(() => isMultiCondominium(data?.profile?.person?.condominiums), [data]);
   const [generatePath, condominium] = usePathWithCondominium();
   const classes = useStyles();
 
   const changeSelectedCondominium = React.useCallback(
     (id: string) => {
       client.cache.writeQuery<SelectedCondominiumQuery>({
-        query: SelectedCondominium,
+        query: SelectedCondominiumDocument,
         data: {
           __typename: "Query",
           selectedCondominium: id,
@@ -130,7 +133,7 @@ export function Sidebar({
                     to={path}
                   >
                     <ListItemIcon>
-                      <Icon size={18} />
+                      <Icon size={21} />
                     </ListItemIcon>
                     <ListItemText primary={r.meta?.displayName} />
                   </ListItem>
@@ -146,25 +149,24 @@ export function Sidebar({
                   to={path}
                 >
                   <ListItemIcon>
-                    <Icon size={18} />
+                    <Icon size={21} />
                   </ListItemIcon>
-                  <ListItemText primary={r.meta?.displayName} />
+                  <ListItemText
+                    primaryTypographyProps={{ variant: "subtitle1", classes: { root: classes.weight } }}
+                    primary={r.meta?.displayName}
+                  />
                 </ListItem>
               );
             })}
           </List>
         </Box>
-        <Box
-          display="flex"
-          alignItems="center"
-          p={{ md: 2 }}
-          px={{ xs: 2 }}
-          py={{ xs: 1 }}
-          className={classes.condominiums}
-        >
+        <Box display="flex" alignItems="center" px={2} py={2} className={classes.condominiums}>
           {multiCondominiums ? (
             <>
               <Box flex="1">
+                <Typography component="span" display="block" variant="overline" color="primary">
+                  Condomínio
+                </Typography>
                 <Typography component="span" variant="body1">
                   {listOpen ? "Selecione um condomínio" : condominium?.companyName}
                 </Typography>
@@ -178,9 +180,14 @@ export function Sidebar({
               </Box>
             </>
           ) : (
-            <Typography component="span" variant="body1">
-              {condominium?.companyName}
-            </Typography>
+            <Box>
+              <Typography component="span" display="block" variant="overline" color="primary">
+                Condomínio
+              </Typography>
+              <Typography component="span" variant="body1">
+                {condominium?.companyName}
+              </Typography>
+            </Box>
           )}
         </Box>
         {multiCondominiums && (

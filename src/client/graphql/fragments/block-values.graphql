@@ -1,0 +1,6 @@
+fragment BlockValues on Block {
+  id
+  name
+  number
+  image
+}

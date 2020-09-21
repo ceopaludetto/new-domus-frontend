@@ -64,10 +64,17 @@ export const lightVariant: Partial<Theme["palette"]> = {
   },
 };
 
-export const common: Partial<Theme> = {
+export const common: Partial<Omit<Theme, "palette">> = {
   shape: {
     borderRadius: 6,
   },
+  typography: {
+    fontFamily: "Roboto",
+    fontWeightLight: 300,
+    fontWeightRegular: 400,
+    fontWeightMedium: 500,
+    fontWeightBold: 700,
+  } as Theme["typography"],
   props: {
     MuiTextField: {
       variant: "filled",
@@ -109,6 +116,12 @@ export const common: Partial<Theme> = {
     MuiListItemIcon: {
       root: {
         minWidth: "36px",
+      },
+    },
+    MuiTab: {
+      root: {
+        fontSize: "0.975rem",
+        textTransform: "none",
       },
     },
   },

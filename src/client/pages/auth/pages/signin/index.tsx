@@ -2,19 +2,16 @@ import * as React from "react";
 import { Helmet } from "react-helmet-async";
 import { useForm, FormProvider } from "react-hook-form";
 
-import { useMutation } from "@apollo/client";
 import { yupResolver } from "@hookform/resolvers";
 import { Button, Box, Typography, Link, Grid } from "@material-ui/core";
 import type { UserInputError } from "apollo-server-express";
 
 import { FormControl, PreloadLink } from "@/client/components";
 import {
-  Login,
-  LoginMutation,
-  LoginMutationVariables,
-  Logged,
+  useLoginMutation,
+  LoggedDocument,
   LoggedQuery,
-  SelectedCondominium,
+  SelectedCondominiumDocument,
   SelectedCondominiumQuery,
 } from "@/client/graphql";
 import { SignInSchema, SignInValues } from "@/client/helpers/validations/signin.schema";
@@ -22,7 +19,7 @@ import { useVisibility } from "@/client/hooks";
 
 export default function SignIn() {
   const [genericError, setGenericError] = React.useState(false);
-  const [login, { client }] = useMutation<LoginMutation, LoginMutationVariables>(Login);
+  const [login, { client }] = useLoginMutation();
   const methods = useForm<SignInValues>({ resolver: yupResolver(SignInSchema) });
   const [getFieldProps] = useVisibility();
 
@@ -37,7 +34,7 @@ export default function SignIn() {
 
       if (res.data?.login.person.condominiums) {
         client.cache.writeQuery<SelectedCondominiumQuery>({
-          query: SelectedCondominium,
+          query: SelectedCondominiumDocument,
           data: {
             __typename: "Query",
             selectedCondominium: res.data?.login.person.condominiums[0].id,
@@ -46,7 +43,7 @@ export default function SignIn() {
       }
 
       client.cache.writeQuery<LoggedQuery>({
-        query: Logged,
+        query: LoggedDocument,
         data: {
           __typename: "Query",
           logged: true,
@@ -102,31 +99,31 @@ export default function SignIn() {
                 {...getFieldProps()}
               />
             </Grid>
+            <Grid item xs={12}>
+              <Button
+                disabled={methods.formState.isSubmitting}
+                size="large"
+                color="primary"
+                fullWidth
+                variant="contained"
+                type="submit"
+              >
+                Entrar
+              </Button>
+              <Box mt={2}>
+                <Button
+                  component={PreloadLink}
+                  variant="text"
+                  fullWidth
+                  size="large"
+                  color="primary"
+                  to="/auth/signup/step-1"
+                >
+                  Cadastre-se
+                </Button>
+              </Box>
+            </Grid>
           </Grid>
-          <Box mt={2}>
-            <Button
-              disabled={methods.formState.isSubmitting}
-              size="large"
-              color="primary"
-              fullWidth
-              variant="contained"
-              type="submit"
-            >
-              Entrar
-            </Button>
-          </Box>
-          <Box mt={2}>
-            <Button
-              component={PreloadLink}
-              variant="text"
-              fullWidth
-              size="large"
-              color="primary"
-              to="/auth/signup/step-1"
-            >
-              Cadastre-se
-            </Button>
-          </Box>
         </Box>
       </form>
     </FormProvider>

@@ -1,15 +1,14 @@
 import * as React from "react";
 
-import { useQuery } from "@apollo/client";
 import { Button, Box, Container } from "@material-ui/core";
 
-import { Logged, LoggedQuery } from "@/client/graphql";
+import { useLoggedQuery } from "@/client/graphql";
 
 import { Blurred } from "../../layout";
 import { PreloadLink } from "../../typography/preload-link";
 
 export function Header() {
-  const { data } = useQuery<LoggedQuery>(Logged);
+  const { data } = useLoggedQuery();
 
   return (
     <Box position="fixed" width="100%">

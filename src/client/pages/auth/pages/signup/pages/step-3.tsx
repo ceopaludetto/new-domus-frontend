@@ -1,7 +1,6 @@
 import * as React from "react";
 import { useForm, FormProvider } from "react-hook-form";
 
-import { useQuery, useMutation } from "@apollo/client";
 import { yupResolver } from "@hookform/resolvers";
 import { Button, Box, MenuItem, Grid } from "@material-ui/core";
 
@@ -14,14 +13,13 @@ import {
   RadioCard,
 } from "@/client/components";
 import {
-  Register,
-  ShowStates,
+  useShowStatesQuery,
+  useRegisterMutation,
+  ShowStatesDocument,
   ShowStatesQuery,
-  RegisterMutation,
-  RegisterMutationVariables,
-  Logged,
+  LoggedDocument,
   LoggedQuery,
-  SelectedCondominium,
+  SelectedCondominiumDocument,
   SelectedCondominiumQuery,
 } from "@/client/graphql";
 import * as Masks from "@/client/helpers/masks";
@@ -42,8 +40,8 @@ export default function Step3() {
   });
   const type = methods.watch("type");
   const state = methods.watch("condominium.address.state");
-  const [register, { client }] = useMutation<RegisterMutation, RegisterMutationVariables>(Register);
-  const { data } = useQuery<ShowStatesQuery>(ShowStates);
+  const [register, { client }] = useRegisterMutation();
+  const { data } = useShowStatesQuery();
 
   const submit = methods.handleSubmit(async (datas) => {
     try {
@@ -79,7 +77,7 @@ export default function Step3() {
 
           if (res.data?.register.person.condominiums[0].id) {
             client.cache.writeQuery<SelectedCondominiumQuery>({
-              query: SelectedCondominium,
+              query: SelectedCondominiumDocument,
               data: {
                 __typename: "Query",
                 selectedCondominium: res.data?.register.person.condominiums[0].id,
@@ -88,7 +86,7 @@ export default function Step3() {
           }
 
           client.cache.writeQuery<LoggedQuery>({
-            query: Logged,
+            query: LoggedDocument,
             data: {
               __typename: "Query",
               logged: true,
@@ -155,7 +153,9 @@ export default function Step3() {
               <Grid item xs={12} md={4}>
                 <FormSelect name="condominium.address.state" id="state" label="Estado" required>
                   {data?.showStates.map((st) => (
-                    <MenuItem value={st.id}>{st.name}</MenuItem>
+                    <MenuItem key={st.id} value={st.id}>
+                      {st.name}
+                    </MenuItem>
                   ))}
                 </FormSelect>
               </Grid>
@@ -171,36 +171,40 @@ export default function Step3() {
                     {data?.showStates
                       ?.find((st) => st.id === state)
                       ?.cities.map((c) => (
-                        <MenuItem value={c.id}>{c.name}</MenuItem>
+                        <MenuItem key={c.id} value={c.id}>
+                          {c.name}
+                        </MenuItem>
                       ))}
                   </FormSelect>
                 </Grid>
               )}
+              <Grid item xs={12}>
+                <FormCheckbox
+                  label="Termos de uso"
+                  info="Ao assinar essa opção você concorda com nossos termos de uso."
+                  id="terms"
+                  name="terms"
+                  color="secondary"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Box textAlign="right">
+                  <Button variant="text" color="primary" onClick={prev}>
+                    Voltar
+                  </Button>{" "}
+                  <Button variant="contained" color="primary" type="submit">
+                    Cadastrar
+                  </Button>
+                </Box>
+              </Grid>
             </Grid>
           </Box>
         )}
-        <Box mt={2}>
-          <FormCheckbox
-            label="Termos de uso"
-            info="Ao assinar essa opção você concorda com nossos termos de uso."
-            id="terms"
-            name="terms"
-            color="secondary"
-          />
-        </Box>
-        <Box mt={2} textAlign="right">
-          <Button variant="text" color="primary" onClick={prev}>
-            Voltar
-          </Button>{" "}
-          <Button variant="contained" color="primary" type="submit">
-            Cadastrar
-          </Button>
-        </Box>
       </form>
     </FormProvider>
   );
 }
 
 Step3.fetchBefore = async (client: Client) => {
-  await client.query<ShowStatesQuery>({ query: ShowStates });
+  await client.query<ShowStatesQuery>({ query: ShowStatesDocument });
 };

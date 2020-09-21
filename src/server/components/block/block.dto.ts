@@ -8,9 +8,8 @@ import { IsShortID } from "@/server/utils/validations";
 @InputType()
 export class BlockInsertInput {
   @IsString()
-  @IsOptional()
-  @Field({ nullable: true })
-  public name?: string;
+  @Field()
+  public name!: string;
 
   @IsInt()
   @IsNumber()

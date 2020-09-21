@@ -10,7 +10,7 @@ const common = {
   transformIgnorePatterns: ["/node_modules/"],
   transform: tsjPreset.transform,
   moduleNameMapper: {
-    "\\.(gql|graphql)$": "jest-transform-graphql",
+    "\\.(gql|graphql)$": "graphql-let/jestTransformer",
     "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$":
       "<rootDir>/__mocks__/file.js",
     "^@/(.*)$": "<rootDir>/src/$1",

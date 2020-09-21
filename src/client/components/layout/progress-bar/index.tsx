@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useLocation } from "react-router-dom";
-import { useDebounce } from "react-use";
+import { useEffectOnce } from "react-use";
 
 import { Theme, NoSsr, Portal } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
@@ -40,29 +40,27 @@ const useStyles = makeStyles((theme: Theme) => ({
 export function ProgressBar({ duration = 150, className, ...rest }: ProgressBarProps) {
   const { isAnimating = false } = React.useContext(ProgressContext);
   const location = useLocation();
-  const [currKey, setCurrKey] = React.useState(location.key);
-  const ref = React.useRef<HTMLBodyElement>(null);
+  const [key, setKey] = React.useState(location.key);
+  const ref = React.useRef<HTMLBodyElement | null>(null);
   const classes = useStyles();
 
-  useDebounce(
-    () => {
-      setCurrKey(location.key);
-    },
-    duration * 2,
-    [location.key]
-  );
-
-  React.useEffect(() => {
+  useEffectOnce(() => {
     if (typeof window !== "undefined") {
       const body = document.querySelector("body");
-      (ref as any).current = body;
+      ref.current = body;
     }
-  }, []);
+  });
+
+  const handleTransitionEnd = React.useCallback(() => {
+    setTimeout(() => {
+      setKey(location.key);
+    }, 100);
+  }, [location.key]);
 
   return (
     <NoSsr>
       <Portal container={ref.current}>
-        <NProgress minimum={0.1} animationDuration={duration} isAnimating={isAnimating} key={currKey}>
+        <NProgress minimum={0.1} animationDuration={duration} isAnimating={isAnimating} key={key}>
           {({ isFinished, animationDuration, progress }) => (
             <div
               className={classes.progress}
@@ -75,6 +73,7 @@ export function ProgressBar({ duration = 150, className, ...rest }: ProgressBarP
                   marginLeft: progress ? `${(-1 + progress) * 100}%` : "-101%",
                   transition: `margin-left ${animationDuration}ms ease-in-out`,
                 }}
+                onTransitionEnd={handleTransitionEnd}
               >
                 <div className={classes.peg} />
               </div>

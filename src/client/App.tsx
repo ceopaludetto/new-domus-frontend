@@ -3,14 +3,13 @@ import { Helmet } from "react-helmet-async";
 import { Switch, Route, Redirect } from "react-router-dom";
 import { useToggle } from "react-use";
 
-import { useQuery } from "@apollo/client";
 import DayJSUtilsProvider from "@date-io/dayjs";
 import { CssBaseline } from "@material-ui/core";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import { ThemeProvider } from "@material-ui/styles";
 
 import { ProgressBar, Global } from "@/client/components";
-import { LoggedQuery, Logged } from "@/client/graphql";
+import { useLoggedQuery } from "@/client/graphql";
 import { usePathWithCondominium } from "@/client/hooks";
 import { LocaleProvider, LocaleContext } from "@/client/providers/locale";
 import { ProgressContext } from "@/client/providers/progress";
@@ -24,7 +23,7 @@ interface AppProps {
 
 export function App({ logged }: AppProps) {
   const [isAnimating, toggle] = useToggle(false);
-  const { data } = useQuery<LoggedQuery>(Logged);
+  const { data } = useLoggedQuery();
   const [generatePath] = usePathWithCondominium();
 
   return (

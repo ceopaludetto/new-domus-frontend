@@ -15,7 +15,7 @@ import { PinoLogger, InjectPinoLogger } from "nestjs-pino";
 import { generate } from "shortid";
 
 import { App } from "@/client/App";
-import { Logged, LoggedQuery, SelectedCondominium, SelectedCondominiumQuery } from "@/client/graphql";
+import { LoggedDocument, LoggedQuery, SelectedCondominiumDocument, SelectedCondominiumQuery } from "@/client/graphql";
 import { createClient } from "@/client/providers/apollo";
 import type { ReactStaticContext } from "@/client/utils/common.dto";
 import { AuthenticationService } from "@/server/components/authentication";
@@ -60,7 +60,7 @@ export class ReactService {
       const user = await this.getCurrentUser(req);
 
       client.cache.writeQuery<LoggedQuery>({
-        query: Logged,
+        query: LoggedDocument,
         data: {
           __typename: "Query",
           logged: !!user,
@@ -79,7 +79,7 @@ export class ReactService {
         }
 
         client.cache.writeQuery<SelectedCondominiumQuery>({
-          query: SelectedCondominium,
+          query: SelectedCondominiumDocument,
           data: {
             __typename: "Query",
             selectedCondominium: condominium,

@@ -6,15 +6,15 @@ import { useInterval } from "react-use";
 
 import { useMutation } from "@apollo/client";
 import { yupResolver } from "@hookform/resolvers";
-import { Button, Typography, Box } from "@material-ui/core";
+import { Button, Typography, Box, Grid } from "@material-ui/core";
 
 import { FormControl, PreloadLink } from "@/client/components";
-import { AuthForgot, AuthForgotMutation, AuthForgotMutationVariables } from "@/client/graphql";
+import { useAuthForgotMutation } from "@/client/graphql";
 import { ForgotSchema, ForgotValues } from "@/client/helpers/validations/forgot.schema";
 import { usePreload } from "@/client/hooks";
 
 export default function Forgot() {
-  const [forgot, { data }] = useMutation<AuthForgotMutation, AuthForgotMutationVariables>(AuthForgot);
+  const [forgot, { data }] = useAuthForgotMutation();
   const methods = useForm<ForgotValues>({ resolver: yupResolver(ForgotSchema) });
   const [submitted, setSubmitted] = React.useState(false);
   const [time, setTime] = React.useState(5);
@@ -84,9 +84,11 @@ export default function Forgot() {
               </Box>
             </>
           ) : (
-            <>
-              <FormControl label="Login" name="login" id="login" autoFocus />
-              <Box mt={2}>
+            <Grid container spacing={3}>
+              <Grid item xs={12}>
+                <FormControl label="Login" name="login" id="login" autoFocus />
+              </Grid>
+              <Grid item xs={12}>
                 <Button
                   disabled={methods.formState.isSubmitting}
                   fullWidth
@@ -97,13 +99,20 @@ export default function Forgot() {
                 >
                   Recuperar Senha
                 </Button>
-              </Box>
-              <Box mt={2}>
-                <Button component={PreloadLink} variant="text" fullWidth size="large" color="primary" to="/auth/signin">
-                  Voltar para Login
-                </Button>
-              </Box>
-            </>
+                <Box mt={2}>
+                  <Button
+                    component={PreloadLink}
+                    variant="text"
+                    fullWidth
+                    size="large"
+                    color="primary"
+                    to="/auth/signin"
+                  >
+                    Voltar para Login
+                  </Button>
+                </Box>
+              </Grid>
+            </Grid>
           )}
         </Box>
       </form>

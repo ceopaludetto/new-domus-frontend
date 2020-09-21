@@ -3,7 +3,6 @@ import { FiChevronRight, FiLogOut, FiUser } from "react-icons/fi";
 import { MdMenu } from "react-icons/md";
 import { RiSettings2Line } from "react-icons/ri";
 
-import { useQuery, useMutation } from "@apollo/client";
 import {
   IconButton,
   Breadcrumbs,
@@ -24,7 +23,7 @@ import {
 import { makeStyles, useTheme } from "@material-ui/styles";
 
 import { PreloadLink, Tooltip } from "@/client/components/typography";
-import { Me, MeQuery, EvictRefreshCookie, EvictRefreshCookieMutation } from "@/client/graphql";
+import { useMeQuery, useEvictRefreshCookieMutation } from "@/client/graphql";
 import { useBreadcrumbs } from "@/client/hooks";
 import { tokenStore } from "@/client/providers/apollo";
 import type { RouteComponentProps } from "@/client/utils/common.dto";
@@ -44,9 +43,9 @@ const useStyles = makeStyles((theme: Theme) => ({
 export function AppHeader({ routes }: Pick<RouteComponentProps, "routes">) {
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement>();
   const breadcrumbs = useBreadcrumbs();
-  const { data, client } = useQuery<MeQuery>(Me);
+  const { data, client } = useMeQuery();
   const [isOpen, setIsOpen] = React.useState(false);
-  const [evict] = useMutation<EvictRefreshCookieMutation>(EvictRefreshCookie);
+  const [evict] = useEvictRefreshCookieMutation();
   const name = React.useMemo(() => data?.profile.person.name.substring(0, 2), [data]);
   const theme: Theme = useTheme();
   const classes = useStyles();
@@ -57,6 +56,16 @@ export function AppHeader({ routes }: Pick<RouteComponentProps, "routes">) {
     client.cache.evict({
       id: "ROOT_QUERY",
       fieldName: "logged",
+    });
+
+    client.cache.evict({
+      id: "ROOT_QUERY",
+      fieldName: "selectedCondominium",
+    });
+
+    client.cache.evict({
+      id: "ROOT_QUERY",
+      fieldName: "profile",
     });
 
     tokenStore.token = "";
