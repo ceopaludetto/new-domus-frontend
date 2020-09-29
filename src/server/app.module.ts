@@ -18,6 +18,8 @@ import {
   StateModule,
   CityModule,
   UserModule,
+  BlockModule,
+  SettingsModule,
 } from "@/server/components";
 import * as entities from "@/server/models";
 import type { ContextType } from "@/server/utils/common.dto";
@@ -90,6 +92,10 @@ import { APP_NAME } from "@/server/utils/constants";
           setSchema(s);
           return s;
         },
+        uploads: {
+          maxFileSize: 10000000, // 10 MB
+          maxFiles: 5,
+        },
       }),
     }),
     QueueModule,
@@ -100,6 +106,8 @@ import { APP_NAME } from "@/server/utils/constants";
     ReactModule,
     StateModule,
     CityModule,
+    BlockModule,
+    SettingsModule,
   ],
 })
 export class ApplicationModule {}

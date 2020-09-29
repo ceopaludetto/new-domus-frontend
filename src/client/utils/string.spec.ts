@@ -1,4 +1,4 @@
-import { removeMask, splitPhone } from "./string";
+import { removeMask, splitPhone, retrieveTo, hasPathname } from "./string";
 
 describe("string", () => {
   describe("removeMask", () => {
@@ -32,6 +32,40 @@ describe("string", () => {
         ddd: "11",
         number: "952151529",
       });
+    });
+  });
+
+  describe("retrieveTo", () => {
+    it("if undefined should return empty string", () => {
+      const str = undefined;
+
+      expect(retrieveTo(str)).toBe("");
+    });
+
+    it("if string should return the same string", () => {
+      const str = "test";
+
+      expect(retrieveTo(str)).toBe(str);
+    });
+
+    it("if array should return first index", () => {
+      const str = ["test", "test-2"];
+
+      expect(retrieveTo(str)).toBe(str[0]);
+    });
+  });
+
+  describe("hasPathname", () => {
+    it("should return true if has pathname", () => {
+      const str = { pathname: "" };
+
+      expect(hasPathname(str)).toBe(true);
+    });
+
+    it("should return false if is string", () => {
+      const str = "test";
+
+      expect(hasPathname(str)).toBe(false);
     });
   });
 });

@@ -1,10 +1,10 @@
-import { renderHook } from "@testing-library/react-hooks";
+import { renderHook, act } from "@testing-library/react-hooks";
 
 import { render, fireEvent } from "@/client/utils/setup-test";
 
 import { useVisibility, useMultipleVisibility } from "./use-visibility";
 
-describe("useVisibility", async () => {
+describe("useVisibility", () => {
   it("should render icon button and change input type on click", async () => {
     const { result } = renderHook(() => useVisibility());
 
@@ -13,12 +13,14 @@ describe("useVisibility", async () => {
     expect(props).toHaveProperty("type");
     expect(props.type).toBe("password");
 
-    if (props.append) {
-      const { container } = render(props.append);
+    if (props.InputProps?.endAdornment) {
+      const { container } = render(props.InputProps.endAdornment as any);
 
       const button = container.querySelector("button") as HTMLButtonElement;
 
-      fireEvent.click(button);
+      act(() => {
+        fireEvent.click(button);
+      });
 
       props = result.current[0]();
 
@@ -40,24 +42,28 @@ describe("useMultipleVisibility", () => {
     expect(bProps).toHaveProperty("type");
     expect(bProps.type).toBe("password");
 
-    if (aProps.append) {
-      const { container } = render(aProps.append);
+    if (aProps.InputProps?.endAdornment) {
+      const { container } = render(aProps.InputProps?.endAdornment as any);
 
       const button = container.querySelector("button") as HTMLButtonElement;
 
-      fireEvent.click(button);
+      act(() => {
+        fireEvent.click(button);
+      });
 
       aProps = result.current[0]("a");
 
       expect(aProps.type).toBe("text");
     }
 
-    if (bProps.append) {
-      const { container } = render(bProps.append);
+    if (bProps.InputProps?.endAdornment) {
+      const { container } = render(bProps.InputProps?.endAdornment as any);
 
       const button = container.querySelector("button") as HTMLButtonElement;
 
-      fireEvent.click(button);
+      act(() => {
+        fireEvent.click(button);
+      });
 
       bProps = result.current[0]("b");
 

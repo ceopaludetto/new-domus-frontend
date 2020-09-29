@@ -25,4 +25,4 @@ async function bootstrap() {
   }
 }
 
-bootstrap().catch((err) => console.error(err)); // eslint-disable-line no-console
+bootstrap();

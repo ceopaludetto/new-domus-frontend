@@ -1,14 +1,9 @@
-import type { FindOptions } from "@mikro-orm/core";
-import { QueryOrder } from "@mikro-orm/core";
-import { ArgsType, Field, ID, Int, registerEnumType } from "@nestjs/graphql";
+import type { FindOptions, QueryOrderMap, QueryOrderKeys } from "@mikro-orm/core";
+import { ArgsType, Field, ID, Int } from "@nestjs/graphql";
 import { IsString, IsObject, IsInt, IsNumber, IsOptional } from "class-validator";
 import type { Request, Response } from "express";
 
 import { IsShortID } from "./validations";
-
-registerEnumType(QueryOrder, {
-  name: "Order",
-});
 
 @ArgsType()
 export class FindByID {
@@ -33,9 +28,9 @@ export class ShowAll {
   public skip?: number;
 }
 
-export type Sort<T, U extends keyof T> = Pick<{ [P in keyof T]?: QueryOrder }, U>;
+export type Sort<T, U extends keyof T = keyof T> = { [P in U]: QueryOrderKeys };
 
-export type ShowAllWithSort = ShowAll & { sort?: FindOptions<any>["orderBy"] };
+export type ShowAllWithSort = ShowAll & { sort?: QueryOrderMap };
 
 export class ContextType {
   @IsObject()
@@ -46,3 +41,10 @@ export class ContextType {
 }
 
 export type Mapped<T> = FindOptions<T>["populate"];
+
+export interface FileUpload {
+  filename: string;
+  mimetype: string;
+  encoding: string;
+  createReadStream(): NodeJS.ReadStream;
+}

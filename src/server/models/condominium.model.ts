@@ -37,6 +37,11 @@ export class Condominium extends BaseModel {
   public address!: Address;
 
   @Field(() => [Person])
-  @ManyToMany({ entity: () => Person, pivotTable: PERSON_CONDOMINIUM })
+  @ManyToMany({
+    entity: () => Person,
+    pivotTable: PERSON_CONDOMINIUM,
+    joinColumn: "condominium",
+    inverseJoinColumn: "person",
+  })
   public people: Collection<Person> = new Collection<Person>(this);
 }

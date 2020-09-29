@@ -1,11 +1,14 @@
 import * as React from "react";
 import { useFormContext, Controller, get } from "react-hook-form";
 
-import { Select } from "@/client/components/form";
+import { Select, InputLabel, FormControl, FormHelperText, SelectProps } from "@material-ui/core";
 
-type FormSelect = Omit<React.ComponentProps<typeof Select>, "name" | "onChange" | "value"> & { name: string };
+type FormSelectProps = Omit<SelectProps, "name" | "onChange" | "value"> & {
+  name: string;
+  helperText?: React.ReactNode;
+};
 
-export function FormSelect({ name, items, helperText, defaultValue = "", ...rest }: FormSelect) {
+export function FormSelect({ name, label, helperText, id, defaultValue = "", children, ...rest }: FormSelectProps) {
   const { control, errors } = useFormContext();
   const error = get(errors, name);
 
@@ -15,14 +18,30 @@ export function FormSelect({ name, items, helperText, defaultValue = "", ...rest
       name={name}
       defaultValue={defaultValue}
       render={({ value, onChange }) => (
-        <Select
-          items={items}
-          error={!!error}
-          helperText={error?.message ?? helperText}
-          value={value}
-          onChange={onChange}
-          {...rest}
-        />
+        <FormControl fullWidth variant="filled" error={!!error}>
+          {label && (
+            <InputLabel id={`${id}-label`} variant="filled" error={!!error}>
+              {label}
+            </InputLabel>
+          )}
+          <Select
+            id={id}
+            labelId={`${id}-label`}
+            label={label}
+            variant="filled"
+            error={!!error}
+            value={value}
+            onChange={onChange}
+            {...rest}
+          >
+            {children}
+          </Select>
+          {(error?.message ?? helperText) && (
+            <FormHelperText variant="filled" error={!!error}>
+              {error?.message ?? helperText}
+            </FormHelperText>
+          )}
+        </FormControl>
       )}
     />
   );

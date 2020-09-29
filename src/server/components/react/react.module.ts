@@ -5,12 +5,11 @@ import { AuthenticationModule } from "@/server/components/authentication";
 
 import { ReactController } from "./react.controller";
 import { ReactService } from "./react.service";
-import { StatsProvider } from "./react.stats.provider";
 
 @Module({
   imports: [AuthenticationModule],
   controllers: [ReactController],
-  providers: [StatsProvider, ReactService],
+  providers: [ReactService],
 })
 export class ReactModule implements OnModuleInit {
   public constructor(@InjectPinoLogger(ReactModule.name) private readonly logger: PinoLogger) {}

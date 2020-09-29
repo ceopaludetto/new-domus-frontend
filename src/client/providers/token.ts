@@ -1,11 +1,19 @@
 export class AccessToken {
   private t = "";
 
-  public set token(t: string) {
+  public set(t: string) {
     this.t = t;
   }
 
-  public get token() {
+  public get() {
     return this.t;
+  }
+
+  public clear() {
+    this.t = "";
+  }
+
+  public has() {
+    return !!this.t;
   }
 }

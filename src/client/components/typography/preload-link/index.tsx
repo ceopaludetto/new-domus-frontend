@@ -1,30 +1,25 @@
 import * as React from "react";
-import { Link } from "react-router-dom";
+import { Link, LinkProps } from "react-router-dom";
 
 import { usePreload, usePathWithCondominium } from "@/client/hooks";
+import { hasPathname } from "@/client/utils/string";
 
-const hasPathname = (to: { pathname: string } | string): to is { pathname: string } => typeof to !== "string";
-
-type PreloadLinkProps<T extends React.ElementType<any> = Link> = {
-  as?: T;
+interface PreloadLinkProps extends LinkProps {
   to: { pathname: string } | string;
   params?: Record<string, any>;
-} & React.ComponentProps<T>;
+}
 
-export const PreloadLink = React.forwardRef(
-  <T extends React.ComponentType<any> = Link>(
-    { to, params, children, onClick, as: Component = Link, ...rest }: PreloadLinkProps<T>,
-    ref: React.Ref<any>
-  ) => {
+export const PreloadLink = React.forwardRef<HTMLAnchorElement, PreloadLinkProps>(
+  ({ to, params, children, onClick, ...rest }, ref) => {
     const [generatePath] = usePathWithCondominium();
-    const routePath = hasPathname(to) ? to.pathname : to;
-    const path = params || routePath.includes(":condominium") ? generatePath(routePath, params) : routePath;
-    const [handleClick] = usePreload<T>(onClick);
+    const resolvedTo = hasPathname(to) ? to.pathname : to;
+    const path = generatePath(resolvedTo);
+    const [handleClick] = usePreload(onClick);
 
     return (
-      <Component ref={ref} to={path} onClick={handleClick(path)} {...rest}>
+      <Link ref={ref} to={path} onClick={handleClick(path)} {...rest}>
         {children}
-      </Component>
+      </Link>
     );
   }
 );

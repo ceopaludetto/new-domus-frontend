@@ -8,7 +8,7 @@ import { PersonResolver } from "./person.resolver";
 import { PersonService } from "./person.service";
 
 @Module({
-  imports: [MikroOrmModule.forFeature({ entities: [Person] })],
+  imports: [MikroOrmModule.forFeature([Person])],
   providers: [PersonService, PersonResolver],
   exports: [PersonService],
 })

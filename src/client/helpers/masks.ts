@@ -1,13 +1,8 @@
 import { removeMask } from "@/client/utils/string";
 
-function createNumberMask(pattern: (string | RegExp)[] | ((parsed: string) => (string | RegExp)[])) {
-  let normalized: (string | RegExp)[] | ((val: string) => (string | RegExp)[]);
-  if (Array.isArray(pattern)) {
-    normalized = pattern;
-  } else {
-    normalized = (val: string) => pattern(val);
-  }
+type Format = ((v: string) => (RegExp | string)[]) | (RegExp | string)[];
 
+function createNumberMask(pattern: Format) {
   function getTrailing(current: (string | RegExp)[], i: number, val?: string): [string, number] {
     let curr = val ?? "";
     const index = i;
@@ -20,24 +15,50 @@ function createNumberMask(pattern: (string | RegExp)[] | ((parsed: string) => (s
     return getTrailing(current, index + 1, curr);
   }
 
-  return (val = "") => {
+  function format(val = "") {
     const numbers = removeMask(val);
     const chars = numbers.split("");
 
-    const current = typeof normalized === "function" ? normalized(numbers) : normalized;
+    const current = Array.isArray(pattern) ? pattern : pattern(numbers);
 
     let result = "";
-    let i = 0;
-    let j = 0;
 
-    while (i < current.length && j < chars.length) {
+    for (let i = 0, j = 0; i < current.length && j < chars.length; j += 1) {
       const [trailing, jumped] = getTrailing(current, i);
       result += trailing + chars[j];
       i = jumped + 1;
-      j += 1;
     }
 
     return result;
+  }
+
+  function replace(val = "") {
+    const numbers = removeMask(val);
+    const current = Array.isArray(pattern) ? pattern : pattern(numbers);
+
+    if (!numbers) {
+      return "";
+    }
+
+    const result = current.reduce((acc, v, i) => {
+      if (typeof v === "string") {
+        return acc + v;
+      }
+
+      if (val[i]) {
+        return acc + val[i];
+      }
+
+      return `${acc}_`;
+    }, "");
+
+    return result as string;
+  }
+
+  return {
+    format,
+    replace,
+    mask: true,
   };
 }
 

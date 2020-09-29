@@ -1,26 +1,47 @@
 import * as React from "react";
 import { Route } from "react-router-dom";
+import { useIsomorphicLayoutEffect } from "react-use";
 
-import { Page, Tabs } from "@/client/components";
-import { usePathWithCondominium } from "@/client/hooks";
+import { Tabs, Tab, Box, Theme } from "@material-ui/core";
+import { makeStyles } from "@material-ui/styles";
+
+import { Page } from "@/client/components";
+import { usePreload, usePathWithCondominium } from "@/client/hooks";
 import type { RouteComponentProps } from "@/client/utils/common.dto";
+import { retrieveTo } from "@/client/utils/string";
 
-export default function Settings({ routes }: RouteComponentProps) {
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    borderBottom: `1px solid ${theme.palette.divider}`,
+  },
+}));
+
+export default function Settings({ routes, location, history }: RouteComponentProps) {
+  const classes = useStyles();
+  const [value, setValue] = React.useState(location.pathname);
   const [generatePath] = usePathWithCondominium();
+  const [, run] = usePreload();
+
+  async function handleTabClick(e: React.ChangeEvent<Record<string, any>>, v: any) {
+    await run(v);
+    history.push(v);
+  }
+
+  useIsomorphicLayoutEffect(() => {
+    setValue(location.pathname);
+  }, [location]);
 
   return (
     <Page title="Configurações" subtitle="Ajustes">
-      <Tabs>
-        {routes?.map((r) => {
-          const path = Array.isArray(r.path) ? r.path[0] : r.path;
+      <Box mb={3}>
+        <Tabs className={classes.root} indicatorColor="primary" value={value} onChange={handleTabClick}>
+          {routes?.map((r) => {
+            const path = retrieveTo(r.path);
 
-          return (
-            <Tabs.Tab key={r.name} to={generatePath(path as string)} exact>
-              {r.meta?.displayName}
-            </Tabs.Tab>
-          );
-        })}
-      </Tabs>
+            return <Tab value={generatePath(path)} label={r.meta?.displayName} key={r.name} />;
+          })}
+        </Tabs>
+      </Box>
       {routes?.map(({ name, component: Component, children, ...rest }) => (
         <Route key={name} render={(props) => <Component routes={children} {...props} />} {...rest} />
       ))}

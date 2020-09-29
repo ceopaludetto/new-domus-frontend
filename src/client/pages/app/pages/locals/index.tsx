@@ -1,10 +1,9 @@
 import * as React from "react";
-import { FiFilter } from "react-icons/fi";
+import { MdFilterList, MdAdd } from "react-icons/md";
 
-import clsx from "clsx";
+import { Button, IconButton, Box } from "@material-ui/core";
 
-import { Page, Button, IconButton } from "@/client/components";
-import u from "@/client/styles/utils.module.scss";
+import { Page, Tooltip } from "@/client/components";
 
 export default function Locals() {
   return (
@@ -12,19 +11,23 @@ export default function Locals() {
       title="Locais"
       subtitle="Geral"
       actions={
-        <div className={clsx(u.row, u["align-items-xs-center"])}>
-          <div className={u.col}>
-            <Button>Novo Local</Button>
-          </div>
-          <div className={u.col}>
-            <IconButton tooltip={{ content: "Filtro" }} color="text" size="small">
-              <FiFilter />
-            </IconButton>
-          </div>
-        </div>
+        <Box display="flex" alignItems="center">
+          <Box pr={2}>
+            <Button variant="contained" color="primary" startIcon={<MdAdd />}>
+              Novo Local
+            </Button>
+          </Box>
+          <Box>
+            <Tooltip title="Filtro">
+              <IconButton color="default">
+                <MdFilterList />
+              </IconButton>
+            </Tooltip>
+          </Box>
+        </Box>
       }
       helmet={{ title: "Locais" }}
-      fluid
+      maxWidth="xl"
     >
       teste
     </Page>

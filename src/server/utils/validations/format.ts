@@ -38,7 +38,7 @@ export function formatErrors(errors: ValidationError[]) {
   };
 
   if (!Object.keys(res.children).length) {
-    delete res.children;
+    delete (res as any).children;
   }
 
   return res;

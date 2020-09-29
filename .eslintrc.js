@@ -1,8 +1,6 @@
 const path = require("path");
 
 module.exports = {
-  root: true,
-  parser: "@typescript-eslint/parser",
   env: {
     node: true,
     browser: true,
@@ -63,11 +61,6 @@ module.exports = {
     "react/jsx-props-no-spreading": "off",
     "jsx-a11y/label-has-for": "off",
   },
-  settings: {
-    "import/resolver": {
-      typescript: {},
-    },
-  },
   overrides: [
     {
       files: ["src/server/models/*.ts"],
@@ -84,6 +77,7 @@ module.exports = {
         "./razzle.config.js",
         "./.eslintrc.js",
         "./jest.config.js",
+        "./babel.config.js",
       ],
       rules: {
         "@typescript-eslint/no-var-requires": "off",

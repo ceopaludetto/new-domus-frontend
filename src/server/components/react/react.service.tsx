@@ -1,33 +1,33 @@
 /* eslint-disable react/no-danger */
 import * as React from "react";
-import { renderToStaticMarkup } from "react-dom/server";
+import { renderToStaticMarkup, renderToString } from "react-dom/server";
 import { FilledContext, HelmetProvider } from "react-helmet-async";
-import { StaticRouter } from "react-router-dom";
+import { StaticRouter, matchPath } from "react-router-dom";
 
 import { ApolloProvider, NormalizedCacheObject } from "@apollo/client";
 import { SchemaLink } from "@apollo/client/link/schema";
-import { renderToStringWithData } from "@apollo/client/react/ssr";
+import { getMarkupFromTree } from "@apollo/client/react/ssr";
 import { ChunkExtractor, ChunkExtractorManager } from "@loadable/server";
-import { Injectable, Inject } from "@nestjs/common";
+import { ServerStyleSheets } from "@material-ui/styles";
+import { Injectable } from "@nestjs/common";
 import type { Request, Response } from "express";
 import { PinoLogger, InjectPinoLogger } from "nestjs-pino";
 import { generate } from "shortid";
 
 import { App } from "@/client/App";
-import { Logged, LoggedQuery, SelectedCondominium, SelectedCondominiumQuery } from "@/client/graphql";
+import { LoggedDocument, LoggedQuery, SelectedCondominiumDocument, SelectedCondominiumQuery } from "@/client/graphql";
 import { createClient } from "@/client/providers/apollo";
 import type { ReactStaticContext } from "@/client/utils/common.dto";
 import { AuthenticationService } from "@/server/components/authentication";
 import { ConfigurationService } from "@/server/components/configuration";
-import { STATS, REFRESH_TOKEN } from "@/server/utils/constants";
+import { REFRESH_TOKEN } from "@/server/utils/constants";
 
 @Injectable()
 export class ReactService {
   public constructor(
     private readonly configService: ConfigurationService,
     private readonly authenticationService: AuthenticationService,
-    @InjectPinoLogger(ReactService.name) private readonly logger: PinoLogger,
-    @Inject(STATS) private readonly stats: Record<string, any>
+    @InjectPinoLogger(ReactService.name) private readonly logger: PinoLogger
   ) {}
 
   public async getCurrentUser(request: Request) {
@@ -47,19 +47,43 @@ export class ReactService {
 
   public async render(req: Request, res: Response) {
     try {
+      const sheets = new ServerStyleSheets();
       const nonce = Buffer.from(generate()).toString("base64");
       const extractor = new ChunkExtractor({
-        stats: this.stats,
+        statsFile: process.env.RAZZLE_LOADABLE_MANIFEST as string,
         entrypoints: ["client"],
       });
       const context: ReactStaticContext = {};
       const helmetContext: FilledContext | Record<string, any> = {};
-      const client = createClient(true, new SchemaLink({ schema: this.configService.schema, context: { req, res } }));
+      const client = createClient(
+        true,
+        new SchemaLink({
+          schema: this.configService.schema,
+          context: (operation) => {
+            const ctx = operation.getContext();
+
+            try {
+              // get selected condominium in cache
+              const selected = ctx.cache.readQuery({
+                query: SelectedCondominiumDocument,
+              });
+
+              if (selected.selectedCondominium) {
+                req.headers = { ...req.headers, "x-condominium": selected.selectedCondominium };
+              }
+            } catch (error) {
+              return { req, res };
+            }
+
+            return { req, res };
+          },
+        })
+      );
 
       const user = await this.getCurrentUser(req);
 
-      client.writeQuery<LoggedQuery>({
-        query: Logged,
+      client.cache.writeQuery<LoggedQuery>({
+        query: LoggedDocument,
         data: {
           __typename: "Query",
           logged: !!user,
@@ -67,11 +91,21 @@ export class ReactService {
       });
 
       if (user?.person.condominiums) {
-        client.writeQuery<SelectedCondominiumQuery>({
-          query: SelectedCondominium,
+        const match = matchPath(req.url, {
+          path: "/app/:condominium",
+        });
+
+        let condominium = user.person.condominiums[0].id;
+
+        if (user.person.condominiums.toArray().some((c) => c.id === (match?.params as any)?.condominium)) {
+          condominium = (match?.params as Record<string, any>)?.condominium;
+        }
+
+        client.cache.writeQuery<SelectedCondominiumQuery>({
+          query: SelectedCondominiumDocument,
           data: {
             __typename: "Query",
-            selectedCondominium: user.person.condominiums[0].id,
+            selectedCondominium: condominium,
           },
         });
       }
@@ -83,8 +117,8 @@ export class ReactService {
         );
       }
 
-      const markup = await renderToStringWithData(
-        <React.StrictMode>
+      const markup = await getMarkupFromTree({
+        tree: (
           <ChunkExtractorManager extractor={extractor}>
             <HelmetProvider context={helmetContext}>
               <ApolloProvider client={client}>
@@ -94,8 +128,9 @@ export class ReactService {
               </ApolloProvider>
             </HelmetProvider>
           </ChunkExtractorManager>
-        </React.StrictMode>
-      );
+        ),
+        renderFunction: (el) => renderToString(sheets.collect(el)),
+      });
 
       const initialState = client.extract();
 
@@ -103,7 +138,14 @@ export class ReactService {
         return res.status(context?.statusCode ?? 307).redirect(context.url);
       }
 
-      const fullHTML = this.markup(markup, initialState, extractor, (helmetContext as FilledContext).helmet, nonce);
+      const fullHTML = this.markup(
+        markup,
+        initialState,
+        extractor,
+        (helmetContext as FilledContext).helmet,
+        nonce,
+        sheets
+      );
 
       return res.send(`<!DOCTYPE html>${fullHTML}`);
     } catch (error) {
@@ -117,7 +159,8 @@ export class ReactService {
     initialState: NormalizedCacheObject,
     extractor: ChunkExtractor,
     helmet: FilledContext["helmet"],
-    nonce: string
+    nonce: string,
+    sheet: ServerStyleSheets
   ) => {
     const { htmlAttributes, bodyAttributes } = helmet;
 
@@ -130,9 +173,11 @@ export class ReactService {
         <head>
           {helmet.title.toComponent()}
           {helmet.meta.toComponent()}
+          <meta property="csp-nonce" content={nonce} />
           {linkEls}
           {helmet.link.toComponent()}
           {styleEls}
+          {sheet.getStyleElement({ nonce })}
         </head>
         <body {...bodyAttributes.toComponent()}>
           <div id="app" dangerouslySetInnerHTML={{ __html: markup }} />

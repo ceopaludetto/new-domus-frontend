@@ -10,3 +10,13 @@ export function splitPhone(val: string) {
     number: removeMask(number),
   };
 }
+
+export function retrieveTo(val: string | string[] | undefined) {
+  if (!val) {
+    return "";
+  }
+
+  return Array.isArray(val) ? val[0] : val;
+}
+
+export const hasPathname = (to: { pathname: string } | string): to is { pathname: string } => typeof to !== "string";

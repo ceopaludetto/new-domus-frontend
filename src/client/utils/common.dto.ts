@@ -95,3 +95,9 @@ export interface Locale {
 export type PropsOf<
   E extends keyof JSX.IntrinsicElements | React.JSXElementConstructor<any>
 > = JSX.LibraryManagedAttributes<E, React.ComponentPropsWithRef<E>>;
+
+export enum Gender {
+  M = "M",
+  F = "F",
+  N = "N",
+}

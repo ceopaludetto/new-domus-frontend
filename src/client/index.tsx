@@ -3,8 +3,9 @@ import * as ReactDOM from "react-dom";
 import { HelmetProvider } from "react-helmet-async";
 import { BrowserRouter } from "react-router-dom";
 
-import { ApolloProvider, HttpLink } from "@apollo/client";
+import { ApolloProvider } from "@apollo/client";
 import { loadableReady } from "@loadable/component";
+import { createUploadLink } from "apollo-upload-client";
 
 import { createClient } from "@/client/providers/apollo";
 
@@ -12,27 +13,30 @@ import { App } from "./App";
 
 const client = createClient(
   false,
-  new HttpLink({
+  createUploadLink({
     credentials: "same-origin",
     uri: "/graphql",
   })
 );
 
-loadableReady(() => {
+// eslint-disable-next-line promise/catch-or-return
+loadableReady().then(() => {
   const root = document.querySelector("#app");
   const method: "render" | "hydrate" = root?.hasChildNodes() ? "hydrate" : "render";
 
-  ReactDOM[method](
-    <React.StrictMode>
-      <HelmetProvider>
-        <ApolloProvider client={client}>
-          <BrowserRouter>
-            <App logged={false} />
-          </BrowserRouter>
-        </ApolloProvider>
-      </HelmetProvider>
-    </React.StrictMode>,
-    root
+  return ReactDOM[method](
+    <HelmetProvider>
+      <ApolloProvider client={client}>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </ApolloProvider>
+    </HelmetProvider>,
+    root,
+    () => {
+      const jssStyles = document.querySelector("#jss-server-side");
+      jssStyles?.parentElement?.removeChild(jssStyles);
+    }
   );
 });
 

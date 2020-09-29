@@ -1,4 +1,6 @@
+import { BiBuildings } from "react-icons/bi";
 import { FiHome, FiCalendar, FiMapPin } from "react-icons/fi";
+import { RiSettings2Line } from "react-icons/ri";
 
 import loadable from "@loadable/component";
 
@@ -89,8 +91,10 @@ export const routes: Route[] = [
       "/app/:condominium",
       "/app/:condominium/events",
       "/app/:condominium/locals",
+      "/app/:condominium/blocks",
       "/app/:condominium/settings",
       "/app/:condominium/settings/condominium",
+      "/app/:condominium/settings/appearance",
     ],
     exact: true,
     component: loadable(() => import("@/client/pages/app")),
@@ -130,12 +134,27 @@ export const routes: Route[] = [
         },
       },
       {
+        name: "@APP:HOME:BLOCKS",
+        path: "/app/:condominium/blocks",
+        exact: true,
+        component: loadable(() => import("@/client/pages/app/pages/block")),
+        meta: {
+          displayName: "Blocos e Apartamentos",
+          icon: BiBuildings,
+        },
+      },
+      {
         name: "@APP:SETTINGS",
-        path: ["/app/:condominium/settings", "/app/:condominium/settings/condominium"],
+        path: [
+          "/app/:condominium/settings",
+          "/app/:condominium/settings/condominium",
+          "/app/:condominium/settings/appearance",
+        ],
         exact: true,
         component: loadable(() => import("@/client/pages/app/pages/settings")),
         meta: {
           displayName: "Configurações",
+          icon: RiSettings2Line,
           hidden: true,
         },
         children: [
@@ -155,6 +174,15 @@ export const routes: Route[] = [
             component: loadable(() => import("@/client/pages/app/pages/settings/pages/condominium")),
             meta: {
               displayName: "Condomínio",
+            },
+          },
+          {
+            name: "@APP:SETTINGS:APPEARANCE",
+            path: "/app/:condominium/settings/appearance",
+            exact: true,
+            component: loadable(() => import("@/client/pages/app/pages/settings/pages/appearance")),
+            meta: {
+              displayName: "Aparência",
             },
           },
         ],

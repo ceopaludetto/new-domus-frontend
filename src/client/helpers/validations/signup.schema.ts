@@ -1,6 +1,6 @@
 import * as Yup from "yup";
 
-import { Gender } from "@/client/graphql";
+import { Gender } from "@/client/utils/common.dto";
 
 import * as Messages from "../constants";
 

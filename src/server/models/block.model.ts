@@ -7,16 +7,20 @@ import { BaseModel } from "./base.model";
 import { Condominium } from "./condominium.model";
 import { Local } from "./local.model";
 
-@ObjectType()
+@ObjectType(BLOCK)
 @Entity({ tableName: BLOCK })
 export class Block extends BaseModel {
-  @Field({ nullable: true })
-  @Property({ nullable: true })
-  public name?: string;
+  @Field()
+  @Property()
+  public name!: string;
 
   @Field()
   @Property()
   public number!: number;
+
+  @Field({ nullable: true })
+  @Property({ nullable: true })
+  public image?: string;
 
   @Field(() => Condominium)
   @ManyToOne({ entity: () => Condominium })

@@ -3,7 +3,8 @@ import { Resolver, Query, Args, Mutation, Context } from "@nestjs/graphql";
 
 import { GqlAuthGuard } from "@/server/components/authentication/authentication.guard";
 import { User } from "@/server/models";
-import { FindByID, ShowAll, Mapped, ContextType } from "@/server/utils/common.dto";
+import { FindByID, ShowAll, ContextType } from "@/server/utils/common.dto";
+import type { Mapped, Sort } from "@/server/utils/common.dto";
 import { MapFields, SortFields } from "@/server/utils/plugins";
 
 import { FindUserByLogin, UserSortInput, UserUpdateInput } from "./user.dto";
@@ -16,10 +17,10 @@ export class UserResolver {
   @Query(() => [User])
   public async showUsers(
     @Args({ nullable: true }) { skip, take }: ShowAll,
-    @SortFields(User) sort?: UserSortInput,
+    @SortFields(() => UserSortInput) sort?: Sort<User>,
     @MapFields() mapped?: Mapped<User>
   ) {
-    return this.userService.showAll({ skip, sort: sort?.get(), take }, mapped);
+    return this.userService.showAll({ skip, sort, take }, mapped);
   }
 
   @Query(() => User)

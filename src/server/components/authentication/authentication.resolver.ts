@@ -5,6 +5,7 @@ import { UserInsertInput, UserService } from "@/server/components/user";
 import { User } from "@/server/models";
 import { ContextType } from "@/server/utils/common.dto";
 import type { Mapped } from "@/server/utils/common.dto";
+import { REFRESH_TOKEN } from "@/server/utils/constants";
 import { MapFields } from "@/server/utils/plugins";
 
 import { AuthenticationInput, ForgotInput, ChangePasswordInput } from "./authentication.dto";
@@ -48,5 +49,15 @@ export class AuthenticationResolver {
   @Query(() => User)
   public async profile(@Context() ctx: ContextType, @MapFields() mapped?: Mapped<User>) {
     return this.userService.populate(ctx.req.user, mapped);
+  }
+
+  @UseGuards(GqlAuthGuard)
+  @Mutation(() => Boolean)
+  public async evictRefreshCookie(@Context() ctx: ContextType) {
+    ctx.res.cookie(REFRESH_TOKEN, "", {
+      expires: new Date(Date.now() - 1000),
+    });
+
+    return true;
   }
 }

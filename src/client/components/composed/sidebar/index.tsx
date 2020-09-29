@@ -1,44 +1,102 @@
 import * as React from "react";
+import { AiOutlineSwap } from "react-icons/ai";
 import { FiX } from "react-icons/fi";
-import { VscArrowBoth } from "react-icons/vsc";
-import { useHistory, useParams } from "react-router-dom";
-import { useMeasure } from "react-use";
+import { useHistory } from "react-router-dom";
 
-import { useQuery } from "@apollo/client";
-import clsx from "clsx";
+import {
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Paper,
+  Box,
+  Theme,
+  IconButton,
+  Typography,
+  Collapse,
+  Hidden,
+} from "@material-ui/core";
+import { makeStyles } from "@material-ui/styles";
 
-import { IconButton } from "@/client/components/form";
-import { Blurred, Paper, MenuItem } from "@/client/components/layout";
-import { Me, MeQuery, SelectedCondominium, SelectedCondominiumQuery } from "@/client/graphql";
+import { Blurred } from "@/client/components/layout";
+import { PreloadNavLink, Tooltip } from "@/client/components/typography";
+import { useMeQuery, SelectedCondominiumQuery, SelectedCondominiumDocument } from "@/client/graphql";
 import { usePathWithCondominium } from "@/client/hooks";
-import u from "@/client/styles/utils.module.scss";
 import type { RouteComponentProps } from "@/client/utils/common.dto";
 import { isMultiCondominium } from "@/client/utils/condominium";
+import { retrieveTo } from "@/client/utils/string";
 
-import { SidebarItem } from "../sidebar-item";
-import s from "./index.module.scss";
+const useStyles = makeStyles((theme: Theme) => ({
+  container: {
+    width: "100%",
+    borderLeft: 0,
+    borderBottom: 0,
+    [theme.breakpoints.up("md")]: {
+      position: "fixed",
+      left: 0,
+      top: 0,
+      maxWidth: "300px",
+      borderTop: 0,
+    },
+    [theme.breakpoints.down("sm")]: {
+      borderRight: 0,
+    },
+  },
+  sidebar: {
+    flexDirection: "column",
+    display: "flex",
+    [theme.breakpoints.up("md")]: {
+      height: "100vh",
+    },
+  },
+  active: {
+    color: theme.palette.primary.main,
+    "& svg": {
+      color: theme.palette.primary.main,
+    },
+  },
+  condominiums: {
+    borderTop: `1px solid ${theme.palette.divider}`,
+  },
+  list: {
+    backgroundColor: theme.palette.background.paper,
+    transition: theme.transitions.create(["max-height"], {
+      easing: theme.transitions.easing.easeInOut,
+      duration: theme.transitions.duration.short,
+    }),
+  },
+  weight: {
+    fontWeight: theme.typography.fontWeightMedium,
+  },
+}));
 
-export function Sidebar({ routes }: Pick<RouteComponentProps, "routes">) {
+export function Sidebar({
+  routes,
+  onListItemClick,
+}: Pick<RouteComponentProps, "routes"> & { onListItemClick?: () => void }) {
   const [listOpen, setListOpen] = React.useState(false);
-  const [tooltip, setTooltip] = React.useState(false);
-  const { data, client } = useQuery<MeQuery>(Me);
+  const { data, client } = useMeQuery();
   const history = useHistory();
-  const params = useParams();
-  const multiCondominiums = React.useMemo(() => isMultiCondominium(data?.profile.person.condominiums), [data]);
+  const multiCondominiums = React.useMemo(() => isMultiCondominium(data?.profile?.person?.condominiums), [data]);
   const [generatePath, condominium] = usePathWithCondominium();
-  const [ref, { height }] = useMeasure<HTMLDivElement>();
+  const classes = useStyles();
 
   const changeSelectedCondominium = React.useCallback(
     (id: string) => {
-      client.writeQuery<SelectedCondominiumQuery>({
-        query: SelectedCondominium,
+      client.cache.writeQuery<SelectedCondominiumQuery>({
+        query: SelectedCondominiumDocument,
         data: {
           __typename: "Query",
           selectedCondominium: id,
         },
       });
+
+      const path = generatePath("/app/:condominium", {
+        condominium: id,
+      });
+      history.replace(path);
     },
-    [client]
+    [client, generatePath, history]
   );
 
   const handleCondominiumChange = React.useCallback(
@@ -51,71 +109,105 @@ export function Sidebar({ routes }: Pick<RouteComponentProps, "routes">) {
     [condominium, setListOpen, changeSelectedCondominium]
   );
 
-  React.useEffect(() => {
-    if (condominium && (params as any).condominium !== condominium.id) {
-      const path = generatePath("/app/:condominium");
-      history.replace(path);
-    }
-  }, [condominium, generatePath, params, history]);
-
   return (
-    <Paper className={clsx(s.container, u["w-100"], u["mw-300"])} outline noVerticalBorders noGutter square>
-      <Blurred className={clsx(s.sidebar, u.flex)}>
-        <div className={s.pages}>
-          {routes
-            ?.filter((r) => !r.meta?.hidden ?? true)
-            ?.map((r) => {
+    <Paper className={classes.container} square variant="outlined">
+      <Blurred className={classes.sidebar}>
+        <Box flex="1">
+          <List component="nav">
+            {routes?.map((r) => {
               const Icon = r.meta?.icon;
-              const path = Array.isArray(r.path) ? r.path[0] : r.path;
+              const path = retrieveTo(r.path);
 
-              return (
-                <SidebarItem key={r.name} to={path} icon={<Icon size={18} />}>
-                  {r.meta?.displayName}
-                </SidebarItem>
+              return r.meta?.hidden ? (
+                <Hidden key={r.name} implementation="css" mdUp>
+                  <ListItem
+                    button
+                    onClick={onListItemClick}
+                    component={PreloadNavLink}
+                    activeClassName={classes.active}
+                    exact
+                    to={path}
+                  >
+                    <ListItemIcon>
+                      <Icon size={21} />
+                    </ListItemIcon>
+                    <ListItemText primary={r.meta?.displayName} />
+                  </ListItem>
+                </Hidden>
+              ) : (
+                <ListItem
+                  key={r.name}
+                  button
+                  onClick={onListItemClick}
+                  component={PreloadNavLink}
+                  activeClassName={classes.active}
+                  exact
+                  to={path}
+                >
+                  <ListItemIcon>
+                    <Icon size={21} />
+                  </ListItemIcon>
+                  <ListItemText
+                    primaryTypographyProps={{ variant: "subtitle1", classes: { root: classes.weight } }}
+                    primary={r.meta?.displayName}
+                  />
+                </ListItem>
               );
             })}
-        </div>
-        <div className={clsx(s.condominium, u.row, u["align-items-xs-center"])}>
+          </List>
+        </Box>
+        <Box display="flex" alignItems="center" px={2} py={2} className={classes.condominiums}>
           {multiCondominiums ? (
             <>
-              <div className={clsx(u.col, u.xs)}>{listOpen ? "Selecione um condomínio" : condominium?.companyName}</div>
-              <div className={u.col}>
-                <IconButton
-                  onClick={() => setListOpen((v) => !v)}
-                  tooltip={{
-                    content: tooltip ? "Fechar" : "Alterar Condomínio",
-                    forceUpdate: tooltip,
-                    updateOnContentChange: false,
-                  }}
-                  size="small"
-                >
-                  {listOpen ? <FiX /> : <VscArrowBoth />}
-                </IconButton>
-              </div>
+              <Box flex="1">
+                <Typography component="span" display="block" variant="overline" color="primary">
+                  Condomínio
+                </Typography>
+                <Typography component="span" variant="body1">
+                  {listOpen ? "Selecione um condomínio" : condominium?.companyName}
+                </Typography>
+              </Box>
+              <Box>
+                <Tooltip title={listOpen ? "Fechar" : "Alterar condomínio"}>
+                  <IconButton color="primary" onClick={() => setListOpen((v) => !v)}>
+                    {listOpen ? <FiX /> : <AiOutlineSwap />}
+                  </IconButton>
+                </Tooltip>
+              </Box>
             </>
           ) : (
-            <div className={clsx(u.col, u.xs)}>{condominium?.companyName}</div>
+            <Box>
+              <Typography component="span" display="block" variant="overline" color="primary">
+                Condomínio
+              </Typography>
+              <Typography component="span" variant="body1">
+                {condominium?.companyName}
+              </Typography>
+            </Box>
           )}
-        </div>
+        </Box>
         {multiCondominiums && (
-          <div
-            style={{ maxHeight: listOpen ? height : 0 }}
-            onTransitionEnd={() => setTooltip((v) => !v)}
-            className={s["list-condominiums"]}
-          >
-            <div className={s.measure} ref={ref}>
-              {data?.profile.person.condominiums.map((c) => (
-                <MenuItem
-                  onClick={() => handleCondominiumChange(c.id)}
-                  className={clsx(s.item, c.id === condominium?.id && s.selected)}
-                  key={c.id}
-                  active={false}
-                >
-                  {c.companyName}
-                </MenuItem>
-              ))}
+          <Collapse in={listOpen}>
+            <div className={classes.list}>
+              <List>
+                {data?.profile.person.condominiums.map((c) => (
+                  <ListItem
+                    button
+                    onClick={() => {
+                      handleCondominiumChange(c.id);
+                      if (onListItemClick) onListItemClick();
+                    }}
+                    key={c.id}
+                  >
+                    <ListItemText
+                      primaryTypographyProps={{ color: condominium?.id === c.id ? "primary" : "textPrimary" }}
+                      primary={c.companyName}
+                    />
+                  </ListItem>
+                ))}
+              </List>
             </div>
-          </div>
+          </Collapse>
         )}
       </Blurred>
     </Paper>

@@ -1,3 +1,4 @@
 export { PreloadLink } from "./preload-link";
+export { PreloadNavLink } from "./preload-nav-link";
 export { PasswordHelper } from "./password-helper";
-export { Text } from "./text";
+export { Tooltip } from "./tooltip";

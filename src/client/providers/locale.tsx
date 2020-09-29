@@ -17,8 +17,8 @@ interface DayJSLocaleProps {
   locale: string;
 }
 
-const DayJSLocale = loadable.lib((props: DayJSLocaleProps = { locale: "en" }) =>
-  import(`dayjs/locale/${props.locale}.js`)
+const DayJSLocale = loadable.lib(
+  (props: DayJSLocaleProps = { locale: "en" }) => import(`dayjs/locale/${props.locale}.js`)
 );
 
 export function LocaleProvider({ children }: LocaleProviderProps) {

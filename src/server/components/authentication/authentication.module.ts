@@ -24,7 +24,7 @@ import { JwtStrategy } from "./strategies/jwt.strategy";
     }),
   ],
   providers: [AuthenticationService, AuthenticationResolver, JwtStrategy],
-  exports: [AuthenticationService],
+  exports: [AuthenticationService, PassportModule],
 })
 export class AuthenticationModule {
   public constructor(@InjectPinoLogger(AuthenticationModule.name) private readonly logger: PinoLogger) {}
