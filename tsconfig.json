@@ -31,7 +31,8 @@
     ".eslintrc.js",
     "jest.config.js",
     "babel.config.js",
-    "__mocks__/**/*"
+    "__mocks__/**/*",
+    "mikro-orm.config.js"
   ],
   "exclude": ["node_modules", "dist", "build", "coverage", "certs", "env"]
 }

@@ -5,7 +5,7 @@ describe("mask", () => {
     it("should put cep mask in value", () => {
       const str = "02137030";
 
-      expect(cep(str)).toBe("02137-030");
+      expect(cep.format(str)).toBe("02137-030");
     });
   });
 
@@ -13,7 +13,7 @@ describe("mask", () => {
     it("should put cnpj mask in value", () => {
       const str = "02328975000179";
 
-      expect(cnpj(str)).toBe("02.328.975/0001-79");
+      expect(cnpj.format(str)).toBe("02.328.975/0001-79");
     });
   });
 
@@ -21,7 +21,7 @@ describe("mask", () => {
     it("should put cpf mask in value", () => {
       const str = "50226006840";
 
-      expect(cpf(str)).toBe("502.260.068-40");
+      expect(cpf.format(str)).toBe("502.260.068-40");
     });
   });
 
@@ -29,13 +29,13 @@ describe("mask", () => {
     it("should put tel mask in value", () => {
       const str = "1129897288";
 
-      expect(tel(str)).toBe("(11) 2989-7288");
+      expect(tel.format(str)).toBe("(11) 2989-7288");
     });
 
     it("should put smartphone mask in value", () => {
       const str = "11952151529";
 
-      expect(tel(str)).toBe("(11) 95215-1529");
+      expect(tel.format(str)).toBe("(11) 95215-1529");
     });
   });
 
@@ -43,7 +43,7 @@ describe("mask", () => {
     it("should put date mask in value", () => {
       const str = "18092001";
 
-      expect(date(str)).toBe("18/09/2001");
+      expect(date.format(str)).toBe("18/09/2001");
     });
   });
 });

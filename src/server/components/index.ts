@@ -8,3 +8,4 @@ export * from "./queue";
 export * from "./city";
 export * from "./user";
 export * from "./block";
+export * from "./settings";

@@ -1,9 +1,8 @@
 import * as React from "react";
 import { AiOutlineSwap } from "react-icons/ai";
 import { FiX } from "react-icons/fi";
-import { useHistory, useParams } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
-import { useQuery } from "@apollo/client";
 import {
   List,
   ListItem,
@@ -78,7 +77,6 @@ export function Sidebar({
   const [listOpen, setListOpen] = React.useState(false);
   const { data, client } = useMeQuery();
   const history = useHistory();
-  const params = useParams();
   const multiCondominiums = React.useMemo(() => isMultiCondominium(data?.profile?.person?.condominiums), [data]);
   const [generatePath, condominium] = usePathWithCondominium();
   const classes = useStyles();
@@ -92,8 +90,13 @@ export function Sidebar({
           selectedCondominium: id,
         },
       });
+
+      const path = generatePath("/app/:condominium", {
+        condominium: id,
+      });
+      history.replace(path);
     },
-    [client]
+    [client, generatePath, history]
   );
 
   const handleCondominiumChange = React.useCallback(
@@ -105,13 +108,6 @@ export function Sidebar({
     },
     [condominium, setListOpen, changeSelectedCondominium]
   );
-
-  React.useEffect(() => {
-    if (condominium && (params as any).condominium !== condominium.id) {
-      const path = generatePath("/app/:condominium");
-      history.replace(path);
-    }
-  }, [condominium, generatePath, params, history]);
 
   return (
     <Paper className={classes.container} square variant="outlined">

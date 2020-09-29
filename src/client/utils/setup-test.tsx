@@ -6,11 +6,13 @@ import { MemoryRouter } from "react-router-dom";
 import { ThemeProvider } from "@material-ui/styles";
 import { render } from "@testing-library/react";
 
-import { theme } from "@/client/providers/theme";
+import { createTheme } from "@/client/providers/theme";
 
 interface AllProvidersProps {
   children?: React.ReactNode;
 }
+
+const theme = createTheme();
 
 const AllProviders: React.FunctionComponent<AllProvidersProps> = ({ children }) => {
   return (

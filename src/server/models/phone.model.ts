@@ -6,7 +6,7 @@ import { PHONE } from "@/server/utils/constants";
 import { BaseModel } from "./base.model";
 import { Person } from "./person.model";
 
-@ObjectType()
+@ObjectType(PHONE)
 @Entity({ tableName: PHONE })
 export class Phone extends BaseModel {
   @Field()

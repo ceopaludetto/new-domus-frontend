@@ -1,18 +1,13 @@
 import { Entity, Property, Enum, OneToOne, OneToMany, Collection, ManyToMany } from "@mikro-orm/core";
 import { ObjectType, Field, registerEnumType } from "@nestjs/graphql";
 
-import { PERSON, PERSON_CONDOMINIUM } from "@/server/utils/constants";
+import { PERSON } from "@/server/utils/constants";
+import { Gender } from "@/server/utils/enums";
 
 import { BaseModel } from "./base.model";
 import { Condominium } from "./condominium.model";
 import { Phone } from "./phone.model";
 import { User } from "./user.model";
-
-export enum Gender {
-  M = "Male",
-  F = "Female",
-  N = "None",
-}
 
 registerEnumType(Gender, {
   name: "Gender",
@@ -54,6 +49,9 @@ export class Person extends BaseModel {
   public user!: User;
 
   @Field(() => [Condominium])
-  @ManyToMany({ entity: () => Condominium, pivotTable: PERSON_CONDOMINIUM })
+  @ManyToMany({
+    entity: () => Condominium,
+    mappedBy: (condominium) => condominium.people,
+  })
   public condominiums: Collection<Condominium> = new Collection<Condominium>(this);
 }

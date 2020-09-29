@@ -1,11 +1,16 @@
 import type { FindOptions } from "@mikro-orm/core";
 import { Type, Injectable, PipeTransform } from "@nestjs/common";
-import { InputType, Field, Args } from "@nestjs/graphql";
+import { InputType, Field, Args, registerEnumType } from "@nestjs/graphql";
 import { classToPlain } from "class-transformer";
 import { IsString, IsEnum, IsOptional } from "class-validator";
 
-import { Sort, Order } from "../common.dto";
+import type { Sort } from "../common.dto";
+import { Order } from "../enums";
 import * as Messages from "../validations/messages";
+
+registerEnumType(Order, {
+  name: "Order",
+});
 
 export function Sortable<T, K extends string & keyof T>(
   model: Type<T>,

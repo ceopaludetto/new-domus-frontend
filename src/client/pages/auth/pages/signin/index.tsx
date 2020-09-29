@@ -32,7 +32,7 @@ export default function SignIn() {
         },
       });
 
-      if (res.data?.login.person.condominiums) {
+      if (res.data?.login.person.condominiums.length) {
         client.cache.writeQuery<SelectedCondominiumQuery>({
           query: SelectedCondominiumDocument,
           data: {
@@ -50,13 +50,17 @@ export default function SignIn() {
         },
       });
     } catch (error) {
-      const graphQLError = (error.graphQLErrors as UserInputError[])[0];
-      if (graphQLError.extensions.fields) {
-        const field: "login" | "password" = graphQLError.extensions.fields[0];
-        methods.setError(field, {
-          type: "graphql",
-          message: graphQLError.message,
-        });
+      if (error.graphQLErrors) {
+        const graphQLError = (error.graphQLErrors as UserInputError[])[0];
+        if (graphQLError.extensions.fields) {
+          const field: "login" | "password" = graphQLError.extensions.fields[0];
+          methods.setError(field, {
+            type: "graphql",
+            message: graphQLError.message,
+          });
+        } else {
+          setGenericError(true);
+        }
       } else {
         setGenericError(true);
       }

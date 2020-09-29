@@ -7,7 +7,7 @@ import { BaseModel } from "./base.model";
 import { Condominium } from "./condominium.model";
 import { Local } from "./local.model";
 
-@ObjectType()
+@ObjectType(BLOCK)
 @Entity({ tableName: BLOCK })
 export class Block extends BaseModel {
   @Field()

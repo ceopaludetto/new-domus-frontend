@@ -1,22 +1,9 @@
 import type { FindOptions, QueryOrderMap, QueryOrderKeys } from "@mikro-orm/core";
-import { ArgsType, Field, ID, Int, registerEnumType } from "@nestjs/graphql";
+import { ArgsType, Field, ID, Int } from "@nestjs/graphql";
 import { IsString, IsObject, IsInt, IsNumber, IsOptional } from "class-validator";
 import type { Request, Response } from "express";
 
 import { IsShortID } from "./validations";
-
-export enum Order {
-  ASC = "ASC",
-  ASC_NULLS_LAST = "ASC NULLS LAST",
-  ASC_NULLS_FIRST = "ASC NULLS FIRST",
-  DESC = "DESC",
-  DESC_NULLS_LAST = "DESC NULLS LAST",
-  DESC_NULLS_FIRST = "DESC NULLS FIRST",
-}
-
-registerEnumType(Order, {
-  name: "Order",
-});
 
 @ArgsType()
 export class FindByID {

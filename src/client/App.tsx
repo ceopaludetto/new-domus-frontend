@@ -14,12 +14,14 @@ import { usePathWithCondominium } from "@/client/hooks";
 import { LocaleProvider, LocaleContext } from "@/client/providers/locale";
 import { ProgressContext } from "@/client/providers/progress";
 import { routes } from "@/client/providers/routes";
-import { theme } from "@/client/providers/theme";
+import { createTheme } from "@/client/providers/theme";
 import { shouldRenderByAuth } from "@/client/utils/guards";
 
 interface AppProps {
   logged?: boolean;
 }
+
+const theme = createTheme();
 
 export function App({ logged }: AppProps) {
   const [isAnimating, toggle] = useToggle(false);

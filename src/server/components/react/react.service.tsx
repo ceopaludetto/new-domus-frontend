@@ -55,7 +55,30 @@ export class ReactService {
       });
       const context: ReactStaticContext = {};
       const helmetContext: FilledContext | Record<string, any> = {};
-      const client = createClient(true, new SchemaLink({ schema: this.configService.schema, context: { req, res } }));
+      const client = createClient(
+        true,
+        new SchemaLink({
+          schema: this.configService.schema,
+          context: (operation) => {
+            const ctx = operation.getContext();
+
+            try {
+              // get selected condominium in cache
+              const selected = ctx.cache.readQuery({
+                query: SelectedCondominiumDocument,
+              });
+
+              if (selected.selectedCondominium) {
+                req.headers = { ...req.headers, "x-condominium": selected.selectedCondominium };
+              }
+            } catch (error) {
+              return { req, res };
+            }
+
+            return { req, res };
+          },
+        })
+      );
 
       const user = await this.getCurrentUser(req);
 

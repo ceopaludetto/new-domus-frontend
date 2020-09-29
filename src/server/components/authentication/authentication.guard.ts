@@ -7,7 +7,7 @@ import type { Request, Response } from "express";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "@/server/utils/constants";
 
 import { AuthenticationService } from "./authentication.service";
-import { extractor } from "./strategies/extractor";
+import { fromAccessTokenHeader } from "./strategies/extractor";
 
 @Injectable()
 export class GqlAuthGuard extends AuthGuard("jwt") {
@@ -25,15 +25,9 @@ export class GqlAuthGuard extends AuthGuard("jwt") {
     const request: Request = ctx.getContext().req;
     const response: Response = ctx.getContext().res;
 
-    try {
-      const accessToken = extractor(request);
+    const accessToken = fromAccessTokenHeader(request);
 
-      if (accessToken) {
-        await this.authenticationService.verifyToken(accessToken);
-      }
-
-      return super.canActivate(context) as boolean;
-    } catch (error) {
+    if (!accessToken) {
       const refreshCookie = request.cookies[REFRESH_TOKEN];
 
       if (refreshCookie) {
@@ -52,11 +46,11 @@ export class GqlAuthGuard extends AuthGuard("jwt") {
         this.authenticationService.setTokensInResponse(newTokens, response);
         request.cookies[REFRESH_TOKEN] = `Bearer ${newTokens.refreshToken}`;
         request.headers[ACCESS_TOKEN.toLowerCase()] = `Bearer ${newTokens.accessToken}`;
-
-        return super.canActivate(context) as boolean;
       }
-
-      return super.canActivate(context) as boolean;
+    } else {
+      await this.authenticationService.verifyToken(accessToken);
     }
+
+    return super.canActivate(context) as boolean;
   }
 }

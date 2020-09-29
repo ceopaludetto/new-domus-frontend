@@ -15,6 +15,7 @@ export const LOCAL = "Local";
 export const BLOCK = "Block";
 export const PHONE = "Phone";
 export const ADDRESS = "Address";
+export const SETTINGS = "Settings";
 
 // Mailer
 export const MAILER = "@MAILER";

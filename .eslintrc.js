@@ -1,8 +1,6 @@
 const path = require("path");
 
 module.exports = {
-  root: true,
-  parser: "@typescript-eslint/parser",
   env: {
     node: true,
     browser: true,
@@ -62,11 +60,6 @@ module.exports = {
     "react/prop-types": "off",
     "react/jsx-props-no-spreading": "off",
     "jsx-a11y/label-has-for": "off",
-  },
-  settings: {
-    "import/resolver": {
-      typescript: {},
-    },
   },
   overrides: [
     {

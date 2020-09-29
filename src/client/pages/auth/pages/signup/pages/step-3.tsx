@@ -4,14 +4,7 @@ import { useForm, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers";
 import { Button, Box, MenuItem, Grid } from "@material-ui/core";
 
-import {
-  MaskedFormControl,
-  FormControl,
-  FormSelect,
-  FormCheckbox,
-  FormRadioCard,
-  RadioCard,
-} from "@/client/components";
+import { MaskedFormControl, FormControl, FormSelect, FormToggle, FormRadioCard, RadioCard } from "@/client/components";
 import {
   useShowStatesQuery,
   useRegisterMutation,
@@ -21,6 +14,7 @@ import {
   LoggedQuery,
   SelectedCondominiumDocument,
   SelectedCondominiumQuery,
+  Theme,
 } from "@/client/graphql";
 import * as Masks from "@/client/helpers/masks";
 import { SignUpStep3Schema, SignUpStep3Values } from "@/client/helpers/validations/signup.schema";
@@ -71,11 +65,14 @@ export default function Step3() {
                   phones: phone ? [splitPhone(phone)] : [],
                   condominiums: [{ ...condominium, address }],
                 },
+                settings: {
+                  theme: Theme.Dark,
+                },
               },
             },
           });
 
-          if (res.data?.register.person.condominiums[0].id) {
+          if (res.data?.register.person.condominiums.length) {
             client.cache.writeQuery<SelectedCondominiumQuery>({
               query: SelectedCondominiumDocument,
               data: {
@@ -127,22 +124,10 @@ export default function Step3() {
                 <FormControl name="condominium.companyName" array id="companyName" label="Razão Social" required />
               </Grid>
               <Grid item xs={12} md={6}>
-                <MaskedFormControl
-                  rifm={{ format: Masks.cnpj, mask: true }}
-                  name="condominium.cnpj"
-                  id="cnpj"
-                  label="CNPJ"
-                  required
-                />
+                <MaskedFormControl rifm={Masks.cnpj} name="condominium.cnpj" id="cnpj" label="CNPJ" required />
               </Grid>
               <Grid item xs={12} md={3}>
-                <MaskedFormControl
-                  rifm={{ format: Masks.cep, mask: true }}
-                  name="condominium.address.zip"
-                  id="zip"
-                  label="CEP"
-                  required
-                />
+                <MaskedFormControl rifm={Masks.cep} name="condominium.address.zip" id="zip" label="CEP" required />
               </Grid>
               <Grid item xs={12} md={6}>
                 <FormControl name="condominium.address.address" id="address" label="Endereço" required />
@@ -179,12 +164,13 @@ export default function Step3() {
                 </Grid>
               )}
               <Grid item xs={12}>
-                <FormCheckbox
+                <FormToggle
                   label="Termos de uso"
                   info="Ao assinar essa opção você concorda com nossos termos de uso."
                   id="terms"
                   name="terms"
                   color="secondary"
+                  variant="checkbox"
                 />
               </Grid>
               <Grid item xs={12}>

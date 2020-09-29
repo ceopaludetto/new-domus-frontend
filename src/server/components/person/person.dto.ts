@@ -4,7 +4,7 @@ import { IsString, IsEmail, IsEnum, IsDate, IsOptional, ValidateNested } from "c
 
 import { CondominiumInsertInput } from "@/server/components/condominium";
 import { PhoneInsertInput, PhoneUpdateInput } from "@/server/components/phone";
-import { Gender } from "@/server/models/person.model";
+import { Gender } from "@/server/utils/enums";
 import { removeMask, trim, mail } from "@/server/utils/transforms";
 import { IsCPF } from "@/server/utils/validations/is.cpf";
 import * as Messages from "@/server/utils/validations/messages";

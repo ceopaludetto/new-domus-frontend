@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Switch, Route, useLocation } from "react-router-dom";
+import { Switch, Route, useRouteMatch } from "react-router-dom";
 
 import { Paper, Box, Container, Theme } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
@@ -39,8 +39,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export default function Auth({ routes }: RouteComponentProps) {
-  const location = useLocation();
-  const isRegister = React.useMemo(() => location.pathname.includes("/auth/signup"), [location]);
+  const isRegister = useRouteMatch("/auth/signup");
   const classes = useStyles();
 
   return (

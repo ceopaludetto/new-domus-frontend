@@ -9,10 +9,10 @@ import type { Route } from "@/client/utils/common.dto";
 import { retrieveTo } from "@/client/utils/string";
 
 export function Footer() {
-  const main = React.useMemo(() => routes.find((r: Route) => r.name === "@MAIN"), []);
-  const company = React.useMemo(() => main?.children?.filter((r: Route) => r.meta?.type === "company"), [main]);
-  const resource = React.useMemo(() => main?.children?.filter((r: Route) => r.meta?.type === "resource"), [main]);
-  const legal = React.useMemo(() => main?.children?.filter((r: Route) => r.meta?.type === "legal"), [main]);
+  const { current } = React.useRef(routes.find((r: Route) => r.name === "@MAIN"));
+  const { current: company } = React.useRef(current?.children?.filter((r: Route) => r.meta?.type === "company"));
+  const { current: resource } = React.useRef(current?.children?.filter((r: Route) => r.meta?.type === "resource"));
+  const { current: legal } = React.useRef(current?.children?.filter((r: Route) => r.meta?.type === "legal"));
 
   return (
     <footer>

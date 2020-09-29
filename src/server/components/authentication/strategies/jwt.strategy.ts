@@ -1,19 +1,19 @@
 import { Injectable } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
 import { AuthenticationError } from "apollo-server-express";
-import { Strategy } from "passport-jwt";
+import { Strategy, ExtractJwt, JwtFromRequestFunction } from "passport-jwt";
 
 import { ConfigurationService } from "@/server/components/configuration";
 import { UserService } from "@/server/components/user";
 import type { FindByID } from "@/server/utils/common.dto";
 
-import { extractor } from "./extractor";
+import { fromAccessTokenHeader } from "./extractor";
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   public constructor({ auth }: ConfigurationService, private readonly userService: UserService) {
     super({
-      jwtFromRequest: extractor,
+      jwtFromRequest: ExtractJwt.fromExtractors([fromAccessTokenHeader as JwtFromRequestFunction]),
       ignoreExpiration: false,
       secretOrKey: auth.secret,
     });

@@ -7,7 +7,7 @@ import { yupResolver } from "@hookform/resolvers";
 import { Grid, Button, Divider, Box, Typography, Snackbar, IconButton } from "@material-ui/core";
 import type { UserInputError } from "apollo-server-express";
 
-import { FormControl, FormSwitch, FormCalendar, MaskedFormControl, PasswordHelper } from "@/client/components";
+import { FormControl, FormToggle, FormCalendar, MaskedFormControl, PasswordHelper } from "@/client/components";
 import { useMeQuery, MeQuery, useUpdateUserMutation, useChangePasswordMutation, MeDocument } from "@/client/graphql";
 import * as Masks from "@/client/helpers/masks";
 import {
@@ -16,7 +16,7 @@ import {
   SettingsPersonalSchema,
   SettingsPersonalValues,
 } from "@/client/helpers/validations/settings.schema";
-import { useMultipleVisibility } from "@/client/hooks";
+import { useMultipleVisibility, usePasswordHelp } from "@/client/hooks";
 import type { Client } from "@/client/utils/common.dto";
 import { splitPhone } from "@/client/utils/string";
 
@@ -35,10 +35,10 @@ export default function Personal() {
     defaultValues: {
       name: data?.profile.person.name,
       lastName: data?.profile.person.lastName,
-      cpf: Masks.cpf(data?.profile.person.cpf),
+      cpf: data?.profile.person.cpf,
       login: data?.profile.login,
       email: data?.profile.person.email,
-      phone: Masks.tel(`${data?.profile.person.phones[0].ddd}${data?.profile.person.phones[0].number}`),
+      phone: `${data?.profile.person.phones[0].ddd}${data?.profile.person.phones[0].number}`,
       birthdate: data?.profile.person.birthdate,
       publicAccount: false,
     },
@@ -52,7 +52,9 @@ export default function Personal() {
       repeatNewPassword: "",
     },
   });
+
   const newPasswordValue = password.watch("newPassword");
+  const passwordHelp = usePasswordHelp(newPasswordValue);
 
   const handlePersonalSubmit = personal.handleSubmit(async ({ login, birthdate, phone, publicAccount, ...rest }) => {
     setPersonalGenericError(false);
@@ -118,14 +120,6 @@ export default function Personal() {
     }
   });
 
-  const passwordHelp = React.useMemo(() => {
-    return {
-      oneNumber: /\d/.test(newPasswordValue),
-      oneUpper: /[A-Z]/.test(newPasswordValue),
-      min: newPasswordValue.length >= 6,
-    };
-  }, [newPasswordValue]);
-
   function handleClose() {
     setSnackbarOpen(false);
   }
@@ -169,21 +163,22 @@ export default function Personal() {
               <FormControl name="email" label="E-mail" id="email" />
             </Grid>
             <Grid item xs={12} md={4}>
-              <MaskedFormControl rifm={{ format: Masks.cpf }} name="cpf" label="CPF" id="cpf" />
+              <MaskedFormControl rifm={Masks.cpf} name="cpf" label="CPF" id="cpf" />
             </Grid>
             <Grid item xs={12} md={4}>
-              <MaskedFormControl rifm={{ format: Masks.tel }} name="phone" label="Telefone" id="phone" />
+              <MaskedFormControl rifm={Masks.tel} name="phone" label="Telefone" id="phone" />
             </Grid>
             <Grid item xs={12} md={4}>
               <FormCalendar disableFuture name="birthdate" label="Data de Nascimento" id="birthdate" />
             </Grid>
             <Grid item xs={12}>
-              <FormSwitch
+              <FormToggle
                 color="primary"
                 label="Conta pública"
                 info="Ser visível a todos usuários do condomínio atual."
                 id="publicAccount"
                 name="publicAccount"
+                variant="switch"
               />
             </Grid>
             <Grid item xs={12}>

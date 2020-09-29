@@ -94,6 +94,7 @@ export const routes: Route[] = [
       "/app/:condominium/blocks",
       "/app/:condominium/settings",
       "/app/:condominium/settings/condominium",
+      "/app/:condominium/settings/appearance",
     ],
     exact: true,
     component: loadable(() => import("@/client/pages/app")),
@@ -144,7 +145,11 @@ export const routes: Route[] = [
       },
       {
         name: "@APP:SETTINGS",
-        path: ["/app/:condominium/settings", "/app/:condominium/settings/condominium"],
+        path: [
+          "/app/:condominium/settings",
+          "/app/:condominium/settings/condominium",
+          "/app/:condominium/settings/appearance",
+        ],
         exact: true,
         component: loadable(() => import("@/client/pages/app/pages/settings")),
         meta: {
@@ -169,6 +174,15 @@ export const routes: Route[] = [
             component: loadable(() => import("@/client/pages/app/pages/settings/pages/condominium")),
             meta: {
               displayName: "Condomínio",
+            },
+          },
+          {
+            name: "@APP:SETTINGS:APPEARANCE",
+            path: "/app/:condominium/settings/appearance",
+            exact: true,
+            component: loadable(() => import("@/client/pages/app/pages/settings/pages/appearance")),
+            meta: {
+              displayName: "Aparência",
             },
           },
         ],

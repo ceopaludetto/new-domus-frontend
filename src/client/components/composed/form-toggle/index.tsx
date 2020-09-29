@@ -8,19 +8,23 @@ import {
   FormHelperText,
   Checkbox,
   CheckboxProps,
+  Switch,
   Box,
 } from "@material-ui/core";
 
-type FormSwitchProps = Omit<CheckboxProps, "name"> & {
+type FormToggleProps = Omit<CheckboxProps, "name"> & {
   name: string;
   helperText?: React.ReactNode;
   label: string;
   info: string;
+  variant?: "switch" | "checkbox";
 };
 
-export function FormCheckbox({ name, label, id, info, helperText, ...rest }: FormSwitchProps) {
+export function FormToggle({ name, label, id, info, helperText, variant = "checkbox", ...rest }: FormToggleProps) {
   const { register, errors } = useFormContext();
   const error = get(errors, name);
+
+  const Component = variant === "checkbox" ? Checkbox : Switch;
 
   return (
     <FormControl error={!!error} component="fieldset" fullWidth variant="filled">
@@ -32,7 +36,7 @@ export function FormCheckbox({ name, label, id, info, helperText, ...rest }: For
       <FormControlLabel
         label={info}
         labelPlacement="end"
-        control={<Checkbox name={name} inputRef={register} color="primary" id={id} {...rest} />}
+        control={<Component name={name} inputRef={register} color="primary" id={id} {...rest} />}
       />
       {(error?.message ?? helperText) && (
         <FormHelperText variant="filled" error={!!error}>

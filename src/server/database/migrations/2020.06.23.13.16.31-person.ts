@@ -1,7 +1,7 @@
 import type knex from "knex";
 
-import { Gender } from "@/server/models/person.model";
 import { PERSON } from "@/server/utils/constants";
+import { Gender } from "@/server/utils/enums";
 
 import { defaults } from "../defaults";
 

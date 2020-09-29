@@ -6,7 +6,7 @@ import { Button, Typography, Box, Grid } from "@material-ui/core";
 
 import { FormControl, PasswordHelper } from "@/client/components";
 import { SignUpStep2Schema, SignUpStep2Values } from "@/client/helpers/validations/signup.schema";
-import { StepperContext, useMultipleVisibility } from "@/client/hooks";
+import { StepperContext, useMultipleVisibility, usePasswordHelp } from "@/client/hooks";
 import { clean } from "@/client/utils/clean";
 
 import { WizardContext } from "../providers";
@@ -20,14 +20,7 @@ export default function Step2() {
     defaultValues: values,
   });
   const password = methods.watch("password");
-
-  const passwordHelp = React.useMemo(() => {
-    return {
-      oneNumber: /\d/.test(password),
-      oneUpper: /[A-Z]/.test(password),
-      min: password.length >= 6,
-    };
-  }, [password]);
+  const passwordHelp = usePasswordHelp(password);
 
   const submit = methods.handleSubmit((data) => {
     if (values) {

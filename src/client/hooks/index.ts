@@ -6,3 +6,4 @@ export * from "./use-locale";
 export * from "./use-breadcrumbs";
 export * from "./use-current-condominium";
 export * from "./use-path-with-condominium";
+export * from "./use-password-help";

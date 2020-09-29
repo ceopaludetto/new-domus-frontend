@@ -45,13 +45,7 @@ export default function Step1() {
             <FormControl type="person.email" name="person.email" id="email" label="E-mail" required />
           </Grid>
           <Grid item xs={12} md={3}>
-            <MaskedFormControl
-              rifm={{ format: Masks.cpf, accept: /\d+/g, mask: true }}
-              name="person.cpf"
-              id="cpf"
-              label="CPF"
-              required
-            />
+            <MaskedFormControl rifm={Masks.cpf} name="person.cpf" id="cpf" label="CPF" required />
           </Grid>
           <Grid item xs={12} md={4}>
             <FormSelect name="person.gender" id="gender" label="Gênero" required>
@@ -64,13 +58,7 @@ export default function Step1() {
             <FormCalendar disableFuture name="person.birthdate" id="birthdate" label="Data de Nascimento" required />
           </Grid>
           <Grid item xs={12} md={4}>
-            <MaskedFormControl
-              rifm={{ format: Masks.tel, accept: /\d+/g, mask: true }}
-              name="person.phone"
-              id="phone"
-              type="tel"
-              label="Telefone"
-            />
+            <MaskedFormControl rifm={Masks.tel} name="person.phone" id="phone" type="tel" label="Telefone" />
           </Grid>
           <Grid item xs={12}>
             <Box textAlign="right">

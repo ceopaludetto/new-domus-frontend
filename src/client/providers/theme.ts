@@ -1,5 +1,7 @@
 import { Theme, createMuiTheme } from "@material-ui/core";
 
+import { Theme as ThemeEnum } from "@/client/graphql";
+
 export const darkVariant: Partial<Theme["palette"]> = {
   type: "dark",
   primary: {
@@ -127,7 +129,8 @@ export const common: Partial<Omit<Theme, "palette">> = {
   },
 };
 
-export const theme = createMuiTheme({
-  palette: darkVariant,
-  ...common,
-});
+export const createTheme = (mode: ThemeEnum = ThemeEnum.Dark) =>
+  createMuiTheme({
+    palette: mode === ThemeEnum.Dark ? darkVariant : lightVariant,
+    ...common,
+  });

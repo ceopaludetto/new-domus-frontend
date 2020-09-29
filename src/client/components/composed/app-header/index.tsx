@@ -68,7 +68,7 @@ export function AppHeader({ routes }: Pick<RouteComponentProps, "routes">) {
       fieldName: "profile",
     });
 
-    tokenStore.token = "";
+    tokenStore.clear();
   }, [client, evict]);
 
   return (
