@@ -41,7 +41,7 @@
     "@tanem/react-nprogress": "^3.0.45",
     "apollo-server-express": "^2.18.1",
     "apollo-upload-client": "^14.1.2",
-    "axios": "^0.20.0",
+    "axios": "^0.21.1",
     "bcryptjs": "^2.4.3",
     "bull": "^3.18.0",
     "class-transformer": "^0.3.1",
