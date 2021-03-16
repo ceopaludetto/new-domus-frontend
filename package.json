@@ -1,7 +1,11 @@
 {
-  "name": "razzle-examples-with-loadable-components",
-  "version": "4.0.1",
+  "name": "nest-new-graphql",
+  "version": "1.0.0",
+  "private": false,
   "license": "MIT",
+  "repository": "git@github.com:ceopaludetto/nest-new-graphql.git",
+  "author": "ceo.paludetto@gmail.com",
+  "main": "dist/index.js",
   "scripts": {
     "analyze": "source-map-explorer build/public/static/js/*.js",
     "build": "razzle build",
