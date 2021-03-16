@@ -1,0 +1,16 @@
+schema:
+  - "./src/server/schema.graphql"
+  - "./src/client/graphql/schema.graphql"
+documents:
+  - "**/*.graphql"
+  - "!**/schema.graphql"
+plugins:
+  - typescript
+  - typescript-operations
+  - typescript-react-apollo
+config:
+  reactApolloVersion: 3
+  preResolveTypes: true
+  dedupeOperationSuffix: true
+  immutableTypes: true
+  nonOptionalTypename: true

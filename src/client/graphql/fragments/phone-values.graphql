@@ -1,0 +1,5 @@
+fragment PhoneValues on Phone {
+  id
+  ddd
+  number
+}

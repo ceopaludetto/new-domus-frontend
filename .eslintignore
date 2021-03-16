@@ -1,0 +1,9 @@
+dist
+node_modules
+coverage
+
+src/**/*.pug
+src/**/*.gql*
+src/**/*.graphql*
+src/**/*.scss*
+src/**/*.woff2

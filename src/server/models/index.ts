@@ -1,0 +1,10 @@
+export { default as Block } from "./block.model";
+export { default as City } from "./city.model";
+export { default as Condominium } from "./condominium.model";
+export { default as Local } from "./local.model";
+export { default as Person } from "./person.model";
+export { default as Phone } from "./phone.model";
+export { default as State } from "./state.model";
+export { default as User } from "./user.model";
+export { default as Address } from "./address.model";
+export { default as BaseModel } from "./base.model";

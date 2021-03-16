@@ -1,0 +1,9 @@
+fragment StateValues on State {
+  id
+  name
+  initials
+  cities {
+    id
+    name
+  }
+}

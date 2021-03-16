@@ -1,0 +1,9 @@
+export const STRING = "Campo deve ser do tipo texto";
+export const EMAIL = "E-mail inválido";
+export const GENDER = "Gênero inválido";
+export const MAX_LENGTH = "$property deve conter no máximo $constraint1 caracteres";
+export const CNPJ = "CNPJ inválido";
+export const CPF = "CPF inválido";
+export const DATE = "Campo deve ser do tipo data";
+export const UNIQUE = "Campo já cadastrado";
+export const SHORTID = "ID ($value) isn't an valid shortid!";

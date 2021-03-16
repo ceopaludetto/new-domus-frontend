@@ -1,0 +1,18 @@
+#import "./phone-values.graphql"
+#import "./condominium-values.graphql"
+
+fragment PersonValues on Person {
+  id
+  cpf
+  name
+  lastName
+  email
+  birthdate
+  color
+  condominiums {
+    ...CondominiumValues
+  }
+  phones {
+    ...PhoneValues
+  }
+}

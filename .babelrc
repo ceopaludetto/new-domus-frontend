@@ -1,0 +1,11 @@
+{
+  "plugins": ["@loadable/babel-plugin", "optimize-clsx", "lodash"],
+  "presets": [
+    [
+      "razzle/babel",
+      {
+        "preset-react": { "runtime": "automatic" }
+      }
+    ]
+  ]
+}
