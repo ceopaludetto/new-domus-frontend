@@ -156,6 +156,12 @@
       "path": "./node_modules/cz-conventional-changelog"
     }
   },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
+      "prepare-commit-msg": "exec < /dev/tty && git cz --hook || true"
+    }
+  },
   "mikro-orm": {
     "useTsNode": true,
     "tsConfigPath": "./tsconfig.orm.json",
