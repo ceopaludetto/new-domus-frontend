@@ -11,6 +11,7 @@
     "build": "razzle build",
     "export": "razzle export",
     "lint": "eslint \"src/**\"",
+    "prepare": "husky install",
     "start": "razzle start",
     "start:production": "NODE_ENV=production node build/server.js",
     "test": "razzle test --env=jsdom"
@@ -153,12 +154,6 @@
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
-    }
-  },
-  "husky": {
-    "hooks": {
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
-      "prepare-commit-msg": "exec < /dev/tty && git cz --hook || true"
     }
   },
   "mikro-orm": {

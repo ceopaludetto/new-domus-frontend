@@ -16,7 +16,7 @@ export default function BlockCreate() {
 
   const handleSubmit = methods.handleSubmit(
     handleError<BlockValues>((values) => {
-      console.log(values);
+      console.log("test", values);
     }, methods.setError)
   );
 

@@ -8,7 +8,7 @@ import { installMiddlewares } from "@/server/utils/middlewares";
 import { ApplicationModule } from "./app.module";
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(ApplicationModule, { logger: false });
+  const app = await NestFactory.create<NestExpressApplication>(ApplicationModule);
   const logger = app.get(Logger);
   app.useLogger(logger);
 
