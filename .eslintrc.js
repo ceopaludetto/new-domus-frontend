@@ -32,7 +32,7 @@ module.exports = {
   rules,
   overrides: [
     {
-      files: ["src/**/*.ts", "src/**/*.tsx"],
+      files: ["src/**/*.ts", "src/**/*.tsx", "mikro-orm.config.ts"],
       env: {
         node: true,
         browser: true,
@@ -73,12 +73,6 @@ module.exports = {
         "react/prop-types": "off",
         "react/jsx-props-no-spreading": "off",
         "jsx-a11y/label-has-for": "off",
-      },
-    },
-    {
-      files: ["src/server/models/*.ts"],
-      rules: {
-        "import/no-cycle": "off",
       },
     },
     {

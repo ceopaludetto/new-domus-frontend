@@ -2,11 +2,10 @@ import { Entity, Property, OneToOne } from "@mikro-orm/core";
 import { ObjectType, Field } from "@nestjs/graphql";
 
 import { ADDRESS } from "../utils/constants";
+import { ModelRef } from "../utils/model-ref";
 import BaseModel from "./base.model";
 import type City from "./city.model";
 import type Condominium from "./condominium.model";
-
-import { ModelRef } from "@/server/utils/model-ref";
 
 @Entity({ tableName: ADDRESS })
 @ObjectType(ADDRESS)
