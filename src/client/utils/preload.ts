@@ -7,8 +7,10 @@ import { getModule, hasFetchBefore } from "./lazy";
 import { retrieveTo } from "./string";
 
 export function findRoute(path: string, definedRoutes = routes, matching: Route[] = []): Route[] {
+  const [base] = path.split("?");
+
   const matchingRoute = definedRoutes.find((r) =>
-    matchPath(path, {
+    matchPath(base, {
       path: r.path,
       exact: r.exact,
       strict: r.strict,
@@ -20,7 +22,7 @@ export function findRoute(path: string, definedRoutes = routes, matching: Route[
     matching.push(matchingRoute);
 
     if (matchingRoute.children?.length) {
-      return findRoute(path, matchingRoute.children, matching) as Route[];
+      return findRoute(base, matchingRoute.children, matching) as Route[];
     }
   }
 

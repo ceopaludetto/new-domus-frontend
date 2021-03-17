@@ -66,9 +66,7 @@ export function createClient(isSsr = false, link: ApolloLink) {
 
   const client = new ApolloClient({
     cache,
-    link: isSsr
-      ? ApolloLink.from([contextLink, link])
-      : ApolloLink.from([contextLink, saveTokenLink, getTokenLink, link]),
+    link: isSsr ? link : ApolloLink.from([contextLink, saveTokenLink, getTokenLink, link]),
     ssrMode: isSsr,
     connectToDevTools: process.env.NODE_ENV === "development" && !isSsr,
     assumeImmutableResults: true,

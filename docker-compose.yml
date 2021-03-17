@@ -22,9 +22,20 @@ services:
     ports:
       - 6379:6379
 
+  adminer:
+    image: adminer
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    networks:
+      - internal
+    ports:
+      - 9999:8080
+
 volumes:
   pgdata:
 
 networks:
   internal:
+    name: domus_internal_network
     driver: bridge

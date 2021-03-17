@@ -41,10 +41,3 @@ export class ContextType {
 }
 
 export type Mapped<T> = FindOptions<T>["populate"];
-
-export interface FileUpload {
-  filename: string;
-  mimetype: string;
-  encoding: string;
-  createReadStream(): NodeJS.ReadStream;
-}

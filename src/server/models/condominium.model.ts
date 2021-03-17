@@ -42,6 +42,7 @@ export default class Condominium extends BaseModel {
     pivotTable: PERSON_CONDOMINIUM,
     joinColumn: "condominium",
     inverseJoinColumn: "person",
+    inversedBy: "condominiums",
   })
   public people: Collection<Person> = new Collection<Person>(this);
 }

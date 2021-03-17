@@ -30,6 +30,16 @@ export default function Settings({ routes, location, history }: RouteComponentPr
     [history, handlePreload]
   );
 
+  const renderTabs = React.useCallback(
+    () =>
+      routes?.map((route) => {
+        const path = retrieveTo(route.path);
+
+        return <Tab value={generatePath(path)} label={route.meta?.displayName} key={route.name} />;
+      }),
+    [routes, generatePath]
+  );
+
   React.useEffect(() => {
     const condominiumURL = new CondominiumURL(location);
 
@@ -44,17 +54,14 @@ export default function Settings({ routes, location, history }: RouteComponentPr
       subtitle="Ajustes"
       tabs={
         <Tabs
-          scrollButtons="auto"
           className={classes.root}
           indicatorColor="primary"
           value={value}
           onChange={handleTabClick}
+          variant="scrollable"
+          scrollButtons="off"
         >
-          {routes?.map((r) => {
-            const path = retrieveTo(r.path);
-
-            return <Tab value={generatePath(path)} label={r.meta?.displayName} key={r.name} />;
-          })}
+          {renderTabs()}
         </Tabs>
       }
     >

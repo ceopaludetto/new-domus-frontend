@@ -1,10 +1,9 @@
 import * as React from "react";
 import { Helmet } from "react-helmet-async";
 import { useForm, FormProvider } from "react-hook-form";
-import { FiX } from "react-icons/fi";
 
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Grid, Button, Divider, Box, Typography, Snackbar, IconButton } from "@material-ui/core";
+import { Grid, Button, Divider, Box, Typography } from "@material-ui/core";
 
 import { FormControl, FormToggle, FormCalendar, MaskedFormControl, PasswordHelper } from "@/client/components";
 import { useMeQuery, MeQuery, useUpdateUserMutation, useChangePasswordMutation, MeDocument } from "@/client/graphql";
@@ -15,17 +14,16 @@ import {
   SettingsPersonalSchema,
   SettingsPersonalValues,
 } from "@/client/helpers/validations/settings.schema";
-import { useMultipleVisibility, usePasswordHelp, useErrorHandler } from "@/client/hooks";
+import { useMultipleVisibility, usePasswordHelp, useErrorHandler, useSnackbar, SnackbarWrapper } from "@/client/hooks";
+import { submitDisabled } from "@/client/utils/form";
 import { splitPhone, mergePhone } from "@/client/utils/string";
 import type { Client } from "@/client/utils/types";
 
 export default function Personal() {
   const { handleError: handlePersonalError, defaultError: personalError } = useErrorHandler();
   const { handleError: handlePasswordError, defaultError: passwordError } = useErrorHandler();
-  const [snackbar, setSnackbar] = React.useState({
-    content: "",
-    isOpen: false,
-  });
+  const snackbarControls = useSnackbar();
+
   const [mapPropsToField] = useMultipleVisibility(["currentPassword", "newPassword", "repeatNewPassword"]);
   const [changePassword] = useChangePasswordMutation();
   const [changeUserData] = useUpdateUserMutation();
@@ -72,7 +70,7 @@ export default function Personal() {
         },
       });
 
-      setSnackbar({ content: "Informações pessoais alteradas com sucesso!", isOpen: true });
+      snackbarControls.handleOpen("Informações pessoais alteradas com sucesso!");
 
       personal.reset(personal.getValues());
     }, personal.setError)
@@ -89,33 +87,15 @@ export default function Personal() {
         },
       });
 
-      setSnackbar({ content: "Senha alterada com sucesso!", isOpen: true });
+      snackbarControls.handleOpen("Senha alterada com sucesso!");
 
       password.reset();
     }, password.setError)
   );
 
-  const handleClose = React.useCallback(() => {
-    setSnackbar((current) => ({ ...current, isOpen: false }));
-  }, []);
-
   return (
     <>
-      <Snackbar
-        message={snackbar.content}
-        open={snackbar.isOpen}
-        onClose={handleClose}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "right",
-        }}
-        autoHideDuration={5000}
-        action={
-          <IconButton size="small" onClick={handleClose} color="inherit">
-            <FiX />
-          </IconButton>
-        }
-      />
+      <SnackbarWrapper {...snackbarControls} />
       <Helmet title="Configurações - Informações Pessoais" />
       <FormProvider {...personal}>
         <form noValidate onSubmit={handlePersonalSubmit}>
@@ -158,12 +138,7 @@ export default function Personal() {
             </Grid>
             <Grid item xs={12}>
               <Box textAlign="right">
-                <Button
-                  disabled={personal.formState.isSubmitting || !personal.formState.isDirty}
-                  color="primary"
-                  variant="contained"
-                  type="submit"
-                >
+                <Button disabled={submitDisabled(personal)} color="primary" variant="contained" type="submit">
                   Alterar Informações
                 </Button>
               </Box>
@@ -214,12 +189,7 @@ export default function Personal() {
                   </Grid>
                   <Grid item xs={12}>
                     <Box textAlign="right">
-                      <Button
-                        color="primary"
-                        variant="contained"
-                        disabled={password.formState.isSubmitting || !password.formState.isDirty}
-                        type="submit"
-                      >
+                      <Button disabled={submitDisabled(password)} color="primary" variant="contained" type="submit">
                         Alterar Senha
                       </Button>
                     </Box>

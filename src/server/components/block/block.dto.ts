@@ -1,8 +1,8 @@
 import { InputType, Field, ID, Int } from "@nestjs/graphql";
 import { GraphQLUpload } from "apollo-server-express";
 import { IsString, IsNumber, IsOptional, IsInt } from "class-validator";
+import type { FileUpload } from "graphql-upload";
 
-import type { FileUpload } from "@/server/utils/common.dto";
 import { IsShortID } from "@/server/utils/validations";
 
 @InputType()

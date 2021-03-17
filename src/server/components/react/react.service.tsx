@@ -76,7 +76,19 @@ export class ReactService {
       true,
       new SchemaLink({
         schema: this.schemaService.schema,
-        context: () => ({ req, res }),
+        context: (operation) => {
+          const ctx = operation.getContext();
+
+          const selected = ctx.cache.readQuery({
+            query: SelectedCondominiumDocument,
+          });
+
+          if (selected?.selectedCondominium) {
+            req.headers = { ...req.headers, "x-condominium": selected.selectedCondominium };
+          }
+
+          return { req, res };
+        },
       })
     );
 

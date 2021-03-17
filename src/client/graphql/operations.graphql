@@ -1,6 +1,7 @@
 #import "./fragments/block-values.graphql"
 #import "./fragments/user-values.graphql"
 #import "./fragments/state-values.graphql"
+#import "./fragments/condominium-values.graphql"
 
 query Logged {
   logged @client
@@ -64,6 +65,18 @@ mutation ChangePassword($input: ChangePasswordInput!) {
 
 mutation EvictRefreshCookie {
   evictRefreshCookie
+}
+
+mutation UpdateCondominium($input: CondominiumUpdateInput!) {
+  updateCondominium(input: $input) {
+    ...CondominiumValues
+  }
+}
+
+query CurrentCondominium {
+  currentCondominium {
+    ...CondominiumValues
+  }
 }
 
 query Me {

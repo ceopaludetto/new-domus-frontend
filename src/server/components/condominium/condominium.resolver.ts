@@ -1,12 +1,16 @@
-import { Resolver, Query, Args, Mutation, Int } from "@nestjs/graphql";
+import { UseGuards } from "@nestjs/common";
+import { Resolver, Query, Args, Mutation } from "@nestjs/graphql";
 
 import { Condominium } from "@/server/models";
 import { ShowAll, FindByID } from "@/server/utils/common.dto";
 import type { Mapped } from "@/server/utils/common.dto";
 import { MapFields } from "@/server/utils/plugins";
 
+import { GqlAuthGuard } from "../authentication/authentication.guard";
+import { CurrentCondominium } from "./condominium.decorator";
+import { GqlCondominiumGuard } from "./condominium.guard";
 import { CondominiumService } from "./condominium.service";
-import { CondominiumInsertInput } from "./condonimium.dto";
+import { CondominiumUpdateInput } from "./condonimium.dto";
 
 @Resolver(() => Condominium)
 export class CondominiumResolver {
@@ -25,8 +29,22 @@ export class CondominiumResolver {
     return this.condominiumService.findByID(id, mapped);
   }
 
-  @Mutation(() => Int)
-  public async createCondominium(@Args("input") data: CondominiumInsertInput) {
-    return data;
+  @UseGuards(GqlAuthGuard, GqlCondominiumGuard)
+  @Query(() => Condominium)
+  public async currentCondominium(
+    @CurrentCondominium() condominium: string,
+    @MapFields() mapped?: Mapped<Condominium>
+  ) {
+    return this.condominiumService.findByID(condominium, mapped);
+  }
+
+  @UseGuards(GqlAuthGuard, GqlCondominiumGuard)
+  @Mutation(() => Condominium)
+  public async updateCondominium(
+    @CurrentCondominium() condominium: string,
+    @Args("input") input: CondominiumUpdateInput,
+    @MapFields() mapped?: Mapped<Condominium>
+  ) {
+    return this.condominiumService.update(condominium, input, mapped);
   }
 }

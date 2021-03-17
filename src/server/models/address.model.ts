@@ -1,4 +1,4 @@
-import { Entity, Property, OneToOne } from "@mikro-orm/core";
+import { Entity, Property, OneToOne, ManyToOne } from "@mikro-orm/core";
 import { ObjectType, Field } from "@nestjs/graphql";
 
 import { ADDRESS } from "../utils/constants";
@@ -31,10 +31,9 @@ export default class Address extends BaseModel {
   public condominium!: Condominium;
 
   @Field(() => ModelRef("city.model"))
-  @OneToOne({
+  @ManyToOne({
     entity: () => ModelRef("city.model"),
     inversedBy: (city: City) => city.addresses,
-    owner: true,
   })
   public city!: City;
 }

@@ -8,13 +8,11 @@ import { installMiddlewares } from "@/server/utils/middlewares";
 import { ApplicationModule } from "./app.module";
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(ApplicationModule);
+  const app = await NestFactory.create<NestExpressApplication>(ApplicationModule, { logger: false });
   const logger = app.get(Logger);
   app.useLogger(logger);
 
-  installClassValidationContainer(app.select(ApplicationModule), {
-    fallbackOnErrors: true,
-  });
+  installClassValidationContainer(app.select(ApplicationModule), { fallbackOnErrors: true });
   installMiddlewares(app);
 
   const port = process.env.PORT || 3333;

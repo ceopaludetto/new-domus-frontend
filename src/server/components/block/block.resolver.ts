@@ -1,10 +1,10 @@
 import { UseGuards } from "@nestjs/common";
-import { Resolver, Args, Query, Mutation, Context } from "@nestjs/graphql";
+import { Resolver, Args, Query, Mutation } from "@nestjs/graphql";
 
 import { GqlAuthGuard } from "@/server/components/authentication/authentication.guard";
-import { GqlCondominiumGuard } from "@/server/components/condominium/condominium.guard";
+import { GqlCondominiumGuard, CurrentCondominium } from "@/server/components/condominium";
 import { Block } from "@/server/models";
-import { FindByID, ShowAll, ContextType } from "@/server/utils/common.dto";
+import { FindByID, ShowAll } from "@/server/utils/common.dto";
 import type { Mapped } from "@/server/utils/common.dto";
 import { MapFields } from "@/server/utils/plugins";
 
@@ -19,10 +19,10 @@ export class BlockResolver {
   @Query(() => [Block])
   public async showBlocks(
     @Args({ nullable: true }) { take, skip }: ShowAll,
-    @Context() { req }: ContextType,
+    @CurrentCondominium() condominium: string,
     @MapFields() mapped?: Mapped<Block>
   ) {
-    return this.blockService.showAll(req.condominium, { take, skip }, mapped);
+    return this.blockService.showAll(condominium, { take, skip }, mapped);
   }
 
   @Query(() => Block)
@@ -34,9 +34,9 @@ export class BlockResolver {
   @Mutation(() => Block)
   public async createBlock(
     @Args("input") data: BlockInsertInput,
-    @Context() { req }: ContextType,
+    @CurrentCondominium() condominium: string,
     @MapFields() mapped?: Mapped<Block>
   ) {
-    return this.blockService.create({ ...data, condominium: req.condominium }, mapped);
+    return this.blockService.create({ ...data, condominium }, mapped);
   }
 }

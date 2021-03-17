@@ -212,13 +212,11 @@ export function Sidebar({ isOpen, onOpen }: SidebarProps) {
       <Paper className={clsx(classes.container, isOpen && classes.open)} square variant="outlined">
         <div className={classes.sidebar}>
           <Box flex="1">
-            <Hidden smDown implementation="css">
-              <Box width="100%" display="flex" py={3} justifyContent="center">
-                <PreloadLink to="/app">
-                  <Logo isLogoType height={40} />
-                </PreloadLink>
-              </Box>
-            </Hidden>
+            <Box width="100%" display="flex" py={3} justifyContent="center">
+              <PreloadLink to="/app">
+                <Logo isLogoType height={40} />
+              </PreloadLink>
+            </Box>
             <List classes={{ root: classes.sidebarList }} component="nav">
               {renderItems()}
             </List>

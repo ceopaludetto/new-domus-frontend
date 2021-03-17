@@ -8,3 +8,4 @@ export * from "./use-error-handler";
 export * from "./use-color-mode";
 export * from "./use-change-condominium";
 export * from "./use-permission-guards";
+export * from "./use-snackbar";

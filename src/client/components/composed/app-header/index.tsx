@@ -5,9 +5,10 @@ import { RiSettings2Line } from "react-icons/ri";
 import { useWindowScroll } from "react-use";
 
 import { IconButton, Grid, Container, Box, Avatar, Hidden, Theme, Divider, fade } from "@material-ui/core";
-import { makeStyles, useTheme } from "@material-ui/styles";
+import { makeStyles } from "@material-ui/styles";
 import clsx from "clsx";
 
+import { Logo } from "@/client/assets/logo";
 import { Spacer } from "@/client/components/layout";
 import { PreloadLink, Tooltip } from "@/client/components/typography";
 import { useMeQuery, useEvictRefreshCookieMutation } from "@/client/graphql";
@@ -44,6 +45,12 @@ const useStyles = makeStyles<Theme, { color?: string }>((theme) => ({
     backgroundColor: fade(theme.palette.background.default, 0.25),
     margin: theme.spacing(0.75, 0, 0.75, 1.5),
   },
+  firstItem: {
+    marginRight: "auto!important",
+  },
+  lastItem: {
+    marginLeft: "auto!important",
+  },
 }));
 
 interface AppHeaderProps {
@@ -56,8 +63,6 @@ export function AppHeader({ isOpen, onOpen }: AppHeaderProps) {
   const [evict] = useEvictRefreshCookieMutation();
   const { y } = useWindowScroll();
   const hasBorder = React.useMemo(() => y > 0, [y]);
-
-  const theme = useTheme<Theme>();
 
   const name = React.useMemo(() => data?.profile.person.name.substring(0, 2), [data]);
   const color = React.useMemo(() => data?.profile.person.color, [data]);
@@ -89,9 +94,9 @@ export function AppHeader({ isOpen, onOpen }: AppHeaderProps) {
     <div id="app-header" className={clsx(classes.root, hasBorder && classes.hasBorder)}>
       <Container maxWidth="xl">
         <Box py={{ xs: 1.25, md: 1.5 }}>
-          <Box clone justifyContent={{ xs: "space-between", md: "center" }}>
+          <Box clone justifyContent="center">
             <Grid container alignItems="center">
-              <Grid item md>
+              <Grid item xs md className={classes.firstItem}>
                 <Hidden mdUp implementation="css">
                   <Tooltip title={!isOpen ? "Abrir Menu" : "Fechar Menu"}>
                     <IconButton onClick={() => onOpen()}>
@@ -103,30 +108,21 @@ export function AppHeader({ isOpen, onOpen }: AppHeaderProps) {
                   <Breadcrumbs />
                 </Hidden>
               </Grid>
-              <Grid item xs="auto">
+              <Grid item xs md="auto">
                 <Hidden mdUp implementation="css">
                   <Box textAlign="center">
-                    <svg
-                      width="40"
-                      viewBox="0 0 116 100"
-                      fill={theme.palette.secondary.main}
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path fillRule="evenodd" clipRule="evenodd" d="M57.5 0L115 100H0L57.5 0z" />
-                    </svg>
+                    <Logo height={35} />
                   </Box>
                 </Hidden>
               </Grid>
-              <Grid item>
-                <Box display="flex" alignItems="center">
+              <Grid item xs md="auto" className={classes.lastItem}>
+                <Box display="flex" alignItems="center" justifyContent="flex-end">
                   <Spacer flex>
-                    <Hidden smDown implementation="css">
-                      <Tooltip title="Configurações">
-                        <IconButton component={PreloadLink} to="/app/settings">
-                          <RiSettings2Line />
-                        </IconButton>
-                      </Tooltip>
-                    </Hidden>
+                    <Tooltip title="Configurações">
+                      <IconButton component={PreloadLink} to="/app/settings">
+                        <RiSettings2Line />
+                      </IconButton>
+                    </Tooltip>
                     <Box className={classes.box} p={0.75} borderRadius={30} display="flex" alignItems="center">
                       <Spacer flex>
                         <Avatar classes={{ root: classes.avatar }}>{name}</Avatar>

@@ -1,11 +1,10 @@
 import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { createWriteStream, ensureDir } from "fs-extra";
+import type { FileUpload } from "graphql-upload";
 import path from "path";
 import sharp from "sharp";
 import shortid from "shortid";
-
-import type { FileUpload } from "@/server/utils/common.dto";
 
 @Injectable()
 export class UploadService {

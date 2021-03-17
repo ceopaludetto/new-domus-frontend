@@ -10,7 +10,7 @@ const smp = new SpeedMeasureWebpackPlugin({ disable: !measure });
 process.env.RAZZLE_LOADABLE_MANIFEST = path.resolve("build", "static", "loadable-stats.json");
 
 module.exports = {
-  options: { verbose: true },
+  options: { verbose: false, enableReactRefresh: false },
   plugins: [
     {
       name: "typescript",
@@ -67,15 +67,13 @@ module.exports = {
       );
     }
 
-    const tsRule = config.module.rules.findIndex((rule) => {
+    const ts = config.module.rules.find((rule) => {
       if (Array.isArray(rule.use)) {
         return rule.use.some((u) => u.loader.includes("ts-loader"));
       }
 
       return false;
     });
-
-    const ts = config.module.rules[tsRule];
 
     // add graphql tag loader
     config.module.rules.unshift({

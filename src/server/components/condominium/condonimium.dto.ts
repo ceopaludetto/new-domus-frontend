@@ -1,4 +1,4 @@
-import { InputType, Field } from "@nestjs/graphql";
+import { InputType, Field, PartialType } from "@nestjs/graphql";
 import { Type } from "class-transformer";
 import { IsString, MaxLength, ValidateNested } from "class-validator";
 
@@ -30,3 +30,6 @@ export class CondominiumInsertInput {
   @Type(() => AddressInsertInput)
   public address!: AddressInsertInput;
 }
+
+@InputType()
+export class CondominiumUpdateInput extends PartialType(CondominiumInsertInput) {}
