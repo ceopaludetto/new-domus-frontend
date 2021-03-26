@@ -1,6 +1,6 @@
-import * as React from "react";
-import { AiOutlineSwap } from "react-icons/ai";
+import { useState, useCallback, useMemo, Fragment } from "react";
 import { FiX, FiChevronDown, FiChevronUp } from "react-icons/fi";
+import { HiOutlineSwitchVertical } from "react-icons/hi";
 
 import {
   List,
@@ -13,8 +13,6 @@ import {
   IconButton,
   Typography,
   Collapse,
-  Hidden,
-  Fade,
   fade,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
@@ -22,7 +20,7 @@ import clsx from "clsx";
 
 import { Logo } from "@/client/assets/logo";
 import { PreloadNavLink, Tooltip, PreloadLink } from "@/client/components/typography";
-import { useMeQuery } from "@/client/graphql";
+import { useMeQuery } from "@/client/graphql/index.graphql";
 import { useCurrentCondominium, useChangeCondominium } from "@/client/hooks";
 import { sidebar } from "@/client/providers/sidebar";
 import { isMultiCondominium } from "@/client/utils/condominium";
@@ -31,30 +29,13 @@ import { retrieveTo } from "@/client/utils/string";
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
-    width: "100%",
     borderLeft: 0,
     borderBottom: 0,
     left: 0,
     top: 0,
-    maxWidth: "300px",
+    width: "100%",
     borderTop: 0,
-    zIndex: theme.zIndex.drawer,
-    [theme.breakpoints.up("md")]: {
-      position: "sticky",
-    },
-    [theme.breakpoints.down("sm")]: {
-      position: "fixed",
-      transition: theme.transitions.create("transform", {
-        duration: theme.transitions.duration.short,
-        easing: theme.transitions.easing.easeInOut,
-      }),
-      transform: "translateX(-300px)",
-      "&$open": {
-        transform: "translateX(0)",
-      },
-    },
   },
-  open: {},
   sidebar: {
     flexDirection: "column",
     display: "flex",
@@ -124,27 +105,23 @@ const useStyles = makeStyles((theme: Theme) => ({
       outline: "none",
     },
   },
-  overline: {
-    fontWeight: theme.typography.fontWeightBold,
-  },
 }));
 
 interface SidebarProps {
-  isOpen: boolean;
-  onOpen: () => void;
+  onSelect?: () => void;
 }
 
-export function Sidebar({ isOpen, onOpen }: SidebarProps) {
-  const [listOpen, setListOpen] = React.useState(false);
-  const [submenuOpen, setSubmenuOpen] = React.useState<Record<string, boolean>>({});
+export function Sidebar({ onSelect }: SidebarProps) {
+  const [listOpen, setListOpen] = useState(false);
+  const [submenuOpen, setSubmenuOpen] = useState<Record<string, boolean>>({});
   const { data } = useMeQuery();
 
-  const multiCondominiums = React.useMemo(() => isMultiCondominium(data?.profile?.person?.condominiums), [data]);
+  const multiCondominiums = useMemo(() => isMultiCondominium(data?.profile?.person?.condominiums), [data]);
   const condominium = useCurrentCondominium();
   const changeCondominium = useChangeCondominium();
   const classes = useStyles();
 
-  const handleCondominiumChange = React.useCallback(
+  const handleCondominiumChange = useCallback(
     async (id: string) => {
       await changeCondominium(id);
 
@@ -153,7 +130,7 @@ export function Sidebar({ isOpen, onOpen }: SidebarProps) {
     [setListOpen, changeCondominium]
   );
 
-  const renderItems = React.useCallback(
+  const renderItems = useCallback(
     (sidebarItems: typeof sidebar = sidebar) =>
       sidebarItems.map((item) => {
         if (item.type === "route") {
@@ -170,6 +147,7 @@ export function Sidebar({ isOpen, onOpen }: SidebarProps) {
               component={PreloadNavLink}
               activeClassName={classes.active}
               classes={{ root: classes.sidebarItem }}
+              onClick={onSelect}
               exact
               to={path}
             >
@@ -184,7 +162,7 @@ export function Sidebar({ isOpen, onOpen }: SidebarProps) {
         const Icon = item.icon;
 
         return (
-          <React.Fragment key={item.key}>
+          <Fragment key={item.key}>
             <ListItem
               button
               onClick={() => setSubmenuOpen((current) => ({ ...current, [item.key]: !current[item.key] }))}
@@ -201,91 +179,72 @@ export function Sidebar({ isOpen, onOpen }: SidebarProps) {
                 {renderItems(item.children)}
               </List>
             </Collapse>
-          </React.Fragment>
+          </Fragment>
         );
       }),
-    [classes, submenuOpen]
+    [classes, submenuOpen, onSelect]
   );
 
   return (
-    <>
-      <Paper className={clsx(classes.container, isOpen && classes.open)} square variant="outlined">
-        <div className={classes.sidebar}>
-          <Box flex="1">
-            <Box width="100%" display="flex" py={3} justifyContent="center">
-              <PreloadLink to="/app">
-                <Logo isLogoType height={40} />
-              </PreloadLink>
-            </Box>
-            <List classes={{ root: classes.sidebarList }} component="nav">
-              {renderItems()}
-            </List>
+    <Paper className={classes.container} square variant="outlined">
+      <div className={classes.sidebar}>
+        <Box flex="1">
+          <Box width="100%" display="flex" py={3} justifyContent="center">
+            <PreloadLink to="/app">
+              <Logo isLogoType height={40} />
+            </PreloadLink>
           </Box>
-          <Box display="flex" alignItems="center" px={2} py={2} className={classes.condominiums}>
-            {multiCondominiums ? (
-              <>
-                <Box flex="1">
-                  <Typography
-                    className={classes.overline}
-                    component="span"
-                    display="block"
-                    variant="overline"
-                    color="primary"
-                  >
-                    Condomínio
-                  </Typography>
-                  <Typography component="span" variant="body1">
-                    {listOpen ? "Selecione um condomínio" : condominium?.companyName}
-                  </Typography>
-                </Box>
-                <Box>
-                  <Tooltip title={listOpen ? "Fechar" : "Alterar condomínio"}>
-                    <IconButton color="primary" onClick={() => setListOpen((v) => !v)}>
-                      {listOpen ? <FiX /> : <AiOutlineSwap />}
-                    </IconButton>
-                  </Tooltip>
-                </Box>
-              </>
-            ) : (
-              <Box>
-                <Typography
-                  className={classes.overline}
-                  component="span"
-                  display="block"
-                  variant="overline"
-                  color="primary"
-                >
+          <List classes={{ root: classes.sidebarList }} component="nav">
+            {renderItems()}
+          </List>
+        </Box>
+        <Box display="flex" alignItems="center" px={2} py={2} className={classes.condominiums}>
+          {multiCondominiums ? (
+            <>
+              <Box flex="1">
+                <Typography component="span" display="block" variant="overline" color="primary">
                   Condomínio
                 </Typography>
                 <Typography component="span" variant="body1">
-                  {condominium?.companyName}
+                  {listOpen ? "Selecione um condomínio" : condominium?.companyName}
                 </Typography>
               </Box>
-            )}
-          </Box>
-          {multiCondominiums && (
-            <Collapse in={listOpen}>
-              <div className={classes.list}>
-                <List>
-                  {data?.profile.person.condominiums.map((c) => (
-                    <ListItem button onClick={() => handleCondominiumChange(c.id)} key={c.id}>
-                      <ListItemText
-                        primaryTypographyProps={{ color: condominium?.id === c.id ? "primary" : "textPrimary" }}
-                        primary={c.companyName}
-                      />
-                    </ListItem>
-                  ))}
-                </List>
-              </div>
-            </Collapse>
+              <Box>
+                <Tooltip title={listOpen ? "Fechar" : "Alterar condomínio"}>
+                  <IconButton color="primary" onClick={() => setListOpen((v) => !v)}>
+                    {listOpen ? <FiX /> : <HiOutlineSwitchVertical />}
+                  </IconButton>
+                </Tooltip>
+              </Box>
+            </>
+          ) : (
+            <Box>
+              <Typography component="span" display="block" variant="overline" color="primary">
+                Condomínio
+              </Typography>
+              <Typography component="span" variant="body1">
+                {condominium?.companyName}
+              </Typography>
+            </Box>
           )}
-        </div>
-      </Paper>
-      <Hidden mdUp implementation="css">
-        <Fade in={isOpen}>
-          <button onClick={() => onOpen()} className={classes.overlay} aria-label="Close Sidebar" />
-        </Fade>
-      </Hidden>
-    </>
+        </Box>
+        {multiCondominiums && (
+          <Collapse in={listOpen}>
+            <div className={classes.list}>
+              <List>
+                {data?.profile.person.condominiums.map((c) => (
+                  <ListItem button onClick={() => handleCondominiumChange(c.id)} key={c.id}>
+                    <ListItemText
+                      primaryTypographyProps={{ color: condominium?.id === c.id ? "primary" : "textPrimary" }}
+                      primary={c.companyName}
+                    />
+                  </ListItem>
+                ))}
+              </List>
+            </div>
+          </Collapse>
+        )}
+      </div>
+    </Paper>
   );
 }

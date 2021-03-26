@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useCallback, useMemo } from "react";
 import { FiLogOut } from "react-icons/fi";
 import { MdMenu } from "react-icons/md";
 import { RiSettings2Line } from "react-icons/ri";
@@ -11,7 +11,8 @@ import clsx from "clsx";
 import { Logo } from "@/client/assets/logo";
 import { Spacer } from "@/client/components/layout";
 import { PreloadLink, Tooltip } from "@/client/components/typography";
-import { useMeQuery, useEvictRefreshCookieMutation } from "@/client/graphql";
+import { useMeQuery, useEvictRefreshCookieMutation } from "@/client/graphql/index.graphql";
+import { usePreload } from "@/client/hooks";
 import { tokenStore } from "@/client/providers/apollo";
 
 import { Breadcrumbs } from "../breadcrumbs";
@@ -61,34 +62,24 @@ interface AppHeaderProps {
 export function AppHeader({ isOpen, onOpen }: AppHeaderProps) {
   const { data, client } = useMeQuery();
   const [evict] = useEvictRefreshCookieMutation();
-  const { y } = useWindowScroll();
-  const hasBorder = React.useMemo(() => y > 0, [y]);
+  const { handlePreload } = usePreload();
 
-  const name = React.useMemo(() => data?.profile.person.name.substring(0, 2), [data]);
-  const color = React.useMemo(() => data?.profile.person.color, [data]);
+  const { y } = useWindowScroll();
+  const hasBorder = useMemo(() => y > 0, [y]);
+
+  const name = useMemo(() => data?.profile.person.name.substring(0, 2), [data]);
+  const color = useMemo(() => data?.profile.person.color, [data]);
 
   const classes = useStyles({ color });
 
-  const handleLogout = React.useCallback(async () => {
+  const handleLogout = useCallback(async () => {
+    await handlePreload("/auth/signin");
     await evict();
 
-    client.cache.evict({
-      id: "ROOT_QUERY",
-      fieldName: "logged",
-    });
-
-    client.cache.evict({
-      id: "ROOT_QUERY",
-      fieldName: "selectedCondominium",
-    });
-
-    client.cache.evict({
-      id: "ROOT_QUERY",
-      fieldName: "profile",
-    });
+    await client.resetStore();
 
     tokenStore.clear();
-  }, [client, evict]);
+  }, [client, evict, handlePreload]);
 
   return (
     <div id="app-header" className={clsx(classes.root, hasBorder && classes.hasBorder)}>
@@ -119,7 +110,7 @@ export function AppHeader({ isOpen, onOpen }: AppHeaderProps) {
                 <Box display="flex" alignItems="center" justifyContent="flex-end">
                   <Spacer flex>
                     <Tooltip title="Configurações">
-                      <IconButton component={PreloadLink} to="/app/settings">
+                      <IconButton color="secondary" component={PreloadLink} to="/app/settings">
                         <RiSettings2Line />
                       </IconButton>
                     </Tooltip>

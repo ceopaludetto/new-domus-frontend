@@ -72,6 +72,7 @@ module.exports = {
         "react/require-default-props": "off",
         "react/prop-types": "off",
         "react/jsx-props-no-spreading": "off",
+        "react/react-in-jsx-scope": "off",
         "jsx-a11y/label-has-for": "off",
       },
     },

@@ -1,12 +1,13 @@
-import * as React from "react";
-import { useLocation } from "react-router-dom";
-import { useEffectOnce } from "react-use";
+import { useState, useRef } from "react";
+import { useEffectOnce, useIsomorphicLayoutEffect } from "react-use";
 
+import { useReactiveVar } from "@apollo/client";
 import { Theme, NoSsr, Portal } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 import { NProgress } from "@tanem/react-nprogress";
+import { generate } from "shortid";
 
-import { ProgressContext } from "@/client/providers/progress";
+import { isProgressAnimating } from "@/client/providers/reactive-vars";
 
 interface ProgressBarProps extends React.HTMLAttributes<HTMLDivElement> {
   duration?: number;
@@ -39,11 +40,12 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export function ProgressBar({ duration = 150, className, ...rest }: ProgressBarProps) {
-  const { isAnimating = false } = React.useContext(ProgressContext);
-  const location = useLocation();
-  const [key, setKey] = React.useState(location.key);
-  const ref = React.useRef<HTMLBodyElement | null>(null);
   const classes = useStyles();
+
+  const isAnimating = useReactiveVar(isProgressAnimating);
+
+  const [key, setKey] = useState(generate());
+  const ref = useRef<HTMLBodyElement | null>(null);
 
   useEffectOnce(() => {
     if (typeof window !== "undefined") {
@@ -52,16 +54,16 @@ export function ProgressBar({ duration = 150, className, ...rest }: ProgressBarP
     }
   });
 
-  const handleTransitionEnd = React.useCallback(() => {
-    setTimeout(() => {
-      setKey(location.key);
-    }, 100);
-  }, [location.key]);
+  useIsomorphicLayoutEffect(() => {
+    if (isAnimating) {
+      setKey(generate());
+    }
+  }, [isAnimating]);
 
   return (
     <NoSsr>
       <Portal container={ref.current}>
-        <NProgress minimum={0.1} animationDuration={duration} isAnimating={isAnimating} key={key}>
+        <NProgress minimum={0.01} animationDuration={duration} isAnimating={isAnimating} key={key}>
           {({ isFinished, animationDuration, progress }) => (
             <div
               className={classes.progress}
@@ -74,7 +76,6 @@ export function ProgressBar({ duration = 150, className, ...rest }: ProgressBarP
                   marginLeft: progress ? `${(-1 + progress) * 100}%` : "-101%",
                   transition: `margin-left ${animationDuration}ms ease-in-out`,
                 }}
-                onTransitionEnd={handleTransitionEnd}
               >
                 <div className={classes.peg} />
               </div>

@@ -1,4 +1,7 @@
+import type { ComponentType } from "react";
 import { matchPath } from "react-router-dom";
+
+import type { LoadableComponent } from "@loadable/component";
 
 import { routes } from "@/client/providers/routes";
 import type { Route, Client } from "@/client/utils/types";
@@ -9,7 +12,7 @@ import { retrieveTo } from "./string";
 export function findRoute(path: string, definedRoutes = routes, matching: Route[] = []): Route[] {
   const [base] = path.split("?");
 
-  const matchingRoute = definedRoutes.find((r) =>
+  const found = definedRoutes.find((r) =>
     matchPath(base, {
       path: r.path,
       exact: r.exact,
@@ -18,11 +21,11 @@ export function findRoute(path: string, definedRoutes = routes, matching: Route[
     })
   );
 
-  if (matchingRoute) {
-    matching.push(matchingRoute);
+  if (found) {
+    matching.push(found);
 
-    if (matchingRoute.children?.length) {
-      return findRoute(base, matchingRoute.children, matching) as Route[];
+    if (found.children?.length) {
+      return findRoute(base, found.children, matching) as Route[];
     }
   }
 
@@ -47,29 +50,51 @@ interface PreloadOptions {
   client: Client;
 }
 
-export async function preload(path: string, { client }: PreloadOptions) {
-  const matchingRoute = findRoute(path, routes, []);
+export async function preload(component: LoadableComponent<any>, options: PreloadOptions): Promise<ComponentType<any>>;
+export async function preload(path: string, options: PreloadOptions): Promise<ComponentType<any>[]>;
+export async function preload(
+  pathOrComponent: string | LoadableComponent<any>,
+  { client }: PreloadOptions
+): Promise<ComponentType<any>[] | ComponentType<any>> {
+  if (typeof pathOrComponent === "string") {
+    const matchingRoute = findRoute(pathOrComponent, routes, []);
 
-  return Promise.all(
-    matchingRoute.map(async (m) => {
-      const component = await m.component.load();
+    return Promise.all(
+      matchingRoute.map(async (m) => {
+        const component = await m.component.load();
 
-      const c = getModule(component);
+        const c = getModule(component);
 
-      if (hasFetchBefore(c)) {
-        await c.fetchBefore(client);
-      }
+        if (hasFetchBefore(c)) {
+          await c.fetchBefore(client);
+        }
 
-      return c;
-    })
-  );
+        return c;
+      })
+    );
+  }
+
+  const component = await pathOrComponent.load();
+
+  const c = getModule<ComponentType<any>>(component);
+
+  if (hasFetchBefore(c)) {
+    await c.fetchBefore(client);
+  }
+
+  return c;
 }
 
-export function findRouteByName(name: string, definedRoutes = routes) {
+const byNameCache = new Map<string, Route>();
+
+export function findRouteByName(name: string, definedRoutes: Route[] = routes) {
+  if (byNameCache.has(name)) return byNameCache.get(name);
+
   let found: Route | undefined;
 
-  definedRoutes.forEach((route) => {
+  for (const route of definedRoutes) {
     if (route.name === name) {
+      byNameCache.set(name, route);
       found = route;
     }
 
@@ -80,7 +105,7 @@ export function findRouteByName(name: string, definedRoutes = routes) {
         found = innerFound;
       }
     }
-  });
+  }
 
   return found;
 }

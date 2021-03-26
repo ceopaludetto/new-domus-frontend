@@ -8,7 +8,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, Typography, Box, Grid } from "@material-ui/core";
 
 import { FormControl, PreloadLink } from "@/client/components";
-import { useAuthForgotMutation } from "@/client/graphql";
+import { useAuthForgotMutation } from "@/client/graphql/index.graphql";
 import { ForgotSchema, ForgotValues } from "@/client/helpers/validations/forgot.schema";
 import { usePreload, useErrorHandler } from "@/client/hooks";
 

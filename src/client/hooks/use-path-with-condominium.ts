@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import type { CondominiumValuesFragment } from "@/client/graphql";
+import type { CondominiumValuesFragment } from "@/client/graphql/index.graphql";
 import { CondominiumURL } from "@/client/utils/url";
 
 import { useCurrentCondominium } from "./use-current-condominium";

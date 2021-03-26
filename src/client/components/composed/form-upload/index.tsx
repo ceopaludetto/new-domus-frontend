@@ -1,4 +1,3 @@
-import * as React from "react";
 import { useFormContext, get } from "react-hook-form";
 
 import { Upload } from "@/client/components/form";

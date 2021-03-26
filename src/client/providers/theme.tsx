@@ -1,7 +1,7 @@
-import * as React from "react";
+import { useState, useRef, useEffect, useCallback, createContext } from "react";
 import { Helmet } from "react-helmet-async";
 
-import { Theme, createMuiTheme } from "@material-ui/core";
+import { Theme, createMuiTheme, responsiveFontSizes } from "@material-ui/core";
 import { ThemeProvider as MuiThemeProvider } from "@material-ui/styles";
 
 import type { ColorMode } from "@/client/utils/types";
@@ -70,81 +70,92 @@ const lightVariant: Partial<Theme["palette"]> = {
   },
 };
 
-const createTheme = (mode: "dark" | "light" = "dark") =>
-  createMuiTheme({
-    palette: mode === "dark" ? darkVariant : lightVariant,
-    shape: {
-      borderRadius: 6,
-    },
-    typography: {
-      fontFamily: "Poppins",
-      fontWeightLight: 300,
-      fontWeightRegular: 400,
-      fontWeightMedium: 500,
-      fontWeightBold: 600,
-    },
-    props: {
-      MuiFormControl: {
-        variant: "outlined",
+const createTheme = (mode: "dark" | "light" = "dark") => {
+  const variant = mode === "dark" ? darkVariant : lightVariant;
+
+  return responsiveFontSizes(
+    createMuiTheme({
+      palette: variant,
+      shape: {
+        borderRadius: 6,
       },
-      MuiFormHelperText: {
-        variant: "outlined",
+      typography: {
+        fontFamily: "Poppins",
+        fontWeightLight: 300,
+        fontWeightRegular: 400,
+        fontWeightMedium: 500,
+        fontWeightBold: 600,
       },
-      MuiSelect: {
-        variant: "outlined",
-      },
-      MuiInputLabel: {
-        variant: "outlined",
-      },
-      MuiTextField: {
-        variant: "outlined",
-        fullWidth: true,
-      },
-      MuiButton: {
-        disableElevation: true,
-      },
-    },
-    overrides: {
-      MuiButton: {
-        root: {
-          textTransform: "none",
+      props: {
+        MuiFormControl: {
+          variant: "outlined",
+        },
+        MuiFormHelperText: {
+          variant: "outlined",
+        },
+        MuiSelect: {
+          variant: "outlined",
+        },
+        MuiInputLabel: {
+          variant: "outlined",
+        },
+        MuiTextField: {
+          variant: "outlined",
+          fullWidth: true,
+        },
+        MuiButton: {
+          disableElevation: true,
         },
       },
-      MuiPaper: {
-        outlined: {
-          backgroundColor: "transparent",
+      overrides: {
+        MuiButton: {
+          root: {
+            textTransform: "none",
+          },
+        },
+        MuiPaper: {
+          outlined: {
+            backgroundColor: variant.background?.paper,
+          },
+        },
+        MuiStepper: {
+          root: {
+            backgroundColor: "transparent",
+            paddingLeft: "0",
+            paddingRight: "0",
+          },
+        },
+        MuiListItemIcon: {
+          root: {
+            minWidth: "36px",
+          },
+        },
+        MuiTab: {
+          root: {
+            fontSize: "0.975rem",
+            textTransform: "none",
+          },
+        },
+        MuiOutlinedInput: {
+          notchedOutline: {
+            transition: "border 150ms ease-in-out",
+          },
+        },
+        MuiIconButton: {
+          root: {
+            padding: "8px",
+          },
+        },
+        MuiTypography: {
+          overline: {
+            fontWeight: 500,
+            letterSpacing: "0.05rem",
+          },
         },
       },
-      MuiStepper: {
-        root: {
-          backgroundColor: "transparent",
-          paddingLeft: "0",
-          paddingRight: "0",
-        },
-      },
-      MuiListItemIcon: {
-        root: {
-          minWidth: "36px",
-        },
-      },
-      MuiTab: {
-        root: {
-          fontSize: "0.975rem",
-          textTransform: "none",
-        },
-      },
-      MuiOutlinedInput: {
-        notchedOutline: {
-          transition: "border 150ms ease-in-out",
-        },
-      },
-      MuiIconButton: {
-        root: {
-          padding: "8px",
-        },
-      },
-    },
-  });
+    })
+  );
+};
 
 interface ThemeProviderProps {
   cookies: string;
@@ -172,18 +183,22 @@ interface ThemeContextProps {
   changeColorMode: (colorMode?: ColorMode) => void;
 }
 
-export const ThemeContext = React.createContext<ThemeContextProps>({
+export const ThemeContext = createContext<ThemeContextProps>({
   theme: {} as any,
   colorMode: "dark",
   changeColorMode: (colorMode?: "dark" | "light") => {}, // eslint-disable-line @typescript-eslint/no-unused-vars
 });
 
-export function ThemeProvider({ children, cookies }: ThemeProviderProps) {
-  const manager = React.useRef(cookieStorageManager(cookies, "@Domus")).current;
-  const [colorMode, setColorMode] = React.useState(manager.get("dark"));
-  const [theme, setTheme] = React.useState(createTheme(colorMode));
+const darkTheme = createTheme("dark");
+const lightTheme = createTheme("light");
 
-  const changeColorMode = React.useCallback((newColorMode?: ColorMode) => {
+export function ThemeProvider({ children, cookies }: ThemeProviderProps) {
+  const manager = useRef(cookieStorageManager(cookies, "@Domus"));
+
+  const [colorMode, setColorMode] = useState(() => manager.current.get("dark"));
+  const [theme, setTheme] = useState(() => (colorMode === "dark" ? darkTheme : lightTheme));
+
+  const changeColorMode = useCallback((newColorMode?: ColorMode) => {
     setColorMode((current) => {
       if (newColorMode) {
         return newColorMode;
@@ -193,9 +208,9 @@ export function ThemeProvider({ children, cookies }: ThemeProviderProps) {
     });
   }, []);
 
-  React.useEffect(() => {
-    manager.set(colorMode);
-    setTheme(createTheme(colorMode));
+  useEffect(() => {
+    manager.current.set(colorMode);
+    setTheme(colorMode === "dark" ? darkTheme : lightTheme);
   }, [manager, colorMode]);
 
   return (

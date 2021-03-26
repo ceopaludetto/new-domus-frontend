@@ -43,3 +43,7 @@ export class CondominiumURL {
     return this.location.pathname;
   }
 }
+
+export function imageURL(path: string) {
+  return `${process.env.RAZZLE_BACKEND_URL}/image/${path}`;
+}

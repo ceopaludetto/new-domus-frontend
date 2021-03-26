@@ -72,7 +72,7 @@ export const routes: Route[] = [
       "/app/events",
       "/app/locals",
       "/app/blocks",
-      "/app/blocks/create",
+      "/app/blocks/create/:id?",
       "/app/settings",
       "/app/settings/condominium",
       "/app/settings/appearance",
@@ -117,7 +117,7 @@ export const routes: Route[] = [
       },
       {
         name: "@APP:BLOCKS",
-        path: ["/app/blocks", "/app/blocks/create"],
+        path: ["/app/blocks", "/app/blocks/create/:id?"],
         exact: true,
         component: loadable(() => import("@/client/pages/app/pages/block")),
         meta: {
@@ -136,7 +136,7 @@ export const routes: Route[] = [
           },
           {
             name: "@APP:BLOCKS:CREATE",
-            path: "/app/blocks/create",
+            path: "/app/blocks/create/:id?",
             exact: true,
             component: loadable(() => import("@/client/pages/app/pages/block/pages/create")),
             meta: {

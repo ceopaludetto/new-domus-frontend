@@ -14,3 +14,4 @@ config:
   dedupeOperationSuffix: true
   immutableTypes: true
   nonOptionalTypename: true
+cacheDir: __generated__

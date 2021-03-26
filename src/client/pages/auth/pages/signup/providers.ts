@@ -1,4 +1,4 @@
-import * as React from "react";
+import { makeVar } from "@apollo/client";
 
 import type {
   SignUpStep1Values,
@@ -7,17 +7,7 @@ import type {
 } from "@/client/helpers/validations/signup.schema";
 import { Gender } from "@/client/utils/types";
 
-export interface WizardContextProps {
-  values?: SignUpStep1Values & SignUpStep2Values & SignUpStep3Values;
-  setValues: React.Dispatch<React.SetStateAction<WizardContextProps["values"]>>;
-}
-
-export const WizardContext = React.createContext<WizardContextProps>({
-  values: undefined,
-  setValues: () => {},
-});
-
-export const initialValues: WizardContextProps["values"] = {
+export const initialValues: SignUpStep1Values & SignUpStep2Values & SignUpStep3Values = {
   type: "enter",
   login: "",
   password: "",
@@ -43,3 +33,5 @@ export const initialValues: WizardContextProps["values"] = {
     },
   },
 };
+
+export const wizard = makeVar<SignUpStep1Values & SignUpStep2Values & SignUpStep3Values>(initialValues);

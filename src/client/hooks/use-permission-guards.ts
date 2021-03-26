@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { useLoggedQuery } from "@/client/graphql";
+import { useLoggedQuery } from "@/client/graphql/index.graphql";
 import { shouldAllowAccess } from "@/client/utils/guards";
 
 export function usePermissionGuards() {

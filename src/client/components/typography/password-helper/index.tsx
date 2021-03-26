@@ -1,4 +1,3 @@
-import * as React from "react";
 import { FiCheckCircle } from "react-icons/fi";
 
 import { Typography, Box, Theme } from "@material-ui/core";

@@ -11,3 +11,4 @@ export { Page } from "./page";
 export { FormToggle } from "./form-toggle";
 export { FormUpload } from "./form-upload";
 export { RouteHandler } from "./route-handler";
+export { RemoveDialog } from "./remove-dialog";

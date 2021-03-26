@@ -1,4 +1,3 @@
-import * as React from "react";
 import { useForm, FormProvider } from "react-hook-form";
 
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -9,15 +8,14 @@ import { SignUpStep2Schema, SignUpStep2Values } from "@/client/helpers/validatio
 import { useStepperContext, useMultipleVisibility, usePasswordHelp } from "@/client/hooks";
 import { clean } from "@/client/utils/clean";
 
-import { WizardContext } from "../providers";
+import { wizard } from "../providers";
 
 export default function Step2() {
-  const { setValues, values } = React.useContext(WizardContext);
   const { handleNextPage, handlePrevPage } = useStepperContext();
 
   const methods = useForm<SignUpStep2Values>({
     resolver: yupResolver(SignUpStep2Schema),
-    defaultValues: values,
+    defaultValues: wizard(),
   });
 
   const [getVisibilityProps] = useMultipleVisibility(["password", "repeatPassword"]);
@@ -25,10 +23,9 @@ export default function Step2() {
   const passwordHelp = usePasswordHelp(password);
 
   const submit = methods.handleSubmit(async (data) => {
-    if (values) {
-      setValues({ ...values, ...clean(data) });
-      await handleNextPage();
-    }
+    wizard({ ...wizard(), ...clean(data) });
+
+    await handleNextPage();
   });
 
   return (

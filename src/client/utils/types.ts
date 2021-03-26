@@ -21,9 +21,9 @@ export interface ReactStaticContext {
   statusCode?: number;
 }
 
-export type RouteComponentProps = {
+export type RouteComponentProps<P = Record<string, any>, C = ReactStaticContext, S = unknown> = {
   routes?: Route[];
-} & DefaultRouteComponentProps<Record<string, any>, ReactStaticContext>;
+} & DefaultRouteComponentProps<P, C, S>;
 
 export type IsomorphicLib<T> = { default: T } | T;
 

@@ -1,4 +1,4 @@
-import type { CondominiumValuesFragment } from "@/client/graphql";
+import type { CondominiumValuesFragment } from "@/client/graphql/index.graphql";
 
 export function isMultiCondominium(condominiums?: readonly CondominiumValuesFragment[]) {
   if (!condominiums) {

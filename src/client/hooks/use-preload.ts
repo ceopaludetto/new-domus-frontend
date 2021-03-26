@@ -1,37 +1,41 @@
-import * as React from "react";
+import type { ComponentType } from "react";
 import { useHistory } from "react-router-dom";
 
 import { useApolloClient } from "@apollo/client";
 import type { LoadableComponent } from "@loadable/component";
 
-import { ProgressContext } from "@/client/providers/progress";
-import { getModule, hasFetchBefore } from "@/client/utils/lazy";
+import { isProgressAnimating } from "@/client/providers/reactive-vars";
 import { preload } from "@/client/utils/preload";
 
+const PreloadCache = new Map<string, ComponentType<any>[]>();
+const PreloadComponentCache = new Map<LoadableComponent<any>, ComponentType<any>>();
+
 export function usePreload<T>(onClick?: (e: React.MouseEvent<T, MouseEvent>) => void) {
-  const { toggle } = React.useContext(ProgressContext);
   const client = useApolloClient();
   const history = useHistory();
 
   async function handlePreloadComponent(component: LoadableComponent<any>) {
-    toggle();
-    const loaded = await component.load();
+    if (PreloadComponentCache.has(component)) return PreloadComponentCache.get(component);
 
-    const c = getModule(component);
+    isProgressAnimating(true);
 
-    if (hasFetchBefore(c)) {
-      await c.fetchBefore(client);
-    }
+    const loaded = await preload(component, { client });
+    PreloadComponentCache.set(component, loaded);
 
-    toggle();
+    isProgressAnimating(false);
 
     return loaded;
   }
 
   async function handlePreload(to: string) {
-    toggle();
+    if (PreloadCache.has(to)) return PreloadCache.get(to);
+
+    isProgressAnimating(true);
+
     const component = await preload(to, { client });
-    toggle();
+    PreloadCache.set(to, component);
+
+    isProgressAnimating(false);
 
     return component;
   }

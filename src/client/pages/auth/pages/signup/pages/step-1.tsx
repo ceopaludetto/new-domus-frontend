@@ -1,4 +1,3 @@
-import * as React from "react";
 import { useForm, FormProvider } from "react-hook-form";
 
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -11,23 +10,20 @@ import { useStepperContext } from "@/client/hooks";
 import { clean } from "@/client/utils/clean";
 import { Gender } from "@/client/utils/types";
 
-import { WizardContext } from "../providers";
+import { wizard } from "../providers";
 
 export default function Step1() {
-  const { setValues, values } = React.useContext(WizardContext);
   const { handleNextPage } = useStepperContext();
 
   const methods = useForm<SignUpStep1Values>({
     resolver: yupResolver(SignUpStep1Schema),
-    defaultValues: values,
+    defaultValues: wizard(),
   });
 
   const submit = methods.handleSubmit(async (data) => {
-    if (values) {
-      setValues({ ...values, ...clean(data) });
+    wizard({ ...wizard(), ...clean(data) });
 
-      await handleNextPage();
-    }
+    await handleNextPage();
   });
 
   return (

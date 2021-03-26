@@ -1,6 +1,6 @@
 import { InMemoryCache, ApolloClient, ApolloLink } from "@apollo/client";
 
-import { SelectedCondominiumDocument } from "@/client/graphql";
+import { SelectedCondominiumDocument } from "@/client/graphql/index.graphql";
 
 import { AccessToken } from "./token";
 
@@ -51,7 +51,23 @@ const getTokenLink = new ApolloLink((operation, forward) => {
 });
 
 export function createClient(isSsr = false, link: ApolloLink) {
-  let cache = new InMemoryCache();
+  let cache = new InMemoryCache({
+    typePolicies: {
+      Query: {
+        fields: {
+          findBlockByID(_, { args, toReference }) {
+            return toReference({
+              __typename: "Block",
+              id: args?.id,
+            });
+          },
+          showBlocks: {
+            merge: false,
+          },
+        },
+      },
+    },
+  });
 
   if (!isSsr) {
     const apolloState = document.querySelector("#__APOLLO_STATE__");
@@ -66,7 +82,7 @@ export function createClient(isSsr = false, link: ApolloLink) {
 
   const client = new ApolloClient({
     cache,
-    link: isSsr ? link : ApolloLink.from([contextLink, saveTokenLink, getTokenLink, link]),
+    link: ApolloLink.from([contextLink, saveTokenLink, getTokenLink, link]),
     ssrMode: isSsr,
     connectToDevTools: process.env.NODE_ENV === "development" && !isSsr,
     assumeImmutableResults: true,

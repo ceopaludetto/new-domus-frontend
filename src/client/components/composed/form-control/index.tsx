@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useRef } from "react";
 import { useFormContext, get } from "react-hook-form";
 import { useEffectOnce } from "react-use";
 
@@ -19,7 +19,7 @@ export function FormControl({
   autoFocus,
   ...rest
 }: FormControlProps) {
-  const innerRef = React.useRef<HTMLInputElement>(null);
+  const innerRef = useRef<HTMLInputElement>(null);
   const { register, errors } = useFormContext();
   const error = get(errors, name);
 

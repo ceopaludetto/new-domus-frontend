@@ -4,7 +4,7 @@ import { Container, Box, Typography, Button, Theme } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 
 import { Spacer, PreloadLink } from "@/client/components";
-import { useLoggedQuery } from "@/client/graphql";
+import { useLoggedQuery } from "@/client/graphql/index.graphql";
 
 const useStyles = makeStyles((theme: Theme) => ({
   title: {

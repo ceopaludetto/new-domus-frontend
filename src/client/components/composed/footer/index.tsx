@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useRef } from "react";
 import { AiOutlineTwitter, AiOutlineGithub } from "react-icons/ai";
 import { FiSun, FiMoon } from "react-icons/fi";
 
@@ -13,6 +13,7 @@ import {
   Select,
   MenuItem,
   InputAdornment,
+  Theme,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 
@@ -24,17 +25,19 @@ import { routes } from "@/client/providers/routes";
 import { retrieveTo } from "@/client/utils/string";
 import type { Route } from "@/client/utils/types";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   item: {
-    textAlign: "center",
+    [theme.breakpoints.down("md")]: {
+      textAlign: "center",
+    },
   },
 }));
 
 export function Footer() {
-  const { current } = React.useRef(routes.find((r: Route) => r.name === "@MAIN"));
-  const { current: company } = React.useRef(current?.children?.filter((r: Route) => r.meta?.type === "company"));
-  const { current: resource } = React.useRef(current?.children?.filter((r: Route) => r.meta?.type === "resource"));
-  const { current: legal } = React.useRef(current?.children?.filter((r: Route) => r.meta?.type === "legal"));
+  const { current } = useRef(routes.find((r: Route) => r.name === "@MAIN"));
+  const { current: company } = useRef(current?.children?.filter((r: Route) => r.meta?.type === "company"));
+  const { current: resource } = useRef(current?.children?.filter((r: Route) => r.meta?.type === "resource"));
+  const { current: legal } = useRef(current?.children?.filter((r: Route) => r.meta?.type === "legal"));
   const { colorMode, changeColorMode } = useColorMode();
 
   const classes = useStyles();
@@ -102,7 +105,7 @@ export function Footer() {
                   flex={{ xs: "0 0 100%", md: "1" }}
                   textAlign={{ xs: "center", md: "left" }}
                 >
-                  <PreloadLink to="/">
+                  <PreloadLink to="/" aria-label="Início">
                     <Logo isLogoType height={40} />
                   </PreloadLink>
                   <Box mt={2}>

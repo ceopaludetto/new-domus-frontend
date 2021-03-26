@@ -3,11 +3,9 @@
     "target": "ESNext",
     "module": "ESNext",
     "lib": ["ESNext", "DOM", "DOM.Iterable"],
-    "jsx": "react",
+    "jsx": "react-jsx",
     "moduleResolution": "Node",
     "esModuleInterop": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "noEmit": true,
@@ -23,6 +21,6 @@
       "@/*": ["*"]
     }
   },
-  "include": ["src", "mikro-orm.config.ts"],
+  "include": ["src"],
   "exclude": ["node_modules", "dist", "build", "coverage", "uploads", "cache"]
 }

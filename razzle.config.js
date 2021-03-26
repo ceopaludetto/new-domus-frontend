@@ -7,18 +7,8 @@ const measure = process.argv.some((arg) => arg === "--measure");
 
 const smp = new SpeedMeasureWebpackPlugin({ disable: !measure });
 
-process.env.RAZZLE_LOADABLE_MANIFEST = path.resolve("build", "static", "loadable-stats.json");
-
 module.exports = {
   options: { verbose: false, enableReactRefresh: false },
-  plugins: [
-    {
-      name: "typescript",
-      options: {
-        useBabel: true,
-      },
-    },
-  ],
   modifyPaths({ paths }) {
     paths.appClientIndexJs = path.resolve("src", "client", "index.tsx");
     paths.appServerIndexJs = path.resolve("src", "server", "index.ts");
@@ -28,24 +18,10 @@ module.exports = {
   modifyWebpackOptions({ options: { webpackOptions }, env: { target } }) {
     webpackOptions.fileLoaderExclude.push(/\.graphql$/);
 
-    if (target === "node") {
-      webpackOptions.terserPluginOptions = {
-        terserOptions: {
-          mangle: false,
-          compress: {
-            keep_classnames: true,
-            keep_fnames: true,
-          },
-        },
-        sourceMap: true,
-        parallel: true,
-      };
-    }
-
     return webpackOptions;
   },
   modifyWebpackConfig({ webpackConfig, env: { target, dev } }) {
-    const config = webpackConfig;
+    let config = webpackConfig;
 
     config.resolve.alias["@"] = path.resolve("src");
     config.resolve.alias["lodash-es"] = "lodash";
@@ -69,7 +45,7 @@ module.exports = {
 
     const ts = config.module.rules.find((rule) => {
       if (Array.isArray(rule.use)) {
-        return rule.use.some((u) => u.loader.includes("ts-loader"));
+        return rule.use.some((u) => u.loader.includes("babel-loader"));
       }
 
       return false;

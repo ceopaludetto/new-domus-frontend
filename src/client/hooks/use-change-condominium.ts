@@ -1,10 +1,10 @@
-import * as React from "react";
+import { useCallback, useEffect } from "react";
 import { useLocation, useHistory } from "react-router-dom";
 
 import { useApolloClient } from "@apollo/client";
 import { parse, stringify } from "qs";
 
-import { SelectedCondominiumQuery, SelectedCondominiumDocument } from "@/client/graphql";
+import { SelectedCondominiumQuery, SelectedCondominiumDocument } from "@/client/graphql/index.graphql";
 
 import { useCurrentCondominium } from "./use-current-condominium";
 
@@ -15,7 +15,7 @@ export function useChangeCondominium() {
   const location = useLocation();
   const history = useHistory();
 
-  const change = React.useCallback(
+  const change = useCallback(
     (id: string) => {
       client.cache.writeQuery<SelectedCondominiumQuery>({
         query: SelectedCondominiumDocument,
@@ -28,7 +28,7 @@ export function useChangeCondominium() {
     [client]
   );
 
-  React.useEffect(() => {
+  useEffect(() => {
     const [, currentQuery] = location.search.split("?");
 
     const query = parse(currentQuery);

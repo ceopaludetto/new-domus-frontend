@@ -1,6 +1,11 @@
+#import "./rules-values.graphql"
+
 fragment CondominiumValues on Condominium {
   id
   companyName
   cnpj
   character
+  rules {
+    ...RuleValues
+  }
 }

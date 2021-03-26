@@ -1,11 +1,10 @@
-import * as React from "react";
 import { useWindowScroll } from "react-use";
 
 import { Button, Box, Container, Theme, fade } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 
 import { Logo } from "@/client/assets/logo";
-import { useLoggedQuery } from "@/client/graphql";
+import { useLoggedQuery } from "@/client/graphql/index.graphql";
 
 import { Blurred, Spacer } from "../../layout";
 import { PreloadLink } from "../../typography/preload-link";
@@ -28,7 +27,7 @@ export function Header() {
         <Container maxWidth="md">
           <Box display="flex" alignItems="center" py={2}>
             <Box flex="1">
-              <PreloadLink to="/">
+              <PreloadLink to="/" aria-label="Início">
                 <Logo height={35} />
               </PreloadLink>
             </Box>

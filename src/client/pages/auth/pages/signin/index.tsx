@@ -6,7 +6,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, Box, Typography, Link, Grid } from "@material-ui/core";
 
 import { FormControl, PreloadLink } from "@/client/components";
-import { useLoginMutation, LoggedDocument, LoggedQuery } from "@/client/graphql";
+import { useLoginMutation, LoggedDocument, LoggedQuery } from "@/client/graphql/index.graphql";
 import { SignInSchema, SignInValues } from "@/client/helpers/validations/signin.schema";
 import { useVisibility, useErrorHandler, useChangeCondominium } from "@/client/hooks";
 

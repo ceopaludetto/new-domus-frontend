@@ -1,7 +1,6 @@
-import * as React from "react";
 import { Helmet } from "react-helmet-async";
 
-import type { Theme } from "@material-ui/core";
+import { Theme, CssBaseline } from "@material-ui/core";
 import { withStyles } from "@material-ui/styles";
 
 import Poppins300 from "@/client/assets/fonts/poppins-300.woff2";
@@ -18,6 +17,7 @@ function GlobalComponent() {
         <link rel="preload" href={Poppins500} as="font" crossOrigin="anonymous" />
         <link rel="preload" href={Poppins600} as="font" crossOrigin="anonymous" />
       </Helmet>
+      <CssBaseline />
     </>
   );
 }
@@ -31,35 +31,5 @@ export const Global = withStyles((theme: Theme) => ({
     body: {
       overflowX: "hidden",
     },
-    "@font-face": [
-      {
-        fontDisplay: "swap",
-        fontFamily: "Poppins",
-        fontWeight: 300,
-        fontStyle: "normal",
-        src: `local("Poppins Light"), local("Poppins-Light"), url(${Poppins300}) format("woff2")`,
-      },
-      {
-        fontDisplay: "swap",
-        fontFamily: "Poppins",
-        fontWeight: 400,
-        fontStyle: "normal",
-        src: `local("Poppins Regular"), local("Poppins-Regular"), url(${Poppins400}) format("woff2")`,
-      },
-      {
-        fontDisplay: "swap",
-        fontFamily: "Poppins",
-        fontWeight: 500,
-        fontStyle: "normal",
-        src: `local("Poppins Medium"), local("Poppins-Medium"), url(${Poppins500}) format("woff2")`,
-      },
-      {
-        fontDisplay: "swap",
-        fontFamily: "Poppins",
-        fontWeight: 600,
-        fontStyle: "normal",
-        src: `local("Poppins Bold"), local("Poppins-Bold"), url(${Poppins600}) format("woff2")`,
-      },
-    ] as any,
   },
 }))(GlobalComponent);

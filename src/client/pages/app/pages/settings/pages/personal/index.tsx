@@ -3,10 +3,16 @@ import { Helmet } from "react-helmet-async";
 import { useForm, FormProvider } from "react-hook-form";
 
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Grid, Button, Divider, Box, Typography } from "@material-ui/core";
+import { Grid, Button, Box, Typography } from "@material-ui/core";
 
-import { FormControl, FormToggle, FormCalendar, MaskedFormControl, PasswordHelper } from "@/client/components";
-import { useMeQuery, MeQuery, useUpdateUserMutation, useChangePasswordMutation, MeDocument } from "@/client/graphql";
+import { FormControl, FormToggle, FormCalendar, MaskedFormControl, PasswordHelper, Divider } from "@/client/components";
+import {
+  useMeQuery,
+  MeQuery,
+  useUpdateUserMutation,
+  useChangePasswordMutation,
+  MeDocument,
+} from "@/client/graphql/index.graphql";
 import * as Masks from "@/client/helpers/masks";
 import {
   SettingsPasswordSchema,
@@ -146,8 +152,8 @@ export default function Personal() {
           </Grid>
         </form>
       </FormProvider>
-      <Box my={3}>
-        <Divider />
+      <Box my={2}>
+        <Divider>Senha</Divider>
       </Box>
       <FormProvider {...password}>
         <form noValidate onSubmit={handlePasswordSubmit}>
@@ -216,8 +222,8 @@ export default function Personal() {
           </Grid>
         </form>
       </FormProvider>
-      <Box my={3}>
-        <Divider />
+      <Box my={2}>
+        <Divider>Área de Risco</Divider>
       </Box>
       <Box textAlign="center" color="error.main" pb={3}>
         <Button variant="text" color="inherit">

@@ -1,18 +1,19 @@
-import * as React from "react";
+import { useEffect } from "react";
 import { Helmet } from "react-helmet-async";
-import { useForm, FormProvider } from "react-hook-form";
+import { useForm, useFieldArray, FormProvider } from "react-hook-form";
+import { FiX, FiPlus } from "react-icons/fi";
 
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Grid, Box, Button } from "@material-ui/core";
+import { Grid, Button, IconButton } from "@material-ui/core";
 
-import { FormControl, MaskedFormControl } from "@/client/components";
+import { FormControl, MaskedFormControl, Tooltip, Divider } from "@/client/components";
 import {
   SelectedCondominiumDocument,
   SelectedCondominiumQuery,
   MeDocument,
   MeQuery,
   useUpdateCondominiumMutation,
-} from "@/client/graphql";
+} from "@/client/graphql/index.graphql";
 import * as Masks from "@/client/helpers/masks";
 import { CondominiumSchema, CondominiumValues } from "@/client/helpers/validations/condominium.schema";
 import { useCurrentCondominium, useErrorHandler, useSnackbar, SnackbarWrapper } from "@/client/hooks";
@@ -33,10 +34,13 @@ export default function Condominium() {
       companyName: condominium?.companyName,
       cnpj: Masks.cnpj.format(condominium?.cnpj),
       character: condominium?.character,
+      rules: condominium?.rules.map((rule) => ({ id: rule.id, description: rule.description })) ?? [],
     },
   });
 
-  React.useEffect(() => {
+  const { fields, append, remove } = useFieldArray({ control: methods.control, name: "rules", keyName: "key" });
+
+  useEffect(() => {
     const { id } = methods.getValues();
 
     if (id !== condominium?.id) {
@@ -45,6 +49,7 @@ export default function Condominium() {
         companyName: condominium?.companyName,
         cnpj: Masks.cnpj.format(condominium?.cnpj),
         character: condominium?.character,
+        rules: condominium?.rules.map((rule) => ({ id: rule.id, description: rule.description })) ?? [],
       });
     }
 
@@ -52,8 +57,10 @@ export default function Condominium() {
   }, [condominium]);
 
   const handleSumbmit = methods.handleSubmit(
-    handleError<CondominiumValues>(async ({ id, ...rest }) => {
-      await updateCondominium({ variables: { input: rest } });
+    handleError<CondominiumValues>(async ({ id, rules, ...rest }) => {
+      await updateCondominium({
+        variables: { input: { rules: rules ?? [], ...rest } },
+      });
 
       snackbarControls.handleOpen("Informações alteradas com sucesso!");
     }, methods.setError)
@@ -75,12 +82,58 @@ export default function Condominium() {
             <Grid item xs={12} md={6}>
               <FormControl name="character" id="character" label="Caractere Especial" inputProps={{ maxLength: "1" }} />
             </Grid>
+            {fields.length >= 1 && (
+              <>
+                <Grid item xs={12}>
+                  <Divider>Regras</Divider>
+                </Grid>
+                {fields.map((field, index) => (
+                  <Grid item xs={12} key={field.key}>
+                    <Grid container spacing={3} alignItems="center">
+                      <Grid item xs>
+                        <input
+                          type="hidden"
+                          ref={methods.register()}
+                          name={`rules[${index}].id`}
+                          defaultValue={field.id}
+                        />
+                        <FormControl
+                          label={`Regra ${index + 1}`}
+                          name={`rules[${index}].description`}
+                          defaultValue={field.description}
+                          array
+                        />
+                      </Grid>
+                      <Grid item>
+                        <Tooltip title={`Remover Regra ${index + 1}`}>
+                          <IconButton onClick={() => remove(index)} aria-label={`Remover Regra ${index + 1}`}>
+                            <FiX />
+                          </IconButton>
+                        </Tooltip>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                ))}
+              </>
+            )}
             <Grid item xs={12}>
-              <Box textAlign="right">
-                <Button disabled={submitDisabled(methods)} variant="contained" color="primary" type="submit">
-                  Alterar Informações
-                </Button>
-              </Box>
+              <Grid container justify="space-between">
+                <Grid item>
+                  <Button
+                    startIcon={<FiPlus />}
+                    variant="contained"
+                    color="secondary"
+                    onClick={() => append({ description: "" })}
+                  >
+                    Adicionar Nova Regra
+                  </Button>
+                </Grid>
+                <Grid item>
+                  <Button disabled={submitDisabled(methods)} variant="contained" color="primary" type="submit">
+                    Alterar Informações
+                  </Button>
+                </Grid>
+              </Grid>
             </Grid>
           </Grid>
         </form>

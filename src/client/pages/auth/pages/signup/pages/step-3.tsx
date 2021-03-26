@@ -14,7 +14,7 @@ import {
   LoggedQuery,
   SelectedCondominiumDocument,
   SelectedCondominiumQuery,
-} from "@/client/graphql";
+} from "@/client/graphql/index.graphql";
 import * as Masks from "@/client/helpers/masks";
 import { SignUpStep3Schema, SignUpStep3Values } from "@/client/helpers/validations/signup.schema";
 import { useStepperContext, useErrorHandlerContext } from "@/client/hooks";
@@ -22,16 +22,15 @@ import { clean } from "@/client/utils/clean";
 import { splitPhone } from "@/client/utils/string";
 import type { Client } from "@/client/utils/types";
 
-import { WizardContext, initialValues } from "../providers";
+import { wizard, initialValues } from "../providers";
 
 export default function Step3() {
-  const { setValues, values } = React.useContext(WizardContext);
   const { handleError } = useErrorHandlerContext();
   const { handlePrevPage } = useStepperContext();
 
   const methods = useForm<SignUpStep3Values>({
     resolver: yupResolver(SignUpStep3Schema),
-    defaultValues: values,
+    defaultValues: wizard(),
   });
 
   const type = methods.watch("type");
@@ -43,57 +42,56 @@ export default function Step3() {
 
   const submit = methods.handleSubmit(
     handleError<SignUpStep3Values>(async (datas) => {
-      if (values) {
-        setValues({ ...values, ...clean(datas) });
+      wizard({ ...wizard(), ...clean(datas) });
+
+      const {
+        login,
+        password,
+        person: { phone, birthdate, ...person },
+        condominium,
+      } = wizard();
+
+      if (condominium) {
         const {
-          login,
-          password,
-          person: { phone, birthdate, ...person },
-          condominium,
-        } = values;
+          // state not needed
+          address: { state: stateID, ...address },
+        } = condominium;
 
-        if (condominium) {
-          const {
-            // state not needed
-            address: { state: stateID, ...address },
-          } = condominium;
-
-          const res = await register({
-            variables: {
-              input: {
-                login,
-                password,
-                person: {
-                  ...person,
-                  birthdate: birthdate as Date,
-                  phones: phone ? [splitPhone(phone)] : [],
-                  condominiums: [{ ...condominium, address }],
-                },
+        const res = await register({
+          variables: {
+            input: {
+              login,
+              password,
+              person: {
+                ...person,
+                birthdate: birthdate as Date,
+                phones: phone ? [splitPhone(phone)] : [],
+                condominiums: [{ ...condominium, address }],
               },
             },
-          });
+          },
+        });
 
-          if (res.data?.register.person.condominiums.length) {
-            client.cache.writeQuery<SelectedCondominiumQuery>({
-              query: SelectedCondominiumDocument,
-              data: {
-                __typename: "Query",
-                selectedCondominium: res.data?.register.person.condominiums[0].id,
-              },
-            });
-          }
-
-          client.cache.writeQuery<LoggedQuery>({
-            query: LoggedDocument,
+        if (res.data?.register.person.condominiums.length) {
+          client.cache.writeQuery<SelectedCondominiumQuery>({
+            query: SelectedCondominiumDocument,
             data: {
               __typename: "Query",
-              logged: true,
+              selectedCondominium: res.data?.register.person.condominiums[0].id,
             },
           });
+        }
 
-          if (res && res.data) {
-            setValues(initialValues);
-          }
+        client.cache.writeQuery<LoggedQuery>({
+          query: LoggedDocument,
+          data: {
+            __typename: "Query",
+            logged: true,
+          },
+        });
+
+        if (res && res.data) {
+          wizard(initialValues);
         }
       }
     }, methods.setError)

@@ -1,5 +1,3 @@
-import * as React from "react";
-
 import { useColorMode } from "@/client/hooks";
 
 interface LogoProps {
