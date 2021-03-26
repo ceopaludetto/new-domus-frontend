@@ -8,18 +8,7 @@ import path from "path";
 import { render } from "./render";
 
 export class App {
-  private readonly fastify = fastify({
-    logger: {
-      prettyPrint:
-        process.env.NODE_ENV !== "production"
-          ? {
-              translateTime: "dd/mm/yyyy, hh:MM:ss:l",
-              ignore: "context,pid,reqId,responseTime",
-              levelFirst: true,
-            }
-          : undefined,
-    },
-  });
+  private readonly fastify = fastify({ logger: false });
 
   public constructor() {
     this.middlewares();
