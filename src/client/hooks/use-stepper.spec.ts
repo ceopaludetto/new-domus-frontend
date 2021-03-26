@@ -9,18 +9,18 @@ describe("useStepper", () => {
     expect(result.current.current).toBe(0);
   });
 
-  it("should change stepper value", () => {
+  it("should change stepper value", async () => {
     const { result } = renderHook(() => useStepper(3));
 
     // initial page
     expect(result.current.current).toBe(0);
 
     // inc count
-    act(() => result.current.handleNextPage());
+    await act(() => result.current.handleNextPage());
     expect(result.current.current).toBe(1);
 
     // dec count
-    act(() => result.current.handlePrevPage());
+    await act(() => result.current.handlePrevPage());
     expect(result.current.current).toBe(0);
   });
 });

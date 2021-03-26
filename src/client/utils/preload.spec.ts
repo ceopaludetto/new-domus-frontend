@@ -33,7 +33,7 @@ describe("preload", () => {
 
       expect(client.query).toBeCalledTimes(0);
 
-      await preload("/auth/signup/step-3", { client: client as any });
+      await preload("/app/blocks", { client: client as any });
 
       expect(client.query).toBeCalledTimes(1);
     });

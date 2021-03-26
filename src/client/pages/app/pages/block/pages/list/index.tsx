@@ -155,6 +155,6 @@ export default function BlockList() {
   );
 }
 
-BlockList.fetchMore = async (client: Client) => {
+BlockList.fetchBefore = async (client: Client) => {
   await client.query({ query: ShowBlocksDocument });
 };
