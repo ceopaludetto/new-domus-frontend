@@ -37,7 +37,8 @@ export class App {
   public async listen(port: number) {
     await this.fastify.listen(port);
 
-    console.log("Server opened in port", port);
+    // eslint-disable-next-line no-console
+    console.log(`Server listen to port ${port}`);
   }
 
   public async close() {
