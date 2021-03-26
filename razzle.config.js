@@ -64,4 +64,16 @@ module.exports = {
 
     return smp.wrap(config);
   },
+  modifyJestConfig({ jestConfig }) {
+    jestConfig = {
+      ...jestConfig,
+      moduleNameMapper: {
+        ...jestConfig.moduleNameMapper,
+        "^@/(.*)$": "<rootDir>/src/$1",
+      },
+      coverageDirectory: "<rootDir>/coverage",
+    };
+
+    return jestConfig;
+  },
 };

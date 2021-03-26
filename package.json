@@ -16,7 +16,7 @@
     "start": "razzle start",
     "start:production": "NODE_ENV=production node build/server.js",
     "test": "razzle test --env=jsdom",
-    "test:cov": "razzle test --env=jsdom --watchAll=false --coverage"
+    "test:cov": "razzle test --env=jsdom --coverage"
   },
   "dependencies": {
     "@apollo/client": "^3.3.12",
@@ -118,24 +118,7 @@
       "path": "./node_modules/cz-conventional-changelog"
     }
   },
-  "jest": {
-    "moduleNameMapper": {
-      "^@/(.*)$": "<rootDir>/src/$1"
-    },
-    "collectCoverageFrom": [
-      "<rootDir>/src/**/*.{ts,tsx}"
-    ],
-    "coverageDirectory": "<rootDir>/coverage"
-  },
-  "mikro-orm": {
-    "useTsNode": true,
-    "tsConfigPath": "./tsconfig.orm.json",
-    "configPaths": [
-      ".mikro-orm.config.ts"
-    ]
-  },
   "sideEffects": [
-    "src/client/helpers/customs.ts",
-    "src/server/utils/patch.ts"
+    "src/helpers/customs.ts"
   ]
 }
