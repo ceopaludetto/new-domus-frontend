@@ -19,7 +19,15 @@ export class App {
     this.fastify.register(helmet, { contentSecurityPolicy: false });
     this.fastify.register(compression);
     this.fastify.register(cookie);
-    this.fastify.register(serve, { root: path.resolve(process.env.RAZZLE_PUBLIC_DIR as string), wildcard: false });
+    this.fastify.register(serve, {
+      root: path.resolve(process.env.RAZZLE_PUBLIC_DIR as string),
+      wildcard: false,
+      allowedPath: (file) => {
+        if (file.includes("loadable-stats.json")) return false;
+
+        return true;
+      },
+    });
   }
 
   private routes() {
@@ -27,7 +35,9 @@ export class App {
   }
 
   public async listen(port: number) {
-    return this.fastify.listen(port);
+    await this.fastify.listen(port);
+
+    console.log("Server opened in port", port);
   }
 
   public async close() {

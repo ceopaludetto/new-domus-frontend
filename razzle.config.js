@@ -1,4 +1,5 @@
 const LoadableWebpackPlugin = require("@loadable/webpack-plugin");
+const CompressionWebpackPlugin = require("compression-webpack-plugin");
 const LodashPlugin = require("lodash-webpack-plugin");
 const path = require("path");
 const SpeedMeasureWebpackPlugin = require("speed-measure-webpack-plugin");
@@ -41,6 +42,10 @@ module.exports = {
           writeToDisk: dev ? { filename } : undefined,
         })
       );
+
+      if (!dev) {
+        config.plugins.push(new CompressionWebpackPlugin({ exclude: [/\.txt$/i, /\.map$/i] }));
+      }
     }
 
     const ts = config.module.rules.find((rule) => {
