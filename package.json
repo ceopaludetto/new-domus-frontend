@@ -1,11 +1,11 @@
 {
-  "name": "nest-new-graphql",
+  "name": "new-domus-frontend",
   "version": "1.0.0",
   "private": false,
   "license": "MIT",
-  "repository": "git@github.com:ceopaludetto/nest-new-graphql.git",
+  "repository": "git@github.com:ceopaludetto/new-domus-frontend.git",
   "author": "ceo.paludetto@gmail.com",
-  "main": "dist/index.js",
+  "main": "build/server.js",
   "scripts": {
     "analyze": "source-map-explorer build/public/static/js/*.js",
     "build": "razzle build",
@@ -15,7 +15,8 @@
     "prepare": "husky install",
     "start": "razzle start",
     "start:production": "NODE_ENV=production node build/server.js",
-    "test": "razzle test --env=jsdom"
+    "test": "razzle test --env=jsdom",
+    "test:cov": "razzle test --env=jsdom --watchAll=false --coverage"
   },
   "dependencies": {
     "@apollo/client": "^3.3.12",
@@ -120,7 +121,11 @@
   "jest": {
     "moduleNameMapper": {
       "^@/(.*)$": "<rootDir>/src/$1"
-    }
+    },
+    "collectCoverageFrom": [
+      "<rootDir>/src/**/*.{ts,tsx}"
+    ],
+    "coverageDirectory": "<rootDir>/coverage"
   },
   "mikro-orm": {
     "useTsNode": true,
