@@ -33,17 +33,17 @@ export function findRoute(path: string, definedRoutes = routes, matching: Route[
 }
 
 export function removeDuplicate(foundRoutes: Route[]) {
-  const map: Record<string, Route> = {};
+  const map = new Map<string, Route>();
 
-  foundRoutes.forEach((route) => {
+  for (const route of foundRoutes) {
     const path = retrieveTo(route.path);
 
-    if (!map[path]) {
-      map[path] = route;
+    if (!map.has(path)) {
+      map.set(path, route);
     }
-  });
+  }
 
-  return Object.values(map);
+  return Array.from(map.values());
 }
 
 interface PreloadOptions {

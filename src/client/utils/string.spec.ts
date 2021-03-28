@@ -1,4 +1,4 @@
-import { removeMask, splitPhone, retrieveTo, hasPathname } from "./string";
+import { removeMask, splitPhone, retrieveTo, hasPathname, mergePhone } from "./string";
 
 describe("string", () => {
   describe("removeMask", () => {
@@ -66,6 +66,16 @@ describe("string", () => {
       const str = "test";
 
       expect(hasPathname(str)).toBe(false);
+    });
+  });
+
+  describe("mergePhone", () => {
+    it('should return "" if no phone are provided', () => {
+      expect(mergePhone()).toBe("");
+    });
+
+    it("should return phone concatenated", () => {
+      expect(mergePhone({ ddd: "(99)", number: "99999-9999" })).toBe("(99) 99999-9999");
     });
   });
 });

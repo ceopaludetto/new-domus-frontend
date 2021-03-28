@@ -1,6 +1,6 @@
 import { routes } from "@/client/providers/routes";
 
-import { findRoute, preload } from "./preload";
+import { findRoute, preload, findRouteByName, removeDuplicate } from "./preload";
 
 describe("preload", () => {
   describe("findRoute", () => {
@@ -21,9 +21,8 @@ describe("preload", () => {
   });
 
   describe("preload", () => {
-    it("should preload the component", async () => {
-      const client: Record<string, any> = {};
-      client.query = jest.fn(() => Promise.resolve());
+    it("should preload route", async () => {
+      const client: Record<string, any> = { query: jest.fn(() => Promise.resolve()) };
 
       const components = await preload("/", { client: client as any });
 
@@ -36,6 +35,52 @@ describe("preload", () => {
       await preload("/app/blocks", { client: client as any });
 
       expect(client.query).toBeCalledTimes(1);
+    });
+
+    it("should preload component", async () => {
+      const client: Record<string, any> = { query: jest.fn(() => Promise.resolve()) };
+      const route = findRouteByName("@APP:BLOCKS:LIST", routes);
+
+      if (route?.component) {
+        const component = await preload(route?.component, { client: client as any });
+
+        expect(typeof component).toBe("function");
+
+        expect(client.query).toBeCalledTimes(1);
+      }
+    });
+  });
+
+  describe("findRouteByName", () => {
+    it("should find route by name", () => {
+      const route = findRouteByName("@MAIN", routes);
+
+      expect(route).toBeDefined();
+      expect(route?.name).toBe("@MAIN");
+    });
+
+    it("should find route by cache", () => {
+      findRouteByName("@MAIN", routes);
+      const route = findRouteByName("@MAIN", routes);
+
+      expect(route).toBeDefined();
+      expect(route?.name).toBe("@MAIN");
+    });
+
+    it("should find children route by name", () => {
+      const route = findRouteByName("@APP:SETTINGS:APPEARANCE", routes);
+
+      expect(route).toBeDefined();
+      expect(route?.name).toBe("@APP:SETTINGS:APPEARANCE");
+    });
+  });
+
+  describe("removeDuplicate", () => {
+    it("should remove duplicated routes", () => {
+      const route = findRoute("/");
+
+      expect(route.length).toBe(2);
+      expect(removeDuplicate(route).length).toBe(1);
     });
   });
 });
