@@ -1,5 +1,3 @@
-import * as React from "react";
-
 import { Container, Box, Typography, Button, Theme } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 
@@ -8,8 +6,19 @@ import { useLoggedQuery } from "@/client/graphql/index.graphql";
 
 const useStyles = makeStyles((theme: Theme) => ({
   title: {
-    fontSize: theme.spacing(14),
     fontWeight: 700,
+    [theme.breakpoints.down("sm")]: {
+      fontSize: `${theme.spacing(4.5) / theme.typography.fontSize}rem`,
+    },
+    [theme.breakpoints.between("sm", "md")]: {
+      fontSize: `${theme.spacing(7.5) / theme.typography.fontSize}rem`,
+    },
+    [theme.breakpoints.between("md", "lg")]: {
+      fontSize: `${theme.spacing(10) / theme.typography.fontSize}rem`,
+    },
+    [theme.breakpoints.up("lg")]: {
+      fontSize: `${theme.spacing(14) / theme.typography.fontSize}rem`,
+    },
   },
   overline: {
     fontSize: theme.spacing(2),
@@ -47,7 +56,7 @@ export default function Home() {
               <Button component={PreloadLink} to="/auth/signin" variant="text" size="large" color="primary">
                 Entrar
               </Button>
-              <Button component={PreloadLink} to="/auth/signup/step-1" variant="contained" size="large" color="primary">
+              <Button component={PreloadLink} to="/auth/signup" variant="contained" size="large" color="primary">
                 Cadastre-se
               </Button>
             </>

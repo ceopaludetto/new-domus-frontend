@@ -51,7 +51,7 @@ export function Footer() {
               <Grid container>
                 <Grid className={classes.item} item xs={12} md>
                   <Box mb={2}>
-                    <Typography color="primary" gutterBottom variant="subtitle2">
+                    <Typography color="primary" component="span" gutterBottom variant="subtitle2">
                       Recursos
                     </Typography>
                   </Box>
@@ -65,7 +65,7 @@ export function Footer() {
                 </Grid>
                 <Grid className={classes.item} item xs={12} md>
                   <Box mb={2}>
-                    <Typography color="primary" gutterBottom variant="subtitle2">
+                    <Typography color="primary" component="span" gutterBottom variant="subtitle2">
                       Companhia
                     </Typography>
                   </Box>
@@ -79,7 +79,7 @@ export function Footer() {
                 </Grid>
                 <Grid className={classes.item} item xs={12} md>
                   <Box mb={2}>
-                    <Typography color="primary" gutterBottom variant="subtitle2">
+                    <Typography color="primary" component="span" gutterBottom variant="subtitle2">
                       Legal
                     </Typography>
                   </Box>
@@ -112,7 +112,7 @@ export function Footer() {
                     <Typography variant="body2">Copyright © 2020 Domus Inc. Todos direitos reservados.</Typography>
                   </Box>
                 </Box>
-                <Box>
+                <Box mt={{ xs: 3, md: 0 }}>
                   <Spacer display="flex" alignItems="center">
                     <Tooltip title="Github">
                       <IconButton color="primary" aria-label="Github">
@@ -134,6 +134,7 @@ export function Footer() {
                           </InputAdornment>
                         }
                         fullWidth
+                        aria-label="Selecione o tema"
                         onChange={(e) => changeColorMode(e.target.value as "dark" | "light")}
                       >
                         <MenuItem value="dark">Escuro</MenuItem>

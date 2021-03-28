@@ -43,12 +43,12 @@ export default function BlockCreate({ history }: RouteComponentProps) {
   }, [editBlock]);
 
   const handleSubmit = methods.handleSubmit(
-    handleError<BlockValues>(async ({ image, ...rest }) => {
+    handleError<BlockValues>(async ({ images, ...rest }) => {
       if (id) {
-        await updateBlock({ variables: { id, input: { ...rest, image: image?.[0] } } });
+        await updateBlock({ variables: { id, input: { ...rest, images: Array.from(images ?? []) } } });
       } else {
         await createBlock({
-          variables: { input: { ...rest, image: image?.[0] } },
+          variables: { input: { ...rest, images: Array.from(images ?? []) } },
           update: (proxy, { data }) => {
             const currentListData = proxy.readQuery<ShowBlocksQuery>({ query: ShowBlocksDocument });
 
@@ -77,7 +77,14 @@ export default function BlockCreate({ history }: RouteComponentProps) {
               <FormControl id="number" name="number" label="Número de Apartamentos" inputMode="numeric" />
             </Grid>
             <Grid item xs={12}>
-              <FormUpload id="image" name="image" label="Arraste sua imagem aqui ou clique para escolher" />
+              <FormUpload
+                id="images"
+                name="images"
+                label="Arraste sua imagem aqui ou clique para escolher"
+                labelOnDragging="Solte para adicionar"
+                multiple
+                accept="image/*"
+              />
             </Grid>
             <Grid item xs={12}>
               <Box textAlign="right">

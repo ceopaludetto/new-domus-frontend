@@ -2,5 +2,10 @@ fragment BlockValues on Block {
   id
   name
   number
-  image
+  images {
+    id
+    name
+    aspectRatio
+    height
+  }
 }

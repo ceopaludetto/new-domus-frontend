@@ -7,7 +7,7 @@ import "../customs";
 export const BlockSchema = Yup.object({
   name: Yup.string().required(Messages.REQUIRED),
   number: Yup.number().typeError(Messages.NUMBER).required(Messages.REQUIRED),
-  image: Yup.mixed<FileList>().file(),
+  images: Yup.mixed<FileList>().file(),
 }).required();
 
 export type BlockValues = Yup.InferType<typeof BlockSchema>;

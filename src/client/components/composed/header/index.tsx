@@ -41,7 +41,7 @@ export function Header() {
                   <Button component={PreloadLink} color="secondary" variant="text" to="/auth/signin">
                     Entrar
                   </Button>
-                  <Button component={PreloadLink} color="secondary" variant="contained" to="/auth/signup/step-1">
+                  <Button component={PreloadLink} color="secondary" variant="contained" to="/auth/signup">
                     Cadastre-se
                   </Button>
                 </Spacer>

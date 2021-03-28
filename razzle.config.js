@@ -67,6 +67,10 @@ module.exports = {
   modifyJestConfig({ jestConfig }) {
     jestConfig = {
       ...jestConfig,
+      transform: {
+        ...jestConfig.transform,
+        "\\.graphql$": "graphql-let/jestTransformer",
+      },
       moduleNameMapper: {
         ...jestConfig.moduleNameMapper,
         "^@/(.*)$": "<rootDir>/src/$1",

@@ -9,7 +9,7 @@ interface BlurredProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    backdropFilter: "saturate(100%) blur(5px)",
+    backdropFilter: "saturate(100%) blur(7.5px)",
     borderBottom: "1px solid transparent",
   },
   border: {

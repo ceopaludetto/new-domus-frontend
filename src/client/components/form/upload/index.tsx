@@ -1,11 +1,15 @@
 import React, { useRef, useState, useCallback, forwardRef } from "react";
-import { FiUpload, FiX } from "react-icons/fi";
+import { FiX } from "react-icons/fi";
+import { IoImagesOutline } from "react-icons/io5";
 
-import { ButtonBase, Theme, Typography, Box, IconButton, Card, CardContent, fade } from "@material-ui/core";
+import { ButtonBase, Theme, Typography, Box, IconButton, Card, fade, Grid } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 import clsx from "clsx";
+import prettyBytes from "pretty-bytes";
 
-import { Spacer } from "@/client/components/layout";
+import { Spacer, Image } from "@/client/components/layout";
+import { Tooltip } from "@/client/components/typography";
+import { fileReader } from "@/client/utils/file";
 import { merge } from "@/client/utils/merge.refs";
 
 const useStyles = makeStyles((theme: Theme) => {
@@ -48,104 +52,185 @@ const useStyles = makeStyles((theme: Theme) => {
 interface UploadProps extends React.InputHTMLAttributes<HTMLInputElement> {
   id: string;
   label: string;
+  labelOnDragging?: string;
+  icon?: React.ReactNode;
+  showPreview?: boolean;
   error?: boolean;
 }
 
-export const Upload = forwardRef<HTMLInputElement, UploadProps>(({ label, id, onChange, error, ...rest }, ref) => {
-  const classes = useStyles();
+export const Upload = forwardRef<HTMLInputElement, UploadProps>(
+  ({ label, id, onChange, error, multiple, labelOnDragging, icon, showPreview = true, ...rest }, ref) => {
+    const classes = useStyles();
 
-  const innerRef = useRef<HTMLInputElement>(null);
-  const [dragging, setDragging] = useState(false);
-  const [files, setFiles] = useState<FileList | undefined>(undefined);
+    const innerRef = useRef<HTMLInputElement>(null);
+    const [dragging, setDragging] = useState(false);
+    const [files, setFiles] = useState<File[]>([]);
+    const [images, setImages] = useState<Record<string, string>>();
 
-  const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      if (e.currentTarget?.files?.length) {
-        setFiles(e.currentTarget?.files);
-      } else {
-        setFiles(undefined);
-      }
+    const loadFile = useCallback((file: File) => {
+      fileReader(file)
+        .then((content) => setImages((current) => ({ ...current, [file.name]: content })))
+        .catch(console.error);
+    }, []);
 
-      if (onChange) {
-        onChange(e);
-      }
-    },
-    [onChange]
-  );
+    const handleChange = useCallback(
+      (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.currentTarget?.files?.length) {
+          if (showPreview) {
+            for (const file of e.currentTarget.files) {
+              loadFile(file);
+            }
+          }
 
-  const handleRemove = useCallback(
-    (e: React.MouseEvent<HTMLButtonElement>) => {
+          setFiles(Array.from(e.currentTarget?.files));
+        } else {
+          setFiles([]);
+        }
+
+        onChange?.(e);
+      },
+      [onChange, loadFile, showPreview]
+    );
+
+    const handleRemove = useCallback(
+      (index: number) => (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const newFiles = files.filter((file, i) => i !== index);
+
+        if (innerRef.current) {
+          const dataTransfer = new DataTransfer();
+
+          for (const file of newFiles) {
+            dataTransfer.items.add(file);
+          }
+
+          innerRef.current.files = dataTransfer.files;
+        }
+
+        setFiles(newFiles);
+      },
+      [innerRef, files]
+    );
+
+    const handleOnDrop = useCallback(
+      (e: React.DragEvent<HTMLLabelElement>) => {
+        e.preventDefault();
+
+        if (showPreview) {
+          for (const file of e.dataTransfer.files) {
+            loadFile(file);
+          }
+        }
+
+        const mergedFiles = [...e.dataTransfer.files];
+
+        const dataTransfer = new DataTransfer();
+
+        if (innerRef?.current?.files) {
+          mergedFiles.push(...innerRef.current.files);
+        }
+
+        const filterd = mergedFiles.filter((file, i) => {
+          const index = mergedFiles.findIndex((item) => item.lastModified === file.lastModified);
+
+          if (index !== i) {
+            return false;
+          }
+
+          return true;
+        });
+
+        for (const file of filterd) {
+          dataTransfer.items.add(file);
+        }
+
+        if (innerRef.current?.files) {
+          innerRef.current.files = dataTransfer.files;
+        }
+
+        setFiles(filterd);
+        setDragging(false);
+      },
+      [innerRef, loadFile, showPreview]
+    );
+
+    const handleDragOver = useCallback((e: React.DragEvent<HTMLLabelElement>) => {
       e.preventDefault();
-      e.stopPropagation();
-      if (innerRef.current) {
-        innerRef.current.value = "";
-      }
-      setFiles(undefined);
-    },
-    [innerRef, setFiles]
-  );
+    }, []);
 
-  const handleOnDrop = useCallback(
-    (e: React.DragEvent<HTMLLabelElement>) => {
-      e.preventDefault();
-
-      if (innerRef?.current) {
-        innerRef.current.files = e.dataTransfer.files;
-      }
-      setFiles(e.dataTransfer.files);
-    },
-    [innerRef]
-  );
-
-  const handleDragOver = useCallback((e: React.DragEvent<HTMLLabelElement>) => {
-    e.preventDefault();
-  }, []);
-
-  return (
-    <>
-      <input
-        type="file"
-        id={id}
-        ref={merge([innerRef, ref])}
-        onChange={handleChange}
-        className={classes.input}
-        {...rest}
-      />
-      <Spacer vertical={2} horizontal={0}>
-        <ButtonBase
-          component="label"
-          onDragEnter={() => setDragging(true)}
-          onDragLeave={() => setDragging(false)}
-          onDragOver={handleDragOver}
-          onDrop={handleOnDrop}
-          htmlFor={id}
-          className={clsx(classes.root, dragging && classes.dragging, error && classes.error)}
-        >
-          <Box
-            className={classes.noPointerEvents}
-            display="flex"
-            flexDirection="column"
-            alignItems="center"
-            justifyContent="center"
-            width="100%"
+    return (
+      <>
+        <input
+          type="file"
+          id={id}
+          ref={merge([innerRef, ref])}
+          onChange={handleChange}
+          className={classes.input}
+          multiple={multiple}
+          {...rest}
+        />
+        <Spacer vertical={2} horizontal={0}>
+          <ButtonBase
+            component="label"
+            disableRipple
+            onDragEnter={() => setDragging(true)}
+            onDragLeave={() => setDragging(false)}
+            onDragOver={handleDragOver}
+            onDrop={handleOnDrop}
+            htmlFor={id}
+            className={clsx(classes.root, dragging && classes.dragging, error && classes.error)}
           >
-            <Box pb={2} display="inline-flex">
-              <FiUpload size={40} />
+            <Box
+              className={classes.noPointerEvents}
+              display="flex"
+              flexDirection="column"
+              alignItems="center"
+              justifyContent="center"
+              width="100%"
+            >
+              <Box pb={2} display="inline-flex">
+                {icon ?? <IoImagesOutline size={40} />}
+              </Box>
+              <Box>
+                <Typography component="span" variant="subtitle2">
+                  {dragging && labelOnDragging ? labelOnDragging : label}
+                </Typography>
+              </Box>
             </Box>
-            <Box>
-              <Typography component="span" variant="subtitle2">
-                {label}
-              </Typography>
-            </Box>
-          </Box>
-        </ButtonBase>
-        {files &&
-          Array.from(files).map((file) => (
-            <Card variant="outlined" key={file.name}>
-              <CardContent>{file.name}</CardContent>
-            </Card>
-          ))}
-      </Spacer>
-    </>
-  );
-});
+          </ButtonBase>
+          {files &&
+            files.map((file, index) => (
+              <Card variant="outlined" key={file.name}>
+                <Box p={1.5}>
+                  <Grid container alignItems="center" spacing={2}>
+                    {showPreview && (
+                      <Grid item>
+                        <Box display="flex">
+                          <Image src={images?.[file.name]} alt={file.name} width={40} />
+                        </Box>
+                      </Grid>
+                    )}
+                    <Grid xs item>
+                      <Typography variant="body1">{file.name}</Typography>
+                      <Typography variant="body2" color="textSecondary">
+                        {prettyBytes(file.size)}
+                      </Typography>
+                    </Grid>
+                    <Grid item>
+                      <Tooltip title="Remover Imagem">
+                        <IconButton aria-label={`Remover ${file.name}`} onClick={handleRemove(index)}>
+                          <FiX />
+                        </IconButton>
+                      </Tooltip>
+                    </Grid>
+                  </Grid>
+                </Box>
+              </Card>
+            ))}
+        </Spacer>
+      </>
+    );
+  }
+);

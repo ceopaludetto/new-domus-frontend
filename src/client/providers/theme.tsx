@@ -73,6 +73,58 @@ const lightVariant: Partial<Theme["palette"]> = {
 const createTheme = (mode: "dark" | "light" = "dark") => {
   const variant = mode === "dark" ? darkVariant : lightVariant;
 
+  const overrides = {
+    MuiButton: {
+      root: {
+        textTransform: "none",
+      },
+    },
+    MuiPaper: {
+      outlined: {
+        backgroundColor: variant.background?.paper,
+      },
+    },
+    MuiStepper: {
+      root: {
+        backgroundColor: "transparent",
+        paddingLeft: "0",
+        paddingRight: "0",
+      },
+    },
+    MuiListItemIcon: {
+      root: {
+        minWidth: "36px",
+      },
+    },
+    MuiTab: {
+      root: {
+        fontSize: "0.975rem",
+        textTransform: "none",
+      },
+    },
+    MuiOutlinedInput: {
+      notchedOutline: {
+        transition: "border 150ms ease-in-out",
+      },
+    },
+    MuiIconButton: {
+      root: {
+        padding: "8px",
+      },
+    },
+    MuiTypography: {
+      overline: {
+        fontWeight: 500,
+        letterSpacing: "0.05rem",
+      },
+    },
+    MuiPickersCalendarHeader: {
+      switchHeader: {
+        padding: "0 0.5rem",
+      },
+    },
+  };
+
   return responsiveFontSizes(
     createMuiTheme({
       palette: variant,
@@ -85,6 +137,7 @@ const createTheme = (mode: "dark" | "light" = "dark") => {
         fontWeightRegular: 400,
         fontWeightMedium: 500,
         fontWeightBold: 600,
+        htmlFontSize: 16,
       },
       props: {
         MuiFormControl: {
@@ -107,52 +160,7 @@ const createTheme = (mode: "dark" | "light" = "dark") => {
           disableElevation: true,
         },
       },
-      overrides: {
-        MuiButton: {
-          root: {
-            textTransform: "none",
-          },
-        },
-        MuiPaper: {
-          outlined: {
-            backgroundColor: variant.background?.paper,
-          },
-        },
-        MuiStepper: {
-          root: {
-            backgroundColor: "transparent",
-            paddingLeft: "0",
-            paddingRight: "0",
-          },
-        },
-        MuiListItemIcon: {
-          root: {
-            minWidth: "36px",
-          },
-        },
-        MuiTab: {
-          root: {
-            fontSize: "0.975rem",
-            textTransform: "none",
-          },
-        },
-        MuiOutlinedInput: {
-          notchedOutline: {
-            transition: "border 150ms ease-in-out",
-          },
-        },
-        MuiIconButton: {
-          root: {
-            padding: "8px",
-          },
-        },
-        MuiTypography: {
-          overline: {
-            fontWeight: 500,
-            letterSpacing: "0.05rem",
-          },
-        },
-      },
+      overrides: overrides as any,
     })
   );
 };

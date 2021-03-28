@@ -4,7 +4,6 @@ import { MdAdd, MdFilterList } from "react-icons/md";
 
 import {
   Button,
-  Card,
   CardMedia,
   IconButton,
   CardHeader,
@@ -12,15 +11,17 @@ import {
   MenuItem,
   ListItemIcon,
   ListItemText,
+  Card,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 
-import { Page, PreloadLink, Tooltip, Spacer, Masonry, RemoveDialog } from "@/client/components";
+import { Page, PreloadLink, Tooltip, Spacer, Masonry, RemoveDialog, Carousel } from "@/client/components";
 import {
   useShowBlocksQuery,
   useDeleteBlockMutation,
   ShowBlocksQuery,
   ShowBlocksDocument,
+  Image,
 } from "@/client/graphql/index.graphql";
 import { useSubscribeOnCondominiumChange } from "@/client/hooks";
 import type { Client } from "@/client/utils/types";
@@ -84,6 +85,16 @@ export default function BlockList() {
     [dialog]
   );
 
+  const getHeight = useCallback((images?: Partial<Image>[] | null) => {
+    if (!images?.length) {
+      return "auto";
+    }
+
+    const min = Math.min(...images?.map((image) => image?.height ?? 0), 400);
+
+    return min;
+  }, []);
+
   return (
     <Page
       title="Blocos e Apartamentos"
@@ -113,6 +124,18 @@ export default function BlockList() {
       <Masonry>
         {blocks?.showBlocks?.map((block) => (
           <Card key={block.id} variant="outlined">
+            {block.images?.length && (
+              <Carousel count={block.images.length}>
+                {(index) => (
+                  <CardMedia
+                    component="img"
+                    alt={block?.images?.[index].name}
+                    image={imageURL(block?.images?.[index].name ?? "")}
+                    style={{ height: getHeight(block?.images) }}
+                  />
+                )}
+              </Carousel>
+            )}
             <CardHeader
               title={block.name}
               classes={{ action: classes.action }}
@@ -147,7 +170,6 @@ export default function BlockList() {
                 </>
               }
             />
-            {block.image && <CardMedia component="img" alt={block.name} image={imageURL(block.image)} />}
           </Card>
         ))}
       </Masonry>
