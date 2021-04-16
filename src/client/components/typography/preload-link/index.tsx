@@ -1,4 +1,4 @@
-import * as React from "react";
+import { forwardRef } from "react";
 import { Link, LinkProps } from "react-router-dom";
 
 import { usePreload, usePathWithCondominium } from "@/client/hooks";
@@ -9,7 +9,7 @@ interface PreloadLinkProps extends LinkProps {
   params?: Record<string, any>;
 }
 
-export const PreloadLink = React.forwardRef<HTMLAnchorElement, PreloadLinkProps>(
+export const PreloadLink = forwardRef<HTMLAnchorElement, PreloadLinkProps>(
   ({ to, params, children, onClick, ...rest }, ref) => {
     const { handlePreloadClick } = usePreload(onClick);
     const [generatePath] = usePathWithCondominium();

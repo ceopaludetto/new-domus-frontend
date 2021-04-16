@@ -1,4 +1,3 @@
-import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { HelmetProvider } from "react-helmet-async";
 import { BrowserRouter } from "react-router-dom";
@@ -15,12 +14,10 @@ import { App } from "./App";
 const client = createClient(
   false,
   createUploadLink({
-    credentials: "include",
     uri: `${process.env.RAZZLE_BACKEND_URL}/graphql`,
-  })
+  }) as any
 );
 
-// eslint-disable-next-line promise/catch-or-return
 loadableReady().then(() => {
   const root = document.querySelector("#app");
   const method: "render" | "hydrate" = root?.hasChildNodes() ? "hydrate" : "render";

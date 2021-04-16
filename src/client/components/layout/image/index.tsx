@@ -1,10 +1,10 @@
-import { useMemo, useState } from "react";
+import { ImgHTMLAttributes, useMemo, useState } from "react";
 
 import type { Theme } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 import clsx from "clsx";
 
-interface ImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
+interface ImageProps extends ImgHTMLAttributes<HTMLImageElement> {
   width?: number;
   height?: number;
   aspectRatio?: number;

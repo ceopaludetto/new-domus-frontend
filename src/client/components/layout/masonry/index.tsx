@@ -1,4 +1,4 @@
-import { Children, useMemo } from "react";
+import { Children, HTMLAttributes, ReactNode, useMemo } from "react";
 
 import type { Theme } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
@@ -8,16 +8,16 @@ const useStyles = makeStyles((theme: Theme) => ({
   masonry: {
     columnGap: theme.spacing(2),
     [theme.breakpoints.up("lg")]: {
-      columnCount: 5,
-    },
-    [theme.breakpoints.between("md", "lg")]: {
       columnCount: 4,
     },
-    [theme.breakpoints.between("xs", "md")]: {
+    [theme.breakpoints.between("md", "lg")]: {
       columnCount: 3,
     },
-    [theme.breakpoints.down("xs")]: {
+    [theme.breakpoints.between("xs", "md")]: {
       columnCount: 2,
+    },
+    [theme.breakpoints.down("xs")]: {
+      columnCount: 1,
     },
   },
   item: {
@@ -29,8 +29,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface MasonryProps extends React.HTMLAttributes<HTMLDivElement> {
-  children: React.ReactNode;
+interface MasonryProps extends HTMLAttributes<HTMLDivElement> {
+  children: ReactNode;
 }
 
 export function Masonry({ children, className, ...rest }: MasonryProps) {

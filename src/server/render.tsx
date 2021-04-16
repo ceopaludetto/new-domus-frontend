@@ -37,7 +37,6 @@ export async function render(request: FastifyRequest, response: FastifyReply) {
   const client = createClient(
     true,
     new HttpLink({
-      credentials: "include",
       uri: `${process.env.RAZZLE_BACKEND_URL}/graphql`,
       fetch: async (uri, options) => {
         let headers = options?.headers as Record<string, string>;
@@ -69,7 +68,6 @@ export async function render(request: FastifyRequest, response: FastifyReply) {
     client.cache.writeQuery<LoggedQuery>({
       query: LoggedDocument,
       data: {
-        __typename: "Query",
         logged: !!data.profile,
       },
     });
@@ -93,7 +91,6 @@ export async function render(request: FastifyRequest, response: FastifyReply) {
         client.cache.writeQuery<SelectedCondominiumQuery>({
           query: SelectedCondominiumDocument,
           data: {
-            __typename: "Query",
             selectedCondominium: id,
           },
         });

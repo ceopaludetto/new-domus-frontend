@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useCallback } from "react";
 
 import type { CondominiumValuesFragment } from "@/client/graphql/index.graphql";
 import { CondominiumURL } from "@/client/utils/url";
@@ -13,7 +13,7 @@ type UsePathWithCondominiumReturns = [
 export function usePathWithCondominium(): UsePathWithCondominiumReturns {
   const condominium = useCurrentCondominium();
 
-  const generate = React.useCallback(
+  const generate = useCallback(
     (path: string) => {
       const [url, currentSearch] = path.split("?");
 

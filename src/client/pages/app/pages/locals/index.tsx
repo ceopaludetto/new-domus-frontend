@@ -1,4 +1,3 @@
-import * as React from "react";
 import { MdFilterList, MdAdd } from "react-icons/md";
 
 import { Button, IconButton } from "@material-ui/core";

@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useMemo } from "react";
 import { FiChevronRight } from "react-icons/fi";
 import { useLocation } from "react-router-dom";
 
@@ -25,7 +25,7 @@ export function Breadcrumbs() {
   const location = useLocation();
   const classes = useStyles();
 
-  const crumbs = React.useMemo(() => removeDuplicate(findRoute(location.pathname)), [location]);
+  const crumbs = useMemo(() => removeDuplicate(findRoute(location.pathname)), [location]);
 
   return (
     <Box display="inline-block" py={0.75} px={2} borderRadius={20} className={classes.box}>

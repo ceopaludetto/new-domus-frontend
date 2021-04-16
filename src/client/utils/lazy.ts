@@ -1,4 +1,4 @@
-import type { IsomorphicLib, Client } from "./types";
+import type { IsomorphicLib, PreloadOptions } from "./types";
 
 export function getModule<T>(lib: IsomorphicLib<T>) {
   if ("default" in lib) {
@@ -8,7 +8,7 @@ export function getModule<T>(lib: IsomorphicLib<T>) {
   return lib;
 }
 
-export function hasFetchBefore<T>(c?: T): c is T & { fetchBefore: (client: Client) => Promise<void> } {
+export function hasFetchBefore<T>(c?: T): c is T & { fetchBefore: (options: PreloadOptions) => Promise<void> } {
   if (typeof c !== "function") {
     return false;
   }

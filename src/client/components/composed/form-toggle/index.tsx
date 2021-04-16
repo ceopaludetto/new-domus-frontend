@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { useFormContext, get } from "react-hook-form";
 
 import {
@@ -13,14 +14,17 @@ import {
 
 type FormToggleProps = Omit<CheckboxProps, "name"> & {
   name: string;
-  helperText?: React.ReactNode;
+  helperText?: ReactNode;
   label: string;
   info: string;
   variant?: "switch" | "checkbox";
 };
 
 export function FormToggle({ name, label, id, info, helperText, variant = "checkbox", ...rest }: FormToggleProps) {
-  const { register, errors } = useFormContext();
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext();
   const error = get(errors, name);
 
   const Component = variant === "checkbox" ? Checkbox : Switch;
@@ -35,7 +39,7 @@ export function FormToggle({ name, label, id, info, helperText, variant = "check
       <FormControlLabel
         label={info}
         labelPlacement="end"
-        control={<Component name={name} inputRef={register} color="primary" id={id} {...rest} />}
+        control={<Component {...register(name)} color="primary" id={id} {...rest} />}
       />
       {(error?.message ?? helperText) && (
         <FormHelperText error={!!error}>{error?.message ?? helperText}</FormHelperText>

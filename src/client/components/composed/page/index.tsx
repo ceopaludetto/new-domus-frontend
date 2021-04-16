@@ -1,18 +1,18 @@
-import * as React from "react";
+import { useState, useRef, ReactNode, ComponentProps } from "react";
 import { HelmetProps, Helmet } from "react-helmet-async";
-import { useIsomorphicLayoutEffect } from "react-use";
+import { useIsomorphicLayoutEffect, useWindowScroll } from "react-use";
 
 import { Typography, Container, Box, Theme } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 
-interface PageProps extends React.ComponentProps<typeof Container> {
+interface PageProps extends ComponentProps<typeof Container> {
   title: string;
   subtitle: string;
-  actions?: React.ReactNode;
+  actions?: ReactNode;
   helmetProps?: HelmetProps;
-  helmet?: React.ReactNode;
-  footer?: React.ReactNode;
-  tabs?: React.ReactNode;
+  helmet?: ReactNode;
+  footer?: ReactNode;
+  tabs?: ReactNode;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -23,10 +23,11 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export function Page({ title, subtitle, children, actions, helmet, helmetProps, footer, tabs, ...rest }: PageProps) {
   const classes = useStyles();
-  const [headerSize, setHeaderSize] = React.useState<number>();
-  const frame = React.useRef<number>(0);
+  const [headerSize, setHeaderSize] = useState<number>();
+  const { y } = useWindowScroll();
+  const frame = useRef<number>(0);
 
-  const observer = React.useRef(
+  const observer = useRef(
     typeof window !== "undefined"
       ? new ResizeObserver((entries) => {
           const entry = entries[0];
@@ -78,22 +79,22 @@ export function Page({ title, subtitle, children, actions, helmet, helmetProps, 
             </Box>
           )}
         </Box>
-        {!!tabs && (
-          <Box
-            position="sticky"
-            bgcolor="background.default"
-            className={classes.tabs}
-            mt={2}
-            mb={4}
-            mx={-3}
-            px={3}
-            top={headerSize}
-          >
-            {tabs}
-          </Box>
-        )}
-        {children}
       </Container>
+      {!!tabs && (
+        <Box position="sticky" bgcolor="background.default" className={classes.tabs} top={headerSize} clone>
+          <Container
+            {...rest}
+            style={{
+              maxWidth: y > (headerSize ?? 0) + 22 ? "none" : undefined,
+            }}
+          >
+            <Box mt={2} mb={4} mx={{ xs: 0, md: -3 }} px={{ xs: 0, md: 3 }}>
+              {tabs}
+            </Box>
+          </Container>
+        </Box>
+      )}
+      <Container {...rest}>{children}</Container>
     </>
   );
 }

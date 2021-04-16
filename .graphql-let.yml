@@ -5,6 +5,7 @@ schemaEntrypoints: "./src/client/schema.graphqls"
 documents:
   - "**/*.graphql"
   - "!**/schema.graphql"
+  - "!**/*-values.graphql"
 plugins:
   - typescript
   - typescript-operations
@@ -13,5 +14,4 @@ config:
   reactApolloVersion: 3
   preResolveTypes: true
   dedupeOperationSuffix: true
-  nonOptionalTypename: true
 cacheDir: __generated__

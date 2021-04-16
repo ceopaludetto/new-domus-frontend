@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useCallback, useState } from "react";
 import { RiEyeLine, RiEyeOffLine } from "react-icons/ri";
 
 import { IconButton, TextFieldProps, InputAdornment } from "@material-ui/core";
@@ -8,13 +8,13 @@ import { Tooltip } from "@/client/components";
 type FieldProps = Pick<TextFieldProps, "type" | "InputProps">;
 
 export function useVisibility(initialValue?: boolean) {
-  const [isVisible, setIsVisible] = React.useState(initialValue ?? false);
+  const [isVisible, setIsVisible] = useState(initialValue ?? false);
 
-  const toggleVisible = React.useCallback(() => {
+  const toggleVisible = useCallback(() => {
     setIsVisible((state) => !state);
   }, [setIsVisible]);
 
-  const getFieldProps = React.useCallback(
+  const getFieldProps = useCallback(
     (props?: TextFieldProps["InputProps"]): FieldProps => ({
       type: isVisible ? "text" : "password",
       InputProps: {
@@ -42,7 +42,7 @@ export function useVisibility(initialValue?: boolean) {
 }
 
 export function useMultipleVisibility<T extends string | symbol>(names: T[], initialValue?: boolean) {
-  const [isVisible, setIsVisible] = React.useState<{ [P in T]?: boolean }>(() => {
+  const [isVisible, setIsVisible] = useState<{ [P in T]?: boolean }>(() => {
     const initialState: { [P in T]?: boolean } = {};
 
     names.forEach((n: T) => {
@@ -52,14 +52,14 @@ export function useMultipleVisibility<T extends string | symbol>(names: T[], ini
     return initialState;
   });
 
-  const toggleVisible = React.useCallback(
+  const toggleVisible = useCallback(
     (name: T) => () => {
       setIsVisible((state) => ({ ...state, [name]: !state[name] }));
     },
     [setIsVisible]
   );
 
-  const getFieldProps = React.useCallback(
+  const getFieldProps = useCallback(
     (name: T, props?: TextFieldProps["InputProps"]): FieldProps => ({
       type: isVisible[name] ? "text" : "password",
       InputProps: {

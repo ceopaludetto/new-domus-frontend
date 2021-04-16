@@ -1,7 +1,16 @@
-import * as React from "react";
+import {
+  MouseEvent,
+  SyntheticEvent,
+  createContext,
+  useCallback,
+  useState,
+  useContext,
+  useMemo,
+  ReactNode,
+} from "react";
 import { FiX } from "react-icons/fi";
 
-import { Snackbar, IconButton, Theme } from "@material-ui/core";
+import { Snackbar, IconButton, Theme, NoSsr } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -12,56 +21,73 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export function useSnackbar() {
-  const [content, setContent] = React.useState("");
-  const [isOpen, setIsOpen] = React.useState(false);
+  const [content, setContent] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
 
-  const handleOpen = React.useCallback((message: string) => {
+  const handleOpen = useCallback((message: string) => {
     setContent(message);
     setIsOpen(true);
   }, []);
 
-  const handleClose = React.useCallback(() => {
+  const handleClose = useCallback((event: SyntheticEvent | MouseEvent<HTMLButtonElement>, reason?: string) => {
+    if (reason === "clickaway") return;
     setIsOpen(false);
   }, []);
 
-  return { handleOpen, handleClose, content, isOpen };
+  const handleExited = useCallback(() => {
+    setContent("");
+  }, []);
+
+  return { handleOpen, handleClose, handleExited, content, isOpen };
 }
 
 type SnackbarWrapperProps = ReturnType<typeof useSnackbar> & { autoHideDuration?: number };
 
-export function SnackbarWrapper({ content, isOpen, handleClose, autoHideDuration = 5000 }: SnackbarWrapperProps) {
+export function SnackbarWrapper({
+  content,
+  isOpen,
+  handleClose,
+  handleExited,
+  autoHideDuration = 5000,
+}: SnackbarWrapperProps) {
   const classes = useStyles();
+  const key = useMemo(() => (typeof window !== "undefined" ? window.btoa(content) : ""), [content]);
 
   return (
-    <Snackbar
-      message={content}
-      open={isOpen}
-      onClose={handleClose}
-      autoHideDuration={autoHideDuration}
-      ContentProps={{ elevation: 0, classes: { root: classes.snackbar } }}
-      anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
-      action={
-        <IconButton size="small" onClick={handleClose} color="inherit">
-          <FiX />
-        </IconButton>
-      }
-    />
+    <NoSsr>
+      <Snackbar
+        key={key}
+        message={content}
+        open={isOpen}
+        onClose={handleClose}
+        onExited={handleExited}
+        autoHideDuration={autoHideDuration}
+        ContentProps={{ elevation: 0, classes: { root: classes.snackbar } }}
+        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+        action={
+          <IconButton size="small" onClick={handleClose} color="inherit">
+            <FiX />
+          </IconButton>
+        }
+      />
+    </NoSsr>
   );
 }
 
-const SnackbarContext = React.createContext<SnackbarWrapperProps>({
+const SnackbarContext = createContext<SnackbarWrapperProps>({
   content: "",
   isOpen: false,
   autoHideDuration: 5000,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   handleOpen: (message: string) => {},
   handleClose: () => {},
+  handleExited: () => {},
 });
 
-export function SnackbarProvider({ children, ...rest }: SnackbarWrapperProps & { children: React.ReactNode }) {
+export function SnackbarProvider({ children, ...rest }: SnackbarWrapperProps & { children: ReactNode }) {
   return <SnackbarContext.Provider value={rest}>{children}</SnackbarContext.Provider>;
 }
 
 export function useSnackbarContext() {
-  return React.useContext(SnackbarContext);
+  return useContext(SnackbarContext);
 }

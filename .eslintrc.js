@@ -23,8 +23,8 @@ module.exports = {
   env: {
     node: true,
   },
-  extends: ["plugin:promise/recommended", "prettier"],
-  plugins: ["promise", "import-helpers", "prettier"],
+  extends: ["prettier"],
+  plugins: ["import-helpers", "prettier"],
   parserOptions: {
     ecmaVersion: 2020,
     sourceType: "module",
@@ -38,14 +38,8 @@ module.exports = {
         browser: true,
         jest: true,
       },
-      extends: [
-        "airbnb-typescript",
-        "airbnb/hooks",
-        "plugin:@typescript-eslint/recommended",
-        "plugin:promise/recommended",
-        "prettier",
-      ],
-      plugins: ["@typescript-eslint", "promise", "import-helpers", "prettier"],
+      extends: ["airbnb-typescript", "airbnb/hooks", "plugin:@typescript-eslint/recommended", "prettier"],
+      plugins: ["@typescript-eslint", "import-helpers", "prettier"],
       parserOptions: {
         ecmaFeatures: {
           jsx: true,

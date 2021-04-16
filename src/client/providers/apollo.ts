@@ -1,4 +1,5 @@
 import { InMemoryCache, ApolloClient, ApolloLink } from "@apollo/client";
+import { relayStylePagination } from "@apollo/client/utilities";
 
 import { SelectedCondominiumDocument } from "@/client/graphql/index.graphql";
 
@@ -33,7 +34,7 @@ const saveTokenLink = new ApolloLink((operation, forward) =>
   forward(operation).map((response) => {
     const context = operation.getContext();
 
-    const token = context.response.headers.get("X-Access-Token");
+    const token = context.response.headers.get("x-access-token");
     if (token) {
       tokenStore.set(token.trim());
     }
@@ -51,19 +52,21 @@ const getTokenLink = new ApolloLink((operation, forward) => {
 });
 
 export function createClient(isSsr = false, link: ApolloLink) {
-  let cache = new InMemoryCache({
+  const cache = new InMemoryCache({
     typePolicies: {
       Query: {
         fields: {
-          findBlockByID(_, { args, toReference }) {
-            return toReference({
-              __typename: "Block",
-              id: args?.id,
-            });
+          findBlockByID(existing, { args, toReference }) {
+            return (
+              existing ||
+              toReference({
+                __typename: "Block",
+                id: args?.id,
+              })
+            );
           },
-          showBlocks: {
-            merge: false,
-          },
+          showBlocks: relayStylePagination(),
+          showStates: relayStylePagination(),
         },
       },
     },
@@ -72,7 +75,7 @@ export function createClient(isSsr = false, link: ApolloLink) {
   if (!isSsr) {
     const apolloState = document.querySelector("#__APOLLO_STATE__");
     if (apolloState) {
-      cache = cache.restore(JSON.parse(apolloState.innerHTML));
+      cache.restore(JSON.parse(apolloState.innerHTML));
 
       if (process.env.NODE_ENV === "production") {
         apolloState.parentElement?.removeChild(apolloState);
@@ -86,6 +89,7 @@ export function createClient(isSsr = false, link: ApolloLink) {
     ssrMode: isSsr,
     connectToDevTools: process.env.NODE_ENV === "development" && !isSsr,
     assumeImmutableResults: true,
+    credentials: "include",
   });
 
   return client;

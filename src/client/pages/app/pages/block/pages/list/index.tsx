@@ -1,18 +1,8 @@
-import { useCallback, MouseEvent, useState } from "react";
-import { FiMoreVertical, FiTrash2, FiEdit } from "react-icons/fi";
+import { useCallback, useState } from "react";
+import { BiTrash, BiEditAlt } from "react-icons/bi";
 import { MdAdd, MdFilterList } from "react-icons/md";
 
-import {
-  Button,
-  CardMedia,
-  IconButton,
-  CardHeader,
-  Menu,
-  MenuItem,
-  ListItemIcon,
-  ListItemText,
-  Card,
-} from "@material-ui/core";
+import { Button, CardMedia, IconButton, CardHeader, Card } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 
 import { Page, PreloadLink, Tooltip, Spacer, Masonry, RemoveDialog, Carousel } from "@/client/components";
@@ -24,7 +14,7 @@ import {
   Image,
 } from "@/client/graphql/index.graphql";
 import { useSubscribeOnCondominiumChange } from "@/client/hooks";
-import type { Client } from "@/client/utils/types";
+import type { PreloadOptions } from "@/client/utils/types";
 import { imageURL } from "@/client/utils/url";
 
 const useStyles = makeStyles(() => ({
@@ -43,15 +33,17 @@ export default function BlockList() {
       const current = cache.readQuery<ShowBlocksQuery>({ query: ShowBlocksDocument });
 
       if (current) {
-        const list = current?.showBlocks.filter((item) => item.id !== data?.deleteBlock.id);
+        const list = current?.showBlocks?.edges?.filter((item) => item?.node?.id !== data?.deleteBlock.id);
 
         cache.writeQuery<ShowBlocksQuery>({
           query: ShowBlocksDocument,
-          data: { ...current, showBlocks: list ?? [] },
+          data: { ...current, showBlocks: { edges: list ?? [] } },
         });
       }
     },
   });
+
+  const nodes = blocks?.showBlocks?.edges?.map((edge) => edge.node);
 
   const [blockID, setBlockID] = useState("");
   const dialog = RemoveDialog.useDialog({
@@ -62,25 +54,15 @@ export default function BlockList() {
     },
     onClose: () => setBlockID(""),
   });
-  const [anchorEl, setAnchorEl] = useState<Record<string, HTMLButtonElement | undefined>>({});
 
   useSubscribeOnCondominiumChange(() => refetch());
 
-  const handleMoreOptions = useCallback(
-    (id: string) => (e: MouseEvent<HTMLButtonElement>) => {
-      e.preventDefault();
-      e.stopPropagation();
-
-      setAnchorEl({ [id]: e.currentTarget });
-    },
-    []
-  );
-
   const handleRemove = useCallback(
-    (id: string) => {
-      setBlockID(id);
-      setAnchorEl({ [id]: undefined });
-      dialog.handleOpen();
+    (id?: string) => {
+      if (id) {
+        setBlockID(id);
+        dialog.handleOpen();
+      }
     },
     [dialog]
   );
@@ -122,52 +104,44 @@ export default function BlockList() {
     >
       <RemoveDialog {...dialog} />
       <Masonry>
-        {blocks?.showBlocks?.map((block) => (
-          <Card key={block.id} variant="outlined">
-            {block.images?.length && (
-              <Carousel count={block.images.length}>
+        {nodes?.map((block) => (
+          <Card key={block?.id} variant="outlined">
+            {block?.images?.length && (
+              <Carousel count={block?.images.length}>
                 {(index) => (
                   <CardMedia
                     component="img"
                     alt={block?.images?.[index].name}
                     image={imageURL(block?.images?.[index].name ?? "")}
-                    style={{ height: getHeight(block?.images) }}
+                    style={{ height: getHeight(block.images) }}
                   />
                 )}
               </Carousel>
             )}
             <CardHeader
-              title={block.name}
+              title={block?.name}
               classes={{ action: classes.action }}
-              subheader={`N° de Apartamentos: ${block.number}`}
+              subheader={`N° de Apartamentos: ${block?.number}`}
               titleTypographyProps={{ variant: "body1" }}
               subheaderTypographyProps={{ variant: "body2" }}
               action={
-                <>
-                  <Tooltip title="Mais Opções">
-                    <IconButton aria-label="Mais Opções" onClick={handleMoreOptions(block.id)}>
-                      <FiMoreVertical />
+                <Spacer>
+                  <Tooltip title="Editar">
+                    <IconButton
+                      color="secondary"
+                      component={PreloadLink}
+                      to={`/app/blocks/create/${block?.id}`}
+                      aria-label="Editar"
+                    >
+                      <BiEditAlt />
                     </IconButton>
                   </Tooltip>
-                  <Menu
-                    anchorEl={anchorEl[block.id]}
-                    open={!!anchorEl[block.id]}
-                    onClose={() => setAnchorEl({ [block.id]: undefined })}
-                  >
-                    <MenuItem component={PreloadLink} to={`/app/blocks/create/${block.id}`}>
-                      <ListItemIcon>
-                        <FiEdit />
-                      </ListItemIcon>
-                      <ListItemText primary="Editar" />
-                    </MenuItem>
-                    <MenuItem button onClick={() => handleRemove(block.id)}>
-                      <ListItemIcon>
-                        <FiTrash2 />
-                      </ListItemIcon>
-                      <ListItemText primary="Excluir" />
-                    </MenuItem>
-                  </Menu>
-                </>
+                  <Tooltip title="Excluir">
+                    <IconButton color="secondary" aria-label="Excluir" onClick={() => handleRemove(block?.id)}>
+                      <BiTrash />
+                    </IconButton>
+                  </Tooltip>
+                </Spacer>
               }
             />
           </Card>
@@ -177,6 +151,6 @@ export default function BlockList() {
   );
 }
 
-BlockList.fetchBefore = async (client: Client) => {
+BlockList.fetchBefore = async ({ client }: PreloadOptions) => {
   await client.query({ query: ShowBlocksDocument });
 };

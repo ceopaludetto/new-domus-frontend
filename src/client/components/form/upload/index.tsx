@@ -1,4 +1,14 @@
-import React, { useRef, useState, useCallback, forwardRef } from "react";
+import {
+  useRef,
+  useState,
+  useCallback,
+  forwardRef,
+  ChangeEvent,
+  MouseEvent,
+  DragEvent,
+  InputHTMLAttributes,
+  ReactNode,
+} from "react";
 import { FiX } from "react-icons/fi";
 import { IoImagesOutline } from "react-icons/io5";
 
@@ -49,11 +59,11 @@ const useStyles = makeStyles((theme: Theme) => {
   };
 });
 
-interface UploadProps extends React.InputHTMLAttributes<HTMLInputElement> {
+interface UploadProps extends InputHTMLAttributes<HTMLInputElement> {
   id: string;
   label: string;
   labelOnDragging?: string;
-  icon?: React.ReactNode;
+  icon?: ReactNode;
   showPreview?: boolean;
   error?: boolean;
 }
@@ -68,13 +78,11 @@ export const Upload = forwardRef<HTMLInputElement, UploadProps>(
     const [images, setImages] = useState<Record<string, string>>();
 
     const loadFile = useCallback((file: File) => {
-      fileReader(file)
-        .then((content) => setImages((current) => ({ ...current, [file.name]: content })))
-        .catch(console.error);
+      fileReader(file).then((content) => setImages((current) => ({ ...current, [file.name]: content })));
     }, []);
 
     const handleChange = useCallback(
-      (e: React.ChangeEvent<HTMLInputElement>) => {
+      (e: ChangeEvent<HTMLInputElement>) => {
         if (e.currentTarget?.files?.length) {
           if (showPreview) {
             for (const file of e.currentTarget.files) {
@@ -93,7 +101,7 @@ export const Upload = forwardRef<HTMLInputElement, UploadProps>(
     );
 
     const handleRemove = useCallback(
-      (index: number) => (e: React.MouseEvent<HTMLButtonElement>) => {
+      (index: number) => (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         e.stopPropagation();
 
@@ -115,7 +123,7 @@ export const Upload = forwardRef<HTMLInputElement, UploadProps>(
     );
 
     const handleOnDrop = useCallback(
-      (e: React.DragEvent<HTMLLabelElement>) => {
+      (e: DragEvent<HTMLLabelElement>) => {
         e.preventDefault();
 
         if (showPreview) {
@@ -156,7 +164,7 @@ export const Upload = forwardRef<HTMLInputElement, UploadProps>(
       [innerRef, loadFile, showPreview]
     );
 
-    const handleDragOver = useCallback((e: React.DragEvent<HTMLLabelElement>) => {
+    const handleDragOver = useCallback((e: DragEvent<HTMLLabelElement>) => {
       e.preventDefault();
     }, []);
 

@@ -1,9 +1,11 @@
 projects:
   app:
-    schemaPath:
+    schema:
       - http://localhost:3333/graphql
       - src/client/graphql/schema.graphql
-    includes: ["src/client/graphql/**/*.graphql"]
+    documents: ["src/client/graphql/**/*.graphql"]
     extensions:
       endpoints:
         default: http://localhost:3333/graphql
+      customDirectives:
+        - directive @client on FIELD

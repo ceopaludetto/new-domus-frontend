@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { FiX } from "react-icons/fi";
 
 import {
@@ -17,8 +18,8 @@ import { Tooltip } from "@/client/components/typography";
 
 interface ModalProps extends DialogProps {
   title: string;
-  wrapper?: (children: React.ReactNode) => JSX.Element;
-  actions?: React.ReactNode;
+  wrapper?: (children: ReactNode) => JSX.Element;
+  actions?: ReactNode;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({

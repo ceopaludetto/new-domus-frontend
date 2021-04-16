@@ -1,9 +1,10 @@
+import type { HTMLAttributes } from "react";
 import { FiCheckCircle } from "react-icons/fi";
 
 import { Typography, Box, Theme } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 
-interface PasswordHelperProps extends Omit<React.HTMLAttributes<HTMLSpanElement>, "color"> {
+interface PasswordHelperProps extends Omit<HTMLAttributes<HTMLSpanElement>, "color"> {
   active: boolean;
 }
 

@@ -1,9 +1,9 @@
-import type { ComponentProps } from "react";
+import type { ComponentProps, ReactNode } from "react";
 
 import { Divider as MuiDivider, Grid, Typography } from "@material-ui/core";
 
 interface DividerProps extends ComponentProps<typeof MuiDivider> {
-  children?: React.ReactNode;
+  children?: ReactNode;
 }
 
 export function Divider({ children, orientation = "horizontal", ...rest }: DividerProps) {

@@ -1,7 +1,7 @@
-import * as React from "react";
+import { useMemo } from "react";
 
 export function usePasswordHelp(password: string) {
-  return React.useMemo(
+  return useMemo(
     () => ({
       oneNumber: /\d/.test(password),
       oneUpper: /[A-Z]/.test(password),

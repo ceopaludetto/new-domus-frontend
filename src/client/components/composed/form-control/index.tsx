@@ -8,19 +8,14 @@ import { merge } from "@/client/utils/merge.refs";
 
 interface FormControlProps extends Omit<TextFieldProps, "inputRef" | "name" | "error"> {
   name: string;
-  array?: boolean;
 }
 
-export function FormControl({
-  name,
-  helperText,
-  array = false,
-  variant = "outlined",
-  autoFocus,
-  ...rest
-}: FormControlProps) {
+export function FormControl({ name, helperText, variant = "outlined", autoFocus, ...rest }: FormControlProps) {
   const innerRef = useRef<HTMLInputElement>(null);
-  const { register, errors } = useFormContext();
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext();
   const error = get(errors, name);
 
   useEffectOnce(() => {
@@ -29,13 +24,15 @@ export function FormControl({
     }
   });
 
+  const { ref, ...form } = register(name);
+
   return (
     <TextField
-      inputRef={merge([array ? register() : register, innerRef])}
-      name={name}
+      inputRef={merge([ref, innerRef])}
       error={!!error}
       helperText={error?.message ?? helperText}
       variant={variant}
+      {...form}
       {...rest}
     />
   );

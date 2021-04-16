@@ -1,4 +1,4 @@
-import type { ComponentType } from "react";
+import type { ComponentType, MouseEvent } from "react";
 import { useHistory } from "react-router-dom";
 
 import { useApolloClient } from "@apollo/client";
@@ -10,7 +10,7 @@ import { preload } from "@/client/utils/preload";
 const PreloadCache = new Map<string, ComponentType<any>[]>();
 const PreloadComponentCache = new Map<LoadableComponent<any>, ComponentType<any>>();
 
-export function usePreload<T>(onClick?: (e: React.MouseEvent<T, MouseEvent>) => void) {
+export function usePreload<T>(onClick?: (e: MouseEvent<T, MouseEvent>) => void) {
   const client = useApolloClient();
   const history = useHistory();
 
@@ -32,7 +32,7 @@ export function usePreload<T>(onClick?: (e: React.MouseEvent<T, MouseEvent>) => 
 
     isProgressAnimating(true);
 
-    const component = await preload(to, { client });
+    const component = await preload(to, { client, url: to });
     PreloadCache.set(to, component);
 
     isProgressAnimating(false);
@@ -41,7 +41,7 @@ export function usePreload<T>(onClick?: (e: React.MouseEvent<T, MouseEvent>) => 
   }
 
   function handlePreloadClick(to: string) {
-    return async (e: React.MouseEvent<T, MouseEvent>) => {
+    return async (e: MouseEvent<T, MouseEvent>) => {
       if (!e.defaultPrevented) {
         e.preventDefault();
       }

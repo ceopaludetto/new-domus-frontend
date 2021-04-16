@@ -1,4 +1,3 @@
-import * as React from "react";
 import { useFormContext, get, Controller } from "react-hook-form";
 
 import { RadioGroup, RadioGroupProps, FormControl, FormHelperText, FormLabel } from "@material-ui/core";
@@ -10,7 +9,9 @@ interface FormRadioCardProps extends Omit<RadioGroupProps, "name" | "value" | "e
 }
 
 export function FormRadioGroup({ name, label, defaultValue = "", helperText, children, ...rest }: FormRadioCardProps) {
-  const { errors } = useFormContext();
+  const {
+    formState: { errors },
+  } = useFormContext();
   const error = get(errors, name);
 
   return (
@@ -19,11 +20,11 @@ export function FormRadioGroup({ name, label, defaultValue = "", helperText, chi
       <Controller
         name={name}
         defaultValue={defaultValue}
-        as={
-          <RadioGroup name={name} {...rest}>
+        render={({ field }) => (
+          <RadioGroup {...field} {...rest}>
             {children}
           </RadioGroup>
-        }
+        )}
       />
       {(error?.message ?? helperText) && (
         <FormHelperText error={!!error}>{error?.message ?? helperText}</FormHelperText>

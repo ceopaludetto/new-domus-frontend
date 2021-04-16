@@ -1,5 +1,3 @@
-import * as React from "react";
-
 import { Page } from "@/client/components";
 
 export default function Events() {

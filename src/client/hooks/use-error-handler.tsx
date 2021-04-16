@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import * as React from "react";
-import type { UseFormMethods, SubmitHandler, UnpackNestedValue } from "react-hook-form";
+import { useState, useCallback, useContext, createContext, ReactNode } from "react";
+import type { UseFormSetError, SubmitHandler, UnpackNestedValue } from "react-hook-form";
 
 import { retrieveErrorType } from "@/client/utils/error";
 
 export function useErrorHandler() {
-  const [defaultError, setDefaultError] = React.useState("");
+  const [defaultError, setDefaultError] = useState("");
 
-  const handleError = React.useCallback(
-    <T extends Record<string, any>>(handler: SubmitHandler<T>, setError: UseFormMethods["setError"]) => async (
+  const handleError = useCallback(
+    <T extends Record<string, any>>(handler: SubmitHandler<T>, setError: UseFormSetError<T>) => async (
       data: UnpackNestedValue<T>
     ) => {
       setDefaultError("");
@@ -17,7 +17,7 @@ export function useErrorHandler() {
       } catch (err) {
         const error = retrieveErrorType(err);
         if (error.type === "field") {
-          setError(error.field, { message: error.message });
+          setError(error.field as any, { message: error.message });
         } else {
           setDefaultError(error.message);
         }
@@ -26,19 +26,19 @@ export function useErrorHandler() {
     []
   );
 
-  const emptyDefaultError = React.useCallback(() => setDefaultError(""), [setDefaultError]);
+  const emptyDefaultError = useCallback(() => setDefaultError(""), [setDefaultError]);
 
   return { defaultError, handleError, emptyDefaultError };
 }
 
-const ErrorHandlerContext = React.createContext<ReturnType<typeof useErrorHandler>>({
+const ErrorHandlerContext = createContext<ReturnType<typeof useErrorHandler>>({
   defaultError: "",
   handleError: (handler) => async () => {},
   emptyDefaultError: () => {},
 });
 
 type ErrorHandlerProviderProps = {
-  children: React.ReactNode;
+  children: ReactNode;
 } & ReturnType<typeof useErrorHandler>;
 
 export function ErrorHandlerProvider({ children, ...rest }: ErrorHandlerProviderProps) {
@@ -46,5 +46,5 @@ export function ErrorHandlerProvider({ children, ...rest }: ErrorHandlerProvider
 }
 
 export function useErrorHandlerContext() {
-  return React.useContext(ErrorHandlerContext);
+  return useContext(ErrorHandlerContext);
 }

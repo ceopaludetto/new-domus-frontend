@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { ReactNode, useCallback, useMemo, useState } from "react";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 
 import { Box, IconButton } from "@material-ui/core";
@@ -28,7 +28,7 @@ export const wrap = (min: number, max: number, v: number) => {
 };
 
 interface CarouselProps {
-  children: (index: number) => React.ReactNode;
+  children: (index: number) => ReactNode;
   count: number;
 }
 
@@ -71,12 +71,12 @@ export function Carousel({ children, count }: CarouselProps) {
           zIndex={2}
         >
           <Box px={1}>
-            <IconButton aria-label="Foto Anterior" onClick={() => handleChange(-1)}>
+            <IconButton color="secondary" aria-label="Foto Anterior" onClick={() => handleChange(-1)}>
               <FiChevronLeft />
             </IconButton>
           </Box>
           <Box px={1}>
-            <IconButton aria-label="Próxima Foto" onClick={() => handleChange(+1)}>
+            <IconButton color="secondary" aria-label="Próxima Foto" onClick={() => handleChange(+1)}>
               <FiChevronRight />
             </IconButton>
           </Box>

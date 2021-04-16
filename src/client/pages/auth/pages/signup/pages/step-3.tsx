@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useMemo } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -20,7 +20,7 @@ import { SignUpStep3Schema, SignUpStep3Values } from "@/client/helpers/validatio
 import { useStepperContext, useErrorHandlerContext } from "@/client/hooks";
 import { clean } from "@/client/utils/clean";
 import { splitPhone } from "@/client/utils/string";
-import type { Client } from "@/client/utils/types";
+import type { PreloadOptions } from "@/client/utils/types";
 
 import { wizard, initialValues } from "../providers";
 
@@ -38,7 +38,8 @@ export default function Step3() {
 
   const [register, { client }] = useRegisterMutation();
   const { data } = useShowStatesQuery();
-  const cities = React.useMemo(() => data?.showStates?.find((st) => st.id === state)?.cities, [state, data]);
+  const nodes = useMemo(() => data?.showStates.edges?.map((edge) => edge.node), [data]);
+  const cities = useMemo(() => nodes?.find((st) => st?.id === state)?.cities, [state, nodes]);
 
   const submit = methods.handleSubmit(
     handleError<SignUpStep3Values>(async (datas) => {
@@ -128,16 +129,16 @@ export default function Step3() {
               </Grid>
               <Grid item xs={12} md={4}>
                 <FormSelect name="condominium.address.state" id="state" label="Estado" required>
-                  {data?.showStates.map((st) => (
-                    <MenuItem key={st.id} value={st.id}>
-                      {st.name}
+                  {nodes?.map((st) => (
+                    <MenuItem key={st?.id} value={st?.id}>
+                      {st?.name}
                     </MenuItem>
                   ))}
                 </FormSelect>
               </Grid>
               <Grid item xs={12} md={8}>
                 <FormSelect
-                  defaultValue={data?.showStates[0].cities[0].id}
+                  defaultValue={nodes?.[0]?.cities[0].id}
                   name="condominium.address.city"
                   id="city"
                   label="Cidade"
@@ -183,6 +184,6 @@ export default function Step3() {
   );
 }
 
-Step3.fetchBefore = async (client: Client) => {
+Step3.fetchBefore = async ({ client }: PreloadOptions) => {
   await client.query<ShowStatesQuery>({ query: ShowStatesDocument });
 };

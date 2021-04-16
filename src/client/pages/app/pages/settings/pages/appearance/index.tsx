@@ -4,7 +4,7 @@ import { Switch, FormControl, FormLabel, FormControlLabel, Box } from "@material
 
 import { MeDocument } from "@/client/graphql/index.graphql";
 import { useColorMode } from "@/client/hooks";
-import type { Client } from "@/client/utils/types";
+import type { PreloadOptions } from "@/client/utils/types";
 
 export default function Appearance() {
   const { colorMode, changeColorMode } = useColorMode();
@@ -33,6 +33,6 @@ export default function Appearance() {
   );
 }
 
-Appearance.fetchBefore = async (client: Client) => {
+Appearance.fetchBefore = async ({ client }: PreloadOptions) => {
   await client.query({ query: MeDocument });
 };

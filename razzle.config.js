@@ -9,7 +9,7 @@ const measure = process.argv.some((arg) => arg === "--measure");
 const smp = new SpeedMeasureWebpackPlugin({ disable: !measure });
 
 module.exports = {
-  options: { verbose: false, enableReactRefresh: false },
+  options: { verbose: false, enableReactRefresh: true },
   modifyPaths({ paths }) {
     paths.appClientIndexJs = path.resolve("src", "client", "index.tsx");
     paths.appServerIndexJs = path.resolve("src", "server", "index.ts");

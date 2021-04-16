@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useCallback, useState, useEffect, ChangeEvent } from "react";
 
 import { Tabs, Tab, Theme } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
@@ -17,12 +17,12 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export default function Settings({ routes, location, history }: RouteComponentProps) {
   const classes = useStyles();
-  const [value, setValue] = React.useState(() => new CondominiumURL(location).getNormalizedURI());
+  const [value, setValue] = useState(() => new CondominiumURL(location).getNormalizedURI());
   const [generatePath] = usePathWithCondominium();
   const { handlePreload } = usePreload();
 
-  const handleTabClick = React.useCallback(
-    async (e: React.ChangeEvent<Record<string, any>>, v: any) => {
+  const handleTabClick = useCallback(
+    async (e: ChangeEvent<Record<string, any>>, v: any) => {
       await handlePreload(v);
 
       history.push(v);
@@ -30,7 +30,7 @@ export default function Settings({ routes, location, history }: RouteComponentPr
     [history, handlePreload]
   );
 
-  const renderTabs = React.useCallback(
+  const renderTabs = useCallback(
     () =>
       routes?.map((route) => {
         const path = retrieveTo(route.path);
@@ -40,7 +40,7 @@ export default function Settings({ routes, location, history }: RouteComponentPr
     [routes, generatePath]
   );
 
-  React.useEffect(() => {
+  useEffect(() => {
     const condominiumURL = new CondominiumURL(location);
 
     if (condominiumURL.hasCondominium()) {

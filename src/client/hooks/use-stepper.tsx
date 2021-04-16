@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useCallback, useMemo, useContext, createContext } from "react";
 import { useCounter } from "react-use";
 
 type Callback = (next: number) => Promise<any>;
@@ -14,7 +14,7 @@ export function useStepper(pages: number, options?: UseStepperOptions) {
 
   const [current, { inc, dec }] = useCounter(options?.initial ? options.initial - 1 : 0, pages - 1, 0);
 
-  const handleNextPage = React.useCallback(
+  const handleNextPage = useCallback(
     async (callback?: Callback) => {
       try {
         if (handleNextPageCallback) {
@@ -33,7 +33,7 @@ export function useStepper(pages: number, options?: UseStepperOptions) {
     [inc, handleNextPageCallback, current]
   );
 
-  const handlePrevPage = React.useCallback(
+  const handlePrevPage = useCallback(
     async (callback?: Callback) => {
       try {
         if (handlePrevPageCallback) {
@@ -52,20 +52,20 @@ export function useStepper(pages: number, options?: UseStepperOptions) {
     [dec, handlePrevPageCallback, current]
   );
 
-  const isLast = React.useMemo(() => current === pages - 1, [current, pages]);
-  const isFirst = React.useMemo(() => current === 0, [current]);
+  const isLast = useMemo(() => current === pages - 1, [current, pages]);
+  const isFirst = useMemo(() => current === 0, [current]);
 
   return { current, handleNextPage, handlePrevPage, isLast, isFirst };
 }
 
 type StepperContextProps = ReturnType<typeof useStepper>;
 
-const StepperContext = React.createContext<StepperContextProps>(undefined as any);
+const StepperContext = createContext<StepperContextProps>(undefined as any);
 
-export function StepperProvider({ children, ...rest }: StepperContextProps & { children: React.ReactNode }) {
+export function StepperProvider({ children, ...rest }: StepperContextProps & { children: ReactNode }) {
   return <StepperContext.Provider value={rest}>{children}</StepperContext.Provider>;
 }
 
 export function useStepperContext() {
-  return React.useContext(StepperContext);
+  return useContext(StepperContext);
 }

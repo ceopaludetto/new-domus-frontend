@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, HTMLAttributes } from "react";
 import { useEffectOnce, useIsomorphicLayoutEffect } from "react-use";
 
 import { useReactiveVar } from "@apollo/client";
@@ -9,7 +9,7 @@ import { generate } from "shortid";
 
 import { isProgressAnimating } from "@/client/providers/reactive-vars";
 
-interface ProgressBarProps extends React.HTMLAttributes<HTMLDivElement> {
+interface ProgressBarProps extends HTMLAttributes<HTMLDivElement> {
   duration?: number;
 }
 

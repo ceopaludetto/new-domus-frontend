@@ -1,4 +1,3 @@
-import * as React from "react";
 import { Helmet } from "react-helmet-async";
 import { useForm, FormProvider } from "react-hook-form";
 
@@ -20,15 +19,15 @@ import {
   SettingsPersonalSchema,
   SettingsPersonalValues,
 } from "@/client/helpers/validations/settings.schema";
-import { useMultipleVisibility, usePasswordHelp, useErrorHandler, useSnackbar, SnackbarWrapper } from "@/client/hooks";
+import { useMultipleVisibility, usePasswordHelp, useErrorHandler, useSnackbarContext } from "@/client/hooks";
 import { submitDisabled } from "@/client/utils/form";
 import { splitPhone, mergePhone } from "@/client/utils/string";
-import type { Client } from "@/client/utils/types";
+import type { PreloadOptions } from "@/client/utils/types";
 
 export default function Personal() {
   const { handleError: handlePersonalError, defaultError: personalError } = useErrorHandler();
   const { handleError: handlePasswordError, defaultError: passwordError } = useErrorHandler();
-  const snackbarControls = useSnackbar();
+  const { handleOpen } = useSnackbarContext();
 
   const [mapPropsToField] = useMultipleVisibility(["currentPassword", "newPassword", "repeatNewPassword"]);
   const [changePassword] = useChangePasswordMutation();
@@ -76,7 +75,7 @@ export default function Personal() {
         },
       });
 
-      snackbarControls.handleOpen("Informações pessoais alteradas com sucesso!");
+      handleOpen("Informações pessoais alteradas com sucesso!");
 
       personal.reset(personal.getValues());
     }, personal.setError)
@@ -93,7 +92,7 @@ export default function Personal() {
         },
       });
 
-      snackbarControls.handleOpen("Senha alterada com sucesso!");
+      handleOpen("Senha alterada com sucesso!");
 
       password.reset();
     }, password.setError)
@@ -101,7 +100,6 @@ export default function Personal() {
 
   return (
     <>
-      <SnackbarWrapper {...snackbarControls} />
       <Helmet title="Configurações - Informações Pessoais" />
       <FormProvider {...personal}>
         <form noValidate onSubmit={handlePersonalSubmit}>
@@ -234,6 +232,6 @@ export default function Personal() {
   );
 }
 
-Personal.fetchBefore = async (client: Client) => {
+Personal.fetchBefore = async ({ client }: PreloadOptions) => {
   await client.query<MeQuery>({ query: MeDocument });
 };

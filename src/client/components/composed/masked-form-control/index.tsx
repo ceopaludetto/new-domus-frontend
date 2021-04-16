@@ -1,3 +1,4 @@
+import type { ComponentProps } from "react";
 import { useFormContext, Controller, get } from "react-hook-form";
 
 import { TextField, TextFieldProps } from "@material-ui/core";
@@ -5,7 +6,7 @@ import { Rifm } from "rifm";
 
 interface MaskedFormControlProps extends Omit<TextFieldProps, "name" | "error"> {
   name: string;
-  rifm: Omit<React.ComponentProps<typeof Rifm>, "value" | "onChange" | "children">;
+  rifm: Omit<ComponentProps<typeof Rifm>, "value" | "onChange" | "children">;
 }
 
 export function MaskedFormControl({
@@ -16,14 +17,16 @@ export function MaskedFormControl({
   variant = "outlined",
   ...rest
 }: MaskedFormControlProps) {
-  const { errors } = useFormContext();
+  const {
+    formState: { errors },
+  } = useFormContext();
   const error = get(errors, name);
 
   return (
     <Controller
       name={name}
       defaultValue={defaultValue}
-      render={({ onBlur, ref, ...props }) => (
+      render={({ field: { onBlur, ref, ...props } }) => (
         <Rifm {...props} {...rifm}>
           {({ onChange, value }) => (
             <TextField

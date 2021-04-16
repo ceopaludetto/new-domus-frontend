@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { RouteComponentProps, useParams } from "react-router-dom";
+import { RouteComponentProps, useParams, matchPath } from "react-router-dom";
 
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, Grid, Box } from "@material-ui/core";
@@ -12,9 +12,12 @@ import {
   useFindBlockByIdLazyQuery,
   ShowBlocksQuery,
   ShowBlocksDocument,
+  FindBlockByIdDocument,
+  FindBlockByIdQuery,
 } from "@/client/graphql/index.graphql";
 import { BlockSchema, BlockValues } from "@/client/helpers/validations/block.schema";
 import { useErrorHandler, usePreload } from "@/client/hooks";
+import type { PreloadOptions } from "@/client/utils/types";
 
 export default function BlockCreate({ history }: RouteComponentProps) {
   const { id } = useParams<{ id?: string }>();
@@ -49,12 +52,14 @@ export default function BlockCreate({ history }: RouteComponentProps) {
       } else {
         await createBlock({
           variables: { input: { ...rest, images: Array.from(images ?? []) } },
-          update: (proxy, { data }) => {
-            const currentListData = proxy.readQuery<ShowBlocksQuery>({ query: ShowBlocksDocument });
+          update: (cache, { data }) => {
+            const currentListData = cache.readQuery<ShowBlocksQuery>({ query: ShowBlocksDocument });
 
-            proxy.writeQuery({
+            const merge = [...(currentListData?.showBlocks?.edges ?? []), { node: data?.createBlock }];
+
+            cache.writeQuery<ShowBlocksQuery>({
               query: ShowBlocksDocument,
-              data: { ...currentListData, showBlocks: [...(currentListData?.showBlocks ?? []), data?.createBlock] },
+              data: { ...currentListData, showBlocks: { edges: merge } },
             });
           },
         });
@@ -66,7 +71,11 @@ export default function BlockCreate({ history }: RouteComponentProps) {
   );
 
   return (
-    <Page title="Blocos e Apartamentos" subtitle={id ? "Editar" : "Criar"} helmetProps={{ title: "Novo Bloco" }}>
+    <Page
+      title="Blocos e Apartamentos"
+      subtitle={id ? "Editar" : "Criar"}
+      helmetProps={{ title: id ? "Editar Bloco" : "Novo Bloco" }}
+    >
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit}>
           <Grid container spacing={3}>
@@ -104,3 +113,15 @@ export default function BlockCreate({ history }: RouteComponentProps) {
     </Page>
   );
 }
+
+BlockCreate.fetchBefore = async ({ client, url }: PreloadOptions) => {
+  if (url) {
+    const [base] = url?.split("?");
+
+    const matched = matchPath<{ id?: string }>(base, { path: "/app/blocks/create/:id?" });
+
+    if (matched?.params?.id) {
+      await client.query<FindBlockByIdQuery>({ query: FindBlockByIdDocument, variables: { id: matched.params.id } });
+    }
+  }
+};

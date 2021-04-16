@@ -1,4 +1,3 @@
-import * as React from "react";
 import { useRouteMatch } from "react-router-dom";
 
 import { Paper, Box, Container, Theme } from "@material-ui/core";

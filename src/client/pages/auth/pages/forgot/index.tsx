@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { useForm, FormProvider } from "react-hook-form";
 import { useHistory } from "react-router-dom";
@@ -20,8 +20,8 @@ export default function Forgot() {
   const methods = useForm<ForgotValues>({ resolver: yupResolver(ForgotSchema) });
   const [forgot, { data }] = useAuthForgotMutation();
 
-  const [submitted, setSubmitted] = React.useState(false);
-  const [time, setTime] = React.useState(5);
+  const [submitted, setSubmitted] = useState(false);
+  const [time, setTime] = useState(5);
 
   useInterval(
     async () => {

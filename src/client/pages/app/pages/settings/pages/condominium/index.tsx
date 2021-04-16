@@ -16,13 +16,13 @@ import {
 } from "@/client/graphql/index.graphql";
 import * as Masks from "@/client/helpers/masks";
 import { CondominiumSchema, CondominiumValues } from "@/client/helpers/validations/condominium.schema";
-import { useCurrentCondominium, useErrorHandler, useSnackbar, SnackbarWrapper } from "@/client/hooks";
+import { useCurrentCondominium, useErrorHandler, useSnackbarContext } from "@/client/hooks";
 import { submitDisabled } from "@/client/utils/form";
-import type { Client } from "@/client/utils/types";
+import type { PreloadOptions } from "@/client/utils/types";
 
 export default function Condominium() {
   const [updateCondominium] = useUpdateCondominiumMutation();
-  const snackbarControls = useSnackbar();
+  const { handleOpen } = useSnackbarContext();
 
   const condominium = useCurrentCondominium();
   const { handleError } = useErrorHandler();
@@ -38,7 +38,7 @@ export default function Condominium() {
     },
   });
 
-  const { fields, append, remove } = useFieldArray({ control: methods.control, name: "rules", keyName: "key" });
+  const { fields, append, remove } = useFieldArray({ name: "rules", control: methods.control, keyName: "key" });
 
   useEffect(() => {
     const { id } = methods.getValues();
@@ -62,13 +62,12 @@ export default function Condominium() {
         variables: { input: { rules: rules ?? [], ...rest } },
       });
 
-      snackbarControls.handleOpen("Informações alteradas com sucesso!");
+      handleOpen("Informações de condomínio alteradas com sucesso!");
     }, methods.setError)
   );
 
   return (
     <>
-      <SnackbarWrapper {...snackbarControls} />
       <Helmet title="Configurações - Condomínio" />
       <FormProvider {...methods}>
         <form onSubmit={handleSumbmit}>
@@ -93,15 +92,13 @@ export default function Condominium() {
                       <Grid item xs>
                         <input
                           type="hidden"
-                          ref={methods.register()}
-                          name={`rules[${index}].id`}
                           defaultValue={field.id}
+                          {...methods.register(`rules.${index}.id` as const)}
                         />
                         <FormControl
                           label={`Regra ${index + 1}`}
-                          name={`rules[${index}].description`}
+                          name={`rules.${index}.description`}
                           defaultValue={field.description}
-                          array
                         />
                       </Grid>
                       <Grid item>
@@ -142,7 +139,7 @@ export default function Condominium() {
   );
 }
 
-Condominium.fetchBefore = async (client: Client) => {
+Condominium.fetchBefore = async ({ client }: PreloadOptions) => {
   await client.query<SelectedCondominiumQuery>({ query: SelectedCondominiumDocument });
   await client.query<MeQuery>({ query: MeDocument });
 };

@@ -9,7 +9,7 @@ export const CondominiumSchema = Yup.object({
   companyName: Yup.string().required(Messages.REQUIRED),
   character: Yup.string().max(1).required(Messages.REQUIRED),
   cnpj: Yup.string().cnpj().required(Messages.REQUIRED),
-  rules: Yup.array(Yup.object({ id: Yup.string(), description: Yup.string().required(Messages.REQUIRED) })),
+  rules: Yup.array(Yup.object({ id: Yup.string(), description: Yup.string().required(Messages.REQUIRED) })).required(),
 }).required();
 
 export type CondominiumValues = Yup.InferType<typeof CondominiumSchema>;

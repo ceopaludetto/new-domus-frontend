@@ -11,9 +11,13 @@ query SelectedCondominium {
   selectedCondominium @client
 }
 
-query ShowBlocks {
-  showBlocks {
-    ...BlockValues
+query ShowBlocks($first: Int, $after: String) {
+  showBlocks(first: $first, after: $after) {
+    edges {
+      node {
+        ...BlockValues
+      }
+    }
   }
 }
 
@@ -31,13 +35,12 @@ mutation DeleteBlock($id: ID!) {
 
 query ShowStates {
   showStates(sort: { name: ASC, cities: { name: ASC } }) {
-    ...StateValues
-  }
-}
-
-query ShowAllUsers {
-  showUsers {
-    ...UserValues
+    totalCount
+    edges {
+      node {
+        ...StateValues
+      }
+    }
   }
 }
 

@@ -1,4 +1,3 @@
-import * as React from "react";
 import { Helmet } from "react-helmet-async";
 import { FiUser, FiLock, FiBriefcase } from "react-icons/fi";
 

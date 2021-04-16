@@ -4,7 +4,7 @@ import { matchPath } from "react-router-dom";
 import type { LoadableComponent } from "@loadable/component";
 
 import { routes } from "@/client/providers/routes";
-import type { Route, Client } from "@/client/utils/types";
+import type { Route, PreloadOptions } from "@/client/utils/types";
 
 import { getModule, hasFetchBefore } from "./lazy";
 import { retrieveTo } from "./string";
@@ -46,15 +46,11 @@ export function removeDuplicate(foundRoutes: Route[]) {
   return Array.from(map.values());
 }
 
-interface PreloadOptions {
-  client: Client;
-}
-
 export async function preload(component: LoadableComponent<any>, options: PreloadOptions): Promise<ComponentType<any>>;
 export async function preload(path: string, options: PreloadOptions): Promise<ComponentType<any>[]>;
 export async function preload(
   pathOrComponent: string | LoadableComponent<any>,
-  { client }: PreloadOptions
+  options: PreloadOptions
 ): Promise<ComponentType<any>[] | ComponentType<any>> {
   if (typeof pathOrComponent === "string") {
     const matchingRoute = findRoute(pathOrComponent, routes, []);
@@ -66,7 +62,7 @@ export async function preload(
         const c = getModule(component);
 
         if (hasFetchBefore(c)) {
-          await c.fetchBefore(client);
+          await c.fetchBefore(options);
         }
 
         return c;
@@ -79,7 +75,7 @@ export async function preload(
   const c = getModule<ComponentType<any>>(component);
 
   if (hasFetchBefore(c)) {
-    await c.fetchBefore(client);
+    await c.fetchBefore(options);
   }
 
   return c;

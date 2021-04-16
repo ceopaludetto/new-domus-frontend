@@ -1,8 +1,10 @@
+import type { HTMLAttributes } from "react";
+
 import type { Theme } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 import clsx from "clsx";
 
-interface BlurredProps extends React.HTMLAttributes<HTMLDivElement> {
+interface BlurredProps extends HTMLAttributes<HTMLDivElement> {
   deactivate?: boolean;
   border?: boolean;
 }

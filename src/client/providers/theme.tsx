@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback, createContext } from "react";
+import { useState, useRef, useEffect, useCallback, createContext, ReactNode } from "react";
 import { Helmet } from "react-helmet-async";
 
 import { Theme, createMuiTheme, responsiveFontSizes } from "@material-ui/core";
@@ -167,7 +167,7 @@ const createTheme = (mode: "dark" | "light" = "dark") => {
 
 interface ThemeProviderProps {
   cookies: string;
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 const cookieStorageManager = (cookies = "", storageKey: string) => ({
