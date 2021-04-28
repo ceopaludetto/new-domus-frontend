@@ -38,6 +38,7 @@ export async function render(request: FastifyRequest, response: FastifyReply) {
     true,
     new HttpLink({
       uri: `${process.env.RAZZLE_BACKEND_URL}/graphql`,
+      fetchOptions: { mode: "cors", credentials: "include" },
       fetch: async (uri, options) => {
         let headers = options?.headers as Record<string, string>;
 

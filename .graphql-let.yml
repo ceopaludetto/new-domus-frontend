@@ -1,7 +1,6 @@
 schema:
   - "http://localhost:3333/graphql"
   - "./src/client/graphql/schema.graphql"
-schemaEntrypoints: "./src/client/schema.graphqls"
 documents:
   - "**/*.graphql"
   - "!**/schema.graphql"
@@ -14,4 +13,7 @@ config:
   reactApolloVersion: 3
   preResolveTypes: true
   dedupeOperationSuffix: true
+  useTypeImports: true
+  immutableTypes: true
+  pureMagicComment: true
 cacheDir: __generated__

@@ -2,14 +2,17 @@ const LoadableWebpackPlugin = require("@loadable/webpack-plugin");
 const CompressionWebpackPlugin = require("compression-webpack-plugin");
 const LodashPlugin = require("lodash-webpack-plugin");
 const path = require("path");
+const makeLoaderFinder = require("razzle-dev-utils/makeLoaderFinder");
 const SpeedMeasureWebpackPlugin = require("speed-measure-webpack-plugin");
 
 const measure = process.argv.some((arg) => arg === "--measure");
 
 const smp = new SpeedMeasureWebpackPlugin({ disable: !measure });
 
+const findBabelLoader = makeLoaderFinder("babel-loader");
+
 module.exports = {
-  options: { verbose: false, enableReactRefresh: true },
+  options: { verbose: false, enableReactRefresh: true, disableWebpackbar: true },
   modifyPaths({ paths }) {
     paths.appClientIndexJs = path.resolve("src", "client", "index.tsx");
     paths.appServerIndexJs = path.resolve("src", "server", "index.ts");
@@ -48,13 +51,7 @@ module.exports = {
       }
     }
 
-    const ts = config.module.rules.find((rule) => {
-      if (Array.isArray(rule.use)) {
-        return rule.use.some((u) => u.loader.includes("babel-loader"));
-      }
-
-      return false;
-    });
+    const ts = config.module.rules.find(findBabelLoader);
 
     // add graphql tag loader
     config.module.rules.unshift({

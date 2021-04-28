@@ -15,6 +15,10 @@ const client = createClient(
   false,
   createUploadLink({
     uri: `${process.env.RAZZLE_BACKEND_URL}/graphql`,
+    fetchOptions: {
+      mode: "cors",
+      credentials: "include",
+    },
   }) as any
 );
 
