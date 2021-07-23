@@ -1,58 +1,18 @@
-import { useRouteMatch } from "react-router-dom";
+import { Box } from "@material-ui/core";
 
-import { Paper, Box, Container, Theme } from "@material-ui/core";
-import { makeStyles } from "@material-ui/styles";
-import clsx from "clsx";
-
-import { Footer, RouteHandler } from "@/client/components";
+import { Logo } from "@/client/assets/logo";
+import { RouteHandler } from "@/client/components";
 import type { RouteComponentProps } from "@/client/utils/types";
 
-const useStyles = makeStyles((theme: Theme) => ({
-  container: {
-    display: "grid",
-    height: "100vh",
-    placeItems: "center",
-    [theme.breakpoints.down("sm")]: {
-      padding: 0,
-    },
-  },
-  paper: {},
-  register: {
-    "@media (max-width: 900px)": {
-      placeItems: "start",
-      height: "auto",
-      "& $paper": {
-        borderColor: "transparent",
-      },
-    },
-  },
-  notRegister: {
-    "@media (max-width: 550px)": {
-      placeItems: "start",
-      height: "auto",
-      "& $paper": {
-        borderColor: "transparent",
-      },
-    },
-  },
-}));
-
 export default function Auth({ routes }: RouteComponentProps) {
-  const isRegister = useRouteMatch("/auth/signup");
-  const classes = useStyles();
-
   return (
-    <>
-      <Container className={clsx(classes.container, isRegister ? classes.register : classes.notRegister)}>
-        <Box width="100%" maxWidth={isRegister ? "900px" : "550px"}>
-          <Box clone p={5.5}>
-            <Paper className={classes.paper} variant="outlined">
-              <RouteHandler routes={routes} />
-            </Paper>
-          </Box>
+    <Box height="100vh" display="flex" alignItems="center" justifyContent="center">
+      <Box flex="1" display="flex" justifyContent="center" flexWrap="wrap">
+        <Box mb={3} flex="0 0 100%" textAlign="center">
+          <Logo isLogoType height={45} />
         </Box>
-      </Container>
-      <Footer />
-    </>
+        <RouteHandler routes={routes} />
+      </Box>
+    </Box>
   );
 }

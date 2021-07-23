@@ -11,7 +11,7 @@
     "noEmit": true,
     "noEmitHelpers": true,
     "sourceMap": true,
-    "skipLibCheck": true,
+    // "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "importsNotUsedAsValues": "error",

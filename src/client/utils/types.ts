@@ -1,23 +1,27 @@
-import type { ReactNode, FunctionComponent, JSXElementConstructor } from "react";
+import type { ReactNode, FunctionComponent } from "react";
 import type { RouteProps, RouteComponentProps as DefaultRouteComponentProps } from "react-router-dom";
 
 import type { ApolloClient } from "@apollo/client";
 import type { LoadableComponent } from "@loadable/component";
-
-export type Client = ApolloClient<Record<string, any>>;
+import type { Theme } from "@material-ui/core";
 
 export interface PreloadOptions {
-  client: Client;
+  client: ApolloClient<any>;
   url?: string;
 }
+
+export type WithFetchBefore<T> = T & { fetchBefore?: (options: PreloadOptions) => Promise<void> };
 
 export type Route = Omit<RouteProps, "component" | "render"> & {
   name: string;
   children?: Route[];
-  component: LoadableComponent<any> & {
-    fetchBefore?: (options: PreloadOptions) => Promise<void>;
+  component: WithFetchBefore<LoadableComponent<any>>;
+  meta?: {
+    needAuth?: boolean;
+    redirectTo?: string;
+    title?: string;
+    icon?: ReactNode;
   };
-  meta?: Record<string, any>;
   render?: (custom: any) => RouteProps["render"];
 };
 
@@ -38,7 +42,11 @@ export enum Gender {
   N = "N",
 }
 
-export type ColorMode = "dark" | "light";
+export type ColorMode = "dark" | "light" | "blue";
+
+export type ColorModeMap = {
+  [K in ColorMode]: { name: string; color: string; theme: Partial<Theme["palette"]> };
+};
 
 export type Sidebar =
   | {

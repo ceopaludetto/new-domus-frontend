@@ -3,7 +3,7 @@ import { renderToString, renderToStaticMarkup } from "react-dom/server";
 import { HelmetProvider, FilledContext } from "react-helmet-async";
 import { StaticRouter } from "react-router-dom";
 
-import { ApolloProvider, HttpLink } from "@apollo/client";
+import { ApolloProvider } from "@apollo/client";
 import { getMarkupFromTree } from "@apollo/client/react/ssr";
 import { ChunkExtractor } from "@loadable/server";
 import { ServerStyleSheets } from "@material-ui/core";
@@ -12,15 +12,7 @@ import fetch from "node-fetch";
 import qs from "qs";
 
 import { App } from "@/client/App";
-import {
-  LoggedDocument,
-  LoggedQuery,
-  MeDocument,
-  MeQuery,
-  SelectedCondominiumDocument,
-  SelectedCondominiumQuery,
-} from "@/client/graphql/index.graphql";
-import { createClient, tokenStore } from "@/client/providers/apollo";
+import { createGraphQLClient } from "@/client/providers/client";
 import type { ReactStaticContext } from "@/client/utils/types";
 
 export async function render(request: FastifyRequest, response: FastifyReply) {
@@ -34,91 +26,40 @@ export async function render(request: FastifyRequest, response: FastifyReply) {
   const context: ReactStaticContext = {};
   const helmetContext: FilledContext | Record<string, any> = {};
 
-  const client = createClient(
-    true,
-    new HttpLink({
-      uri: `${process.env.RAZZLE_BACKEND_URL}/graphql`,
-      fetchOptions: { mode: "cors", credentials: "include" },
-      fetch: async (uri, options) => {
-        let headers = options?.headers as Record<string, string>;
+  const { client, condominiumStorage } = createGraphQLClient(true, fetch as any, request);
 
-        if (!headers.cookie) {
-          headers = { ...headers, cookie: "" };
-        }
+  const [, query] = request.url.split("?");
 
-        if (request.cookies["X-Refresh-Token"]) {
-          headers.cookie += `X-Refresh-Token=${request.cookies["X-Refresh-Token"]};`;
-        }
+  if (query) {
+    const { c } = qs.parse(query);
 
-        if (request.cookies["@Domus"]) {
-          headers.cookie += `@Domus=${request.cookies["@Domus"]};`;
-        }
-
-        return fetch(uri.toString(), { ...options, headers } as any) as any;
-      },
-    })
-  );
-
-  let data!: MeQuery;
-
-  try {
-    const res = await client.query<MeQuery>({ query: MeDocument });
-
-    data = res.data;
-
-    client.cache.writeQuery<LoggedQuery>({
-      query: LoggedDocument,
-      data: {
-        logged: !!data.profile,
-      },
-    });
-
-    if (data.profile?.person.condominiums) {
-      const [, query] = request.url.split("?");
-
-      const params = qs.parse(query);
-
-      let { id } = data.profile.person.condominiums[0];
-
-      if (params.condominium) {
-        const found = data.profile.person.condominiums.find((c) => c.id === params.condominium);
-
-        if (found) {
-          id = found.id;
-        }
-      }
-
-      if (id) {
-        client.cache.writeQuery<SelectedCondominiumQuery>({
-          query: SelectedCondominiumDocument,
-          data: {
-            selectedCondominium: id,
-          },
-        });
-      }
+    if (c) {
+      condominiumStorage(c as string);
     }
-  } catch (error) {} // eslint-disable-line no-empty
+  }
 
   const markup = await getMarkupFromTree({
     tree: (
-      <ApolloProvider client={client}>
+      <StaticRouter context={context} location={request.url}>
         <HelmetProvider context={helmetContext}>
-          <StaticRouter context={context} location={request.url}>
-            <App cookies={request.headers.cookie ?? ""} logged={!!data?.profile} />
-          </StaticRouter>
+          <ApolloProvider client={client}>
+            <App cookies={request.headers.cookie ?? ""} />
+          </ApolloProvider>
         </HelmetProvider>
-      </ApolloProvider>
+      </StaticRouter>
     ),
-    renderFunction: (el) => renderToString(extractor.collectChunks(sheets.collect(el))),
+    renderFunction: (children) => renderToString(extractor.collectChunks(sheets.collect(children))),
   });
 
-  tokenStore.clear();
+  const initialState = client.extract();
 
   if (context.url) {
-    return response.status(context?.statusCode ?? 307).redirect(context.url);
-  }
+    const logged = !!initialState?.ROOT_QUERY?.profile;
 
-  const initialState = client.extract();
+    if ((!context.url.includes("/auth/signin") && logged) || (!context.url.includes("/app") && !logged)) {
+      return response.status(context?.statusCode ?? 307).redirect(context.url);
+    }
+  }
 
   const { helmet } = helmetContext as FilledContext;
 

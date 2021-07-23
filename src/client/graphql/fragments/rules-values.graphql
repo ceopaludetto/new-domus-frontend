@@ -1,4 +1,0 @@
-fragment RuleValues on Rule {
-  id
-  description
-}

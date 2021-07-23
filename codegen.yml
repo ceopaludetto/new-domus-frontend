@@ -1,0 +1,25 @@
+overwrite: true
+silent: true
+schema: "http://localhost:3333/graphql"
+documents: "src/**/*.graphql"
+generates:
+  src/client/graphql/types.ts:
+    plugins:
+      - "typescript"
+  src/:
+    preset: near-operation-file
+    presetConfig:
+      baseTypesPath: client/graphql/types.ts
+      extension: .ts
+    plugins:
+      - "typescript-operations"
+      - "typescript-react-apollo"
+    config:
+      preResolveTypes: true
+      dedupeOperationSuffix: true
+      useTypeImports: true
+      pureMagicComment: true
+
+hooks:
+  afterAllFileWrite:
+    - eslint --fix

@@ -1,4 +1,0 @@
-type Query {
-  logged: Boolean!
-  selectedCondominium: ID!
-}

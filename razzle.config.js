@@ -2,14 +2,13 @@ const LoadableWebpackPlugin = require("@loadable/webpack-plugin");
 const CompressionWebpackPlugin = require("compression-webpack-plugin");
 const LodashPlugin = require("lodash-webpack-plugin");
 const path = require("path");
-const makeLoaderFinder = require("razzle-dev-utils/makeLoaderFinder");
 const SpeedMeasureWebpackPlugin = require("speed-measure-webpack-plugin");
 
 const measure = process.argv.some((arg) => arg === "--measure");
 
 const smp = new SpeedMeasureWebpackPlugin({ disable: !measure });
 
-const findBabelLoader = makeLoaderFinder("babel-loader");
+process.env.RAZZLE_LOADABLE_MANIFEST = path.resolve("build", "loadable-stats.json");
 
 module.exports = {
   options: { verbose: false, enableReactRefresh: true, disableWebpackbar: true },
@@ -19,7 +18,7 @@ module.exports = {
 
     return paths;
   },
-  modifyWebpackOptions({ options: { webpackOptions }, env: { target } }) {
+  modifyWebpackOptions({ options: { webpackOptions } }) {
     webpackOptions.fileLoaderExclude.push(/\.graphql$/);
 
     return webpackOptions;
@@ -32,17 +31,13 @@ module.exports = {
 
     config.plugins.unshift(new LodashPlugin());
 
-    process.env.RAZZLE_LOADABLE_MANIFEST = dev
-      ? path.resolve("build", "loadable-stats.json")
-      : path.resolve("build", "public", "loadable-stats.json");
-
     if (target === "web") {
       const filename = path.resolve("build");
 
       config.plugins.push(
         new LoadableWebpackPlugin({
-          outputAsset: !dev,
-          writeToDisk: dev ? { filename } : undefined,
+          outputAsset: false,
+          writeToDisk: { filename },
         })
       );
 
@@ -50,14 +45,6 @@ module.exports = {
         config.plugins.push(new CompressionWebpackPlugin({ exclude: [/\.txt$/i, /\.map$/i] }));
       }
     }
-
-    const ts = config.module.rules.find(findBabelLoader);
-
-    // add graphql tag loader
-    config.module.rules.unshift({
-      test: /\.graphql$/,
-      use: [...ts.use, require.resolve("graphql-let/loader")],
-    });
 
     return smp.wrap(config);
   },

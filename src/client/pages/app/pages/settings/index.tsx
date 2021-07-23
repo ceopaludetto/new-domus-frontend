@@ -1,67 +1,32 @@
-import { useCallback, useState, useEffect, ChangeEvent } from "react";
+import { Tab, Tabs } from "@material-ui/core";
 
-import { Tabs, Tab, Theme } from "@material-ui/core";
-import { makeStyles } from "@material-ui/styles";
-
-import { Page, RouteHandler } from "@/client/components";
-import { usePreload, usePathWithCondominium } from "@/client/hooks";
-import { retrieveTo } from "@/client/utils/string";
+import { Page, PreloadNavLink, RouteHandler } from "@/client/components";
+import { useLocationTabs } from "@/client/helpers/hooks";
 import type { RouteComponentProps } from "@/client/utils/types";
-import { CondominiumURL } from "@/client/utils/url";
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    borderBottom: `1px solid ${theme.palette.divider}`,
-  },
-}));
-
-export default function Settings({ routes, location, history }: RouteComponentProps) {
-  const classes = useStyles();
-  const [value, setValue] = useState(() => new CondominiumURL(location).getNormalizedURI());
-  const [generatePath] = usePathWithCondominium();
-  const { handlePreload } = usePreload();
-
-  const handleTabClick = useCallback(
-    async (e: ChangeEvent<Record<string, any>>, v: any) => {
-      await handlePreload(v);
-
-      history.push(v);
-    },
-    [history, handlePreload]
-  );
-
-  const renderTabs = useCallback(
-    () =>
-      routes?.map((route) => {
-        const path = retrieveTo(route.path);
-
-        return <Tab value={generatePath(path)} label={route.meta?.displayName} key={route.name} />;
-      }),
-    [routes, generatePath]
-  );
-
-  useEffect(() => {
-    const condominiumURL = new CondominiumURL(location);
-
-    if (condominiumURL.hasCondominium()) {
-      setValue(condominiumURL.getNormalizedURI());
-    }
-  }, [location]);
+export default function AppSettings({ routes }: RouteComponentProps) {
+  const [page, changePage] = useLocationTabs();
 
   return (
     <Page
       title="Configurações"
-      subtitle="Ajustes"
+      subtitle="Visão Geral"
+      contained
       tabs={
-        <Tabs
-          className={classes.root}
-          indicatorColor="primary"
-          value={value}
-          onChange={handleTabClick}
-          variant="scrollable"
-          scrollButtons="off"
-        >
-          {renderTabs()}
+        <Tabs variant="scrollable" indicatorColor="primary" value={page} onChange={changePage}>
+          <Tab component={PreloadNavLink} to="/app/settings" value="/app/settings" label="Informações Pessoais" />
+          <Tab
+            component={PreloadNavLink}
+            to="/app/settings/condominium"
+            value="/app/settings/condominium"
+            label="Condomínio"
+          />
+          <Tab
+            component={PreloadNavLink}
+            to="/app/settings/appearance"
+            value="/app/settings/appearance"
+            label="Aparência"
+          />
         </Tabs>
       }
     >

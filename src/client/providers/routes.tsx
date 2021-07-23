@@ -1,6 +1,5 @@
-import { BiBuildings } from "react-icons/bi";
-import { FiHome, FiCalendar, FiMapPin } from "react-icons/fi";
-import { RiSettings2Line } from "react-icons/ri";
+import { BiBuildings, BiHomeAlt } from "react-icons/bi";
+import { FiMapPin } from "react-icons/fi";
 
 import loadable from "@loadable/component";
 
@@ -12,32 +11,10 @@ export const routes: Route[] = [
     path: ["/", "/about"],
     exact: true,
     component: loadable(() => import("@/client/pages/main")),
-    children: [
-      {
-        name: "@MAIN:HOME",
-        path: "/",
-        exact: true,
-        component: loadable(() => import("@/client/pages/main/pages/home")),
-        meta: {
-          displayName: "Home",
-          type: "company",
-        },
-      },
-      {
-        name: "@MAIN:ABOUT",
-        path: "/about",
-        exact: true,
-        component: loadable(() => import("@/client/pages/main/pages/about")),
-        meta: {
-          displayName: "About",
-          type: "company",
-        },
-      },
-    ],
   },
   {
     name: "@AUTH",
-    path: ["/auth/signin", "/auth/signup", "/auth/forgot"],
+    path: ["/auth/signin", "/auth/forgot", "/auth/reset"],
     exact: true,
     component: loadable(() => import("@/client/pages/auth")),
     meta: {
@@ -46,22 +23,22 @@ export const routes: Route[] = [
     },
     children: [
       {
-        name: "@AUTH:SIGNIN",
+        name: "@AUTH:Signin",
         path: "/auth/signin",
         exact: true,
         component: loadable(() => import("@/client/pages/auth/pages/signin")),
       },
       {
-        name: "@AUTH:FORGOT",
+        name: "@AUTH:Forgot",
         path: "/auth/forgot",
         exact: true,
         component: loadable(() => import("@/client/pages/auth/pages/forgot")),
       },
       {
-        name: "@AUTH:SIGNUP",
-        path: "/auth/signup",
+        name: "@AUTH:Reset",
+        path: "/auth/reset",
         exact: true,
-        component: loadable(() => import("@/client/pages/auth/pages/signup")),
+        component: loadable(() => import("@/client/pages/auth/pages/reset")),
       },
     ],
   },
@@ -69,118 +46,108 @@ export const routes: Route[] = [
     name: "@APP",
     path: [
       "/app",
-      "/app/events",
-      "/app/locals",
       "/app/blocks",
-      "/app/blocks/create/:id?",
+      "/app/blocks/create",
+      "/app/locals",
+      "/app/locals/create",
       "/app/settings",
-      "/app/settings/condominium",
       "/app/settings/appearance",
+      "/app/settings/condominium",
     ],
     exact: true,
     component: loadable(() => import("@/client/pages/app")),
     meta: {
       needAuth: true,
       redirectTo: "/auth/signin",
-      displayName: "Início",
+      title: "Início",
     },
     children: [
       {
-        name: "@APP:HOME",
+        name: "@APP:Home",
         path: "/app",
         exact: true,
         component: loadable(() => import("@/client/pages/app/pages/home")),
         meta: {
-          displayName: "Início",
-          icon: FiHome,
+          title: "Início",
+          icon: <BiHomeAlt />,
         },
       },
       {
-        name: "@APP:EVENTS",
-        path: "/app/events",
+        name: "@APP:Blocks",
+        path: ["/app/blocks", "/app/blocks/create"],
         exact: true,
-        component: loadable(() => import("@/client/pages/app/pages/events")),
+        component: loadable(() => import("@/client/pages/app/pages/blocks")),
         meta: {
-          displayName: "Eventos",
-          icon: FiCalendar,
-        },
-      },
-      {
-        name: "@APP:LOCALS",
-        path: "/app/locals",
-        exact: true,
-        component: loadable(() => import("@/client/pages/app/pages/locals")),
-        meta: {
-          displayName: "Locais",
-          icon: FiMapPin,
-        },
-      },
-      {
-        name: "@APP:BLOCKS",
-        path: ["/app/blocks", "/app/blocks/create/:id?"],
-        exact: true,
-        component: loadable(() => import("@/client/pages/app/pages/block")),
-        meta: {
-          displayName: "Blocos e Apartamentos",
-          icon: BiBuildings,
+          title: "Blocos",
+          icon: <BiBuildings />,
         },
         children: [
           {
-            name: "@APP:BLOCKS:LIST",
+            name: "@APP:Blocks:List",
             path: "/app/blocks",
             exact: true,
-            component: loadable(() => import("@/client/pages/app/pages/block/pages/list")),
-            meta: {
-              displayName: "Blocos e Apartamentos",
-            },
+            component: loadable(() => import("@/client/pages/app/pages/blocks/pages/list")),
           },
           {
-            name: "@APP:BLOCKS:CREATE",
-            path: "/app/blocks/create/:id?",
+            name: "@APP:Blocks:Create",
+            path: "/app/blocks/create",
             exact: true,
-            component: loadable(() => import("@/client/pages/app/pages/block/pages/create")),
+            component: loadable(() => import("@/client/pages/app/pages/blocks/pages/create")),
             meta: {
-              displayName: "Criar",
+              title: "Criar Bloco",
             },
           },
         ],
       },
       {
-        name: "@APP:SETTINGS",
-        path: ["/app/settings", "/app/settings/condominium", "/app/settings/appearance"],
+        name: "@APP:Locals",
+        path: ["/app/locals", "/app/locals/create"],
         exact: true,
-        component: loadable(() => import("@/client/pages/app/pages/settings")),
+        component: loadable(() => import("@/client/pages/app/pages/locals")),
         meta: {
-          displayName: "Configurações",
-          icon: RiSettings2Line,
-          hidden: true,
+          title: "Locais",
+          icon: <FiMapPin />,
         },
         children: [
           {
-            name: "@APP:SETTINGS:PERSONAL",
+            name: "@APP:Locals:List",
+            path: "/app/locals",
+            exact: true,
+            component: loadable(() => import("@/client/pages/app/pages/locals/pages/list")),
+          },
+        ],
+      },
+      {
+        name: "@APP:Settings",
+        path: ["/app/settings", "/app/settings/appearance", "/app/settings/condominium"],
+        exact: true,
+        component: loadable(() => import("@/client/pages/app/pages/settings")),
+        meta: {
+          title: "Configurações",
+        },
+        children: [
+          {
+            name: "@APP:Settings:Profile",
             path: "/app/settings",
             exact: true,
-            component: loadable(() => import("@/client/pages/app/pages/settings/pages/personal")),
-            meta: {
-              displayName: "Informações Pessoais",
-            },
+            component: loadable(() => import("@/client/pages/app/pages/settings/pages/profile")),
           },
           {
-            name: "@APP:SETTINGS:CONDOMINIUM",
+            name: "@APP:Settings:Condominium",
             path: "/app/settings/condominium",
             exact: true,
             component: loadable(() => import("@/client/pages/app/pages/settings/pages/condominium")),
             meta: {
-              displayName: "Condomínio",
+              title: "Condomínio",
             },
           },
           {
-            name: "@APP:SETTINGS:APPEARANCE",
+            name: "@APP:Settings:Appearance",
             path: "/app/settings/appearance",
             exact: true,
             component: loadable(() => import("@/client/pages/app/pages/settings/pages/appearance")),
             meta: {
-              displayName: "Aparência",
+              title: "Aparência",
             },
           },
         ],

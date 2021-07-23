@@ -4,36 +4,26 @@ import { BrowserRouter } from "react-router-dom";
 
 import { ApolloProvider } from "@apollo/client";
 import { loadableReady } from "@loadable/component";
-import { createUploadLink } from "apollo-upload-client";
 
-import { createClient } from "@/client/providers/apollo";
-import "@/client/utils/polyfills";
+import { createGraphQLClient } from "@/client/providers/client";
+import "./polyfills";
 
 import { App } from "./App";
 
-const client = createClient(
-  false,
-  createUploadLink({
-    uri: `${process.env.RAZZLE_BACKEND_URL}/graphql`,
-    fetchOptions: {
-      mode: "cors",
-      credentials: "include",
-    },
-  }) as any
-);
+const { client } = createGraphQLClient(false, window.fetch);
 
 loadableReady().then(() => {
   const root = document.querySelector("#app");
   const method: "render" | "hydrate" = root?.hasChildNodes() ? "hydrate" : "render";
 
   return ReactDOM[method](
-    <HelmetProvider>
-      <ApolloProvider client={client}>
-        <BrowserRouter>
+    <BrowserRouter>
+      <HelmetProvider>
+        <ApolloProvider client={client}>
           <App cookies={document.cookie} />
-        </BrowserRouter>
-      </ApolloProvider>
-    </HelmetProvider>,
+        </ApolloProvider>
+      </HelmetProvider>
+    </BrowserRouter>,
     root,
     () => {
       const jssStyles = document.querySelector("#jss-server-side");

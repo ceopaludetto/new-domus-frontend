@@ -9,6 +9,7 @@ const rules = {
   "no-restricted-syntax": "off",
   // Import ordering and allow no default
   "import/prefer-default-export": "off",
+  "import/no-extraneous-dependencies": "off",
   "import-helpers/order-imports": [
     "warn",
     {
@@ -51,11 +52,6 @@ module.exports = {
       },
       rules: {
         ...rules,
-        // DI in Nest
-        "no-useless-constructor": "off",
-        "class-methods-use-this": "off",
-        // Nest dtos
-        "max-classes-per-file": ["error", 4],
         // Use inference of type
         "@typescript-eslint/explicit-function-return-type": "off",
         "@typescript-eslint/explicit-module-boundary-types": "off",

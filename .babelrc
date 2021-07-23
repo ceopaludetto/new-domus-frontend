@@ -1,5 +1,5 @@
 {
-  "plugins": ["@loadable/babel-plugin", "optimize-clsx", "lodash"],
+  "plugins": ["@loadable/babel-plugin", "optimize-clsx", "lodash", "graphql-tag"],
   "presets": [
     [
       "razzle/babel",

@@ -26,7 +26,13 @@ export const SettingsPersonalSchema = Yup.object({
   login: Yup.string().login().required(Messages.REQUIRED),
   email: Yup.string().email(Messages.EMAIL).required(Messages.REQUIRED),
   birthdate: Yup.date().typeError(Messages.DATE).required(Messages.REQUIRED),
-  phone: Yup.string().matches(/\([\d]{2}\) \d?[\d]{4}-[\d]{4}/, Messages.TEL),
+  phones: Yup.array(
+    Yup.object({
+      number: Yup.string()
+        .matches(/\([\d]{2}\) \d?[\d]{4}-[\d]{4}/, Messages.TEL)
+        .required(),
+    }).required()
+  ).required(),
   publicAccount: Yup.bool(),
 }).required();
 

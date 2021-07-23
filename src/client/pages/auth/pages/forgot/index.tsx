@@ -1,116 +1,114 @@
-import { useState } from "react";
-import { Helmet } from "react-helmet-async";
-import { useForm, FormProvider } from "react-hook-form";
-import { useHistory } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { FormProvider, useForm } from "react-hook-form";
 import { useInterval } from "react-use";
 
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Button, Typography, Box, Grid } from "@material-ui/core";
+import { Grid, Typography, Button, Box, Link } from "@material-ui/core";
 
-import { FormControl, PreloadLink } from "@/client/components";
-import { useAuthForgotMutation } from "@/client/graphql/index.graphql";
+import { PreloadLink, TextField, AuthPaper } from "@/client/components";
+import { useForgotMutation } from "@/client/graphql";
+import { useErrorHandler, usePreload } from "@/client/helpers/hooks";
 import { ForgotSchema, ForgotValues } from "@/client/helpers/validations/forgot.schema";
-import { usePreload, useErrorHandler } from "@/client/hooks";
+import type { RouteComponentProps } from "@/client/utils/types";
 
-export default function Forgot() {
-  const { handleError } = useErrorHandler();
-  const { handlePreload } = usePreload();
-  const history = useHistory();
+export default function AuthForgot({ history }: RouteComponentProps) {
+  const [seconds, setSeconds] = useState(5);
+  const { preload } = usePreload();
+  const [forgot, { data }] = useForgotMutation();
 
-  const methods = useForm<ForgotValues>({ resolver: yupResolver(ForgotSchema) });
-  const [forgot, { data }] = useAuthForgotMutation();
+  const form = useForm<ForgotValues>({
+    resolver: yupResolver(ForgotSchema),
+    defaultValues: { login: "" },
+  });
 
-  const [submitted, setSubmitted] = useState(false);
-  const [time, setTime] = useState(5);
+  const [handleErrorAndSubmit] = useErrorHandler(form);
 
-  useInterval(
-    async () => {
-      if (submitted) {
-        if (time > 1) {
-          setTime((curr) => curr - 1);
-        } else {
-          await handlePreload("/auth/signin");
-          history.push("/auth/signin");
-        }
-      }
-    },
-    submitted ? 1000 : undefined
-  );
+  const handleSubmit = handleErrorAndSubmit(async (values) => {
+    await forgot({ variables: { input: { ...values, callback: "http://localhost:3001/auth/reset" } } });
+    await preload("/auth/signin");
+  });
 
-  const submit = methods.handleSubmit(
-    handleError<ForgotValues>(async (values) => {
-      const callback = `${window.location.origin}/auth/recover`;
+  useInterval(() => setSeconds((current) => current - 1), data?.forgot && seconds ? 1000 : null);
 
-      await forgot({
-        variables: {
-          input: { ...values, callback },
-        },
-      });
+  useEffect(() => {
+    if (seconds <= 0) {
+      history.push("/auth/signin");
+    }
+  }, [seconds, history]);
 
-      setSubmitted(true);
-    }, methods.setError)
-  );
-
-  return (
-    <FormProvider {...methods}>
-      <form noValidate autoComplete="on" onSubmit={submit}>
-        <Helmet>
-          <title>Esqueceu a senha</title>
-        </Helmet>
-        <Typography component="span" color="primary" variant="h6">
-          Esqueceu a senha
-        </Typography>
-        <Typography component="h1" gutterBottom variant="h4">
-          Recuperar Senha
-        </Typography>
-        <Box pt={2}>
-          {submitted ? (
-            <>
-              <Typography gutterBottom>
-                Um e-mail com instruções de recuperação de senha foi enviado para {data?.forgot}!
+  if (data?.forgot) {
+    return (
+      <Box>
+        <AuthPaper>
+          <Grid container spacing={3} alignItems="center">
+            <Grid item xs={12}>
+              <Typography variant="subtitle1" color="primary">
+                Esqueceu a senha
               </Typography>
-              <Typography variant="caption">
-                Você será redirecionado em {time} segundo{time !== 1 && "s"}.
+              <Typography variant="h4" color="textPrimary" component="h1">
+                Recuperar
               </Typography>
-              <Box textAlign="right" mt={3}>
-                <Button component={PreloadLink} variant="text" color="primary" to="/auth/signin">
-                  Ir agora
+            </Grid>
+            <Grid item xs={12}>
+              <Typography>
+                Um e-mail contendo detalhes para a recuperação foi enviado para{" "}
+                <Typography component="span" color="primary">
+                  {data.forgot}
+                </Typography>
+                !
+              </Typography>
+            </Grid>
+            <Grid item xs>
+              <Typography variant="subtitle2">Voltando para login em {seconds} segundos.</Typography>
+            </Grid>
+            <Grid item>
+              <Box textAlign="right">
+                <Button component={PreloadLink} to="/auth/signin" color="primary">
+                  Voltar Agora
                 </Button>
               </Box>
-            </>
-          ) : (
+            </Grid>
+          </Grid>
+        </AuthPaper>
+      </Box>
+    );
+  }
+
+  return (
+    <Box>
+      <AuthPaper>
+        <FormProvider {...form}>
+          <form onSubmit={handleSubmit}>
             <Grid container spacing={3}>
               <Grid item xs={12}>
-                <FormControl label="Login" name="login" id="login" autoFocus />
+                <Typography variant="subtitle1" color="primary">
+                  Esqueceu a senha
+                </Typography>
+                <Typography variant="h4" color="textPrimary" component="h1">
+                  Recuperar
+                </Typography>
               </Grid>
               <Grid item xs={12}>
-                <Button
-                  disabled={methods.formState.isSubmitting}
-                  fullWidth
-                  color="primary"
-                  variant="contained"
-                  type="submit"
-                  size="large"
-                >
-                  Recuperar Senha
+                <TextField name="login" id="login" label="Login" />
+              </Grid>
+              <Grid item xs={12}>
+                <Button type="submit" variant="contained" color="primary" size="large" fullWidth>
+                  Recuperar
                 </Button>
-                <Box mt={2}>
-                  <Button
-                    component={PreloadLink}
-                    variant="text"
-                    fullWidth
-                    size="large"
-                    color="primary"
-                    to="/auth/signin"
-                  >
-                    Voltar para Login
-                  </Button>
-                </Box>
               </Grid>
             </Grid>
-          )}
-        </Box>
-      </form>
-    </FormProvider>
+          </form>
+        </FormProvider>
+      </AuthPaper>
+      <Box mt={2} textAlign="center">
+        <Typography>
+          Está perdido?{" "}
+          <Link component={PreloadLink} to="/auth/signin">
+            Voltar para Login
+          </Link>
+          .
+        </Typography>
+      </Box>
+    </Box>
   );
 }

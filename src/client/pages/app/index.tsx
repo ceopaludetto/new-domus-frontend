@@ -1,68 +1,22 @@
-import { useEffect, useState } from "react";
+import loadable from "@loadable/component";
+import { Box } from "@material-ui/core";
 
-import { Box, Drawer, SwipeableDrawer, Hidden, useMediaQuery, useTheme } from "@material-ui/core";
-import { makeStyles } from "@material-ui/styles";
-import clsx from "clsx";
-
-import { Sidebar, AppHeader, RouteHandler } from "@/client/components";
-import { useSnackbar, SnackbarProvider, SnackbarWrapper } from "@/client/hooks";
+import { AppHeader, AppSidebar, RouteHandler } from "@/client/components";
 import type { RouteComponentProps } from "@/client/utils/types";
 
-const useStyles = makeStyles(() => ({
-  drawer: {
-    maxWidth: "300px",
-    width: "80%",
-  },
-  paper: {
-    border: 0,
-  },
-}));
+const Cropper = loadable(() => import("@/client/components/cropper"));
+const Snackbar = loadable(() => import("@/client/components/snackbar-container"));
 
 export default function App({ routes }: RouteComponentProps) {
-  const theme = useTheme();
-  const classes = useStyles();
-  const matches = useMediaQuery(theme.breakpoints.up("md"));
-
-  const snackbar = useSnackbar();
-  const [isOpen, setIsOpen] = useState(false);
-
-  useEffect(() => {
-    if (matches && isOpen) {
-      setIsOpen(false);
-    }
-  }, [matches, isOpen]);
-
   return (
-    <SnackbarProvider {...snackbar}>
-      <SnackbarWrapper {...snackbar} />
-      <Box display="flex">
-        <Box width={{ xs: "auto", md: "300px" }}>
-          <Hidden mdUp implementation="css">
-            <SwipeableDrawer
-              variant="temporary"
-              open={isOpen}
-              onClose={() => setIsOpen(false)}
-              onOpen={() => setIsOpen(true)}
-              elevation={0}
-              ModalProps={{
-                keepMounted: true,
-              }}
-              classes={{ paper: classes.drawer }}
-            >
-              <Sidebar onSelect={() => setIsOpen(false)} />
-            </SwipeableDrawer>
-          </Hidden>
-          <Hidden smDown implementation="css">
-            <Drawer classes={{ paper: clsx(classes.paper, classes.drawer) }} variant="permanent" open>
-              <Sidebar />
-            </Drawer>
-          </Hidden>
-        </Box>
-        <Box flex="1" width="calc(100% - 300px)">
-          <AppHeader isOpen={isOpen} onOpen={() => setIsOpen(!isOpen)} />
-          <RouteHandler routes={routes} />
-        </Box>
+    <>
+      <Snackbar />
+      <Cropper />
+      <AppSidebar />
+      <Box ml={{ xs: 0, md: "300px" }}>
+        <AppHeader />
+        <RouteHandler routes={routes} />
       </Box>
-    </SnackbarProvider>
+    </>
   );
 }

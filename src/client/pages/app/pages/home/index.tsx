@@ -1,9 +1,9 @@
 import { Page } from "@/client/components";
 
-export default function Home() {
+export default function AppHome() {
   return (
-    <Page title="Início" subtitle="Geral" helmetProps={{ title: "Início" }} maxWidth="xl">
-      teste
+    <Page title="Início" subtitle="Visão Geral">
+      home
     </Page>
   );
 }

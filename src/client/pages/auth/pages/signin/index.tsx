@@ -1,99 +1,80 @@
-import { Helmet } from "react-helmet-async";
 import { useForm, FormProvider } from "react-hook-form";
 
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Button, Box, Typography, Link, Grid } from "@material-ui/core";
+import { Typography, Button, Grid, Link, Box } from "@material-ui/core";
 
-import { FormControl, PreloadLink } from "@/client/components";
-import { useLoginMutation, LoggedDocument, LoggedQuery } from "@/client/graphql/index.graphql";
+import { TextField, PreloadLink, AuthPaper } from "@/client/components";
+import { MeDocument, useLoginMutation } from "@/client/graphql";
+import { useVisibility, useErrorHandler } from "@/client/helpers/hooks";
 import { SignInSchema, SignInValues } from "@/client/helpers/validations/signin.schema";
-import { useVisibility, useErrorHandler, useChangeCondominium } from "@/client/hooks";
 
-export default function SignIn() {
-  const { defaultError, handleError } = useErrorHandler();
-  const [login, { client }] = useLoginMutation();
-  const methods = useForm<SignInValues>({ resolver: yupResolver(SignInSchema) });
-  const [getFieldProps] = useVisibility();
-  const changeCondominium = useChangeCondominium();
+export default function AuthSignin() {
+  const [login] = useLoginMutation({
+    update(cache, { data }) {
+      cache.writeQuery({ query: MeDocument, data: data?.login });
+    },
+  });
 
-  const submit = methods.handleSubmit(
-    handleError<SignInValues>(async (data) => {
-      const res = await login({
-        variables: {
-          input: data,
-        },
-      });
+  const [mapVisibility] = useVisibility();
+  const form = useForm<SignInValues>({
+    resolver: yupResolver(SignInSchema),
+    defaultValues: { login: "", password: "" },
+  });
 
-      if (res.data?.login.person.condominiums.length) {
-        changeCondominium(res.data?.login.person.condominiums[0].id);
-      }
+  const [handleErrorAndSubmit] = useErrorHandler(form);
 
-      client.cache.writeQuery<LoggedQuery>({
-        query: LoggedDocument,
-        data: {
-          __typename: "Query",
-          logged: true,
-        },
-      });
-    }, methods.setError)
-  );
+  const handleSubmit = handleErrorAndSubmit(async (values) => {
+    await login({ variables: { input: values } });
+  });
 
   return (
-    <FormProvider {...methods}>
-      <form noValidate autoComplete="on" onSubmit={submit}>
-        <Helmet>
-          <title>Login</title>
-        </Helmet>
-        <Typography component="span" color="primary" variant="h6">
-          Login
-        </Typography>
-        <Typography gutterBottom component="h1" variant="h4">
-          Bem vindo de volta
-        </Typography>
-        {defaultError && (
-          <Typography variant="body2" color="error">
-            Falha ao realizar login
-          </Typography>
-        )}
-        <Box pt={2}>
-          <Grid container spacing={3}>
-            <Grid item xs={12}>
-              <FormControl autoComplete="on" autoFocus label="Login" name="login" id="login" />
-            </Grid>
-            <Grid item xs={12}>
-              <FormControl
-                autoComplete="password"
-                label="Senha"
-                name="password"
-                id="password"
-                helperText={
-                  <Link component={PreloadLink} color="primary" to="/auth/forgot">
-                    Esqueceu a senha?
-                  </Link>
-                }
-                {...getFieldProps()}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <Button
-                disabled={methods.formState.isSubmitting}
-                size="large"
-                color="primary"
-                fullWidth
-                variant="contained"
-                type="submit"
-              >
-                Entrar
-              </Button>
-              <Box mt={2}>
-                <Button component={PreloadLink} variant="text" fullWidth size="large" color="primary" to="/auth/signup">
-                  Cadastre-se
+    <Box>
+      <AuthPaper>
+        <FormProvider {...form}>
+          <form onSubmit={handleSubmit}>
+            <Grid container spacing={3}>
+              <Grid item xs={12}>
+                <Typography variant="subtitle1" color="primary">
+                  Entrar
+                </Typography>
+                <Typography variant="h4" color="textPrimary" component="h1">
+                  Bem vindo de volta!
+                </Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <TextField name="login" id="login" label="Login" />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  name="password"
+                  id="password"
+                  label="Senha"
+                  helperText={
+                    <Link component={PreloadLink} to="/auth/forgot">
+                      Esqueceu a senha?
+                    </Link>
+                  }
+                  {...mapVisibility()}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Button type="submit" variant="contained" color="primary" size="large" fullWidth>
+                  Entrar
                 </Button>
-              </Box>
+              </Grid>
             </Grid>
-          </Grid>
-        </Box>
-      </form>
-    </FormProvider>
+          </form>
+        </FormProvider>
+      </AuthPaper>
+      <Box mt={2} textAlign="center">
+        <Typography>
+          Novo por aqui?{" "}
+          <Link component={PreloadLink} to="/auth/signup">
+            Criar conta
+          </Link>
+          .
+        </Typography>
+      </Box>
+    </Box>
   );
 }
