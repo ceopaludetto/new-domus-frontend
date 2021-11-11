@@ -18,6 +18,7 @@ const rules = {
       alphabetize: { order: "asc", ignoreCase: true },
     },
   ],
+  "import/extensions": "off",
 };
 
 module.exports = {
@@ -39,14 +40,14 @@ module.exports = {
         browser: true,
         jest: true,
       },
-      extends: ["airbnb-typescript", "airbnb/hooks", "plugin:@typescript-eslint/recommended", "prettier"],
+      extends: ["airbnb-typescript", "airbnb/hooks", "prettier"],
       plugins: ["@typescript-eslint", "import-helpers", "prettier"],
       parserOptions: {
         ecmaFeatures: {
           jsx: true,
           tsx: true,
         },
-        ecmaVersion: 2020,
+        ecmaVersion: 2021,
         sourceType: "module",
         project: path.resolve("tsconfig.json"),
       },

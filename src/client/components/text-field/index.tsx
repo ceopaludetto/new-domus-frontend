@@ -1,17 +1,19 @@
 import { useFormContext, get } from "react-hook-form";
 
-import { TextField as MuiTextField } from "@material-ui/core";
+import { TextField as MuiTextField, FilledTextFieldProps } from "@mui/material";
 
-interface TextFieldProps extends React.ComponentPropsWithoutRef<typeof MuiTextField> {
+interface TextFieldProps extends Omit<FilledTextFieldProps, "variant"> {
   name: string;
-  id: string;
 }
 
 export function TextField({ name, helperText, ...rest }: TextFieldProps) {
-  const { register, formState } = useFormContext();
-  const error = get(formState.errors, name);
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext();
+  const error = get(errors, name);
 
-  const { ref, ...form } = register(name);
+  const field = register(name);
 
-  return <MuiTextField inputRef={ref} error={!!error} helperText={error?.message ?? helperText} {...form} {...rest} />;
+  return <MuiTextField {...field} helperText={error?.message ?? helperText} {...rest} />;
 }

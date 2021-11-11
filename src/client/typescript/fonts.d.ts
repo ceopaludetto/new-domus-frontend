@@ -1,4 +1,4 @@
-declare module "*.woff2" {
+declare module "*.ttf" {
   const content: string;
   export default content;
 }

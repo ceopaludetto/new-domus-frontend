@@ -1,11 +1,11 @@
-import { useCallback, MouseEvent, forwardRef } from "react";
-import { Link, LinkProps, useHistory, useLocation } from "react-router-dom";
+import { forwardRef, useCallback, MouseEvent } from "react";
+import { NavLink, NavLinkProps, useHistory, useLocation } from "react-router-dom";
 
 import { handleLinkClick } from "@/client/utils/route";
 
-export interface PreloadLinkProps extends LinkProps {}
+export interface PreloadNavLinkProps extends NavLinkProps {}
 
-export const PreloadLink = forwardRef<HTMLAnchorElement, PreloadLinkProps>((props, ref) => {
+export const PreloadNavLink = forwardRef<HTMLAnchorElement, PreloadNavLinkProps>((props, ref) => {
   const { children, onClick, to, ...rest } = props;
 
   const history = useHistory();
@@ -23,8 +23,8 @@ export const PreloadLink = forwardRef<HTMLAnchorElement, PreloadLinkProps>((prop
   );
 
   return (
-    <Link ref={ref} to={to} onClick={handleClick} {...rest}>
+    <NavLink ref={ref} to={to} onClick={handleClick} {...rest}>
       {children}
-    </Link>
+    </NavLink>
   );
 });

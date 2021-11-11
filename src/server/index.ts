@@ -1,20 +1,18 @@
-import { App } from "./app";
+/* eslint-disable global-require */
+import http from "http";
 
-async function bootstrap() {
-  try {
-    const app = new App();
-    const port = Number(process.env.PORT) || 3000;
+let { app } = require("./app");
 
-    await app.listen(port);
+const server = http.createServer(app);
+let curr = app;
 
-    if (module.hot) {
-      module.hot.accept();
-      module.hot.dispose(() => app.close());
-    }
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.log("fail to start server");
-  }
+server.listen(process.env.PORT ?? 3333);
+
+if (module.hot) {
+  module.hot.accept("./app", () => {
+    app = require("./app").app;
+    server.removeListener("request", curr);
+    server.on("request", app);
+    curr = app;
+  });
 }
-
-bootstrap();

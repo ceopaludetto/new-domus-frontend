@@ -1,62 +1,20 @@
-import type { ReactNode, FunctionComponent } from "react";
-import type { RouteProps, RouteComponentProps as DefaultRouteComponentProps } from "react-router-dom";
+import type { IconType } from "react-icons";
+import type { match } from "react-router";
+import type { RouteConfig } from "react-router-config";
 
-import type { ApolloClient } from "@apollo/client";
 import type { LoadableComponent } from "@loadable/component";
-import type { Theme } from "@material-ui/core";
 
-export interface PreloadOptions {
-  client: ApolloClient<any>;
-  url?: string;
-}
+export type ColorMode = "dark" | "light";
+export type PageComponent<T = any> = LoadableComponent<T> & { fetchBefore: (match: match) => Promise<void> };
+export type LazyModule<T = any> = { default: T; esModule: true };
 
-export type WithFetchBefore<T> = T & { fetchBefore?: (options: PreloadOptions) => Promise<void> };
-
-export type Route = Omit<RouteProps, "component" | "render"> & {
+export interface ApplicationRouteConfig extends RouteConfig {
   name: string;
-  children?: Route[];
-  component: WithFetchBefore<LoadableComponent<any>>;
-  meta?: {
-    needAuth?: boolean;
-    redirectTo?: string;
-    title?: string;
-    icon?: ReactNode;
-  };
-  render?: (custom: any) => RouteProps["render"];
-};
-
-export interface ReactStaticContext {
-  url?: string;
-  statusCode?: number;
+  routes?: ApplicationRouteConfig[];
 }
 
-export type RouteComponentProps<P = Record<string, any>, C = ReactStaticContext, S = unknown> = {
-  routes?: Route[];
-} & DefaultRouteComponentProps<P, C, S>;
-
-export type IsomorphicLib<T> = { default: T } | T;
-
-export enum Gender {
-  M = "M",
-  F = "F",
-  N = "N",
-}
-
-export type ColorMode = "dark" | "light" | "blue";
-
-export type ColorModeMap = {
-  [K in ColorMode]: { name: string; color: string; theme: Partial<Theme["palette"]> };
+export type ApplicationSidebarRouteConfig = {
+  route: string;
+  displayName: string;
+  icon: IconType;
 };
-
-export type Sidebar =
-  | {
-      type: "route";
-      routeName: string;
-    }
-  | {
-      type: "submenu";
-      key: string;
-      title: ReactNode;
-      children?: Sidebar[];
-      icon: FunctionComponent<any>;
-    };

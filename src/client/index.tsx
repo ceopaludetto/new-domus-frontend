@@ -1,34 +1,30 @@
-import * as ReactDOM from "react-dom";
+import { hydrate } from "react-dom";
 import { HelmetProvider } from "react-helmet-async";
 import { BrowserRouter } from "react-router-dom";
 
-import { ApolloProvider } from "@apollo/client";
+import { CacheProvider } from "@emotion/react";
 import { loadableReady } from "@loadable/component";
 
-import { createGraphQLClient } from "@/client/providers/client";
-import "./polyfills";
+import { App } from "./app";
+import { ApplicationThemeProvider } from "./theme";
+import { createApplicationCache } from "./theme/create";
 
-import { App } from "./App";
+const root = document.querySelector("#root");
+const colorMode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+const cache = createApplicationCache();
 
-const { client } = createGraphQLClient(false, window.fetch);
-
-loadableReady().then(() => {
-  const root = document.querySelector("#app");
-  const method: "render" | "hydrate" = root?.hasChildNodes() ? "hydrate" : "render";
-
-  return ReactDOM[method](
-    <BrowserRouter>
-      <HelmetProvider>
-        <ApolloProvider client={client}>
-          <App cookies={document.cookie} />
-        </ApolloProvider>
-      </HelmetProvider>
-    </BrowserRouter>,
-    root,
-    () => {
-      const jssStyles = document.querySelector("#jss-server-side");
-      jssStyles?.parentElement?.removeChild(jssStyles);
-    }
+loadableReady(() => {
+  hydrate(
+    <HelmetProvider>
+      <CacheProvider value={cache}>
+        <ApplicationThemeProvider initialMode={colorMode}>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </ApplicationThemeProvider>
+      </CacheProvider>
+    </HelmetProvider>,
+    root
   );
 });
 

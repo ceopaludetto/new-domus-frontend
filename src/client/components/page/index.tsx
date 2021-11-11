@@ -1,44 +1,57 @@
-import { Container, Typography, Box, Grid, Theme } from "@material-ui/core";
-import { makeStyles } from "@material-ui/styles";
+import type { ReactNode } from "react";
 
-const useStyles = makeStyles<Theme>((theme) => ({
-  tabs: {
-    borderBottom: `1px solid ${theme.palette.divider}`,
-  },
-}));
+import { Box, Container } from "@mui/material";
+import { motion, Variants } from "framer-motion";
 
-interface PageProps extends React.ComponentPropsWithoutRef<typeof Container> {
+import { useAnimatedHeader } from "@/client/utils/hooks";
+
+import { Header } from "../header";
+
+interface PageProps {
   title: string;
-  subtitle: string;
-  contained?: boolean;
-  actions?: React.ReactNode;
-  tabs?: React.ReactNode;
+  children: ReactNode;
+  tabs?: ReactNode;
 }
 
-export function Page({ title, subtitle, actions, tabs, contained = false, children, ...rest }: PageProps) {
-  const classes = useStyles();
+const animationVariants: Variants = {
+  show: {
+    translateY: 0,
+    transition: {
+      duration: 0.125,
+      ease: "easeInOut",
+    },
+  },
+  hide: (height: number) => ({
+    translateY: -height,
+    transition: {
+      duration: 0.125,
+      ease: "easeInOut",
+    },
+  }),
+};
+
+const AnimatedBox = motion(Box);
+
+export function Page({ title, children, tabs }: PageProps) {
+  const [ref, { shouldShow, height }] = useAnimatedHeader<HTMLDivElement>({ hasTabs: !!tabs });
 
   return (
-    <Box mt={2}>
-      <Container maxWidth={!contained ? "xl" : undefined} {...rest}>
-        <Grid container alignItems="center">
-          <Grid item xs>
-            <Typography variant="h6" color="primary">
-              {subtitle}
-            </Typography>
-            <Typography variant="h3" color="secondary" component="h1">
-              {title}
-            </Typography>
-          </Grid>
-          <Grid item>{actions}</Grid>
-        </Grid>
-        {tabs && (
-          <Box mt={2} className={classes.tabs}>
-            {tabs}
-          </Box>
-        )}
-        <Box mt={tabs ? 5 : 3}>{children}</Box>
-      </Container>
-    </Box>
+    <>
+      <AnimatedBox
+        sx={{
+          backdropFilter: "saturate(180%) blur(5px)",
+          position: "sticky",
+          mb: 3,
+          top: 0,
+        }}
+        animate={shouldShow ? "show" : "hide"}
+        variants={animationVariants}
+        custom={height}
+      >
+        <Header ref={ref} title={title} hasTabs={!!tabs} />
+        {tabs && <Box sx={{ px: 3 }}>{tabs}</Box>}
+      </AnimatedBox>
+      <Container maxWidth={false}>{children}</Container>
+    </>
   );
 }
