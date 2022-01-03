@@ -20,12 +20,7 @@ export function Sidebar() {
             const to = Array.isArray(configuration.path) ? configuration.path[0] : configuration.path;
 
             return (
-              <SidebarItem
-                key={configuration.name}
-                icon={route.icon}
-                exact={configuration.exact}
-                to={to ?? "/application"}
-              >
+              <SidebarItem key={configuration.name} icon={route.icon} end={route.end} to={to ?? "/application"}>
                 {route.displayName}
               </SidebarItem>
             );

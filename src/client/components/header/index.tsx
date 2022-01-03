@@ -7,11 +7,10 @@ import { Tooltip } from "../tooltip";
 
 interface HeaderProps {
   title: string;
-  hasTabs?: boolean;
 }
 
-export const Header = forwardRef<HTMLDivElement, HeaderProps>(({ title, hasTabs }, ref) => (
-  <Box ref={ref} sx={{ alignItems: "center", display: "flex", px: 3, pt: 3, pb: !hasTabs ? 3 : 2 }}>
+export const Header = forwardRef<HTMLDivElement, HeaderProps>(({ title }, ref) => (
+  <Box ref={ref} sx={{ alignItems: "center", display: "flex", px: 3, pt: 2, pb: 2 }}>
     <Box>
       <Typography sx={{ fontWeight: "fontWeightMedium" }} variant="h4">
         {title}
@@ -34,7 +33,3 @@ export const Header = forwardRef<HTMLDivElement, HeaderProps>(({ title, hasTabs 
     </Box>
   </Box>
 ));
-
-Header.defaultProps = {
-  hasTabs: false,
-};

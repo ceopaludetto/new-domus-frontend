@@ -15,5 +15,5 @@ export function TextField({ name, helperText, ...rest }: TextFieldProps) {
 
   const field = register(name);
 
-  return <MuiTextField {...field} helperText={error?.message ?? helperText} {...rest} />;
+  return <MuiTextField {...field} error={!!error} helperText={error?.message ?? helperText} {...rest} />;
 }

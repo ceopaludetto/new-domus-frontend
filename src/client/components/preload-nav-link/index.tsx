@@ -1,5 +1,5 @@
 import { forwardRef, useCallback, MouseEvent } from "react";
-import { NavLink, NavLinkProps, useHistory, useLocation } from "react-router-dom";
+import { NavLink, NavLinkProps, useNavigate, useLocation } from "react-router-dom";
 
 import { handleLinkClick } from "@/client/utils/route";
 
@@ -8,18 +8,18 @@ export interface PreloadNavLinkProps extends NavLinkProps {}
 export const PreloadNavLink = forwardRef<HTMLAnchorElement, PreloadNavLinkProps>((props, ref) => {
   const { children, onClick, to, ...rest } = props;
 
-  const history = useHistory();
+  const navigate = useNavigate();
   const location = useLocation();
 
   const handleClick = useCallback(
     async (e: MouseEvent<HTMLAnchorElement>) => {
       e.preventDefault();
 
-      await handleLinkClick(history, location, to);
+      await handleLinkClick(navigate, location, to);
 
       if (onClick) onClick(e);
     },
-    [to, onClick, location, history]
+    [to, onClick, location, navigate]
   );
 
   return (

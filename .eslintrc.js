@@ -19,6 +19,7 @@ const rules = {
     },
   ],
   "import/extensions": "off",
+  "import/no-import-module-exports": "off",
 };
 
 module.exports = {
@@ -40,7 +41,7 @@ module.exports = {
         browser: true,
         jest: true,
       },
-      extends: ["airbnb-typescript", "airbnb/hooks", "prettier"],
+      extends: ["airbnb", "airbnb-typescript", "airbnb/hooks", "prettier"],
       plugins: ["@typescript-eslint", "import-helpers", "prettier"],
       parserOptions: {
         ecmaFeatures: {

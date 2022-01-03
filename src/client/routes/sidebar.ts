@@ -17,5 +17,6 @@ export const sidebarRoutes: ApplicationSidebarRouteConfig[] = [
     route: "@Application:Settings",
     displayName: "Ajustes",
     icon: FiSliders,
+    end: false,
   },
 ];

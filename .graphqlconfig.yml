@@ -1,7 +1,7 @@
 projects:
   app:
     schema:
-      - http://localhost:3333/graphql
+      - http://localhost:3002/graphql
       - src/client/graphql/schema.graphql
     documents: ["src/client/graphql/**/*.graphql"]
     extensions:

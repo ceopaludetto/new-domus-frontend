@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import type { IconType } from "react-icons";
 import { FiChevronRight } from "react-icons/fi";
+import { useMatch, useResolvedPath } from "react-router-dom";
 
 import { Box, ButtonBase, Typography } from "@mui/material";
 
@@ -11,17 +12,21 @@ interface SettingsLinkProps extends PreloadLinkProps {
   description: ReactNode;
 }
 
-export function SettingsLink({ children, description, icon: Icon, ...rest }: SettingsLinkProps) {
+export function SettingsLink({ children, description, icon: Icon, to, ...rest }: SettingsLinkProps) {
+  const { pathname } = useResolvedPath(to);
+  const match = useMatch({ path: pathname, end: true });
+
   return (
     <ButtonBase
       component={PreloadLink}
+      to={to}
       sx={{
         display: "flex",
         width: "100%",
         alignItems: "center",
-        p: 2,
+        p: 1.75,
         borderRadius: 1,
-        "& + &": { mt: 2 },
+        "& + &": { mt: 1 },
       }}
       {...rest}
     >
@@ -30,9 +35,14 @@ export function SettingsLink({ children, description, icon: Icon, ...rest }: Set
           sx={{
             p: 1,
             borderRadius: 1,
-            backgroundColor: "secondary.main",
-            color: "secondary.contrastText",
+            backgroundColor: match ? "primary.main" : "secondary.main",
+            color: match ? "primary.contrastText" : "secondary.contrastText",
             display: "flex",
+            transition: (theme) =>
+              theme.transitions.create(["background-color", "color"], {
+                duration: theme.transitions.duration.short,
+                easing: theme.transitions.easing.easeInOut,
+              }),
           }}
         >
           <Icon size={22} />

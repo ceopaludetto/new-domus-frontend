@@ -1,14 +1,17 @@
 import type { IconType } from "react-icons";
+import type { To } from "react-router-dom";
 
 import { ListItemButton, ListItemButtonProps, ListItemIcon, ListItemText } from "@mui/material";
 
-import { PreloadNavLink, PreloadNavLinkProps } from "../preload-nav-link";
+import { PreloadNavLink } from "../preload-nav-link";
 
-interface SidebarItemProps extends ListItemButtonProps, Pick<PreloadNavLinkProps, "to" | "exact"> {
+interface SidebarItemProps extends ListItemButtonProps {
+  to: To;
   icon: IconType;
+  end?: boolean;
 }
 
-export function SidebarItem({ children, to, icon: Icon, ...rest }: SidebarItemProps) {
+export function SidebarItem({ children, to, end, icon: Icon, ...rest }: SidebarItemProps) {
   return (
     <ListItemButton
       sx={{
@@ -32,8 +35,8 @@ export function SidebarItem({ children, to, icon: Icon, ...rest }: SidebarItemPr
           ".MuiListItemIcon-root": { color: "secondary.contrastText" },
         },
       }}
-      activeClassName="active"
       component={PreloadNavLink as any}
+      end={end}
       to={to}
       {...rest}
     >
@@ -46,3 +49,7 @@ export function SidebarItem({ children, to, icon: Icon, ...rest }: SidebarItemPr
     </ListItemButton>
   );
 }
+
+SidebarItem.defaultProps = {
+  end: true,
+};

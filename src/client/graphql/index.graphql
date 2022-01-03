@@ -1,0 +1,33 @@
+fragment PersonValues on Person {
+  id
+  fullName
+  firstName
+  lastName
+  cpf
+  phone
+  birthDate
+}
+
+fragment UserValues on User {
+  id
+  email
+  person {
+    ...PersonValues
+  }
+}
+
+mutation Login($input: AuthenticateUserInput!) {
+  login(input: $input) {
+    ...UserValues
+  }
+}
+
+query Profile {
+  profile {
+    ...UserValues
+  }
+}
+
+mutation EvictRefresh {
+  evictRefresh
+}

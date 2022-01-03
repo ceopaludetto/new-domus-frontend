@@ -1,13 +1,12 @@
-import { matchRoutes } from "react-router-config";
+import { matchRoutes, NavigateFunction, To, Location } from "react-router-dom";
 
 import type { LoadableComponent } from "@loadable/component";
-import type { LocationDescriptor, Location, History } from "history";
 
 import { routes } from "../routes";
 import { hasFetchBefore, isLazyModule, isLoadable } from "./lazy";
-import type { ApplicationRouteConfig } from "./types";
+import type { ApplicationRouteConfig, ApplicationRouteMatch } from "./types";
 
-export function extractPath(to: LocationDescriptor<any>) {
+export function extractPath(to: To) {
   if (typeof to === "object") {
     return to.pathname;
   }
@@ -16,35 +15,33 @@ export function extractPath(to: LocationDescriptor<any>) {
 }
 
 export async function preloadRoutes(path: string) {
-  const branch = matchRoutes(routes, path);
+  const branch = matchRoutes(routes, path) as ApplicationRouteMatch[] | null;
+  if (!branch) return [];
 
-  const promises = branch.map(async ({ route, match }) => {
+  const promises = branch.map(async ({ route, ...rest }) => {
     if (isLoadable(route.component)) {
       const m = await route.component.load();
 
       if (isLazyModule<LoadableComponent<any>>(m)) {
         const component = m.default;
-        if (hasFetchBefore(component)) await component.fetchBefore(match);
+        if (hasFetchBefore(component)) await component.fetchBefore({ route, ...rest });
       }
 
       return route;
     }
 
-    if (hasFetchBefore(route.component)) await route.component.fetchBefore(match);
     return route;
   });
 
   return Promise.all(promises);
 }
 
-type To = LocationDescriptor<any> | ((location: Location) => LocationDescriptor<any>);
-
-export async function handleLinkClick(history: History, location: Location, to: To) {
-  const path = extractPath(typeof to === "function" ? to(location) : to);
+export async function handleLinkClick(navigate: NavigateFunction, location: Location, to: To) {
+  const path = extractPath(to);
   if (!path) return;
 
   await preloadRoutes(path);
-  history.push(path);
+  navigate(to);
 }
 
 const routeCache = new Map<string, ApplicationRouteConfig>();
@@ -62,8 +59,8 @@ export function findRouteByName(name: string, r = routes): ApplicationRouteConfi
       found = route;
     }
 
-    if (route.routes && !found) {
-      const inner = findRouteByName(name, route.routes);
+    if (route.children && !found) {
+      const inner = findRouteByName(name, route.children);
 
       if (inner) found = inner;
     }
