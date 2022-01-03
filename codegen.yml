@@ -19,7 +19,3 @@ generates:
       dedupeOperationSuffix: true
       useTypeImports: true
       pureMagicComment: true
-
-hooks:
-  afterAllFileWrite:
-    - eslint --fix

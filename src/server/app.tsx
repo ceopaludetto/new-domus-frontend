@@ -2,6 +2,7 @@
 import { StrictMode } from "react";
 import { renderToString, renderToStaticMarkup } from "react-dom/server";
 import { HelmetProvider, FilledContext } from "react-helmet-async";
+import { matchPath, generatePath } from "react-router-dom";
 import { StaticRouter } from "react-router-dom/server";
 
 import { ApolloProvider } from "@apollo/client";
@@ -12,8 +13,9 @@ import { ChunkExtractor } from "@loadable/server";
 import express from "express";
 
 import { App } from "@/client/app";
-import { ProfileDocument } from "@/client/graphql";
-import { accessToken, createClient } from "@/client/providers/client";
+import { ProfileDocument, ProfileQuery } from "@/client/graphql";
+import { createClient } from "@/client/providers/client";
+import { accessTokenStorage, condominiumStorage } from "@/client/providers/storage";
 import { ApplicationThemeProvider } from "@/client/theme";
 import { createApplicationCache } from "@/client/theme/create";
 import type { ColorMode } from "@/client/utils/types";
@@ -34,7 +36,28 @@ app.get("*", async (request, response) => {
   const [client] = createClient(true, request);
 
   try {
-    await client.query({ query: ProfileDocument });
+    const { data } = await client.query<ProfileQuery>({ query: ProfileDocument });
+
+    if (data) {
+      const match = matchPath("/application/:condominium/*", request.url);
+
+      const condominium = match?.params.condominium;
+      const hasCondominium = data.profile.person.condominiums.some((c) => c.id === condominium);
+
+      if (condominium && hasCondominium) condominiumStorage(condominium);
+
+      if (!hasCondominium) {
+        const condominiumID = data.profile.person.condominiums[0].id;
+
+        condominiumStorage(condominiumID);
+
+        const path = generatePath("/application/:condominium", {
+          condominium: condominiumID,
+        });
+
+        if (match) return response.redirect(path);
+      }
+    }
   } catch (error) {} // eslint-disable-line no-empty
 
   const extractor = new ChunkExtractor({ statsFile: process.env.CEOP_LOADABLE as string });
@@ -70,7 +93,10 @@ app.get("*", async (request, response) => {
 
   const head = `${helmet.title.toString()}${helmet.meta.toString()}${helmet.link.toString()}${helmet.script.toString()}${link}${style}${emotionCss}`;
 
-  accessToken(null);
+  const initialCondominium = condominiumStorage();
+
+  accessTokenStorage(null);
+  condominiumStorage(null);
 
   return response.send(
     "<!DOCTYPE html>".concat(
@@ -85,6 +111,13 @@ app.get("*", async (request, response) => {
               type="application/json"
               dangerouslySetInnerHTML={{
                 __html: JSON.stringify(initialState).replace(/</g, "\\u003c"),
+              }}
+            />
+            <script
+              id="__CONDOMINIUM__"
+              type="application/json"
+              dangerouslySetInnerHTML={{
+                __html: JSON.stringify(initialCondominium).replace(/</g, "\\u003c"),
               }}
             />
           </body>

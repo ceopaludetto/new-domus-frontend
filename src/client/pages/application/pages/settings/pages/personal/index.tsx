@@ -2,8 +2,9 @@ import { FormProvider, useForm } from "react-hook-form";
 
 import { Button, Grid, Typography } from "@mui/material";
 
-import { TextField } from "@/client/components";
+import { MaskedTextField, TextField } from "@/client/components";
 import { useProfileQuery } from "@/client/graphql";
+import * as Masks from "@/client/utils/mask";
 
 export default function ApplicationSettingsPersonal() {
   const { data } = useProfileQuery();
@@ -35,7 +36,7 @@ export default function ApplicationSettingsPersonal() {
           <TextField label="Data de Nascimento" name="birthDate" id="birthDate" />
         </Grid>
         <Grid item xs={12} lg={6}>
-          <TextField label="Telefone" name="phone" id="phone" />
+          <MaskedTextField rifm={Masks.phone} label="Telefone" name="phone" id="phone" />
         </Grid>
         <Grid item xs={12} sx={{ textAlign: "right" }}>
           <Button type="submit">Salvar Alterações</Button>

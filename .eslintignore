@@ -7,3 +7,5 @@ src/**/*.gql*
 src/**/*.graphql*
 src/**/*.scss*
 src/**/*.woff2
+
+src/client/graphql/**

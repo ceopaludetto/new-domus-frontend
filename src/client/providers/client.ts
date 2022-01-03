@@ -1,13 +1,13 @@
-import { ApolloClient, ApolloLink, from, InMemoryCache, HttpLink, makeVar } from "@apollo/client";
+import { ApolloClient, ApolloLink, from, InMemoryCache, HttpLink } from "@apollo/client";
 import type { Request } from "express";
 
-export const accessToken = makeVar<string | null>(null);
+import { accessTokenStorage } from "./storage";
 
 const addTokenLink = new ApolloLink((operation, forward) => {
   operation.setContext(({ headers = {} }) => {
     let newHeaders = headers;
 
-    const token = accessToken();
+    const token = accessTokenStorage();
     if (token) newHeaders = { ...newHeaders, Authorization: `Bearer ${token}` };
 
     return { headers: newHeaders };
@@ -21,7 +21,7 @@ const saveTokenLink = new ApolloLink((operation, forward) =>
     const context = operation.getContext();
     const token = context.response.headers.get("AccessToken");
 
-    if (token) accessToken(token);
+    if (token) accessTokenStorage(token);
 
     return response;
   })
@@ -44,7 +44,7 @@ export function createClient(ssrMode: boolean, request?: Request) {
 
   if (!ssrMode) {
     const state = document.querySelector("#__APOLLO_STATE__")?.innerHTML;
-    cache = cache.restore(JSON.parse(state!));
+    if (state) cache = cache.restore(JSON.parse(state));
   }
 
   const client = new ApolloClient({ cache, ssrMode, link, assumeImmutableResults: true });

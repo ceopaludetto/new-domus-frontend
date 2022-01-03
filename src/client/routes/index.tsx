@@ -48,7 +48,7 @@ export const routes: ApplicationRouteConfig[] = [
   }),
   createRoute({
     name: "@Application",
-    path: "/application",
+    path: "/application/:condominium",
     needAuth: true,
     component: loadable(() => import("@/client/pages/application")),
     children: [

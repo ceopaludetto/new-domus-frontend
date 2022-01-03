@@ -1,7 +1,8 @@
 import type { ReactElement } from "react";
-import { Navigate } from "react-router-dom";
+import { generatePath, Navigate } from "react-router-dom";
 
 import { useProfileQuery } from "../graphql";
+import { useSelectedCondominium } from "../utils/hooks";
 
 interface RequireAuthProps {
   children: ReactElement<any>;
@@ -15,8 +16,13 @@ export function RequireAuth({ children }: RequireAuthProps) {
 }
 
 export function DontRequireAuth({ children }: RequireAuthProps) {
+  const [selectedCondominium] = useSelectedCondominium();
   const { data } = useProfileQuery();
 
-  if (data) return <Navigate to="/application" replace />;
+  if (data) {
+    const path = generatePath("/application/:condominium", { condominium: selectedCondominium?.id });
+    return <Navigate to={path} replace />;
+  }
+
   return children;
 }

@@ -17,10 +17,8 @@ export function Sidebar() {
             const configuration = findRouteByName(route.route);
             if (!configuration) return <Fragment key={route.route} />;
 
-            const to = Array.isArray(configuration.path) ? configuration.path[0] : configuration.path;
-
             return (
-              <SidebarItem key={configuration.name} icon={route.icon} end={route.end} to={to ?? "/application"}>
+              <SidebarItem key={configuration.name} icon={route.icon} end={route.end} to={route.path ?? "/application"}>
                 {route.displayName}
               </SidebarItem>
             );

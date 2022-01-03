@@ -3,7 +3,7 @@ import type { LoadableComponent } from "@loadable/component";
 import type { LazyModule, PageComponent } from "./types";
 
 export function isLazyModule<T = any>(m: any): m is LazyModule<T> {
-  return "default" in m && typeof m.default === "function";
+  return "default" in m && (typeof m.default === "function" || typeof m.default === "object");
 }
 
 export function isLoadable(component: any): component is LoadableComponent<any> {

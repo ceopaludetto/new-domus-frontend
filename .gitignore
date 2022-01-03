@@ -11,7 +11,8 @@ tmp
 *.graphql.d.ts
 *.gql.d.ts
 src/server/schema.graphql
-src/client/graphql/operations.ts
+src/client/graphql/index.ts
+src/client/graphql/types.ts
 
 coverage
 uploads

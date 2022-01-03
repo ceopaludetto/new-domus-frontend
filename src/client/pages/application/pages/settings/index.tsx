@@ -11,17 +11,13 @@ export default function ApplicationSettings() {
     <Page title="Ajustes">
       <Grid container spacing={3}>
         <Grid item xs={12} lg={4}>
-          <SettingsLink icon={FiUser} description="Nome, e-mail e outros" to="/application/settings">
+          <SettingsLink icon={FiUser} description="Nome, e-mail e outros" to="">
             Informações Pessoais
           </SettingsLink>
-          <SettingsLink icon={FiLock} description="Senha e 2FA" to="/application/settings/security">
+          <SettingsLink icon={FiLock} description="Senha e 2FA" to="security">
             Segurança
           </SettingsLink>
-          <SettingsLink
-            icon={BiBuilding}
-            description="Nome do condomínio, endereço e outros"
-            to="/application/settings/condominium"
-          >
+          <SettingsLink icon={BiBuilding} description="Nome do condomínio, endereço e outros" to="condominium">
             Condomínio
           </SettingsLink>
         </Grid>

@@ -6,19 +6,21 @@ import { ButtonBase, Typography, Box, Avatar } from "@mui/material";
 import { usePopupState, bindMenu, bindTrigger } from "material-ui-popup-state/hooks";
 
 import { ProfileDocument, useEvictRefreshMutation, useProfileQuery } from "@/client/graphql";
-import { accessToken } from "@/client/providers/client";
+import { accessTokenStorage } from "@/client/providers/storage";
+import { useSelectedCondominium } from "@/client/utils/hooks";
 
 import { Menu } from "../menu";
 
 export function SidebarUser() {
   const [evict] = useEvictRefreshMutation({ refetchQueries: [ProfileDocument] });
   const { data } = useProfileQuery();
+  const [selectedCondominium] = useSelectedCondominium();
 
   const navigate = useNavigate();
   const profileState = usePopupState({ variant: "popover", popupId: "profile-menu" });
 
   const handleLogout = useCallback(async () => {
-    accessToken(null);
+    accessTokenStorage(null);
     await evict();
 
     navigate("/");
@@ -63,7 +65,7 @@ export function SidebarUser() {
           <Typography color="secondary.main" sx={{ fontWeight: "fontWeightMedium" }}>
             {data?.profile.person.fullName}
           </Typography>
-          <Typography color="textSecondary">Condomínio Itália</Typography>
+          <Typography color="textSecondary">{selectedCondominium?.name}</Typography>
         </Box>
       </ButtonBase>
     </>

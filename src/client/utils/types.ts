@@ -1,5 +1,6 @@
+import type { FunctionComponent } from "react";
 import type { IconType } from "react-icons";
-import type { RouteMatch, RouteObject } from "react-router-dom";
+import type { RouteMatch, RouteObject, To } from "react-router-dom";
 
 import type { LoadableComponent } from "@loadable/component";
 
@@ -9,7 +10,7 @@ export type LazyModule<T = any> = { default: T; esModule: true };
 
 export interface ApplicationRouteConfig extends RouteObject {
   name: string;
-  component: LoadableComponent<any>;
+  component: LoadableComponent<any> | FunctionComponent<any>;
   needAuth?: boolean;
   children?: ApplicationRouteConfig[];
 }
@@ -24,5 +25,6 @@ export type ApplicationSidebarRouteConfig = {
   route: string;
   displayName: string;
   icon: IconType;
+  path: To;
   end?: boolean;
 };

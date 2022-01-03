@@ -10,7 +10,18 @@ interface HeaderProps {
 }
 
 export const Header = forwardRef<HTMLDivElement, HeaderProps>(({ title }, ref) => (
-  <Box ref={ref} sx={{ alignItems: "center", display: "flex", px: 3, pt: 2, pb: 2 }}>
+  <Box
+    ref={ref}
+    sx={{
+      alignItems: "center",
+      display: "flex",
+      px: 3,
+      pt: 2,
+      pb: 2,
+      borderBottom: "1px solid",
+      borderColor: "divider",
+    }}
+  >
     <Box>
       <Typography sx={{ fontWeight: "fontWeightMedium" }} variant="h4">
         {title}

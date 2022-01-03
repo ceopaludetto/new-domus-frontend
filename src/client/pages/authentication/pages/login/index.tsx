@@ -5,11 +5,12 @@ import { Button, Grid, Typography, Box, Link } from "@mui/material";
 
 import { AuthenticationPaper, PreloadLink, TextField } from "@/client/components";
 import { ProfileDocument, useLoginMutation } from "@/client/graphql";
-import { useVisibility } from "@/client/utils/hooks";
+import { useSelectedCondominium, useVisibility } from "@/client/utils/hooks";
 import { LoginSchema, LoginSchemaValues } from "@/client/utils/validation/login.schema";
 
 export default function AuthenticationLogin() {
-  const [login] = useLoginMutation({ refetchQueries: [ProfileDocument] });
+  const [login, { client }] = useLoginMutation();
+  const [, { changeCondominium }] = useSelectedCondominium();
 
   const [mapToProps] = useVisibility(["password"]);
   const form = useForm<LoginSchemaValues>({
@@ -18,7 +19,12 @@ export default function AuthenticationLogin() {
   });
 
   const handleSubmit = form.handleSubmit(async (values) => {
-    await login({ variables: { input: values } });
+    const { data } = await login({ variables: { input: values } });
+    const condominiumID = data?.login.person.condominiums[0].id;
+
+    changeCondominium(condominiumID);
+
+    await client.query({ query: ProfileDocument });
   });
 
   return (

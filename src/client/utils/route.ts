@@ -14,8 +14,8 @@ export function extractPath(to: To) {
   return to;
 }
 
-export async function preloadRoutes(path: string) {
-  const branch = matchRoutes(routes, path) as ApplicationRouteMatch[] | null;
+export async function preloadRoutes(path: string, r = routes) {
+  const branch = matchRoutes(r, path) as ApplicationRouteMatch[] | null;
   if (!branch) return [];
 
   const promises = branch.map(async ({ route, ...rest }) => {
@@ -38,7 +38,7 @@ export async function preloadRoutes(path: string) {
 
 export async function handleLinkClick(navigate: NavigateFunction, location: Location, to: To) {
   const path = extractPath(to);
-  if (!path) return;
+  if (typeof path === "undefined") return;
 
   await preloadRoutes(path);
   navigate(to);
