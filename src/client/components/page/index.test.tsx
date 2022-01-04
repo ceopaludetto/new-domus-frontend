@@ -19,8 +19,8 @@ describe("<Page />", () => {
       <Page
         title="test"
         tabs={
-          <Tabs>
-            <Tab label="tab" />
+          <Tabs value={0}>
+            <Tab label="tab" value={0} />
           </Tabs>
         }
       >

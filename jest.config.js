@@ -4,7 +4,7 @@ const commonOptions = {
     "^@/(.*)$": "<rootDir>/src/$1",
   },
   moduleFileExtensions: ["js", "jsx", "ts", "tsx"],
-  setupFilesAfterEnv: ["<rootDir>/__test__/setup.ts"],
+  setupFilesAfterEnv: ["<rootDir>/src/__test__/setup.ts"],
   preset: "ts-jest",
 };
 

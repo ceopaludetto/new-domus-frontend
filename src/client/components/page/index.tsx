@@ -15,7 +15,7 @@ export function Page({ title, children, tabs }: PageProps) {
     <>
       <Box
         sx={{
-          backdropFilter: "saturate(180%) blur(5px)",
+          backdropFilter: "blur(12px) saturate(120%)",
           position: "sticky",
           mb: 3,
           top: 0,
