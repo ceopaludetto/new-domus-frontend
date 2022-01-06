@@ -1,8 +1,7 @@
-import type { MockedResponse } from "@apollo/client/testing";
 import { fireEvent, waitFor } from "@testing-library/react";
+import { fromValue, never } from "wonka";
 
 import { renderWithProviders } from "@/__test__/render";
-import { EvictRefreshDocument } from "@/client/graphql";
 import { accessTokenStorage } from "@/client/providers/storage";
 
 import { SidebarUser } from "./index";
@@ -23,21 +22,24 @@ describe("<SidebarUser />", () => {
   });
 
   it("should logout", async () => {
-    const mocks: MockedResponse[] = [
-      {
-        request: { query: EvictRefreshDocument },
-        result: { data: { evictRefresh: true } },
-      },
-    ];
+    const mockClient = {
+      executeMutation: () =>
+        fromValue({
+          data: {
+            evictRefresh: true,
+          },
+        }),
+      query: jest.fn(() => ({ toPromise: () => never })),
+    };
 
-    accessTokenStorage("somecontent");
+    accessTokenStorage.set("somecontent");
 
-    const { container, getByText } = renderWithProviders(<SidebarUser />, { mocks });
+    const { container, getByText } = renderWithProviders(<SidebarUser />, { mockClient });
 
     const el = container.querySelector("button");
 
     expect(el).toBeInTheDocument();
-    expect(accessTokenStorage()).toBe("somecontent");
+    expect(accessTokenStorage.get()).toBe("somecontent");
 
     fireEvent.click(el!);
 
@@ -46,10 +48,11 @@ describe("<SidebarUser />", () => {
 
       expect(exit).toBeInTheDocument();
       fireEvent.click(exit);
+    });
 
-      waitFor(() => {
-        expect(accessTokenStorage()).toBe(null);
-      });
+    await waitFor(() => {
+      expect(accessTokenStorage.get()).toBe(null);
+      expect(mockClient.query).toBeCalled();
     });
   });
 });

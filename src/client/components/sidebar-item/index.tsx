@@ -3,6 +3,8 @@ import type { To } from "react-router-dom";
 
 import { ListItemButton, ListItemButtonProps, ListItemIcon, ListItemText } from "@mui/material";
 
+import { useSidebarContext } from "@/client/utils/hooks";
+
 import { PreloadNavLink } from "../preload-nav-link";
 
 interface SidebarItemProps extends ListItemButtonProps {
@@ -12,6 +14,8 @@ interface SidebarItemProps extends ListItemButtonProps {
 }
 
 export function SidebarItem({ children, to, end, icon: Icon, ...rest }: SidebarItemProps) {
+  const { toggleOpen } = useSidebarContext();
+
   return (
     <ListItemButton
       sx={{
@@ -38,6 +42,7 @@ export function SidebarItem({ children, to, end, icon: Icon, ...rest }: SidebarI
       component={PreloadNavLink as any}
       end={end}
       to={to}
+      onClick={toggleOpen}
       {...rest}
     >
       <ListItemIcon sx={{ minWidth: "auto", mr: 1.5 }}>

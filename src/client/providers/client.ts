@@ -1,53 +1,58 @@
-import { ApolloClient, ApolloLink, from, InMemoryCache, HttpLink } from "@apollo/client";
+import { devtoolsExchange } from "@urql/devtools";
 import type { Request } from "express";
+import { createClient, dedupExchange, cacheExchange, ssrExchange, fetchExchange } from "urql";
 
 import { accessTokenStorage } from "./storage";
 
-const addTokenLink = new ApolloLink((operation, forward) => {
-  operation.setContext(({ headers = {} }) => {
-    let newHeaders = headers;
+export function fetchOptions(request?: Request): () => RequestInit {
+  return () => {
+    let headers: HeadersInit = {};
 
-    const token = accessTokenStorage();
-    if (token) newHeaders = { ...newHeaders, Authorization: `Bearer ${token}` };
+    const token = accessTokenStorage.get();
+    if (token) headers = { ...headers, Authorization: `Bearer ${token}` };
 
-    return { headers: newHeaders };
-  });
+    if (request) {
+      const cookies = request.header("Cookie");
+      if (cookies) headers = { ...headers, Cookie: cookies };
+    }
 
-  return forward(operation);
-});
+    return { headers, credentials: "include", mode: "cors" };
+  };
+}
 
-const saveTokenLink = new ApolloLink((operation, forward) =>
-  forward(operation).map((response) => {
-    const context = operation.getContext();
-    const token = context.response.headers.get("AccessToken");
+export async function saveToken(input: RequestInfo, init?: RequestInit) {
+  return fetch(input, init).then((response) => {
+    const { headers } = response;
 
-    if (token) accessTokenStorage(token);
+    if (headers.has("AccessToken")) accessTokenStorage.set(headers.get("AccessToken"));
 
     return response;
-  })
-);
+  });
+}
 
-export function createClient(ssrMode: boolean, request?: Request) {
-  const httpLink = new HttpLink({
-    credentials: "include",
-    uri: process.env.CEOP_BACKEND_URL as string,
-    headers:
-      ssrMode && request
-        ? {
-            cookie: request.header("Cookie"),
-          }
-        : undefined,
+export function createURQLClient(ssrMode: boolean, request?: Request) {
+  const ssr = ssrExchange({
+    isClient: !ssrMode,
   });
 
-  const link = from([addTokenLink, saveTokenLink, httpLink]);
-  let cache = new InMemoryCache();
-
   if (!ssrMode) {
-    const state = document.querySelector("#__APOLLO_STATE__")?.innerHTML;
-    if (state) cache = cache.restore(JSON.parse(state));
+    const state = document.querySelector("#__URQL_STATE__")?.innerHTML;
+    if (state) ssr.restoreData(JSON.parse(state));
   }
 
-  const client = new ApolloClient({ cache, ssrMode, link, assumeImmutableResults: true });
+  const exchanges = [dedupExchange, cacheExchange, ssr, fetchExchange];
 
-  return [client, { cache }] as const;
+  if (process.env.NODE_ENV === "development") {
+    exchanges.unshift(devtoolsExchange);
+  }
+
+  const client = createClient({
+    suspense: ssrMode,
+    url: process.env.CEOP_BACKEND_URL as string,
+    exchanges,
+    fetchOptions: fetchOptions(request),
+    fetch: saveToken,
+  });
+
+  return { client, ssr };
 }

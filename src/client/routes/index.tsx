@@ -37,7 +37,7 @@ export const routes: ApplicationRouteConfig[] = [
       createRoute({
         name: "@Authentication:Signin",
         path: "signin",
-        component: loadable(() => import("@/client/pages/authentication/pages/login")),
+        component: loadable(() => import("@/client/pages/authentication/pages/signin")),
       }),
       createRoute({
         name: "@Authentication:Forgot",

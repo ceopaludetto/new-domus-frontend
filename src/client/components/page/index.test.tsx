@@ -1,11 +1,15 @@
 import { Tab, Tabs } from "@mui/material";
-import { render } from "@testing-library/react";
+
+import { renderWithProviders } from "@/__test__/render";
+import { SidebarProvider } from "@/client/utils/hooks";
 
 import { Page } from "./index";
 
 describe("<Page />", () => {
   it("should render", () => {
-    const { getByText } = render(<Page title="test">content</Page>);
+    const { getByText } = renderWithProviders(<Page title="test">content</Page>, {
+      wrapper: ({ children }) => <SidebarProvider>{children}</SidebarProvider>,
+    });
 
     const title = getByText(/test/i);
     const body = getByText(/content/i);
@@ -15,17 +19,18 @@ describe("<Page />", () => {
   });
 
   it("should render tabs if provided", () => {
-    const { getByText } = render(
+    const { getByText } = renderWithProviders(
       <Page
         title="test"
         tabs={
           <Tabs value={0}>
-            <Tab label="tab" value={0} />
+            <Tab label="tab" />
           </Tabs>
         }
       >
         content
-      </Page>
+      </Page>,
+      { wrapper: ({ children }) => <SidebarProvider>{children}</SidebarProvider> }
     );
 
     const tab = getByText(/tab/i);

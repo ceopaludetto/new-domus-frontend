@@ -69,3 +69,26 @@ export const phone = createNumberMask((v: string) => {
 
   return ["(", /\d/, /\d/, ")", " ", /\d/, /\d/, /\d/, /\d/, "-", /\d/, /\d/, /\d/, /\d/];
 });
+
+export const cpf = createNumberMask([/\d/, /\d/, /\d/, ".", /\d/, /\d/, /\d/, ".", /\d/, /\d/, /\d/, "-", /\d/, /\d/]);
+
+export const cnpj = createNumberMask([
+  /\d/,
+  /\d/,
+  ".",
+  /\d/,
+  /\d/,
+  /\d/,
+  ".",
+  /\d/,
+  /\d/,
+  /\d/,
+  "/",
+  /\d/,
+  /\d/,
+  /\d/,
+  /\d/,
+  "-",
+  /\d/,
+  /\d/,
+]);

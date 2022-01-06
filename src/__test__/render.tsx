@@ -1,50 +1,68 @@
-import type { ReactElement, ReactNode } from "react";
+import { ReactElement, ReactNode, StrictMode } from "react";
 import { HelmetProvider } from "react-helmet-async";
 import { BrowserRouter } from "react-router-dom";
 
-import type { InMemoryCache } from "@apollo/client";
-import { MockedProvider, MockedResponse } from "@apollo/client/testing";
 import { CacheProvider } from "@emotion/react";
 import { render, RenderOptions } from "@testing-library/react";
 import Conditional from "conditional-wrap";
+import { Provider } from "urql";
+import { never } from "wonka";
 
 import { ApplicationThemeProvider } from "@/client/theme";
 import { createApplicationCache } from "@/client/theme/create";
+import { CondominiumProvider } from "@/client/utils/hooks";
 
 interface AllProvidersProps {
   children: ReactNode;
-  cache?: InMemoryCache;
-  mocks?: readonly MockedResponse[];
+  mocks?: any;
+  condominiumID?: string;
 }
 
-function AllProviders({ children, cache, mocks }: AllProvidersProps) {
+function AllProviders({ children, mocks, condominiumID }: AllProvidersProps) {
   const c = createApplicationCache();
+  const mockClient: any = {
+    executeQuery: jest.fn(() => never),
+    executeMutation: jest.fn(() => never),
+    executeSubscription: jest.fn(() => never),
+    query: jest.fn(() => never),
+    ...mocks,
+  };
 
   return (
     <HelmetProvider>
       <CacheProvider value={c}>
         <ApplicationThemeProvider initialMode="light">
-          <MockedProvider cache={cache} mocks={mocks}>
-            <BrowserRouter>{children}</BrowserRouter>
-          </MockedProvider>
+          <Provider value={mockClient}>
+            <CondominiumProvider initialValue={condominiumID}>
+              <BrowserRouter>{children}</BrowserRouter>
+            </CondominiumProvider>
+          </Provider>
         </ApplicationThemeProvider>
       </CacheProvider>
     </HelmetProvider>
   );
 }
 
-type RenderOptionsAndMocks = RenderOptions & { mocks?: readonly MockedResponse[]; cache?: InMemoryCache };
+type RenderOptionsAndMocks = RenderOptions & { mockClient?: any; condominiumID?: string };
 
 export function renderWithProviders(ui: ReactElement, options: RenderOptionsAndMocks = {}) {
-  const { wrapper: Component, mocks, cache, ...rest } = options;
+  const { wrapper, mockClient, condominiumID, ...rest } = options;
 
   return render(ui, {
     wrapper: ({ children }) => (
-      <AllProviders mocks={mocks}>
-        <Conditional condition={!!Component} wrap={(el) => (Component ? <Component>{el}</Component> : el)}>
-          {children}
-        </Conditional>
-      </AllProviders>
+      <StrictMode>
+        <AllProviders mocks={mockClient} condominiumID={condominiumID}>
+          <Conditional
+            condition={!!wrapper}
+            wrap={(el) => {
+              const Component = wrapper!;
+              return <Component>{el}</Component>;
+            }}
+          >
+            {children}
+          </Conditional>
+        </AllProviders>
+      </StrictMode>
     ),
     ...rest,
   });

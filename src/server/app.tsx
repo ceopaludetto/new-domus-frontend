@@ -4,20 +4,21 @@ import { renderToString, renderToStaticMarkup } from "react-dom/server";
 import { HelmetProvider, FilledContext } from "react-helmet-async";
 import { matchPath, generatePath } from "react-router-dom";
 import { StaticRouter } from "react-router-dom/server";
+import prepass from "react-ssr-prepass";
 
-import { ApolloProvider } from "@apollo/client";
-import { getMarkupFromTree } from "@apollo/client/react/ssr";
 import { CacheProvider } from "@emotion/react";
 import createEmotionServer from "@emotion/server/create-instance";
 import { ChunkExtractor } from "@loadable/server";
 import express from "express";
+import { Provider } from "urql";
 
 import { App } from "@/client/app";
 import { ProfileDocument, ProfileQuery } from "@/client/graphql";
-import { createClient } from "@/client/providers/client";
-import { accessTokenStorage, condominiumStorage } from "@/client/providers/storage";
+import { createURQLClient } from "@/client/providers/client";
+import { accessTokenStorage } from "@/client/providers/storage";
 import { ApplicationThemeProvider } from "@/client/theme";
 import { createApplicationCache } from "@/client/theme/create";
+import { CondominiumProvider } from "@/client/utils/hooks";
 import type { ColorMode } from "@/client/utils/types";
 
 import { applyMiddlewares } from "./middlewares";
@@ -33,10 +34,11 @@ app.get("*", async (request, response) => {
   const colorMode = (request.header("sec-ch-prefers-color-scheme") ?? "light") as ColorMode;
   const helmetContext: FilledContext = {} as any;
 
-  const [client] = createClient(true, request);
+  const { client, ssr } = createURQLClient(true, request);
+  let initialCondominium: string = "";
 
   try {
-    const { data } = await client.query<ProfileQuery>({ query: ProfileDocument });
+    const { data } = await client.query<ProfileQuery>(ProfileDocument).toPromise();
 
     if (data) {
       const match = matchPath("/application/:condominium/*", request.url);
@@ -44,12 +46,12 @@ app.get("*", async (request, response) => {
       const condominium = match?.params.condominium;
       const hasCondominium = data.profile.person.condominiums.some((c) => c.id === condominium);
 
-      if (condominium && hasCondominium) condominiumStorage(condominium);
+      if (condominium && hasCondominium) initialCondominium = condominium;
 
       if (!hasCondominium) {
         const condominiumID = data.profile.person.condominiums[0].id;
 
-        condominiumStorage(condominiumID);
+        initialCondominium = condominiumID;
 
         const path = generatePath("/application/:condominium", {
           condominium: condominiumID,
@@ -61,26 +63,28 @@ app.get("*", async (request, response) => {
   } catch (error) {} // eslint-disable-line no-empty
 
   const extractor = new ChunkExtractor({ statsFile: process.env.CEOP_LOADABLE as string });
-  const markup = await getMarkupFromTree({
-    tree: (
-      <StrictMode>
-        <HelmetProvider context={helmetContext}>
-          <CacheProvider value={cache}>
-            <ApplicationThemeProvider initialMode={colorMode}>
-              <ApolloProvider client={client}>
+  const element = extractor.collectChunks(
+    <StrictMode>
+      <HelmetProvider context={helmetContext}>
+        <CacheProvider value={cache}>
+          <ApplicationThemeProvider initialMode={colorMode}>
+            <Provider value={client}>
+              <CondominiumProvider initialValue={initialCondominium}>
                 <StaticRouter location={request.url}>
                   <App />
                 </StaticRouter>
-              </ApolloProvider>
-            </ApplicationThemeProvider>
-          </CacheProvider>
-        </HelmetProvider>
-      </StrictMode>
-    ),
-    renderFunction: (tree) => renderToString(extractor.collectChunks(tree)),
-  });
+              </CondominiumProvider>
+            </Provider>
+          </ApplicationThemeProvider>
+        </CacheProvider>
+      </HelmetProvider>
+    </StrictMode>
+  );
 
-  const initialState = client.extract();
+  await prepass(element);
+  const markup = renderToString(element);
+
+  const initialState = ssr.extractData();
 
   const script = extractor.getScriptElements();
   const link = extractor.getLinkTags();
@@ -93,10 +97,7 @@ app.get("*", async (request, response) => {
 
   const head = `${helmet.title.toString()}${helmet.meta.toString()}${helmet.link.toString()}${helmet.script.toString()}${link}${style}${emotionCss}`;
 
-  const initialCondominium = condominiumStorage();
-
-  accessTokenStorage(null);
-  condominiumStorage(null);
+  accessTokenStorage.del();
 
   return response.send(
     "<!DOCTYPE html>".concat(
@@ -107,7 +108,7 @@ app.get("*", async (request, response) => {
             <div id="root" dangerouslySetInnerHTML={{ __html: markup }} />
             {script}
             <script
-              id="__APOLLO_STATE__"
+              id="__URQL_STATE__"
               type="application/json"
               dangerouslySetInnerHTML={{
                 __html: JSON.stringify(initialState).replace(/</g, "\\u003c"),

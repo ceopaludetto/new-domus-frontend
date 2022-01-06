@@ -2,8 +2,9 @@ import { useCallback } from "react";
 import { FiLogOut, FiUser } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 
-import { ButtonBase, Typography, Box, Avatar } from "@mui/material";
+import { ButtonBase, Typography, Box, Avatar, Divider } from "@mui/material";
 import { usePopupState, bindMenu, bindTrigger } from "material-ui-popup-state/hooks";
+import { useClient } from "urql";
 
 import { ProfileDocument, useEvictRefreshMutation, useProfileQuery } from "@/client/graphql";
 import { accessTokenStorage } from "@/client/providers/storage";
@@ -12,19 +13,21 @@ import { useSelectedCondominium } from "@/client/utils/hooks";
 import { Menu } from "../menu";
 
 export function SidebarUser() {
-  const [evict] = useEvictRefreshMutation({ refetchQueries: [ProfileDocument] });
-  const { data } = useProfileQuery();
-  const [selectedCondominium] = useSelectedCondominium();
+  const client = useClient();
+  const [, evict] = useEvictRefreshMutation();
+  const [{ data }] = useProfileQuery();
+  const [selectedCondominium, { hasMultiple, changeCondominium }] = useSelectedCondominium();
 
   const navigate = useNavigate();
   const profileState = usePopupState({ variant: "popover", popupId: "profile-menu" });
 
   const handleLogout = useCallback(async () => {
-    accessTokenStorage(null);
+    accessTokenStorage.del();
     await evict();
+    await client.query(ProfileDocument).toPromise();
 
     navigate("/");
-  }, [evict, navigate]);
+  }, [evict, navigate, client]);
 
   return (
     <>
@@ -39,10 +42,29 @@ export function SidebarUser() {
         }}
         {...bindMenu(profileState)}
       >
+        {hasMultiple && (
+          <Box>
+            <Typography variant="overline" color="textSecondary" sx={{ px: 1, mb: 2 }}>
+              Meus Condomínios
+            </Typography>
+            {data?.profile.person.condominiums.map((condominium) => (
+              <Menu.Item
+                onClick={() => changeCondominium(condominium.id)}
+                color={condominium.id === selectedCondominium?.id ? "primary.main" : "secondary.main"}
+                key={condominium.id}
+              >
+                {condominium.name}
+              </Menu.Item>
+            ))}
+            <Box my={1} px={1}>
+              <Divider />
+            </Box>
+          </Box>
+        )}
         <Menu.Item sx={{ borderRadius: 1 }} icon={FiUser}>
           Perfil
         </Menu.Item>
-        <Menu.Item onClick={handleLogout} icon={FiLogOut}>
+        <Menu.Item color="error.main" onClick={handleLogout} icon={FiLogOut}>
           Sair
         </Menu.Item>
       </Menu>

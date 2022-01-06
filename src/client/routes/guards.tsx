@@ -9,7 +9,7 @@ interface RequireAuthProps {
 }
 
 export function RequireAuth({ children }: RequireAuthProps) {
-  const { data } = useProfileQuery();
+  const [{ data }] = useProfileQuery();
 
   if (!data) return <Navigate to="/authentication/signin" replace />;
   return children;
@@ -17,7 +17,7 @@ export function RequireAuth({ children }: RequireAuthProps) {
 
 export function DontRequireAuth({ children }: RequireAuthProps) {
   const [selectedCondominium] = useSelectedCondominium();
-  const { data } = useProfileQuery();
+  const [{ data }] = useProfileQuery();
 
   if (data) {
     const path = generatePath("/application/:condominium", { condominium: selectedCondominium?.id });

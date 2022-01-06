@@ -8,6 +8,8 @@ const commonOptions = {
   preset: "ts-jest",
 };
 
+process.env.NODE_ENV = "development";
+
 /** @type {import('ts-jest/dist/types').InitialOptionsTsJest} */
 module.exports = {
   projects: [

@@ -1,3 +1,5 @@
+import { createElement } from "react";
+
 import createCache from "@emotion/cache";
 import { createTheme, Palette } from "@mui/material";
 
@@ -10,9 +12,10 @@ export function createApplicationCache() {
 
 export function createApplicationTheme(colorMode: ColorMode) {
   const radius = 6;
+  const palette = (colorMode === "dark" ? darkPalette : lightPalette) as Palette;
 
   return createTheme({
-    palette: (colorMode === "dark" ? darkPalette : lightPalette) as Palette,
+    palette,
     shape: { borderRadius: radius },
     typography: {
       fontFamily: "Poppins",
@@ -55,6 +58,28 @@ export function createApplicationTheme(colorMode: ColorMode) {
           root: {
             textTransform: "none",
             fontSize: "0.95rem",
+            borderRadius: radius,
+            marginBottom: 8,
+          },
+        },
+      },
+      MuiTabs: {
+        styleOverrides: {
+          indicator: {
+            display: "flex",
+            justifyContent: "center",
+            backgroundColor: "transparent",
+            "& .MuiTabs-indicatorSpan": {
+              maxWidth: 100,
+              width: "100%",
+              backgroundColor: palette.primary.main,
+              borderRadius: radius * 2,
+            },
+          },
+        },
+        defaultProps: {
+          TabIndicatorProps: {
+            children: createElement("span", { className: "MuiTabs-indicatorSpan" }),
           },
         },
       },

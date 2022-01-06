@@ -1,30 +1,45 @@
-import { BiBuilding } from "react-icons/bi";
+import { BiBuildings } from "react-icons/bi";
 import { FiUser, FiLock } from "react-icons/fi";
 import { Outlet } from "react-router-dom";
 
-import { Grid } from "@mui/material";
+import { Tab, Tabs } from "@mui/material";
 
-import { Page, SettingsLink } from "@/client/components";
+import { Page, PreloadLink, TabLabel } from "@/client/components";
+import { useRouteMatch } from "@/client/utils/hooks";
+
+const base = "/application/:condominium/settings";
 
 export default function ApplicationSettings() {
+  const routeMatch = useRouteMatch([base, `${base}/security`, `${base}/condominium`]);
+  const currentTab = routeMatch?.pattern.path;
+
   return (
-    <Page title="Ajustes">
-      <Grid container spacing={3}>
-        <Grid item xs={12} lg={4}>
-          <SettingsLink icon={FiUser} description="Nome, e-mail e outros" to="">
-            Informações Pessoais
-          </SettingsLink>
-          <SettingsLink icon={FiLock} description="Senha e 2FA" to="security">
-            Segurança
-          </SettingsLink>
-          <SettingsLink icon={BiBuilding} description="Nome do condomínio, endereço e outros" to="condominium">
-            Condomínio
-          </SettingsLink>
-        </Grid>
-        <Grid item xs={12} lg>
-          <Outlet />
-        </Grid>
-      </Grid>
+    <Page
+      title="Ajustes"
+      tabs={
+        <Tabs value={currentTab}>
+          <Tab
+            label={<TabLabel icon={FiUser}>Informações Pessoais</TabLabel>}
+            component={PreloadLink}
+            value={base}
+            to=""
+          />
+          <Tab
+            label={<TabLabel icon={FiLock}>Segurança</TabLabel>}
+            component={PreloadLink}
+            value={`${base}/security`}
+            to="security"
+          />
+          <Tab
+            label={<TabLabel icon={BiBuildings}>Condomínio</TabLabel>}
+            component={PreloadLink}
+            value={`${base}/condominium`}
+            to="condominium"
+          />
+        </Tabs>
+      }
+    >
+      <Outlet />
     </Page>
   );
 }

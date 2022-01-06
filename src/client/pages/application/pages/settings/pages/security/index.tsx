@@ -12,9 +12,6 @@ export default function ApplicationSettingsSecurity() {
   return (
     <FormProvider {...form}>
       <Grid container spacing={3}>
-        <Grid item xs={12}>
-          <Typography variant="h6">Segurança</Typography>
-        </Grid>
         <Grid item xs={12} lg={6}>
           <Grid container spacing={3}>
             <Grid item xs={12}>

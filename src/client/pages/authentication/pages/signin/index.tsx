@@ -2,14 +2,16 @@ import { FormProvider, useForm } from "react-hook-form";
 
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, Grid, Typography, Box, Link } from "@mui/material";
+import { useClient } from "urql";
 
 import { AuthenticationPaper, PreloadLink, TextField } from "@/client/components";
 import { ProfileDocument, useLoginMutation } from "@/client/graphql";
 import { useSelectedCondominium, useVisibility } from "@/client/utils/hooks";
 import { LoginSchema, LoginSchemaValues } from "@/client/utils/validation/login.schema";
 
-export default function AuthenticationLogin() {
-  const [login, { client }] = useLoginMutation();
+export default function AuthenticationSignin() {
+  const client = useClient();
+  const [, login] = useLoginMutation();
   const [, { changeCondominium }] = useSelectedCondominium();
 
   const [mapToProps] = useVisibility(["password"]);
@@ -19,12 +21,12 @@ export default function AuthenticationLogin() {
   });
 
   const handleSubmit = form.handleSubmit(async (values) => {
-    const { data } = await login({ variables: { input: values } });
+    const { data } = await login({ input: values });
     const condominiumID = data?.login.person.condominiums[0].id;
 
     changeCondominium(condominiumID);
 
-    await client.query({ query: ProfileDocument });
+    await client.query(ProfileDocument).toPromise();
   });
 
   return (

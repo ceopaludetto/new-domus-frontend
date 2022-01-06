@@ -17,4 +17,9 @@ export function applyMiddlewares(app: Application) {
 
     return next();
   });
+
+  app.use((request, response, next) => {
+    if (request.url.includes("favicon.ico")) return response.send(undefined);
+    return next();
+  });
 }

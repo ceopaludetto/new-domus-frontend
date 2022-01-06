@@ -11,7 +11,7 @@ import {
 
 export function Menu({ children, PaperProps, ...rest }: MenuProps) {
   return (
-    <MuiMenu elevation={1} PaperProps={{ ...PaperProps, sx: { px: 1, width: 252, ...PaperProps?.sx } }} {...rest}>
+    <MuiMenu elevation={1} PaperProps={{ ...PaperProps, sx: { px: 1, width: 280, ...PaperProps?.sx } }} {...rest}>
       {children}
     </MuiMenu>
   );
@@ -19,26 +19,35 @@ export function Menu({ children, PaperProps, ...rest }: MenuProps) {
 
 interface MenuItemProps extends MuiMenuItemProps {
   icon?: IconType;
+  color?: string;
 }
 
-function MenuItem({ children, sx, icon: Icon, ...rest }: MenuItemProps) {
+function MenuItem({ children, sx, icon: Icon, color = "secondary.main", ...rest }: MenuItemProps) {
   return (
     <MuiMenuItem
       sx={{
         borderRadius: 1,
         px: 1,
         py: 1,
+        color,
         "& + &": { mt: 0.5 },
         ...sx,
       }}
       {...rest}
     >
       {Icon && (
-        <ListItemIcon sx={{ color: "secondary.main", minWidth: "auto!important", mr: 1.5 }}>
+        <ListItemIcon sx={{ color, minWidth: "auto!important", mr: 1.5 }}>
           <Icon size={18} />
         </ListItemIcon>
       )}
-      <ListItemText sx={{ "& .MuiListItemText-primary": { color: "secondary.main", fontSize: "body1.fontSize" } }}>
+      <ListItemText
+        sx={{
+          "& .MuiListItemText-primary": {
+            color,
+            fontSize: "body1.fontSize",
+          },
+        }}
+      >
         {children}
       </ListItemText>
     </MuiMenuItem>

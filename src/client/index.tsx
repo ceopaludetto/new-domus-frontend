@@ -3,20 +3,23 @@ import { hydrate } from "react-dom";
 import { HelmetProvider } from "react-helmet-async";
 import { BrowserRouter } from "react-router-dom";
 
-import { ApolloProvider } from "@apollo/client";
 import { CacheProvider } from "@emotion/react";
 import { loadableReady } from "@loadable/component";
+import { Provider } from "urql";
 
 import { App } from "./app";
-import { createClient } from "./providers/client";
+import { createURQLClient } from "./providers/client";
 import { ApplicationThemeProvider } from "./theme";
 import { createApplicationCache } from "./theme/create";
+import { CondominiumProvider } from "./utils/hooks";
 
 const root = document.querySelector("#root");
 const colorMode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 const cache = createApplicationCache();
 
-const [client] = createClient(false);
+const { client } = createURQLClient(false);
+const condominiumState = document.querySelector("#__CONDOMINIUM__")?.innerHTML;
+const initialCondominium = condominiumState ? JSON.parse(condominiumState) : null;
 
 loadableReady(() => {
   hydrate(
@@ -24,11 +27,13 @@ loadableReady(() => {
       <HelmetProvider>
         <CacheProvider value={cache}>
           <ApplicationThemeProvider initialMode={colorMode}>
-            <ApolloProvider client={client}>
-              <BrowserRouter>
-                <App />
-              </BrowserRouter>
-            </ApolloProvider>
+            <Provider value={client}>
+              <CondominiumProvider initialValue={initialCondominium}>
+                <BrowserRouter>
+                  <App />
+                </BrowserRouter>
+              </CondominiumProvider>
+            </Provider>
           </ApplicationThemeProvider>
         </CacheProvider>
       </HelmetProvider>

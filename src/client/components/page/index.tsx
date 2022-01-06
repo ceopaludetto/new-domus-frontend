@@ -19,10 +19,12 @@ export function Page({ title, children, tabs }: PageProps) {
           position: "sticky",
           mb: 3,
           top: 0,
+          borderBottom: "1px solid",
+          borderColor: "divider",
         }}
       >
         <Header title={title} />
-        {tabs && <Box sx={{ px: 3 }}>{tabs}</Box>}
+        {tabs && <Box sx={{ px: 3, mx: -2 }}>{tabs}</Box>}
       </Box>
       <Container maxWidth={false}>{children}</Container>
     </>

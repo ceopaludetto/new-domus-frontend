@@ -1,6 +1,21 @@
-import { makeVar } from "@apollo/client";
+class TokenStorage {
+  private state: string | null;
 
-export const accessTokenStorage = makeVar<string | null>(null);
+  public constructor(initialValue?: string) {
+    this.state = initialValue ?? null;
+  }
 
-const initialValue = typeof window !== "undefined" ? document.querySelector("#__CONDOMINIUM__")?.innerHTML : null;
-export const condominiumStorage = makeVar<string | null>(initialValue ? JSON.parse(initialValue) : null);
+  public get() {
+    return this.state;
+  }
+
+  public set(next: string | null) {
+    this.state = next;
+  }
+
+  public del() {
+    this.state = null;
+  }
+}
+
+export const accessTokenStorage = new TokenStorage();
