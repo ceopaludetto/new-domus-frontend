@@ -9,7 +9,7 @@
   "scripts": {
     "build": "ceop build",
     "codegen": "graphql-codegen",
-    "lint": "eslint \"src/**\" --fix",
+    "lint": "eslint \"src/**\"",
     "prepare": "husky install",
     "start": "ceop start",
     "start:production": "NODE_ENV=production node dist/main.js",
