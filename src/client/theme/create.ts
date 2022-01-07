@@ -70,8 +70,7 @@ export function createApplicationTheme(colorMode: ColorMode) {
             justifyContent: "center",
             backgroundColor: "transparent",
             "& .MuiTabs-indicatorSpan": {
-              maxWidth: 100,
-              width: "100%",
+              width: "60%",
               backgroundColor: palette.primary.main,
               borderRadius: radius * 2,
             },

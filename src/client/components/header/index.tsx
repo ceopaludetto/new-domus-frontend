@@ -9,13 +9,14 @@ import { Tooltip } from "../tooltip";
 
 interface HeaderProps {
   title: string;
+  haveTabs?: boolean;
 }
 
-export const Header = forwardRef<HTMLDivElement, HeaderProps>(({ title }, ref) => {
+export const Header = forwardRef<HTMLDivElement, HeaderProps>(({ title, haveTabs }, ref) => {
   const { toggleOpen } = useSidebarContext();
 
   return (
-    <Box ref={ref} sx={{ alignItems: "center", display: "flex", px: 3, pt: 2, pb: 2 }}>
+    <Box ref={ref} sx={{ alignItems: "center", display: "flex", px: 3, pt: 2, pb: haveTabs ? 1 : 2 }}>
       <Box sx={{ display: { xs: "block", lg: "none" }, mr: 1.5 }}>
         <Tooltip title="Abrir Menu">
           <IconButton aria-label="Abrir Menu" onClick={toggleOpen}>

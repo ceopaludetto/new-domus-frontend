@@ -1,6 +1,6 @@
-import type { ReactNode } from "react";
+import { ReactNode, useRef } from "react";
 
-import { Box, Container } from "@mui/material";
+import { Box, Container, useScrollTrigger } from "@mui/material";
 
 import { Header } from "../header";
 
@@ -11,6 +11,9 @@ interface PageProps {
 }
 
 export function Page({ title, children, tabs }: PageProps) {
+  const ref = useRef<HTMLDivElement>(null);
+  const slide = useScrollTrigger({ disableHysteresis: true });
+
   return (
     <>
       <Box
@@ -18,13 +21,19 @@ export function Page({ title, children, tabs }: PageProps) {
           backdropFilter: "blur(12px) saturate(120%)",
           position: "sticky",
           mb: 3,
-          top: 0,
           borderBottom: "1px solid",
           borderColor: "divider",
+          top: slide ? -(ref?.current?.offsetHeight ?? 0) : 0,
+          zIndex: (theme) => theme.zIndex.appBar,
+          transition: (theme) =>
+            theme.transitions.create(["top"], {
+              easing: theme.transitions.easing.easeInOut,
+              duration: theme.transitions.duration.short,
+            }),
         }}
       >
-        <Header title={title} />
-        {tabs && <Box sx={{ px: 3, mx: -2 }}>{tabs}</Box>}
+        <Header ref={ref} title={title} haveTabs={!!tabs} />
+        {tabs && <Box sx={{ px: 3, pt: 1, mx: -2 }}>{tabs}</Box>}
       </Box>
       <Container maxWidth={false}>{children}</Container>
     </>
