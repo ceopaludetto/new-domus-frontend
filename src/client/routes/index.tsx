@@ -37,12 +37,12 @@ export const routes: ApplicationRouteConfig[] = [
       createRoute({
         name: "@Authentication:Signin",
         path: "signin",
-        component: loadable(() => import("@/client/pages/authentication/pages/signin")),
+        component: loadable(() => import("@/client/pages/authentication/signin")),
       }),
       createRoute({
         name: "@Authentication:Forgot",
         path: "forgot",
-        component: loadable(() => import("@/client/pages/authentication/pages/forgot")),
+        component: loadable(() => import("@/client/pages/authentication/forgot")),
       }),
     ],
   }),
@@ -55,32 +55,42 @@ export const routes: ApplicationRouteConfig[] = [
       createRoute({
         name: "@Application:Dashboard",
         index: true,
-        component: loadable(() => import("@/client/pages/application/pages/dashboard")),
+        component: loadable(() => import("@/client/pages/application/dashboard")),
+      }),
+      createRoute({
+        name: "@Application:Blocks",
+        path: "blocks",
+        component: loadable(() => import("@/client/pages/application/blocks")),
+      }),
+      createRoute({
+        name: "@Application:Blocks:Create",
+        path: "blocks/create",
+        component: loadable(() => import("@/client/pages/application/blocks/create")),
       }),
       createRoute({
         name: "@Application:Messages",
         path: "messages",
-        component: loadable(() => import("@/client/pages/application/pages/messages")),
+        component: loadable(() => import("@/client/pages/application/messages")),
       }),
       createRoute({
         name: "@Application:Settings",
         path: "settings",
-        component: loadable(() => import("@/client/pages/application/pages/settings")),
+        component: loadable(() => import("@/client/pages/application/settings")),
         children: [
           createRoute({
             name: "@Application:Settings:Personal",
             index: true,
-            component: loadable(() => import("@/client/pages/application/pages/settings/pages/personal")),
+            component: loadable(() => import("@/client/pages/application/settings/personal")),
           }),
           createRoute({
             name: "@Application:Settings:Security",
             path: "security",
-            component: loadable(() => import("@/client/pages/application/pages/settings/pages/security")),
+            component: loadable(() => import("@/client/pages/application/settings/security")),
           }),
           createRoute({
             name: "@Application:Settings:Condominium",
             path: "condominium",
-            component: loadable(() => import("@/client/pages/application/pages/settings/pages/condominium")),
+            component: loadable(() => import("@/client/pages/application/settings/condominium")),
           }),
         ],
       }),

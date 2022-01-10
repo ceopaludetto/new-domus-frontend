@@ -1,3 +1,4 @@
+import { BiBuildings } from "react-icons/bi";
 import { FiGrid, FiSliders, FiMessageCircle } from "react-icons/fi";
 
 import type { ApplicationSidebarRouteConfig } from "../utils/types";
@@ -8,6 +9,12 @@ export const sidebarRoutes: ApplicationSidebarRouteConfig[] = [
     displayName: "Dashboard",
     path: "",
     icon: FiGrid,
+  },
+  {
+    route: "@Application:Blocks",
+    displayName: "Blocos e Apartamentos",
+    path: "blocks",
+    icon: BiBuildings,
   },
   {
     route: "@Application:Messages",

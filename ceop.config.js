@@ -3,10 +3,8 @@ const { addBabelPluginsOrPresets } = require("@ceop/utils");
 /**
  * @type import("@ceop/utils").Plugin
  */
-const addOptimizeClsx = (configuration) => {
-  addBabelPluginsOrPresets(configuration, "plugins", ["optimize-clsx"]);
-
-  return configuration;
+const addGraphqlTagBabelPlugin = (configuration) => {
+  return addBabelPluginsOrPresets(configuration, "plugins", [["graphql-tag", { strip: true }]]);
 };
 
 /**
@@ -14,7 +12,7 @@ const addOptimizeClsx = (configuration) => {
  */
 const configuration = {
   mode: "both",
-  plugins: [addOptimizeClsx, "@ceop/plugin-loadable", "@ceop/plugin-compress", "@ceop/plugin-file"],
+  plugins: [addGraphqlTagBabelPlugin, "@ceop/plugin-loadable", "@ceop/plugin-compress", "@ceop/plugin-file"],
 };
 
 module.exports = configuration;

@@ -12,3 +12,5 @@ export * from "./menu";
 export * from "./text-field";
 export * from "./masked-text-field";
 export * from "./tab-label";
+export * from "./settings-link";
+export * from "./section";
