@@ -8,15 +8,13 @@ export default function ApplicationBlocks() {
   return (
     <Page
       title="Blocos"
-      actions={{
-        trailing: (
-          <Tooltip title="Novo Bloco">
-            <IconButton component={PreloadLink} to="create" color="primary" aria-label="Novo Bloco">
-              <FiPlus />
-            </IconButton>
-          </Tooltip>
-        ),
-      }}
+      actions={
+        <Tooltip title="Novo Bloco">
+          <IconButton component={PreloadLink} to="create" color="primary" aria-label="Novo Bloco">
+            <FiPlus />
+          </IconButton>
+        </Tooltip>
+      }
     >
       blocos
     </Page>

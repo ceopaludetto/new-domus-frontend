@@ -1,43 +1,29 @@
-import { ReactNode, useMemo, useRef } from "react";
+import type { ReactNode } from "react";
 
-import { Box, Container, SxProps, useScrollTrigger } from "@mui/material";
+import { Box, Container, Theme, useMediaQuery } from "@mui/material";
 
 import { Header } from "../header";
 
 interface PageProps {
-  title: string;
+  title: ReactNode;
   children: ReactNode;
   tabs?: ReactNode;
-  nested?: ReactNode;
-  contentSx?: SxProps;
-  nestedSx?: SxProps;
-  actions?: {
-    remove?: boolean;
-    leading?: ReactNode;
-    trailing?: ReactNode;
-  };
+  actions?: ReactNode;
+  inner?: boolean;
 }
 
-export function Page({ title, children, tabs, actions, nested, nestedSx, contentSx }: PageProps) {
-  const ref = useRef<HTMLDivElement>(null);
-  const slide = useScrollTrigger({ disableHysteresis: true });
-
-  const top = useMemo(() => {
-    if (!tabs) return 0;
-
-    const height = ref.current?.offsetHeight ?? 0;
-    return slide ? -height : 0;
-  }, [tabs, slide, ref]);
+export function Page({ title, children, tabs, actions, inner }: PageProps) {
+  const show = useMediaQuery<Theme>((theme) => theme.breakpoints.up("lg"));
 
   return (
-    <Box sx={{ minHeight: "100vh", display: "flex" }}>
-      <Box sx={{ flex: 1, ...contentSx }}>
+    <>
+      {(!inner || show) && (
         <Box
           sx={{
+            mb: 2,
+            top: 0,
             backdropFilter: "blur(12px) saturate(120%)",
             position: "sticky",
-            mb: 3,
-            top,
             zIndex: (theme) => theme.zIndex.appBar,
             transition: (theme) =>
               theme.transitions.create(["top"], {
@@ -46,21 +32,13 @@ export function Page({ title, children, tabs, actions, nested, nestedSx, content
               }),
           }}
         >
-          <Header
-            ref={ref}
-            title={title}
-            haveTabs={!!tabs}
-            leadingActions={actions?.leading}
-            trailingActions={actions?.trailing}
-            removeActions={actions?.remove}
-          />
-          {tabs && <Box sx={{ px: 3, pt: 1, mx: -2 }}>{tabs}</Box>}
+          <Header title={title} haveTabs={!!tabs} actions={actions} hideSidebar={inner} />
+          {tabs && <Box sx={{ px: 3, pt: 1, mx: -1 }}>{tabs}</Box>}
         </Box>
-        <Container sx={{ px: (theme) => `${theme.spacing(4)}!important` }} maxWidth={false}>
-          {children}
-        </Container>
-      </Box>
-      {nested && <Box sx={{ flex: 1, borderLeft: 1, borderColor: "divider", ...nestedSx }}>{nested}</Box>}
-    </Box>
+      )}
+      <Container sx={{ px: (theme) => `${theme.spacing(4)}!important` }} maxWidth={false}>
+        {children}
+      </Container>
+    </>
   );
 }

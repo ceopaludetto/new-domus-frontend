@@ -1,24 +1,25 @@
 import { BiBuildings } from "react-icons/bi";
 import { FiUser, FiLock } from "react-icons/fi";
-import { Outlet } from "react-router-dom";
 
-import { Stack } from "@mui/material";
+import { SidePage } from "@/client/components";
 
-import { Page, SettingsLink } from "@/client/components";
+const basePattern = "/application/:condominium/settings/";
 
 export default function ApplicationSettings() {
   return (
-    <Page title="Ajustes" nested={<Outlet />} contentSx={{ flex: 1 }} nestedSx={{ flex: 1.4 }}>
-      <Stack sx={{ mx: -2 }} spacing={2}>
-        <SettingsLink to="" title="Conta" description="Informações pessoais, área de risco." icon={FiUser} />
-        <SettingsLink to="security" title="Segurança" description="Senha, 2FA." icon={FiLock} />
-        <SettingsLink
-          to="condominium"
-          title="Condomínio"
-          description="Informações de condomínio, caractere especial."
-          icon={BiBuildings}
-        />
-      </Stack>
-    </Page>
+    <SidePage
+      title="Ajustes"
+      options={[
+        { label: "Conta", description: "Informações pessoais, área de risco.", to: "", icon: FiUser },
+        { label: "Segurança", description: "Senha, 2FA.", to: "security", icon: FiLock },
+        {
+          label: "Condomínio",
+          description: "Informações de condomínio, caractere especial.",
+          to: "condominium",
+          icon: BiBuildings,
+        },
+      ]}
+      basePattern={basePattern}
+    />
   );
 }

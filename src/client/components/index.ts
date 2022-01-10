@@ -14,3 +14,4 @@ export * from "./masked-text-field";
 export * from "./tab-label";
 export * from "./settings-link";
 export * from "./section";
+export * from "./side-page";

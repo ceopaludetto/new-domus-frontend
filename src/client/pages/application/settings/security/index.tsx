@@ -10,7 +10,7 @@ export default function ApplicationSettingsSecurity() {
   const form = useForm();
 
   return (
-    <Page title="Segurança" actions={{ remove: true }}>
+    <Page title="Segurança" inner>
       <Section title="Alterar senha" description="Utilize uma senha forte e de fácil memorização.">
         <FormProvider {...form}>
           <Grid container spacing={3}>

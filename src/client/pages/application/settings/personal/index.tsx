@@ -19,7 +19,7 @@ export default function ApplicationSettingsPersonal() {
   });
 
   return (
-    <Page title="Conta" actions={{ remove: true }}>
+    <Page title="Conta" inner>
       <Section title="Informações Pessoais" description="Preencha com cuidado e verifique a validade dos dados.">
         <FormProvider {...form}>
           <Grid container spacing={3}>
