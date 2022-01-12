@@ -1,6 +1,8 @@
 import { devtoolsExchange } from "@urql/devtools";
+import { cacheExchange } from "@urql/exchange-graphcache";
+import { multipartFetchExchange } from "@urql/exchange-multipart-fetch";
 import type { Request } from "express";
-import { createClient, dedupExchange, cacheExchange, ssrExchange, fetchExchange } from "urql";
+import { createClient, dedupExchange, ssrExchange } from "urql";
 
 import { accessTokenStorage } from "./storage";
 
@@ -31,6 +33,8 @@ export async function saveToken(input: RequestInfo, init?: RequestInit) {
 }
 
 export function createURQLClient(ssrMode: boolean, request?: Request) {
+  const cache = cacheExchange({});
+
   const ssr = ssrExchange({
     isClient: !ssrMode,
   });
@@ -40,7 +44,7 @@ export function createURQLClient(ssrMode: boolean, request?: Request) {
     if (state) ssr.restoreData(JSON.parse(state));
   }
 
-  const exchanges = [dedupExchange, cacheExchange, ssr, fetchExchange];
+  const exchanges = [dedupExchange, cache, ssr, multipartFetchExchange];
 
   if (process.env.NODE_ENV === "development") {
     exchanges.unshift(devtoolsExchange);

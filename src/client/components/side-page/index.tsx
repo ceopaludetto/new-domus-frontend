@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import type { IconType } from "react-icons";
 import { Outlet } from "react-router-dom";
 
-import { Box, Stack, Tab, Tabs, Typography } from "@mui/material";
+import { Box, Stack, Tab, Tabs, Theme, Typography, useMediaQuery } from "@mui/material";
 
 import { useRouteMatch } from "@/client/utils/hooks";
 
@@ -17,16 +17,19 @@ interface SidePageProps {
 }
 
 export function SidePage({ title, options, basePattern }: SidePageProps) {
+  const showTabs = useMediaQuery<Theme>((theme) => theme.breakpoints.down("lg"));
   const match = useRouteMatch(options.map((option) => basePattern + option.to));
   const value = match?.pattern.path;
 
   return (
-    <Box sx={{ display: "flex", flexWrap: "wrap" }}>
-      <Box sx={{ flex: { xs: "0 0 100%", lg: 1 } }}>
+    <Box
+      sx={{ display: "flex", flexWrap: "wrap", flexDirection: { xs: "column", lg: "row" }, minHeight: { lg: "100vh" } }}
+    >
+      <Box sx={{ flex: { lg: 1 } }}>
         <Page
           title={title}
           tabs={
-            <Box sx={{ display: { lg: "none" } }}>
+            showTabs ? (
               <Tabs value={value}>
                 {options.map(({ label, icon: Icon, to }) => (
                   <Tab
@@ -43,14 +46,16 @@ export function SidePage({ title, options, basePattern }: SidePageProps) {
                   />
                 ))}
               </Tabs>
-            </Box>
+            ) : undefined
           }
         >
-          <Stack sx={{ mx: -2, display: { xs: "none", lg: "flex" } }} spacing={2}>
-            {options.map(({ label, description, icon, to }) => (
-              <SettingsLink key={to} title={label} description={description} icon={icon} to={to} />
-            ))}
-          </Stack>
+          {!showTabs && (
+            <Stack sx={{ mx: -2 }} spacing={2}>
+              {options.map(({ label, description, icon, to }) => (
+                <SettingsLink key={to} title={label} description={description} icon={icon} to={to} />
+              ))}
+            </Stack>
+          )}
         </Page>
       </Box>
       <Box sx={{ flex: { xs: "0 0 100%", lg: 1.4 }, borderLeft: { xs: 0, lg: 1 }, borderColor: { lg: "divider" } }}>
